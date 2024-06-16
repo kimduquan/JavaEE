@@ -117,14 +117,14 @@ public class Application {
     	final Client client = ClientBuilder.newClient();
     	final RequestBuilder builder = new RequestBuilder(client, serviceUrl, req.getMethod(), headers, uriInfo, body, true);
     	Response response = builder.build();
+    	final Optional<Object> entity = HATEOAS.readEntity(response);
     	if(isSuccessful(response)) {
-        	final Optional<Object> entity = HATEOAS.readEntity(response);
         	final Link self = HATEOAS.selfLink(uriInfo, req, service);
         	final boolean isPartial = isPartial(response);
         	final MediaType mediaType = response.getMediaType();
         	response = buildLinkRequests(client, response, entity, mediaType, headers, self, isPartial);
     	}
-    	response = ResponseUtil.buildResponse(response, uriInfo.getBaseUri());
+    	response = ResponseUtil.buildResponse(response, entity, uriInfo.getBaseUri());
     	client.close();
     	return response;
     }
@@ -225,7 +225,15 @@ public class Application {
     			final Optional<String> volatile_ = HATEOAS.volatile_(targetLink);
     			if(volatile_.isPresent()) {
     				final CompletionStage<InputStream> linkStream = HATEOAS.buildStreamRequest(client, serviceUrl, headers, prevLinkResponse, prevLinkEntity, prevMediaType, targetLink);
-    				stream.stream(volatile_.get(), linkStream);
+    				final Streaming streaming = stream.stream(volatile_.get(), linkStream);
+    				if(streaming.getThrowable() != null) {
+    					throw (Exception)streaming.getThrowable();
+    				}
+    				Response linkResponse = Response.ok().build();
+        			linkResponses.add(linkResponse);
+    				prevLinkResponse = linkResponse;
+    				prevLinkEntity = HATEOAS.readEntity(linkResponse);
+    				prevMediaType = linkResponse.getMediaType();
     			}
     			else {
         			Response linkResponse = HATEOAS.buildLinkRequest(client, serviceUrl, headers, prevLinkResponse, prevLinkEntity, prevMediaType, targetLink);
