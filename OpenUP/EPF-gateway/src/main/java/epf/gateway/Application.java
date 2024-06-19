@@ -1,7 +1,9 @@
 package epf.gateway;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.time.Duration;
 import java.util.Arrays;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.HttpMethod;
 import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.client.Client;
@@ -31,12 +34,14 @@ import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import epf.concurrent.client.ext.Concurrent;
 import epf.concurrent.client.ext.Synchronized;
 import epf.gateway.util.HATEOAS;
 import epf.gateway.util.RequestBuilder;
 import epf.gateway.util.RequestUtil;
 import epf.gateway.util.ResponseUtil;
+import epf.gateway.util.StreamClient;
 import epf.gateway.util.Streaming;
 import epf.naming.Naming;
 import epf.util.io.InputStreamUtil;
@@ -200,6 +205,37 @@ public class Application {
 		}
     }
     
+    private CompletionStage<InputStream> buildStreamRequest(
+    		final URI serviceUrl,
+    		final Optional<Object> entity,
+    		final Link link
+    		) throws Exception {
+    	final InputStream input = entity.isPresent() ? (InputStream)entity.get() : null;
+    	try(BufferedReader reader = new BufferedReader(new InputStreamReader(input))) {
+    		final String string = reader.lines().collect(Collectors.joining());
+    		LOGGER.info("string:" + string);
+    	}
+    	final StreamClient stream = RestClientBuilder.newBuilder().baseUri(serviceUrl.resolve(link.getUri())).build(StreamClient.class);
+    	switch(link.getType()) {
+			case HttpMethod.GET:
+				return stream.get();
+			case HttpMethod.POST:
+				return stream.post(input);
+			case HttpMethod.PUT:
+				return stream.put(input);
+			case HttpMethod.DELETE:
+				return stream.delete();
+			case HttpMethod.HEAD:
+				return stream.head();
+			case HttpMethod.OPTIONS:
+				return stream.options();
+			case HttpMethod.PATCH:
+				return stream.patch(input);
+			default:
+				return null;
+		}
+    }
+    
     private Response buildLinkRequests(final Client client, final Response response, final Optional<Object> entity, final MediaType mediaType, final HttpHeaders headers, final Link self, final boolean isPartial) throws Exception {
     	Response prevLinkResponse = response;
     	Optional<Object> prevLinkEntity = entity;
@@ -224,7 +260,8 @@ public class Application {
     			final URI serviceUrl = lookup(targetLink);
     			final Optional<String> volatile_ = HATEOAS.volatile_(targetLink);
     			if(volatile_.isPresent()) {
-    				final CompletionStage<InputStream> linkStream = HATEOAS.buildStreamRequest(client, serviceUrl, headers, prevLinkResponse, prevLinkEntity, prevMediaType, targetLink);
+    				//final CompletionStage<InputStream> linkStream = HATEOAS.buildStreamRequest(client, serviceUrl, headers, prevLinkResponse, prevLinkEntity, prevMediaType, targetLink);
+    				final CompletionStage<InputStream> linkStream = buildStreamRequest(serviceUrl, prevLinkEntity, targetLink);
     				final Streaming streaming = stream.stream(volatile_.get(), linkStream);
     				if(streaming.getThrowable() != null) {
     					throw (Exception)streaming.getThrowable();

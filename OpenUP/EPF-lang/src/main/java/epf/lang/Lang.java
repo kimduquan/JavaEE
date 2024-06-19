@@ -3,6 +3,7 @@ package epf.lang;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import dev.langchain4j.data.segment.TextSegment;
 import epf.lang.schema.ollama.ChatRequest;
 import epf.lang.schema.ollama.Message;
@@ -50,6 +51,13 @@ public class Lang {
 	Cache cache;
 	
 	/**
+	 * 
+	 */
+	@Inject
+	@ConfigProperty(name = Naming.Lang.Internal.LANGUAGE_MODEL)
+	String modelName;
+	
+	/**
 	 * @param input
 	 */
 	@Path(Naming.PERSISTENCE)
@@ -95,6 +103,7 @@ public class Lang {
 			chat = new ChatRequest();
 			chat.setMessages(new ArrayList<>());
 		}
+		chat.setModel(modelName);
 		final Message message = new Message();
 		message.setRole(Role.user);
 		message.setContent(text);
