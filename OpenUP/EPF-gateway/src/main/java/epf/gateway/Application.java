@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.HttpMethod;
 import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.client.Client;
@@ -32,6 +31,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
 import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.core.UriInfo;
+import jakarta.ws.rs.HttpMethod;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
@@ -207,15 +207,12 @@ public class Application {
     
     private CompletionStage<InputStream> buildStreamRequest(
     		final URI serviceUrl,
-    		final Optional<Object> entity,
+    		final Object input,
     		final Link link
     		) throws Exception {
-    	final InputStream input = entity.isPresent() ? (InputStream)entity.get() : null;
-    	try(BufferedReader reader = new BufferedReader(new InputStreamReader(input))) {
-    		final String string = reader.lines().collect(Collectors.joining());
-    		LOGGER.info("string:" + string);
-    	}
-    	final StreamClient stream = RestClientBuilder.newBuilder().baseUri(serviceUrl.resolve(link.getUri())).build(StreamClient.class);
+    	final URI baseUri = serviceUrl.resolve(link.getUri());
+    	LOGGER.info("base uri:" + baseUri);
+    	final StreamClient stream = RestClientBuilder.newBuilder().baseUri(baseUri).build(StreamClient.class);
     	switch(link.getType()) {
 			case HttpMethod.GET:
 				return stream.get();
@@ -260,13 +257,21 @@ public class Application {
     			final URI serviceUrl = lookup(targetLink);
     			final Optional<String> volatile_ = HATEOAS.volatile_(targetLink);
     			if(volatile_.isPresent()) {
-    				//final CompletionStage<InputStream> linkStream = HATEOAS.buildStreamRequest(client, serviceUrl, headers, prevLinkResponse, prevLinkEntity, prevMediaType, targetLink);
-    				final CompletionStage<InputStream> linkStream = buildStreamRequest(serviceUrl, prevLinkEntity, targetLink);
+    				String string = null;
+    				Object streamEntity = null;
+    		    	if(prevLinkEntity.isPresent()) {
+    		    		final InputStream input = (InputStream)prevLinkEntity.get();
+    		    		streamEntity = input;
+        		    	try(BufferedReader reader = new BufferedReader(new InputStreamReader(input))) {
+        		    		string = reader.lines().collect(Collectors.joining());
+        		    	}
+    		    	}
+    				final CompletionStage<InputStream> linkStream = buildStreamRequest(serviceUrl, string, targetLink);
     				final Streaming streaming = stream.stream(volatile_.get(), linkStream);
     				if(streaming.getThrowable() != null) {
     					throw (Exception)streaming.getThrowable();
     				}
-    				Response linkResponse = Response.ok().build();
+    				Response linkResponse = Response.fromResponse(prevLinkResponse).entity(streamEntity).build();
         			linkResponses.add(linkResponse);
     				prevLinkResponse = linkResponse;
     				prevLinkEntity = HATEOAS.readEntity(linkResponse);

@@ -29,21 +29,21 @@ public interface StreamClient {
 	 * @return
 	 */
 	@POST
-	CompletionStage<InputStream> post(final InputStream input);
+	CompletionStage<InputStream> post(final Object input);
 	
 	/**
 	 * @param input
 	 * @return
 	 */
 	@PUT
-	CompletionStage<InputStream> put(final InputStream input);
+	CompletionStage<InputStream> put(final Object input);
 	
 	/**
 	 * @param input
 	 * @return
 	 */
 	@PATCH
-	CompletionStage<InputStream> patch(final InputStream input);
+	CompletionStage<InputStream> patch(final Object input);
 	
 	/**
 	 * @param input

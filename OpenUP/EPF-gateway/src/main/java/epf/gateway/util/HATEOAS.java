@@ -85,7 +85,7 @@ public interface HATEOAS {
     		final URI serviceUrl,
     		final HttpHeaders headers,
     		final Response response,
-    		final Optional<Object> entity,
+    		final Object entity,
     		final MediaType mediaType,
     		final Link link
     		) {
@@ -103,9 +103,9 @@ public interface HATEOAS {
 			case HttpMethod.GET:
 				return builder.rx().get(InputStream.class);
 			case HttpMethod.POST:
-				return builder.rx().post(Entity.entity(entity.orElse(null), mediaType), InputStream.class);
+				return builder.rx().post(Entity.entity(entity, mediaType), InputStream.class);
 			case HttpMethod.PUT:
-				return builder.rx().put(Entity.entity(entity.orElse(null), mediaType), InputStream.class);
+				return builder.rx().put(Entity.entity(entity, mediaType), InputStream.class);
 			case HttpMethod.DELETE:
 				return builder.rx().delete(InputStream.class);
 			case HttpMethod.HEAD:
@@ -113,9 +113,9 @@ public interface HATEOAS {
 			case HttpMethod.OPTIONS:
 				return builder.rx().options(InputStream.class);
 			case HttpMethod.PATCH:
-				return builder.rx().method(HttpMethod.PATCH, Entity.entity(entity.orElse(null), mediaType), InputStream.class);
+				return builder.rx().method(HttpMethod.PATCH, Entity.entity(entity, mediaType), InputStream.class);
 			default:
-				return builder.rx().method(link.getType(), Entity.entity(entity.orElse(null), mediaType), InputStream.class);
+				return builder.rx().method(link.getType(), Entity.entity(entity, mediaType), InputStream.class);
 		}
     }
     
