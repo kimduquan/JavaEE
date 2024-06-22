@@ -1,6 +1,8 @@
 package epf.lang;
 
 import dev.langchain4j.data.document.DocumentSplitter;
+import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
+import dev.langchain4j.data.document.parser.TextDocumentParser;
 import dev.langchain4j.data.document.splitter.DocumentSplitters;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.store.embedding.EmbeddingSearchRequest;
@@ -10,6 +12,7 @@ import epf.lang.ollama.Ollama;
 import epf.lang.schema.ollama.EmbeddingsRequest;
 import epf.lang.schema.ollama.EmbeddingsResponse;
 import epf.naming.Naming;
+import epf.util.logging.LogManager;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -21,9 +24,14 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.context.ManagedExecutor;
+import org.eclipse.microprofile.health.HealthCheck;
+import org.eclipse.microprofile.health.HealthCheckResponse;
+import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import dev.langchain4j.data.document.BlankDocumentException;
 import dev.langchain4j.data.document.Document;
@@ -32,10 +40,22 @@ import dev.langchain4j.data.document.Document;
  * 
  */
 @ApplicationScoped
-public class Persistence {
+@Readiness
+public class Persistence implements HealthCheck {
+	
+	/**
+	 * 
+	 */
+	private static final transient Logger LOGGER = LogManager.getLogger(Persistence.class.getName());
 
+	/**
+	 * 
+	 */
 	private final DocumentSplitter splitter = DocumentSplitters.recursive(300, 0);
 	
+	/**
+	 * 
+	 */
 	private InMemoryEmbeddingStore<TextSegment> embeddingStore;
 	
 	/**
@@ -44,6 +64,13 @@ public class Persistence {
 	@Inject
 	@ConfigProperty(name = Naming.Lang.Internal.EMBEDDING_LANGUAGE_MODEL)
 	String embeddingModelName;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	@ConfigProperty(name = "epf.lang.path")
+	String path;
 	
 	/**
 	 * 
@@ -71,7 +98,35 @@ public class Persistence {
 		}
 		else {
 			embeddingStore = new InMemoryEmbeddingStore<>();
+	        executor.submit(() -> {
+	        	try {
+	        		LOGGER.info("load documents:");
+	                final List<Document> documents = loadDocuments();
+	                LOGGER.info("split documents:");
+	                final List<TextSegment> segments = splitDocuments(documents);
+	                LOGGER.info("embed segments:");
+	                final List<EmbeddingsResponse> embeddings = embedSegments(embeddingModelName, segments);
+	                LOGGER.info("store embeddings:");
+	                storeEmbeddings(embeddings, segments);
+	                LOGGER.info("serialize to file:");
+	                embeddingStore.serializeToFile(store);
+	                LOGGER.info("done.");
+	        	}
+	        	catch(Exception ex) {
+	        		LOGGER.log(Level.SEVERE, "postConstruct", ex);
+	        	}
+	        });
 		}
+	}
+	
+	private List<Document> loadDocuments(){
+		final TextDocumentParser parser = new TextDocumentParser();
+        return FileSystemDocumentLoader.loadDocumentsRecursively(Paths.get(path), parser);
+	}
+	
+	private List<TextSegment> splitDocuments(List<Document> documents){
+		final DocumentSplitter splitter = DocumentSplitters.recursive(300, 0);
+        return splitter.splitAll(documents);
 	}
 	
 	private Document parse(InputStream inputStream) {
@@ -146,5 +201,13 @@ public class Persistence {
 	public List<TextSegment> executeQuery(final String query) {
 		final EmbeddingsResponse embeddedQuery = embedQuery(embeddingModelName, query);
     	return searchQuery(embeddedQuery);
+	}
+
+	@Override
+	public HealthCheckResponse call() {
+		if(embeddingStore != null) {
+			return HealthCheckResponse.up("EPF-lang-persistence");
+		}
+		return HealthCheckResponse.down("EPF-lang-persistence");
 	}
 }

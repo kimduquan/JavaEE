@@ -40,9 +40,21 @@ public class Registry implements HealthCheck  {
 	/**
 	 * 
 	 */
+	private URI localhost;
+	
+	/**
+	 * 
+	 */
 	@ConfigProperty(name = Naming.Registry.REGISTRY_URL)
 	@Inject
 	URI registryUrl;
+	
+	/**
+	 * 
+	 */
+	@ConfigProperty(name = "quarkus.http.port")
+	@Inject
+	String port;
 	
 	/**
 	 * 
@@ -54,8 +66,8 @@ public class Registry implements HealthCheck  {
 	
 	private void initialize() {
 		if(remotes.isEmpty()) {
-			final Client client = ClientBuilder.newClient();
-			try {
+			try(Client client = ClientBuilder.newClient()) {
+				localhost = new URI("http://localhost:" + port);
 				client.target(registryUrl)
 				.queryParam(Naming.Registry.Filter.SCHEME, "http", "ws")
 				.request()
@@ -69,9 +81,6 @@ public class Registry implements HealthCheck  {
 			catch(Exception ex) {
 				LOGGER.log(Level.SEVERE, "[Registry.call]", ex);
 			}
-			finally {
-				client.close();
-			}
 		}
 	}
 	
@@ -80,6 +89,9 @@ public class Registry implements HealthCheck  {
 	 * @return
 	 */
 	public Optional<URI> lookup(final String name) {
+		if(Naming.GATEWAY.equals(name)) {
+			return Optional.of(localhost);
+		}
 		return MapUtil.get(remotes, name);
 	}
 

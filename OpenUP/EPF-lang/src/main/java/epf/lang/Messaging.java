@@ -1,51 +1,48 @@
 package epf.lang;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStream;
+import java.net.URI;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.eclipse.microprofile.context.ManagedExecutor;
+import org.eclipse.microprofile.health.HealthCheck;
+import org.eclipse.microprofile.health.HealthCheckResponse;
+import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
-import dev.langchain4j.data.document.Document;
-import dev.langchain4j.data.document.DocumentSplitter;
-import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
-import dev.langchain4j.data.document.parser.TextDocumentParser;
-import dev.langchain4j.data.document.splitter.DocumentSplitters;
 import dev.langchain4j.data.segment.TextSegment;
-import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
 import epf.lang.ollama.Ollama;
 import epf.lang.schema.ollama.ChatRequest;
 import epf.lang.schema.ollama.ChatResponse;
-import epf.lang.schema.ollama.EmbeddingsRequest;
-import epf.lang.schema.ollama.EmbeddingsResponse;
 import epf.lang.schema.ollama.Message;
 import epf.lang.schema.ollama.Role;
 import epf.naming.Naming;
+import epf.util.logging.LogManager;
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.websocket.OnClose;
-import jakarta.websocket.OnError;
+import jakarta.websocket.ClientEndpoint;
+import jakarta.websocket.ContainerProvider;
 import jakarta.websocket.OnMessage;
-import jakarta.websocket.OnOpen;
 import jakarta.websocket.RemoteEndpoint.Basic;
 import jakarta.websocket.Session;
-import jakarta.websocket.server.ServerEndpoint;
 
 /**
  * 
  */
-@ServerEndpoint("/messaging")
+@ClientEndpoint
 @ApplicationScoped
-public class Messaging {
+@Readiness
+public class Messaging implements HealthCheck {
+	
+	/**
+	 * 
+	 */
+	private static final transient Logger LOGGER = LogManager.getLogger(Messaging.class.getName());
 	
 	/**
 	 * 
@@ -57,21 +54,7 @@ public class Messaging {
 			//"nous-hermes2:10.7b", "<|im_start|>user\n%s<|im_end|>\n<|im_start|>assistant\n%s<|im_end|>\n"
 			);
 	
-	private final List<Session> sessions = new CopyOnWriteArrayList<>();
-	
-	/**
-	 * 
-	 */
-	@Inject
-	@ConfigProperty(name = "epf.lang.path")
-	String path;
-	
-	/**
-	 * 
-	 */
-	@Inject
-	@ConfigProperty(name = Naming.Lang.Internal.EMBEDDING_LANGUAGE_MODEL)
-	String embeddingModelName;
+	private Session session;
 	
 	/**
 	 * 
@@ -84,14 +67,8 @@ public class Messaging {
 	 * 
 	 */
 	@Inject
-	@ConfigProperty(name = "epf.lang.store")
-	String store;
-
-    /**
-     * 
-     */
-    @Inject 
-    ManagedExecutor executor;
+	@ConfigProperty(name = Naming.Gateway.MESSAGING_URL)
+	URI messagingUrl;
 	
 	/**
 	 * 
@@ -103,43 +80,29 @@ public class Messaging {
 	 * 
 	 */
 	@Inject
+	@Readiness
 	Cache cache;
 	
-	/**
-	 * 
-	 */
-	@Inject
-	Persistence persistence;
-	
-	private InMemoryEmbeddingStore<TextSegment> embeddingStore;
-	
-	private List<Document> loadDocuments(){
-		final TextDocumentParser parser = new TextDocumentParser();
-        return FileSystemDocumentLoader.loadDocumentsRecursively(Paths.get(path), parser);
+	@PostConstruct
+	void postConstruct() {
+        try {
+        	final URI url = messagingUrl.resolve(Naming.LANG);
+        	LOGGER.info("connect to server: " + url);
+            session = ContainerProvider.getWebSocketContainer().connectToServer(this, url);
+        }
+        catch(Exception ex) {
+        	LOGGER.log(Level.SEVERE, "connectToServer", ex);
+        }
 	}
 	
-	private List<TextSegment> splitDocuments(List<Document> documents){
-		final DocumentSplitter splitter = DocumentSplitters.recursive(300, 0);
-        return splitter.splitAll(documents);
-	}
-	
-	private List<EmbeddingsResponse> embedSegments(List<TextSegment> segments, Consumer<Float> progress){
-		final int size = segments.size();
-		final List<EmbeddingsResponse> embeddings = new LinkedList<>();
-		final AtomicInteger count = new AtomicInteger();
-		segments.forEach(segment -> {
-			final EmbeddingsRequest request = new EmbeddingsRequest();
-			request.setModel(embeddingModelName);
-			request.setPrompt(segment.text());
-			final EmbeddingsResponse embedding = ollama.generateEmbeddings(request);
-			embeddings.add(embedding);
-			progress.accept((float)count.incrementAndGet() * 100 / size);
-		});
-		return embeddings;
-	}
-	
-	private void storeEmbeddings(final List<EmbeddingsResponse> embeddings, final List<TextSegment> segments) {
-        embeddingStore.addAll(embeddings.stream().map(e -> dev.langchain4j.data.embedding.Embedding.from(e.getEmbedding())).collect(Collectors.toList()), segments);
+	@PreDestroy
+	void preDestroy() {
+		try {
+			session.close();
+		}
+		catch(Exception ex) {
+        	LOGGER.log(Level.WARNING, "cose", ex);
+        }
 	}
     
     private void send(final Session session, final String promt) {
@@ -149,105 +112,73 @@ public class Messaging {
     	final ChatRequest chat = cache.get(session.getId());
     	chat.getMessages().add(chatMessage);
     	final Basic remote = session.getBasicRemote();
-    	Ollama.stream(ollama.chat(chat), ChatResponse.class, (response) -> {
-    		if(session.isOpen()) {
-    			try {
-        			remote.sendText(response.getMessage().getContent());
-    			}
-            	catch(Exception ex) {
-            		ex.printStackTrace();
-            	}
-			}
-			System.out.print(response.getMessage().getContent());
-			if(response.isDone()) {
-            	chat.getMessages().add(response.getMessage());
-            	cache.put(session.getId(), chat);
-			}
-    		return session.isOpen();
-    	});
+    	Ollama.stream(
+    			ollama.chat(chat), 
+    			ChatResponse.class, 
+    			(response) -> {
+    				if(session.isOpen()) {
+		    			try {
+		        			remote.sendText(response.getMessage().getContent());
+		    			}
+		            	catch(Exception ex) {
+		            		LOGGER.log(Level.WARNING, "sendText", ex);
+		            	}
+		    		}
+					if(response.isDone()) {
+						final ChatRequest newChat = cache.get(session.getId());
+						newChat.getMessages().add(response.getMessage());
+		            	cache.put(session.getId(), newChat);
+		            	return false;
+					}
+					return session.isOpen();
+					}, 
+    			(err) -> {
+    				LOGGER.log(Level.WARNING, "send", err);
+    				}
+    			);
     }
-	
-	@PostConstruct
-	void postConstruct() {
-        if(Files.exists(Paths.get(store))) {
-			embeddingStore = InMemoryEmbeddingStore.fromFile(store);
-		}
-		else {
-	        embeddingStore = new InMemoryEmbeddingStore<>();
-	        executor.submit(() -> {
-	        	try {
-	        		System.out.println("load documents:");
-	                final List<Document> documents = loadDocuments();
-	                System.out.println("split documents:");
-	                final List<TextSegment> segments = splitDocuments(documents);
-	                System.out.println("embed segments:");
-	                final List<EmbeddingsResponse> embeddings = embedSegments(segments, (progress) -> {
-	                	System.out.println(progress);
-	                });
-	                System.out.println("store embeddings:");
-	                storeEmbeddings(embeddings, segments);
-	                System.out.println("serialize to file:");
-	                embeddingStore.serializeToFile(store);
-	                System.out.println("done.");
-	        	}
-	        	catch(Exception ex) {
-	        		ex.printStackTrace();
-	        	}
-	        });
-		}
-	}
-
-    /**
-     * @param session
-     */
-    @OnOpen
-    public void onOpen(final Session session) {
-        System.out.println("onOpen>");
-        final ChatRequest chat = new ChatRequest();
-        chat.setModel(modelName);
-        chat.setMessages(new ArrayList<>());
-        cache.put(session.getId(), chat);
-        sessions.clear();
-        sessions.addAll(session.getOpenSessions());
-        session.getAsyncRemote().sendText(session.getId());
-    }
-
-    @OnClose
-    public void onClose(final Session session) {
-        System.out.println("onClose>");
-        cache.remove(session.getId());
-        sessions.clear();
-        sessions.addAll(session.getOpenSessions());
-    }
-
-    @OnError
-    public void onError(final Session session, Throwable throwable) {
-        System.out.println("onError>" + throwable);
-        throwable.printStackTrace();
-        cache.remove(session.getId());
-        sessions.clear();
-        sessions.addAll(session.getOpenSessions());
-    }
-
+    
     @OnMessage
-    public void onMessage(final Session session, final String message) throws Exception {
-        System.out.println("onMessage>" + message);
-        executor.submit(() -> {
-        	try {
-                System.out.println("execute query:");
-            	final List<TextSegment> segments = persistence.executeQuery(message);
-            	System.out.println("inject prompt:");
-            	final String prompt = injectPrompt(message, segments);
-            	System.out.print(prompt);
-            	System.out.println("send:");
-            	send(session, prompt);
-        	}
-        	catch(Exception ex) {
-        		ex.printStackTrace();
-        	}
-        });
-    }
+    public void onMessage(
+    		final String message, 
+    		final Session session) {
+	}
 	
+	/**
+	 * @param message
+	 * @param session
+	 */
+	@OnMessage
+    public void onMessage(
+    		final InputStream message, 
+    		final Session session) {
+	}
+	
+	/**
+	 * @param id
+	 * @param text
+	 * @return
+	 */
+	public ChatRequest put(final String id, final String text) {
+		ChatRequest chat = cache.get(id);
+		if(chat == null) {
+			chat = new ChatRequest();
+			chat.setMessages(new ArrayList<>());
+			chat.setModel(modelName);
+		}
+		final Message message = new Message();
+		message.setRole(Role.user);
+		message.setContent(text);
+		chat.getMessages().add(message);
+		cache.put(id, chat);
+		return chat;
+	}
+	
+	/**
+	 * @param query
+	 * @param segments
+	 * @return
+	 */
 	public String injectPrompt(final String query, final List<TextSegment> segments) {
     	final StringBuilder contents = new StringBuilder();
     	segments.forEach(segment -> {
@@ -257,10 +188,22 @@ public class Messaging {
     	return String.format(promptTemplates.getOrDefault(modelName, DEFAULT_PROMPT_TEMPLATE), query, contents.toString());
 	}
     
+    /**
+     * @param sid
+     * @param promt
+     */
     public void send(final String sid, final String promt) {
-    	final Optional<Session> session = sessions.stream().filter(ss -> ss.getId().equals(sid)).findFirst();
+    	final Optional<Session> session = this.session.getOpenSessions().stream().filter(ss -> ss.getId().equals(sid)).findFirst();
     	if(session.isPresent()) {
     		send(session.get(), promt);
     	}
     }
+
+	@Override
+	public HealthCheckResponse call() {
+		if(session != null && session.isOpen()) {
+			return HealthCheckResponse.up("EPF-lang-messaging");
+		}
+		return HealthCheckResponse.down("EPF-lang-messaging");
+	}
 }

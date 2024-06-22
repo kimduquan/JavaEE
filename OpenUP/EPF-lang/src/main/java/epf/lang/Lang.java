@@ -1,13 +1,10 @@
 package epf.lang;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.health.Readiness;
 import dev.langchain4j.data.segment.TextSegment;
 import epf.lang.schema.ollama.ChatRequest;
-import epf.lang.schema.ollama.Message;
-import epf.lang.schema.ollama.Role;
 import epf.naming.Naming;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -36,26 +33,22 @@ public class Lang {
 	 * 
 	 */
 	@Inject
+	@Readiness
 	Persistence persistence;
 	
 	/**
 	 * 
 	 */
 	@Inject
+	@Readiness
 	Messaging messaging;
 	
 	/**
 	 * 
 	 */
 	@Inject
+	@Readiness
 	Cache cache;
-	
-	/**
-	 * 
-	 */
-	@Inject
-	@ConfigProperty(name = Naming.Lang.Internal.LANGUAGE_MODEL)
-	String modelName;
 	
 	/**
 	 * @param input
@@ -98,17 +91,7 @@ public class Lang {
 			@QueryParam("id")
 			final String id,
 			final String text) {
-		ChatRequest chat = cache.get(id);
-		if(chat == null) {
-			chat = new ChatRequest();
-			chat.setMessages(new ArrayList<>());
-		}
-		chat.setModel(modelName);
-		final Message message = new Message();
-		message.setRole(Role.user);
-		message.setContent(text);
-		chat.getMessages().add(message);
-		cache.put(id, chat);
+		final ChatRequest chat = messaging.put(id, text);
 		return Response.ok(chat).build();
 	}
 	
@@ -124,9 +107,26 @@ public class Lang {
 			@QueryParam("id")
 			final String id, 
 			final String text) {
-		final Link executeQuery = Link.fromUriBuilder(UriBuilder.fromPath(Naming.PERSISTENCE).queryParam("query", text)).rel(Naming.LANG).type(HttpMethod.GET).title("#1").build();
-		final Link put = Link.fromUriBuilder(UriBuilder.fromPath(Naming.CACHE).queryParam("id", id)).rel(Naming.LANG).type(HttpMethod.PUT).title("#2").build();
+		messaging.send(id, text);
+		return Response.ok().build();
+	}
+	
+	/**
+	 * @param id
+	 * @param text
+	 * @return
+	 */
+	@POST
+	@Consumes(MediaType.TEXT_PLAIN)
+    @RunOnVirtualThread
+	public Response chat(
+			@QueryParam("id")
+			final String id, 
+			final String text) {
+		final Link executeQueryLink = Link.fromUriBuilder(UriBuilder.fromPath(Naming.PERSISTENCE).queryParam("query", text)).rel(Naming.LANG).type(HttpMethod.GET).title("#1").build();
+		final Link putLink = Link.fromUriBuilder(UriBuilder.fromPath(Naming.CACHE).queryParam("id", id)).rel(Naming.LANG).type(HttpMethod.PUT).title("#2").build();
 		final Link ollamaLink = Link.fromPath("api/chat").rel(Naming.Lang.Internal.OLLAMA).type(HttpMethod.POST).param("volatile", id).title("#3").build();
-		return Response.ok().links(executeQuery, put, ollamaLink).build();
+		final Link streamLink = Link.fromPath("messaging/lang").rel(Naming.GATEWAY).type("ws").param("volatile", id).title("#4").build();
+		return Response.ok().links(executeQueryLink, putLink, ollamaLink, streamLink).build();
 	}
 }

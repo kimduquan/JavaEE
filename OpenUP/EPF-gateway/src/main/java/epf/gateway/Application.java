@@ -9,14 +9,17 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Map.Entry;
 import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.NotAuthorizedException;
@@ -58,6 +61,11 @@ public class Application {
 	 * 
 	 */
 	private transient static final Logger LOGGER = LogManager.getLogger(Application.class.getName());
+	
+	/**
+	 * 
+	 */
+	private transient final Map<URI, Streaming> streamings = new ConcurrentHashMap<>();
     
     /**
      * 
@@ -82,12 +90,6 @@ public class Application {
     /**
      * 
      */
-    @Inject
-    transient Stream stream;
-    
-    /**
-     * 
-     */
     @PostConstruct
     protected void postConstruct() {
     	final Optional<URI> uri = registry.lookup(Naming.CONCURRENT);
@@ -98,6 +100,30 @@ public class Application {
     	catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "postConstruct", e);
 		}
+    }
+    
+    @PreDestroy
+    protected void preDestroy() {
+    	streamings.forEach((uri, streaming) -> {
+    		try {
+				streaming.getSession().close();
+			} 
+    		catch (Exception e) {
+    			LOGGER.log(Level.SEVERE, "preDestroy", e);
+			}
+    	});
+    }
+    
+    private Streaming getStreaming(final URI uri) {
+    	return streamings.computeIfAbsent(uri, (url) -> {
+			try {
+				return Streaming.connectToServer(url);
+			} 
+			catch (Exception e) {
+				LOGGER.log(Level.SEVERE, "getStreaming", e);
+				return null;
+			}
+		});
     }
     
     /**
@@ -237,6 +263,7 @@ public class Application {
     	Response prevLinkResponse = response;
     	Optional<Object> prevLinkEntity = entity;
     	MediaType prevMediaType = mediaType;
+    	final Map<String, CompletionStage<InputStream>> streams = new ConcurrentHashMap<>();
     	Iterator<Object> partialEntityIterator = Arrays.asList().iterator();
     	if(isPartial) {
     		final List<Object> partialEntities = response.readEntity(new GenericType<List<Object>>() {});
@@ -258,24 +285,14 @@ public class Application {
     			final Optional<String> volatile_ = HATEOAS.volatile_(targetLink);
     			if(volatile_.isPresent()) {
     				String string = null;
-    				Object streamEntity = null;
     		    	if(prevLinkEntity.isPresent()) {
     		    		final InputStream input = (InputStream)prevLinkEntity.get();
-    		    		streamEntity = input;
         		    	try(BufferedReader reader = new BufferedReader(new InputStreamReader(input))) {
         		    		string = reader.lines().collect(Collectors.joining());
         		    	}
     		    	}
     				final CompletionStage<InputStream> linkStream = buildStreamRequest(serviceUrl, string, targetLink);
-    				final Streaming streaming = stream.stream(volatile_.get(), linkStream);
-    				if(streaming.getThrowable() != null) {
-    					throw (Exception)streaming.getThrowable();
-    				}
-    				Response linkResponse = Response.fromResponse(prevLinkResponse).entity(streamEntity).build();
-        			linkResponses.add(linkResponse);
-    				prevLinkResponse = linkResponse;
-    				prevLinkEntity = HATEOAS.readEntity(linkResponse);
-    				prevMediaType = linkResponse.getMediaType();
+    				streams.put(volatile_.get(), linkStream);
     			}
     			else {
         			Response linkResponse = HATEOAS.buildLinkRequest(client, serviceUrl, headers, prevLinkResponse, prevLinkEntity, prevMediaType, targetLink);
@@ -306,16 +323,20 @@ public class Application {
     		else if(HATEOAS.isStreamLink(link)) {
     			final Link targetLink = HATEOAS.isSelfLink(link) ? self : link;
     			final URI serviceUrl = lookup(targetLink);
-    			final Streaming stream = Streaming.connectToServer(serviceUrl.resolve(targetLink.getUri()));
-    			if(prevLinkEntity.isPresent()) {
-    				final Optional<String> volatile_ = HATEOAS.volatile_(targetLink);
-    				if(volatile_.isPresent()) {
-        				stream.send(volatile_.get(), (InputStream)prevLinkEntity.get());
-    				}
-    				else {
-        				stream.send((InputStream)prevLinkEntity.get());
-    				}
+    			final Streaming stream = getStreaming(serviceUrl.resolve(targetLink.getUri()));
+    			final Optional<String> volatile_ = HATEOAS.volatile_(targetLink);
+				if(volatile_.isPresent()) {
+					final CompletionStage<InputStream> streamInput = streams.get(volatile_.get());
+    				stream.send(volatile_.get(), streamInput);
+				}
+				else if(prevLinkEntity.isPresent()) {
+					stream.send((InputStream)prevLinkEntity.get());
     			}
+				final Response linkResponse = Response.fromResponse(prevLinkResponse).entity(prevLinkEntity.orElse(null)).build();
+    			linkResponses.add(linkResponse);
+				prevLinkResponse = linkResponse;
+				prevLinkEntity = HATEOAS.readEntity(linkResponse);
+				prevMediaType = linkResponse.getMediaType();
     		}
     	}
     	if(isPartial) {

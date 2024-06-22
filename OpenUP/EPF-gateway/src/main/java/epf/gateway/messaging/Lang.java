@@ -17,14 +17,14 @@ import epf.util.logging.LogManager;
  * @author PC
  *
  */
-@ServerEndpoint("/messaging")
+@ServerEndpoint("/messaging/lang")
 @ApplicationScoped
-public class Messaging {
+public class Lang {
 	
 	/**
 	 *
 	 */
-	private static final Logger LOGGER = LogManager.getLogger(Messaging.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Lang.class.getName());
 
 	/**
 	 * @param session
@@ -32,7 +32,7 @@ public class Messaging {
 	 */
 	@OnOpen
     public void onOpen(final Session session) throws Exception {
-		LOGGER.log(Level.INFO, String.format("[Messaging.open]session.id=%s", session.getId()));
+		LOGGER.log(Level.INFO, String.format("[Lang.open]session.id=%s", session.getId()));
 	}
 	
 	/**
@@ -63,13 +63,18 @@ public class Messaging {
     public void onError(
     		final Session session, 
     		final Throwable throwable) {
-		LOGGER.log(Level.SEVERE, String.format("[Messaging.error]session.id=%s, throwable:%s", session.getId(), throwable), throwable);
+		LOGGER.log(Level.SEVERE, String.format("[Lang.error]session.id=%s, throwable:%s", session.getId(), throwable), throwable);
 	}
 	
+	/**
+	 * @param session
+	 * @param closeReason
+	 * @throws Exception
+	 */
 	@OnClose
     public void onClose(
     		final Session session, 
     		final CloseReason closeReason) throws Exception {
-		LOGGER.log(Level.INFO, String.format("[Messaging.close]session.id=%s, close reason:%s", session.getId(), closeReason));
+		LOGGER.log(Level.INFO, String.format("[Lang.close]session.id=%s, close reason:%s", session.getId(), closeReason));
 	}
 }

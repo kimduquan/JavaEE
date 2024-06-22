@@ -69,11 +69,10 @@ public class Lang {
      * @return
      * @throws Exception
      */
-    @Path(Naming.MESSAGING)
     @POST
 	@Consumes(MediaType.TEXT_PLAIN)
     @RunOnVirtualThread
-    public Response send(
+    public Response chat(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,

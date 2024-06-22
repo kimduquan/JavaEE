@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.concurrent.CompletionStage;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import epf.lang.schema.ollama.ChatRequest;
@@ -58,10 +59,10 @@ public interface Ollama {
 	 * @param clazz
 	 * @param consumer
 	 */
-	static <T> void stream(final CompletionStage<InputStream> response, final Class<T> clazz, final Function<T, Boolean> consumer) {
+	static <T> void stream(final CompletionStage<InputStream> response, final Class<T> clazz, final Function<T, Boolean> consumer, final Consumer<Throwable> err) {
 		response.handleAsync((stream, error) -> {
 			if(error != null) {
-				error.printStackTrace();
+				err.accept(error);
 			}
 			else {
 				try(stream) {
@@ -80,7 +81,7 @@ public interface Ollama {
 					}
 				}
             	catch(Exception ex) {
-            		ex.printStackTrace();
+            		err.accept(error);
             	}
 			}
 			return stream;

@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiFunction;
 import jakarta.websocket.ClientEndpoint;
 import jakarta.websocket.ContainerProvider;
+import jakarta.websocket.RemoteEndpoint.Basic;
 import jakarta.websocket.Session;
 
 /**
@@ -30,6 +31,14 @@ public class Streaming implements BiFunction<InputStream, Throwable, InputStream
 
 	@Override
 	public InputStream apply(final InputStream stream, Throwable error) {
+		return stream(session, stream, error, throwable);
+	}
+
+	public Throwable getThrowable() {
+		return throwable.get();
+	}
+	
+	private static InputStream stream(final Session session, final InputStream stream, Throwable error, final AtomicReference<Throwable> throwable) {
 		if(error != null) {
 			throwable.set(error);
 		}
@@ -37,29 +46,27 @@ public class Streaming implements BiFunction<InputStream, Throwable, InputStream
 			try {
 				send(session, stream);
 			}
-	    	catch(Exception ex) {
+	    	catch(Throwable ex) {
 	    		throwable.set(ex);
 	    	}
 		}
 		return stream;
 	}
-
-	public Throwable getThrowable() {
-		return throwable.get();
-	}
 	
-	private void send(final Session session, final InputStream stream) throws Exception {
+	private static InputStream send(final Session session, final InputStream stream) throws Exception {
 		try(stream){
+			final Basic remote = session.getBasicRemote();
 			try(BufferedReader reader = new BufferedReader(new InputStreamReader(stream))){
 				String line;
     		    while ((line = reader.readLine()) != null) {
     		        if(session.isOpen()) {
-    		        	session.getBasicRemote().sendText(line);
+    		        	remote.sendText(line);
     		        }
     		        else {
     		        	break;
     		        }
     		    }
+    			return stream;
     		}
 		}
 	}
@@ -69,10 +76,10 @@ public class Streaming implements BiFunction<InputStream, Throwable, InputStream
 	 * @param stream
 	 * @throws Exception
 	 */
-	public void send(final String id, final InputStream stream) throws Exception {
+	public void send(final String id, final CompletionStage<InputStream> input) throws Exception {
 		final Optional<Session> session = this.session.getOpenSessions().stream().filter(ss -> ss.getId().equals(id)).findFirst();
 		if(session.isPresent()) {
-			send(session.get(), stream);
+			input.handleAsync((in, err) -> stream(session.get(), in, err, throwable));
 		}
 	}
 	
@@ -94,16 +101,12 @@ public class Streaming implements BiFunction<InputStream, Throwable, InputStream
 		stream.session = ContainerProvider.getWebSocketContainer().connectToServer(stream, uri);
 		return stream;
 	}
-	
-	/**
-	 * @param session
-	 * @param input
-	 * @return
-	 */
-	public static Streaming stream(final Session session, final CompletionStage<InputStream> input) {
-		final Streaming stream = new Streaming();
-		stream.session = session;
-		input.handleAsync(stream);
-		return stream;
+
+	public Session getSession() {
+		return session;
+	}
+
+	public void setSession(Session session) {
+		this.session = session;
 	}
 }
