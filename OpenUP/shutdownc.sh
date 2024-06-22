@@ -7,6 +7,9 @@ killall java
 
 killall kubectl
 ./webapp_shutdownc.sh
+cd EPF-lang
+./stop.sh
+cd ../
 cd EPF-gateway
 ./stop.sh
 cd ../
@@ -26,9 +29,6 @@ cd EPF-concurrent
 ./stop.sh
 cd ../
 cd EPF-tests
-./stop.sh
-cd ../
-cd EPF-lang
 ./stop.sh
 cd ../
 cd EPF-registry

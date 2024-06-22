@@ -49,6 +49,9 @@ cd ../
 cd EPF-gateway
 ./start.sh
 cd ../
+cd EPF-lang
+./start.sh
+cd ../
 cd EPF-shell
 #./dev.sh
 cd ../

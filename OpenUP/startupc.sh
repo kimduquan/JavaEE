@@ -66,4 +66,8 @@ cd EPF-gateway
 ./start.sh
 cd ../
 
+cd EPF-lang
+./start.sh
+cd ../
+
 ./webapp_startupc.sh
