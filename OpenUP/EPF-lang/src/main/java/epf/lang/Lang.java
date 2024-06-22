@@ -11,6 +11,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.HttpMethod;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
@@ -88,7 +89,7 @@ public class Lang {
 	@Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
 	public Response put(
-			@QueryParam("id")
+			@HeaderParam("id")
 			final String id,
 			final String text) {
 		final ChatRequest chat = messaging.put(id, text);
@@ -104,7 +105,7 @@ public class Lang {
 	@Consumes(MediaType.TEXT_PLAIN)
     @RunOnVirtualThread
 	public Response send(
-			@QueryParam("id")
+			@HeaderParam("id")
 			final String id, 
 			final String text) {
 		messaging.send(id, text);
@@ -120,7 +121,7 @@ public class Lang {
 	@Consumes(MediaType.TEXT_PLAIN)
     @RunOnVirtualThread
 	public Response chat(
-			@QueryParam("id")
+			@HeaderParam("id")
 			final String id, 
 			final String text) {
 		final Link executeQueryLink = Link.fromUriBuilder(UriBuilder.fromPath(Naming.PERSISTENCE).queryParam("query", text)).rel(Naming.LANG).type(HttpMethod.GET).title("#1").build();
