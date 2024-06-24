@@ -62,22 +62,22 @@ public class Persistence implements HealthCheck {
 	 * 
 	 */
 	@Inject
-	@ConfigProperty(name = Naming.Lang.Internal.EMBEDDING_LANGUAGE_MODEL)
-	String embeddingModelName;
+	@ConfigProperty(name = Naming.Lang.Internal.EMBED_LANGUAGE_MODEL)
+	String embedModel;
 	
 	/**
 	 * 
 	 */
 	@Inject
-	@ConfigProperty(name = "epf.lang.path")
-	String path;
+	@ConfigProperty(name = Naming.Lang.Internal.CACHE_PATH)
+	String cachePath;
 	
 	/**
 	 * 
 	 */
 	@Inject
-	@ConfigProperty(name = "epf.lang.store")
-	String store;
+	@ConfigProperty(name = Naming.Lang.Internal.PERSISTENCE_PATH)
+	String persistencePath;
 	
 	/**
      * 
@@ -93,8 +93,8 @@ public class Persistence implements HealthCheck {
 	
 	@PostConstruct
 	void postConstruct() {
-		if(Files.exists(Paths.get(store))) {
-			embeddingStore = InMemoryEmbeddingStore.fromFile(store);
+		if(Files.exists(Paths.get(persistencePath))) {
+			embeddingStore = InMemoryEmbeddingStore.fromFile(persistencePath);
 		}
 		else {
 			embeddingStore = new InMemoryEmbeddingStore<>();
@@ -105,11 +105,11 @@ public class Persistence implements HealthCheck {
 	                LOGGER.info("split documents:");
 	                final List<TextSegment> segments = splitDocuments(documents);
 	                LOGGER.info("embed segments:");
-	                final List<EmbeddingsResponse> embeddings = embedSegments(embeddingModelName, segments);
+	                final List<EmbeddingsResponse> embeddings = embedSegments(embedModel, segments);
 	                LOGGER.info("store embeddings:");
 	                storeEmbeddings(embeddings, segments);
 	                LOGGER.info("serialize to file:");
-	                embeddingStore.serializeToFile(store);
+	                embeddingStore.serializeToFile(persistencePath);
 	                LOGGER.info("done.");
 	        	}
 	        	catch(Exception ex) {
@@ -121,7 +121,7 @@ public class Persistence implements HealthCheck {
 	
 	private List<Document> loadDocuments(){
 		final TextDocumentParser parser = new TextDocumentParser();
-        return FileSystemDocumentLoader.loadDocumentsRecursively(Paths.get(path), parser);
+        return FileSystemDocumentLoader.loadDocumentsRecursively(Paths.get(cachePath), parser);
 	}
 	
 	private List<TextSegment> splitDocuments(List<Document> documents){
@@ -193,13 +193,13 @@ public class Persistence implements HealthCheck {
 	public void persist(final InputStream entity) {
 		final Document document = parse(entity);
 		final List<TextSegment> segments = splitter.split(document);
-		final List<EmbeddingsResponse> embeddings = embedSegments(embeddingModelName, segments);
+		final List<EmbeddingsResponse> embeddings = embedSegments(embedModel, segments);
 		storeEmbeddings(embeddings, segments);
-		embeddingStore.serializeToFile(store);
+		embeddingStore.serializeToFile(persistencePath);
 	}
 	
 	public List<TextSegment> executeQuery(final String query) {
-		final EmbeddingsResponse embeddedQuery = embedQuery(embeddingModelName, query);
+		final EmbeddingsResponse embeddedQuery = embedQuery(embedModel, query);
     	return searchQuery(embeddedQuery);
 	}
 

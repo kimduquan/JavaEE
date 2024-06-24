@@ -391,7 +391,17 @@ public interface Naming {
 			/**
 			 * 
 			 */
-			String EMBEDDING_LANGUAGE_MODEL = "epf.lang.embed.model";
+			String EMBED_LANGUAGE_MODEL = "epf.lang.embed.model";
+			
+			/**
+			 * 
+			 */
+			String CACHE_PATH = "epf.lang.cache.path";
+			
+			/**
+			 * 
+			 */
+			String PERSISTENCE_PATH = "epf.lang.persistence.path";
 		}
 	}
 	
