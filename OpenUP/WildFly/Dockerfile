@@ -1,5 +1,5 @@
 # FROM adoptopenjdk/openjdk8-openj9:
-FROM eclipse-temurin:21-ubi9-minimal
+FROM eclipse-temurin:11-ubi9-minimal
 
 RUN groupadd -r jboss -g 1000 && useradd -u 1000 -r -g jboss -m -d /opt/jboss -s /sbin/nologin -c "JBoss user" jboss && \
     chmod 755 /opt/jboss
