@@ -1,7 +1,5 @@
 . ../env.sh
 . ../config.sh
-cp $USER_DIR/EPF-query.trace.db ./
-cp $USER_DIR/EPF-query.mv.db ./
 cp $USER_DIR/EPF-security.mv.db ./
 cp $USER_DIR/EPF-security.trace.db ./
 cp $SOURCE_DIR/dev.p12 ./

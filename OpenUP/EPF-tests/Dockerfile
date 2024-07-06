@@ -13,11 +13,6 @@ COPY --chown=1001:0 dev.p12 /
 COPY --chown=1001:0 private.pem /
 COPY --chown=1001:0 public.pem /
 
-COPY --chown=1001:0 EPF-security.trace.db /liberty/usr/
-COPY --chown=1001:0 EPF-query.mv.db /liberty/usr/
-COPY --chown=1001:0 EPF-query.trace.db /liberty/usr/
-COPY --chown=1001:0 EPF-security.mv.db /liberty/usr/
-
 COPY --chown=1001:0 target/servers/test/server.xml /config/
 COPY --chown=1001:0 target/servers/test/apps /config/apps
 

@@ -40,3 +40,38 @@ spec:
       initialDelaySeconds: 60
       periodSeconds: 60
       timeoutSeconds: 10
+  volumeMounts:
+  - name: openup
+    mountPath: /openup
+    subPath: openup
+  statefulSet:
+    storage:
+      volumeClaimTemplate:
+        metadata:
+          name: openup
+        spec:
+          accessModes:
+          - "ReadWriteOnce"
+          storageClassName: 'hostpath'
+          resources:
+            requests:
+              storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+  labels:
+    app.kubernetes.io/name: openup
+    app.kubernetes.io/version: 1.0.0
+  name: openup
+spec:
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: "Retain"
+  storageClassName: "hostpath"
+  hostPath:
+    path: "/var/lib/k8s-pvs/openup"
+    type: ""
+  capacity:  
+    storage: 1Gi
