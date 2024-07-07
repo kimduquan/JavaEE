@@ -21,7 +21,7 @@
 		<internalHost>localhost</internalHost>
 		<internalPort>8080</internalPort>
 		<userHome>~/</userHome>
-		<openupHome>/openup</openupHome>
+		<openupHome>~/</openupHome>
         <!-- Jaeger configuration -->
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
@@ -521,6 +521,7 @@
 				<gatewayHost>epf-gateway.default.svc.cluster.local</gatewayHost>
 				<internalHost>epf-gateway-internal.default.svc.cluster.local</internalHost>
 				<userHome>/liberty/usr/</userHome>
+				<openupHome>/openup</openupHome>
 				<liberty.jvm.JAEGER_AGENT_HOST>-DJAEGER_AGENT_HOST=jaeger-agent.default.svc.cluster.local</liberty.jvm.JAEGER_AGENT_HOST>
 				<liberty.jvm.HAZELCAST_KUBERNETES_SERVICE_DNS>-Dhazelcast.kubernetes.service-dns=hazelcast.default.svc.cluster.local</liberty.jvm.HAZELCAST_KUBERNETES_SERVICE_DNS>
 				<liberty.bootstrap.hazelcast.kubernetes.service-dns>hazelcast.default.svc.cluster.local</liberty.bootstrap.hazelcast.kubernetes.service-dns>
