@@ -1,1 +1,1 @@
-helm install neo4j oci://registry-1.docker.io/bitnamicharts/neo4j --set resourcesPreset=nano --set persistence.size=1Gi --set advertisedHost=localhost
+helm install neo4j oci://registry-1.docker.io/bitnamicharts/neo4j --set resourcesPreset=nano --set persistence.size=1Gi --set advertisedHost=localhost --set service.type=ClusterIP
