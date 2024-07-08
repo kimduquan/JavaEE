@@ -1,10 +1,10 @@
 resources:
   requests:
-    memory: 256Mi
+    memory: 512Mi
     cpu: 100m
   limits:
     memory: 1024Mi
-    cpu: 200m
+    cpu: 400m
 service:
   type: ClusterIP
 persistence:
