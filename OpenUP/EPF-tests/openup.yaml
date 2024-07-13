@@ -1,3 +1,22 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+  labels:
+    app.kubernetes.io/name: openup
+    app.kubernetes.io/version: 1.0.0
+  name: openup
+spec:
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: "Retain"
+  storageClassName: "hostpath"
+  hostPath:
+    path: "/var/lib/k8s-pvs/openup"
+    type: ""
+  capacity:  
+    storage: 1Gi
+---
 apiVersion: apps.openliberty.io/v1
 kind: OpenLibertyApplication
 metadata:
@@ -57,22 +76,3 @@ spec:
             requests:
               storage: 1Gi
           volumeName: "openup"
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  annotations:
-  labels:
-    app.kubernetes.io/name: openup
-    app.kubernetes.io/version: 1.0.0
-  name: openup
-spec:
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: "Retain"
-  storageClassName: "hostpath"
-  hostPath:
-    path: "/var/lib/k8s-pvs/openup"
-    type: ""
-  capacity:  
-    storage: 1Gi
