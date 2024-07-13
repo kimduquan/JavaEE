@@ -367,6 +367,5 @@ spec:
       hostPID: false
       securityContext:
         runAsNonRoot: true
-        fsGroup: 0
       serviceAccountName: olo-controller-manager
       terminationGracePeriodSeconds: 10
