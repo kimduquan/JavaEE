@@ -362,11 +362,11 @@ spec:
           privileged: false
           readOnlyRootFilesystem: true
           runAsNonRoot: true
-          fsGroup: 0
       hostIPC: false
       hostNetwork: false
       hostPID: false
       securityContext:
         runAsNonRoot: true
+        fsGroup: 0
       serviceAccountName: olo-controller-manager
       terminationGracePeriodSeconds: 10
