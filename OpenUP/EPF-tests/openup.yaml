@@ -51,11 +51,12 @@ spec:
           name: openup
         spec:
           accessModes:
-          - "ReadWriteOnce"
+            - ReadWriteOnce
           storageClassName: 'hostpath'
           resources:
             requests:
               storage: 1Gi
+          volumeName: "openup"
 ---
 apiVersion: v1
 kind: PersistentVolume
