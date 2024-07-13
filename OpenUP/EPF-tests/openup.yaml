@@ -44,6 +44,10 @@ spec:
     - name: openup
       mountPath: /openup
       readOnly: false
+  initContainers:
+    - name: openup
+      image: busybox
+      command: ["sh", "-c", "chown 1001:0 /openup"]
   statefulSet:
     storage:
       volumeClaimTemplate:
