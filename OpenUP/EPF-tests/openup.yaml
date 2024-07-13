@@ -44,10 +44,8 @@ spec:
     - name: openup
       mountPath: /openup
       readOnly: false
-  containers:
-    - name: openup
-      securityContext:
-        fsGroup: 0
+  securityContext:
+    fsGroup: 0
   statefulSet:
     storage:
       volumeClaimTemplate:
