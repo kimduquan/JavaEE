@@ -26,6 +26,8 @@ spec:
       value: "n"
     - name: WLP_DEBUG_ADDRESS
       value: "7777"
+    - name: BROWSER
+      value: "curl"
   probes:
     liveness:
       failureThreshold: 12

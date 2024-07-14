@@ -13,7 +13,7 @@ COPY --chown=1001:0 dev.p12 /
 COPY --chown=1001:0 private.pem /
 COPY --chown=1001:0 public.pem /
 
-COPY --chown=1001:0 h2 /
+COPY --chown=1001:0 --chmod=777 h2 /h2
 
 COPY --chown=1001:0 target/servers/test/server.xml /config/
 COPY --chown=1001:0 target/servers/test/apps /config/apps
