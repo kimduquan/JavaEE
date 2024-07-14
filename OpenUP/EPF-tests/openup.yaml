@@ -9,6 +9,11 @@ spec:
   applicationImage: openup:1.0.0
   service:
     port: 9080
+    portName: http
+    targetPort: 9080
+    ports:
+      - port: 8082
+        name: h2
   expose: true
   route:
     pathType: ImplementationSpecific
