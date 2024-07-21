@@ -744,8 +744,8 @@ postgresql:
 externalDatabase:
   host: "postgresql.default.svc.cluster.local"
   port: 5432
-  user: odoo
-  password: "123456"
+  user: openpg
+  password: "openpgpwd"
   database: odoo
   create: true
   postgresqlPostgresUser: "postgres"
