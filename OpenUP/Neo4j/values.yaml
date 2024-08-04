@@ -9,3 +9,5 @@ service:
   type: ClusterIP
 persistence:
   size: 1Gi
+auth:
+  password: "neo4j"
