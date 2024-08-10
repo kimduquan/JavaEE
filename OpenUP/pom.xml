@@ -903,7 +903,6 @@
 		<module>EPF-schema-utility</module>
 		<module>EPF-nosql-schema-utility</module>
 		<module>EPF-nosql-schema</module>
-		<module>EPF-graph-schema</module>
 		<module>EPF-lang-schema</module>
 		<module>EPF-workflow-schema-utility</module>
 		<module>EPF-net-schema</module>
