@@ -985,5 +985,7 @@
         <module>EPF-tests</module>
         <module>EPF-assembly</module>
         <!--<module>EPF-installer</module>-->
+		
+		<module>ERP-schema</module>
     </modules>
 </project>
