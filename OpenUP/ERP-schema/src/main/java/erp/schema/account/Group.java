@@ -16,23 +16,41 @@ import jakarta.validation.constraints.NotNull;
 @Description("Account Group")
 public class Group {
 	
+	/**
+	 * 
+	 */
 	@Column(updatable = false)
 	@ManyToOne(targetEntity = Group.class)
 	private String parent_id;
 	
+	/**
+	 * 
+	 */
 	@Column
 	private String parent_path;
 	
+	/**
+	 * 
+	 */
 	@Column
 	@NotNull
 	private String name;
 	
+	/**
+	 * 
+	 */
 	@Column
 	private String code_prefix_start;
 	
+	/**
+	 * 
+	 */
 	@Column
 	private String code_prefix_end;
 	
+	/**
+	 * 
+	 */
 	@Column(updatable = false)
 	@ManyToOne(targetEntity = Company.class)
 	@NotNull

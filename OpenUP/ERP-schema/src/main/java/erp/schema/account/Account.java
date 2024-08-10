@@ -35,7 +35,7 @@ public class Account {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = ResCurrency.class)
+	@ManyToOne(targetEntity = Currency.class)
 	@Description("Account Currency")
 	private String currency_id;
 	
