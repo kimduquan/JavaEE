@@ -48,5 +48,10 @@
 		    <artifactId>microprofile-openapi-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>openup</groupId>
+			<artifactId>EPF-assembly</artifactId>
+			<version>1.0.0</version>
+		</dependency>
     </dependencies>
 </project>
