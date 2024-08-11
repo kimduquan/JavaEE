@@ -1,6 +1,8 @@
-package erp.schema;
+package erp.schema.ir.actions;
 
 import org.eclipse.microprofile.graphql.Description;
+
+import erp.schema.View;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,7 +17,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_act_window_view")
 @Description("Action Window View")
-public class IrActionsActWindowView {
+public class ActWindowView {
 
 	/**
 	 * 
@@ -44,7 +46,7 @@ public class IrActionsActWindowView {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = IrActionsActWindow.class)
+	@ManyToOne(targetEntity = ActWindow.class)
 	@Description("Action")
 	private String act_window_id;
 	

@@ -1,7 +1,8 @@
-package erp.schema;
+package erp.schema.ir.actions;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -12,7 +13,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "ir_actions")
 @Description("Action Window Close")
-public class IrActionsActWindowClose extends IrActions {
+public class ActWindowClose extends Actions {
 
 	/**
 	 * 

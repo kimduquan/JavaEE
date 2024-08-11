@@ -1,7 +1,8 @@
-package erp.schema;
+package erp.schema.ir.actions;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -16,13 +17,13 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_actions_todo")
 @Description("Configuration Wizards")
-public class IrActionsTodo {
+public class Todo {
 
 	/**
 	 * 
 	 */
 	@Column(nullable = false)
-	@ManyToOne(targetEntity = IrActions.class)
+	@ManyToOne(targetEntity = Actions.class)
 	@NotNull
 	@Description("Action")
 	private String action_id;

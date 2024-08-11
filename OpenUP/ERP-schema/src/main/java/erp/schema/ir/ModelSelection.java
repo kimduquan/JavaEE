@@ -1,4 +1,4 @@
-package erp.schema;
+package erp.schema.ir;
 
 import jakarta.persistence.Entity;
 
@@ -6,6 +6,6 @@ import jakarta.persistence.Entity;
  * 
  */
 @Entity
-public class IrModel {
+public class ModelSelection {
 
 }

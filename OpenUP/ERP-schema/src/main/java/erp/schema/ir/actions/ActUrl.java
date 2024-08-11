@@ -1,7 +1,8 @@
-package erp.schema;
+package erp.schema.ir.actions;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,7 +16,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_act_url")
 @Description("Action URL")
-public class IrActionsActUrl extends IrActions {
+public class ActUrl extends Actions {
 
 	/**
 	 * 

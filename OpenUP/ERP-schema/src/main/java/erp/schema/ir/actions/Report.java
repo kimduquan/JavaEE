@@ -1,7 +1,11 @@
-package erp.schema;
+package erp.schema.ir.actions;
 
 import java.util.List;
 import org.eclipse.microprofile.graphql.Description;
+
+import erp.schema.Groups;
+import erp.schema.ReportPaperFormat;
+import erp.schema.ir.Model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -17,7 +21,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_act_report_xml")
 @Description("Report Action")
-public class IrActionsReport extends IrActions {
+public class Report extends Actions {
 
 	/**
 	 * 
@@ -44,7 +48,7 @@ public class IrActionsReport extends IrActions {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = IrModel.class)
+	@ManyToOne(targetEntity = Model.class)
 	@Description("Model")
 	private String model_id;
 	

@@ -1,4 +1,4 @@
-package erp.schema;
+package erp.schema.ir;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_asset")
 @Description("Asset")
-public class IrAsset {
+public class Asset {
 
 	/**
 	 * 

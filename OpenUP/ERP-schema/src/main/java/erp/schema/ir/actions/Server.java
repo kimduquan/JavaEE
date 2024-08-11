@@ -1,8 +1,13 @@
-package erp.schema;
+package erp.schema.ir.actions;
 
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+
+import erp.schema.Groups;
+import erp.schema.ir.Model;
+import erp.schema.ir.ModelFields;
+import erp.schema.ir.ModelSelection;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -20,7 +25,7 @@ import jakarta.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "ir_act_server")
-public class IrActionsServer extends IrActions {
+public class Server extends Actions {
 
 	/**
 	 * 
@@ -71,7 +76,7 @@ public class IrActionsServer extends IrActions {
 	 * 
 	 */
 	@Column(nullable = false)
-	@ManyToOne(targetEntity = IrModel.class)
+	@ManyToOne(targetEntity = Model.class)
 	@NotNull
 	@Description("Model")
 	private String model_id;
@@ -80,8 +85,8 @@ public class IrActionsServer extends IrActions {
 	 * 
 	 */
 	@Column
-	@ManyToMany(targetEntity = IrModel.class)
-	@ElementCollection(targetClass = IrModel.class)
+	@ManyToMany(targetEntity = Model.class)
+	@ElementCollection(targetClass = Model.class)
 	@CollectionTable(name = "ir_model")
 	@Description("Available Models")
 	private List<String> available_model_ids;
@@ -104,8 +109,8 @@ public class IrActionsServer extends IrActions {
 	 * 
 	 */
 	@Column
-	@ManyToMany(targetEntity = IrActionsServer.class)
-	@ElementCollection(targetClass = IrActionsServer.class)
+	@ManyToMany(targetEntity = Server.class)
+	@ElementCollection(targetClass = Server.class)
 	@CollectionTable(joinColumns = {
 			@JoinColumn(name = "server_id"),
 			@JoinColumn(name = "action_id")
@@ -117,7 +122,7 @@ public class IrActionsServer extends IrActions {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = IrModel.class)
+	@ManyToOne(targetEntity = Model.class)
 	@Description("Record to Create")
 	private String crud_model_id;
 	
@@ -132,7 +137,7 @@ public class IrActionsServer extends IrActions {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = IrModelFields.class)
+	@ManyToOne(targetEntity = ModelFields.class)
 	@Description("Link Field")
 	private String link_field_id;
 	
@@ -150,7 +155,7 @@ public class IrActionsServer extends IrActions {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = IrModelFields.class)
+	@ManyToOne(targetEntity = ModelFields.class)
 	@Description("Field to Update")
 	private String update_field_id;
 	
@@ -165,7 +170,7 @@ public class IrActionsServer extends IrActions {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = IrModel.class)
+	@ManyToOne(targetEntity = Model.class)
 	private String update_related_model_id;
 	
 	/**
@@ -219,7 +224,7 @@ public class IrActionsServer extends IrActions {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = IrModelSelection.class)
+	@ManyToOne(targetEntity = ModelSelection.class)
 	@Description("Custom Value")
 	private String selection_value;
 	
@@ -241,7 +246,7 @@ public class IrActionsServer extends IrActions {
 	 * 
 	 */
 	@Column
-	@ManyToMany(targetEntity = IrModelFields.class)
+	@ManyToMany(targetEntity = ModelFields.class)
 	@Description("Webhook Fields")
 	private List<String> webhook_field_ids;
 	

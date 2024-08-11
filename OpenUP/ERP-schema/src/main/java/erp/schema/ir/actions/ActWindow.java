@@ -1,10 +1,12 @@
-package erp.schema;
+package erp.schema.ir.actions;
 
 import java.util.List;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
 
+import erp.schema.Groups;
+import erp.schema.View;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -24,7 +26,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_act_window")
 @Description("Action Window")
-public class IrActionsActWindow extends IrActions {
+public class ActWindow extends Actions {
 
 	/**
 	 * 
@@ -109,8 +111,8 @@ public class IrActionsActWindow extends IrActions {
 	 * 
 	 */
 	@Column
-	@OneToMany(targetEntity = IrActionsActWindowView.class)
-	@ElementCollection(targetClass = IrActionsActWindowView.class)
+	@OneToMany(targetEntity = ActWindowView.class)
+	@ElementCollection(targetClass = ActWindowView.class)
 	@CollectionTable(name = "ir_actions_act_window_view", joinColumns = {
 			@JoinColumn(referencedColumnName = "act_window_id")
 	})
