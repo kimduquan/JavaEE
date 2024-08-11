@@ -1,4 +1,4 @@
-package erp.schema.resource;
+package erp.schema.ir.ui;
 
 import jakarta.persistence.Entity;
 
@@ -6,6 +6,6 @@ import jakarta.persistence.Entity;
  * 
  */
 @Entity
-public class Company {
+public class View {
 
 }

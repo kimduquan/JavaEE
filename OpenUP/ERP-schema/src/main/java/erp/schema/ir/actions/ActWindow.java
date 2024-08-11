@@ -6,7 +6,7 @@ import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
 
 import erp.schema.Groups;
-import erp.schema.View;
+import erp.schema.ir.ui.View;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
