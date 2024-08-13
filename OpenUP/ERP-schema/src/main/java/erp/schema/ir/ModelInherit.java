@@ -1,6 +1,5 @@
 package erp.schema.ir;
 
-import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,24 +11,30 @@ import jakarta.validation.constraints.NotNull;
  * 
  */
 @Entity
-@Table(name = "ir_model_fields_selection")
-@Description("Fields Selection")
-public class ModelSelection {
+@Table(name = "ir_model_inherit")
+@Description("Model Inheritance Tree")
+public class ModelInherit {
 
+	/**
+	 * 
+	 */
 	@Column(nullable = false)
-	@ManyToOne(targetEntity = ModelFields.class)
+	@ManyToOne(targetEntity = Model.class)
 	@NotNull
-	private String field_id;
+	private String model_id;
 	
+	/**
+	 * 
+	 */
 	@Column(nullable = false)
+	@ManyToOne(targetEntity = Model.class)
 	@NotNull
-	private String value;
+	private String parent_id;
 	
-	@Column(nullable = false)
-	@NotNull
-	private String name;
-	
+	/**
+	 * 
+	 */
 	@Column
-	@DefaultValue("1000")
-	private Integer sequence = 1000;
+	@ManyToOne(targetEntity = ModelFields.class)
+	private String parent_field_id;
 }
