@@ -77,4 +77,60 @@ public class Category {
 	@CollectionTable(name = "res_partner")
 	@Description("Partners")
 	private List<String> partner_ids;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Integer getColor() {
+		return color;
+	}
+
+	public void setColor(Integer color) {
+		this.color = color;
+	}
+
+	public String getParent_id() {
+		return parent_id;
+	}
+
+	public void setParent_id(String parent_id) {
+		this.parent_id = parent_id;
+	}
+
+	public List<String> getChild_ids() {
+		return child_ids;
+	}
+
+	public void setChild_ids(List<String> child_ids) {
+		this.child_ids = child_ids;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
+	public String getParent_path() {
+		return parent_path;
+	}
+
+	public void setParent_path(String parent_path) {
+		this.parent_path = parent_path;
+	}
+
+	public List<String> getPartner_ids() {
+		return partner_ids;
+	}
+
+	public void setPartner_ids(List<String> partner_ids) {
+		this.partner_ids = partner_ids;
+	}
 }

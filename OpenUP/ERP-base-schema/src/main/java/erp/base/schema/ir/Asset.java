@@ -72,4 +72,60 @@ public class Asset {
 	@DefaultValue("16")
 	@Description("Sequence")
 	private Integer sequence = 16;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getBundle() {
+		return bundle;
+	}
+
+	public void setBundle(String bundle) {
+		this.bundle = bundle;
+	}
+
+	public String getDirective() {
+		return directive;
+	}
+
+	public void setDirective(String directive) {
+		this.directive = directive;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public String getTarget() {
+		return target;
+	}
+
+	public void setTarget(String target) {
+		this.target = target;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
+	public Integer getSequence() {
+		return sequence;
+	}
+
+	public void setSequence(Integer sequence) {
+		this.sequence = sequence;
+	}
 }

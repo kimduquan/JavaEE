@@ -28,4 +28,20 @@ public class ExportsLine {
 	@ManyToOne(targetEntity = Exports.class)
 	@Description("Export")
 	private String export_id;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getExport_id() {
+		return export_id;
+	}
+
+	public void setExport_id(String export_id) {
+		this.export_id = export_id;
+	}
 }

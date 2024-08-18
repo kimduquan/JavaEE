@@ -2,7 +2,6 @@ package erp.base.schema.ir.act;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
-
 import erp.base.schema.ir.actions.Actions;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -43,4 +42,28 @@ public class ActUrl extends Actions {
 	@Description("Action Target")
 	@DefaultValue("new")
 	private String target = "new";
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getTarget() {
+		return target;
+	}
+
+	public void setTarget(String target) {
+		this.target = target;
+	}
 }

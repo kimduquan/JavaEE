@@ -34,4 +34,20 @@ public class Group {
 	@CollectionTable(name = "res_country")
 	@Description("Countries")
 	private List<String> country_ids;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public List<String> getCountry_ids() {
+		return country_ids;
+	}
+
+	public void setCountry_ids(List<String> country_ids) {
+		this.country_ids = country_ids;
+	}
 }

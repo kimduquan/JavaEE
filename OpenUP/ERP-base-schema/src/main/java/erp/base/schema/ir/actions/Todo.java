@@ -2,7 +2,6 @@ package erp.base.schema.ir.actions;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -50,4 +49,36 @@ public class Todo {
 	 */
 	@Column
 	private String name;
+
+	public String getAction_id() {
+		return action_id;
+	}
+
+	public void setAction_id(String action_id) {
+		this.action_id = action_id;
+	}
+
+	public Integer getSequence() {
+		return sequence;
+	}
+
+	public void setSequence(Integer sequence) {
+		this.sequence = sequence;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 }

@@ -3,7 +3,6 @@ package erp.base.schema.ir.act;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
-
 import erp.base.schema.ir.model.Model;
 import erp.base.schema.ir.actions.Actions;
 import erp.base.schema.ir.model.Fields;
@@ -257,4 +256,228 @@ public class Server extends Actions {
 	@Column
 	@Description("Sample Payload")
 	private String webhook_sample_payload;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getUsage() {
+		return usage;
+	}
+
+	public void setUsage(String usage) {
+		this.usage = usage;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public Integer getSequence() {
+		return sequence;
+	}
+
+	public void setSequence(Integer sequence) {
+		this.sequence = sequence;
+	}
+
+	public String getModel_id() {
+		return model_id;
+	}
+
+	public void setModel_id(String model_id) {
+		this.model_id = model_id;
+	}
+
+	public List<String> getAvailable_model_ids() {
+		return available_model_ids;
+	}
+
+	public void setAvailable_model_ids(List<String> available_model_ids) {
+		this.available_model_ids = available_model_ids;
+	}
+
+	public String getModel_name() {
+		return model_name;
+	}
+
+	public void setModel_name(String model_name) {
+		this.model_name = model_name;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public List<String> getChild_ids() {
+		return child_ids;
+	}
+
+	public void setChild_ids(List<String> child_ids) {
+		this.child_ids = child_ids;
+	}
+
+	public String getCrud_model_id() {
+		return crud_model_id;
+	}
+
+	public void setCrud_model_id(String crud_model_id) {
+		this.crud_model_id = crud_model_id;
+	}
+
+	public String getCrud_model_name() {
+		return crud_model_name;
+	}
+
+	public void setCrud_model_name(String crud_model_name) {
+		this.crud_model_name = crud_model_name;
+	}
+
+	public String getLink_field_id() {
+		return link_field_id;
+	}
+
+	public void setLink_field_id(String link_field_id) {
+		this.link_field_id = link_field_id;
+	}
+
+	public List<String> getGroups_id() {
+		return groups_id;
+	}
+
+	public void setGroups_id(List<String> groups_id) {
+		this.groups_id = groups_id;
+	}
+
+	public String getUpdate_field_id() {
+		return update_field_id;
+	}
+
+	public void setUpdate_field_id(String update_field_id) {
+		this.update_field_id = update_field_id;
+	}
+
+	public String getUpdate_path() {
+		return update_path;
+	}
+
+	public void setUpdate_path(String update_path) {
+		this.update_path = update_path;
+	}
+
+	public String getUpdate_related_model_id() {
+		return update_related_model_id;
+	}
+
+	public void setUpdate_related_model_id(String update_related_model_id) {
+		this.update_related_model_id = update_related_model_id;
+	}
+
+	public String getUpdate_field_type() {
+		return update_field_type;
+	}
+
+	public void setUpdate_field_type(String update_field_type) {
+		this.update_field_type = update_field_type;
+	}
+
+	public String getUpdate_m2m_operation() {
+		return update_m2m_operation;
+	}
+
+	public void setUpdate_m2m_operation(String update_m2m_operation) {
+		this.update_m2m_operation = update_m2m_operation;
+	}
+
+	public String getUpdate_boolean_value() {
+		return update_boolean_value;
+	}
+
+	public void setUpdate_boolean_value(String update_boolean_value) {
+		this.update_boolean_value = update_boolean_value;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	public String getEvaluation_type() {
+		return evaluation_type;
+	}
+
+	public void setEvaluation_type(String evaluation_type) {
+		this.evaluation_type = evaluation_type;
+	}
+
+	public String getResource_ref() {
+		return resource_ref;
+	}
+
+	public void setResource_ref(String resource_ref) {
+		this.resource_ref = resource_ref;
+	}
+
+	public String getSelection_value() {
+		return selection_value;
+	}
+
+	public void setSelection_value(String selection_value) {
+		this.selection_value = selection_value;
+	}
+
+	public String getValue_field_to_show() {
+		return value_field_to_show;
+	}
+
+	public void setValue_field_to_show(String value_field_to_show) {
+		this.value_field_to_show = value_field_to_show;
+	}
+
+	public String getWebhook_url() {
+		return webhook_url;
+	}
+
+	public void setWebhook_url(String webhook_url) {
+		this.webhook_url = webhook_url;
+	}
+
+	public List<String> getWebhook_field_ids() {
+		return webhook_field_ids;
+	}
+
+	public void setWebhook_field_ids(List<String> webhook_field_ids) {
+		this.webhook_field_ids = webhook_field_ids;
+	}
+
+	public String getWebhook_sample_payload() {
+		return webhook_sample_payload;
+	}
+
+	public void setWebhook_sample_payload(String webhook_sample_payload) {
+		this.webhook_sample_payload = webhook_sample_payload;
+	}
 }

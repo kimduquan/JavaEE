@@ -42,4 +42,28 @@ public class Deletion {
 	@DefaultValue("todo")
 	@Description("State")
 	private String state = "todo";
+
+	public String getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(String user_id) {
+		this.user_id = user_id;
+	}
+
+	public Integer getUser_id_int() {
+		return user_id_int;
+	}
+
+	public void setUser_id_int(Integer user_id_int) {
+		this.user_id_int = user_id_int;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
 }

@@ -45,4 +45,36 @@ public class Exclusion {
 	@Enumerated(EnumType.STRING)
 	@Description("Status")
 	private String state;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getModule_id() {
+		return module_id;
+	}
+
+	public void setModule_id(String module_id) {
+		this.module_id = module_id;
+	}
+
+	public String getExclusion_id() {
+		return exclusion_id;
+	}
+
+	public void setExclusion_id(String exclusion_id) {
+		this.exclusion_id = exclusion_id;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
 }

@@ -3,7 +3,6 @@ package erp.base.schema.ir.ui;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
-
 import erp.base.schema.res.groups.Groups;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -107,4 +106,92 @@ public class Menu {
 	@Column
 	@Description("Web Icon Image")
 	private byte[] web_icon_data;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
+	public Integer getSequence() {
+		return sequence;
+	}
+
+	public void setSequence(Integer sequence) {
+		this.sequence = sequence;
+	}
+
+	public String getChild_id() {
+		return child_id;
+	}
+
+	public void setChild_id(String child_id) {
+		this.child_id = child_id;
+	}
+
+	public String getParent_id() {
+		return parent_id;
+	}
+
+	public void setParent_id(String parent_id) {
+		this.parent_id = parent_id;
+	}
+
+	public String getParent_path() {
+		return parent_path;
+	}
+
+	public void setParent_path(String parent_path) {
+		this.parent_path = parent_path;
+	}
+
+	public List<String> getGroups_id() {
+		return groups_id;
+	}
+
+	public void setGroups_id(List<String> groups_id) {
+		this.groups_id = groups_id;
+	}
+
+	public String getComplete_name() {
+		return complete_name;
+	}
+
+	public void setComplete_name(String complete_name) {
+		this.complete_name = complete_name;
+	}
+
+	public String getWeb_icon() {
+		return web_icon;
+	}
+
+	public void setWeb_icon(String web_icon) {
+		this.web_icon = web_icon;
+	}
+
+	public String getAction() {
+		return action;
+	}
+
+	public void setAction(String action) {
+		this.action = action;
+	}
+
+	public byte[] getWeb_icon_data() {
+		return web_icon_data;
+	}
+
+	public void setWeb_icon_data(byte[] web_icon_data) {
+		this.web_icon_data = web_icon_data;
+	}
 }

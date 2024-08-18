@@ -1,10 +1,8 @@
 package erp.base.schema.ir.act;
 
 import java.util.List;
-
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
-
 import erp.base.schema.ir.actions.Actions;
 import erp.base.schema.ir.ui.View;
 import erp.base.schema.res.groups.Groups;
@@ -164,4 +162,132 @@ public class ActWindow extends Actions {
 	 */
 	@Column
 	private Boolean filter;
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getView_id() {
+		return view_id;
+	}
+
+	public void setView_id(String view_id) {
+		this.view_id = view_id;
+	}
+
+	public String getDomain() {
+		return domain;
+	}
+
+	public void setDomain(String domain) {
+		this.domain = domain;
+	}
+
+	public String getContext() {
+		return context;
+	}
+
+	public void setContext(String context) {
+		this.context = context;
+	}
+
+	public Integer getRes_id() {
+		return res_id;
+	}
+
+	public void setRes_id(Integer res_id) {
+		this.res_id = res_id;
+	}
+
+	public String getRes_model() {
+		return res_model;
+	}
+
+	public void setRes_model(String res_model) {
+		this.res_model = res_model;
+	}
+
+	public String getTarget() {
+		return target;
+	}
+
+	public void setTarget(String target) {
+		this.target = target;
+	}
+
+	public String getView_mode() {
+		return view_mode;
+	}
+
+	public void setView_mode(String view_mode) {
+		this.view_mode = view_mode;
+	}
+
+	public String getMobile_view_mode() {
+		return mobile_view_mode;
+	}
+
+	public void setMobile_view_mode(String mobile_view_mode) {
+		this.mobile_view_mode = mobile_view_mode;
+	}
+
+	public String getUsage() {
+		return usage;
+	}
+
+	public void setUsage(String usage) {
+		this.usage = usage;
+	}
+
+	public List<String> getView_ids() {
+		return view_ids;
+	}
+
+	public void setView_ids(List<String> view_ids) {
+		this.view_ids = view_ids;
+	}
+
+	public byte[] getViews() {
+		return views;
+	}
+
+	public void setViews(byte[] views) {
+		this.views = views;
+	}
+
+	public Integer getLimit() {
+		return limit;
+	}
+
+	public void setLimit(Integer limit) {
+		this.limit = limit;
+	}
+
+	public List<String> getGroups_id() {
+		return groups_id;
+	}
+
+	public void setGroups_id(List<String> groups_id) {
+		this.groups_id = groups_id;
+	}
+
+	public String getSearch_view_id() {
+		return search_view_id;
+	}
+
+	public void setSearch_view_id(String search_view_id) {
+		this.search_view_id = search_view_id;
+	}
+
+	public Boolean getFilter() {
+		return filter;
+	}
+
+	public void setFilter(Boolean filter) {
+		this.filter = filter;
+	}
 }

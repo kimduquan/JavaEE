@@ -55,4 +55,44 @@ public class DateRange {
 	@Column
 	@Description("Actual Next Number")
 	private Integer number_next_actual;
+
+	public String getDate_from() {
+		return date_from;
+	}
+
+	public void setDate_from(String date_from) {
+		this.date_from = date_from;
+	}
+
+	public String getDate_to() {
+		return date_to;
+	}
+
+	public void setDate_to(String date_to) {
+		this.date_to = date_to;
+	}
+
+	public String getSequence_id() {
+		return sequence_id;
+	}
+
+	public void setSequence_id(String sequence_id) {
+		this.sequence_id = sequence_id;
+	}
+
+	public Integer getNumber_next() {
+		return number_next;
+	}
+
+	public void setNumber_next(Integer number_next) {
+		this.number_next = number_next;
+	}
+
+	public Integer getNumber_next_actual() {
+		return number_next_actual;
+	}
+
+	public void setNumber_next_actual(Integer number_next_actual) {
+		this.number_next_actual = number_next_actual;
+	}
 }

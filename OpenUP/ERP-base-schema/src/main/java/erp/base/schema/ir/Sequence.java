@@ -126,4 +126,108 @@ public class Sequence {
 	@CollectionTable(name = "ir_sequence_date_range")
 	@Description("Subsequences")
 	private List<String> date_range_ids;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getImplementation() {
+		return implementation;
+	}
+
+	public void setImplementation(String implementation) {
+		this.implementation = implementation;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
+	public String getPrefix() {
+		return prefix;
+	}
+
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
+
+	public String getSuffix() {
+		return suffix;
+	}
+
+	public void setSuffix(String suffix) {
+		this.suffix = suffix;
+	}
+
+	public Integer getNumber_next() {
+		return number_next;
+	}
+
+	public void setNumber_next(Integer number_next) {
+		this.number_next = number_next;
+	}
+
+	public Integer getNumber_next_actual() {
+		return number_next_actual;
+	}
+
+	public void setNumber_next_actual(Integer number_next_actual) {
+		this.number_next_actual = number_next_actual;
+	}
+
+	public Integer getNumber_increment() {
+		return number_increment;
+	}
+
+	public void setNumber_increment(Integer number_increment) {
+		this.number_increment = number_increment;
+	}
+
+	public Integer getPadding() {
+		return padding;
+	}
+
+	public void setPadding(Integer padding) {
+		this.padding = padding;
+	}
+
+	public String getCompany_id() {
+		return company_id;
+	}
+
+	public void setCompany_id(String company_id) {
+		this.company_id = company_id;
+	}
+
+	public Boolean getUse_date_range() {
+		return use_date_range;
+	}
+
+	public void setUse_date_range(Boolean use_date_range) {
+		this.use_date_range = use_date_range;
+	}
+
+	public List<String> getDate_range_ids() {
+		return date_range_ids;
+	}
+
+	public void setDate_range_ids(List<String> date_range_ids) {
+		this.date_range_ids = date_range_ids;
+	}
 }

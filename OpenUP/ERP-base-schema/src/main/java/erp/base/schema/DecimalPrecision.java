@@ -31,4 +31,20 @@ public class DecimalPrecision {
 	@Description("Digits")
 	@DefaultValue("2")
 	private Integer digits = 2;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Integer getDigits() {
+		return digits;
+	}
+
+	public void setDigits(Integer digits) {
+		this.digits = digits;
+	}
 }

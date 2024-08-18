@@ -49,4 +49,44 @@ public class Layout {
 	
 	@Column
 	private String name;
+
+	public String getView_id() {
+		return view_id;
+	}
+
+	public void setView_id(String view_id) {
+		this.view_id = view_id;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
+	public String getPdf() {
+		return pdf;
+	}
+
+	public void setPdf(String pdf) {
+		this.pdf = pdf;
+	}
+
+	public Integer getSequence() {
+		return sequence;
+	}
+
+	public void setSequence(Integer sequence) {
+		this.sequence = sequence;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 }

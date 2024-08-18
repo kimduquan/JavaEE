@@ -128,4 +128,108 @@ public class Country {
 	@Column
 	@DefaultValue("true")
 	private Boolean zip_required = true;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getAddress_format() {
+		return address_format;
+	}
+
+	public void setAddress_format(String address_format) {
+		this.address_format = address_format;
+	}
+
+	public String getAddress_view_id() {
+		return address_view_id;
+	}
+
+	public void setAddress_view_id(String address_view_id) {
+		this.address_view_id = address_view_id;
+	}
+
+	public String getCurrency_id() {
+		return currency_id;
+	}
+
+	public void setCurrency_id(String currency_id) {
+		this.currency_id = currency_id;
+	}
+
+	public String getImage_url() {
+		return image_url;
+	}
+
+	public void setImage_url(String image_url) {
+		this.image_url = image_url;
+	}
+
+	public Integer getPhone_code() {
+		return phone_code;
+	}
+
+	public void setPhone_code(Integer phone_code) {
+		this.phone_code = phone_code;
+	}
+
+	public List<String> getCountry_group_ids() {
+		return country_group_ids;
+	}
+
+	public void setCountry_group_ids(List<String> country_group_ids) {
+		this.country_group_ids = country_group_ids;
+	}
+
+	public List<String> getState_ids() {
+		return state_ids;
+	}
+
+	public void setState_ids(List<String> state_ids) {
+		this.state_ids = state_ids;
+	}
+
+	public String getName_position() {
+		return name_position;
+	}
+
+	public void setName_position(String name_position) {
+		this.name_position = name_position;
+	}
+
+	public String getVat_label() {
+		return vat_label;
+	}
+
+	public void setVat_label(String vat_label) {
+		this.vat_label = vat_label;
+	}
+
+	public Boolean getState_required() {
+		return state_required;
+	}
+
+	public void setState_required(Boolean state_required) {
+		this.state_required = state_required;
+	}
+
+	public Boolean getZip_required() {
+		return zip_required;
+	}
+
+	public void setZip_required(Boolean zip_required) {
+		this.zip_required = zip_required;
+	}
 }

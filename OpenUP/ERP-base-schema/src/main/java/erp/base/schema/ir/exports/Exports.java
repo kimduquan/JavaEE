@@ -39,4 +39,28 @@ public class Exports {
 	@CollectionTable
 	@Description("Export")
 	private List<String> export_fields;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getResource() {
+		return resource;
+	}
+
+	public void setResource(String resource) {
+		this.resource = resource;
+	}
+
+	public List<String> getExport_fields() {
+		return export_fields;
+	}
+
+	public void setExport_fields(List<String> export_fields) {
+		this.export_fields = export_fields;
+	}
 }

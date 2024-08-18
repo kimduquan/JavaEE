@@ -33,4 +33,20 @@ public class GroupsImplied extends Groups {
 	@CollectionTable(name = "res_groups")
 	@Description("Transitively inherits")
 	private List<String> trans_implied_ids;
+
+	public List<String> getImplied_ids() {
+		return implied_ids;
+	}
+
+	public void setImplied_ids(List<String> implied_ids) {
+		this.implied_ids = implied_ids;
+	}
+
+	public List<String> getTrans_implied_ids() {
+		return trans_implied_ids;
+	}
+
+	public void setTrans_implied_ids(List<String> trans_implied_ids) {
+		this.trans_implied_ids = trans_implied_ids;
+	}
 }

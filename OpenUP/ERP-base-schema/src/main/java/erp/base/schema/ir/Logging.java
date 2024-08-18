@@ -64,4 +64,100 @@ public class Logging {
 	@Column(nullable = false)
 	@NotNull
 	private String line;
+
+	public Integer getCreate_uid() {
+		return create_uid;
+	}
+
+	public void setCreate_uid(Integer create_uid) {
+		this.create_uid = create_uid;
+	}
+
+	public String getCreate_date() {
+		return create_date;
+	}
+
+	public void setCreate_date(String create_date) {
+		this.create_date = create_date;
+	}
+
+	public Integer getWrite_uid() {
+		return write_uid;
+	}
+
+	public void setWrite_uid(Integer write_uid) {
+		this.write_uid = write_uid;
+	}
+
+	public Integer getWrite_date() {
+		return write_date;
+	}
+
+	public void setWrite_date(Integer write_date) {
+		this.write_date = write_date;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getDbname() {
+		return dbname;
+	}
+
+	public void setDbname(String dbname) {
+		this.dbname = dbname;
+	}
+
+	public String getLevel() {
+		return level;
+	}
+
+	public void setLevel(String level) {
+		this.level = level;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public String getFunc() {
+		return func;
+	}
+
+	public void setFunc(String func) {
+		this.func = func;
+	}
+
+	public String getLine() {
+		return line;
+	}
+
+	public void setLine(String line) {
+		this.line = line;
+	}
 }

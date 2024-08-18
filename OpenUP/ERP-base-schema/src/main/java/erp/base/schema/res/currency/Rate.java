@@ -1,7 +1,6 @@
 package erp.base.schema.res.currency;
 
 import org.eclipse.microprofile.graphql.Description;
-
 import erp.base.schema.res.Company;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -62,4 +61,52 @@ public class Rate {
 	@ManyToOne(targetEntity = Company.class)
 	@Description("Company")
 	private String company_id;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Float getRate() {
+		return rate;
+	}
+
+	public void setRate(Float rate) {
+		this.rate = rate;
+	}
+
+	public Float getCompany_rate() {
+		return company_rate;
+	}
+
+	public void setCompany_rate(Float company_rate) {
+		this.company_rate = company_rate;
+	}
+
+	public Float getInverse_company_rate() {
+		return inverse_company_rate;
+	}
+
+	public void setInverse_company_rate(Float inverse_company_rate) {
+		this.inverse_company_rate = inverse_company_rate;
+	}
+
+	public String getCurrency_id() {
+		return currency_id;
+	}
+
+	public void setCurrency_id(String currency_id) {
+		this.currency_id = currency_id;
+	}
+
+	public String getCompany_id() {
+		return company_id;
+	}
+
+	public void setCompany_id(String company_id) {
+		this.company_id = company_id;
+	}
 }

@@ -26,4 +26,20 @@ public class Trigger {
 	 */
 	@Column
 	private String call_at;
+
+	public String getCron_id() {
+		return cron_id;
+	}
+
+	public void setCron_id(String cron_id) {
+		this.cron_id = cron_id;
+	}
+
+	public String getCall_at() {
+		return call_at;
+	}
+
+	public void setCall_at(String call_at) {
+		this.call_at = call_at;
+	}
 }

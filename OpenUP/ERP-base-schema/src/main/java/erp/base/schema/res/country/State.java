@@ -39,4 +39,28 @@ public class State {
 	@NotNull
 	@Description("State Code")
 	private String code;
+
+	public String getCountry_id() {
+		return country_id;
+	}
+
+	public void setCountry_id(String country_id) {
+		this.country_id = country_id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
 }
