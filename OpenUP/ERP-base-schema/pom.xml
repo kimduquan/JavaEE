@@ -6,8 +6,8 @@
         <artifactId>OpenUP-parent</artifactId>
         <version>1.0.0</version>
     </parent>
-    <artifactId>ERP-schema</artifactId>
-    <name>Enterprise Resource Planning Schema</name>
+    <artifactId>ERP-base-schema</artifactId>
+    <name>Enterprise Resource Planning Base Schema</name>
     <packaging>jar</packaging>
     <dependencies>
 		<dependency>
