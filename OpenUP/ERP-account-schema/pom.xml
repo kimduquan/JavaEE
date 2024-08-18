@@ -39,7 +39,7 @@
 		
 		<dependency>
             <groupId>openup</groupId>
-            <artifactId>ERP-schema</artifactId>
+            <artifactId>ERP-base-schema</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
