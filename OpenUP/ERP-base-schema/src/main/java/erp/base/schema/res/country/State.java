@@ -1,8 +1,6 @@
-package erp.base.schema.ir.ui;
+package erp.base.schema.res.country;
 
 import org.eclipse.microprofile.graphql.Description;
-
-import erp.base.schema.res.users.Users;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -13,33 +11,32 @@ import jakarta.validation.constraints.NotNull;
  * 
  */
 @Entity
-@Table(name = "ir_ui_view_custom")
-@Description("Custom View")
-public class ViewCustom {
+@Table(name = "res_country_state")
+@Description("Country state")
+public class State {
 
 	/**
 	 * 
 	 */
 	@Column(nullable = false)
-	@ManyToOne(targetEntity = View.class)
+	@ManyToOne(targetEntity = Country.class)
 	@NotNull
-	@Description("Original View")
-	private String ref_id;
-	
-	/**
-	 * 
-	 */
-	@Column(nullable = false)
-	@ManyToOne(targetEntity = Users.class)
-	@NotNull
-	@Description("User")
-	private String user_id;
+	@Description("Country")
+	private String country_id;
 	
 	/**
 	 * 
 	 */
 	@Column(nullable = false)
 	@NotNull
-	@Description("View Architecture")
-	private String arch;
+	@Description("State Name")
+	private String name;
+	
+	/**
+	 * 
+	 */
+	@Column(nullable = false)
+	@NotNull
+	@Description("State Code")
+	private String code;
 }

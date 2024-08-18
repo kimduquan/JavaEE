@@ -2,7 +2,7 @@ package erp.base.schema.ir;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
-
+import erp.base.schema.ir.model.Fields;
 import erp.base.schema.res.Company;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -45,7 +45,7 @@ public class Property {
 	 * 
 	 */
 	@Column(nullable = false)
-	@ManyToOne(targetEntity = ModelFields.class)
+	@ManyToOne(targetEntity = Fields.class)
 	@NotNull
 	@Description("Field")
 	private String fields_id;

@@ -5,9 +5,9 @@ import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
 
-import erp.base.schema.ir.Model;
-import erp.base.schema.ir.ModelData;
-import erp.base.schema.res.Groups;
+import erp.base.schema.ir.model.Model;
+import erp.base.schema.res.groups.Groups;
+import erp.base.schema.ir.model.Data;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -129,7 +129,7 @@ public class View {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = ModelData.class)
+	@ManyToOne(targetEntity = Data.class)
 	@Description("Model Data")
 	private String model_data_id;
 	

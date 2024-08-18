@@ -2,8 +2,9 @@ package erp.base.schema.ir;
 
 import org.eclipse.microprofile.graphql.Description;
 
+import erp.base.schema.ir.model.Fields;
 import erp.base.schema.res.Company;
-import erp.base.schema.res.Users;
+import erp.base.schema.res.users.Users;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -19,7 +20,7 @@ import jakarta.validation.constraints.NotNull;
 public class Default {
 
 	@Column(nullable = false)
-	@ManyToOne(targetEntity = ModelFields.class)
+	@ManyToOne(targetEntity = Fields.class)
 	@NotNull
 	@Description("Field")
 	private String field_id;

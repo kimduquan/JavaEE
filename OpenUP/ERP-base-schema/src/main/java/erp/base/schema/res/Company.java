@@ -3,9 +3,13 @@ package erp.base.schema.res;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
-
-import erp.base.schema.ReportPaperFormat;
 import erp.base.schema.ir.ui.View;
+import erp.base.schema.report.PaperFormat;
+import erp.base.schema.res.country.Country;
+import erp.base.schema.res.country.State;
+import erp.base.schema.res.currency.Currency;
+import erp.base.schema.res.partner.Partner;
+import erp.base.schema.res.users.Users;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -191,7 +195,7 @@ public class Company {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = CountryState.class)
+	@ManyToOne(targetEntity = State.class)
 	@Description("Fed. State")
 	private String state_id;
 	
@@ -251,7 +255,7 @@ public class Company {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = ReportPaperFormat.class)
+	@ManyToOne(targetEntity = PaperFormat.class)
 	@Description("Paper format")
 	private String paperformat_id;
 	

@@ -2,7 +2,7 @@ package erp.base.schema.ir.actions;
 
 import org.eclipse.microprofile.graphql.Description;
 
-import erp.base.schema.ir.Model;
+import erp.base.schema.ir.model.Model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

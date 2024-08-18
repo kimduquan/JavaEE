@@ -1,8 +1,6 @@
-package erp.base.schema.ir.ui;
+package erp.base.schema.ir.model;
 
 import org.eclipse.microprofile.graphql.Description;
-
-import erp.base.schema.res.users.Users;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -13,33 +11,43 @@ import jakarta.validation.constraints.NotNull;
  * 
  */
 @Entity
-@Table(name = "ir_ui_view_custom")
-@Description("Custom View")
-public class ViewCustom {
+@Table(name = "ir_model_relation")
+@Description("Relation Model")
+public class Relation {
 
 	/**
 	 * 
 	 */
 	@Column(nullable = false)
-	@ManyToOne(targetEntity = View.class)
 	@NotNull
-	@Description("Original View")
-	private String ref_id;
+	@Description("Relation Name")
+	private String name;
 	
 	/**
 	 * 
 	 */
 	@Column(nullable = false)
-	@ManyToOne(targetEntity = Users.class)
+	@ManyToOne(targetEntity = Model.class)
 	@NotNull
-	@Description("User")
-	private String user_id;
+	private String model;
 	
 	/**
 	 * 
 	 */
 	@Column(nullable = false)
+	@ManyToOne(targetEntity = Module.class)
 	@NotNull
-	@Description("View Architecture")
-	private String arch;
+	private String module;
+	
+	/**
+	 * 
+	 */
+	@Column
+	private String write_date;
+	
+	/**
+	 * 
+	 */
+	@Column
+	private String create_date;
 }

@@ -2,6 +2,9 @@ package erp.base.schema.res;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+
+import erp.base.schema.res.country.Country;
+import erp.base.schema.res.country.State;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -51,7 +54,7 @@ public class Bank {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = CountryState.class)
+	@ManyToOne(targetEntity = State.class)
 	@Description("Fed. State")
 	private String state;
 	

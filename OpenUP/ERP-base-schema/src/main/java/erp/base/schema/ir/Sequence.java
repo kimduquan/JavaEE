@@ -1,10 +1,8 @@
 package erp.base.schema.ir;
 
 import java.util.List;
-
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
-
 import erp.base.schema.res.Company;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -123,8 +121,8 @@ public class Sequence {
 	 * 
 	 */
 	@Column
-	@OneToMany(targetEntity = SequenceDateRange.class)
-	@ElementCollection(targetClass = SequenceDateRange.class)
+	@OneToMany(targetEntity = DateRange.class)
+	@ElementCollection(targetClass = DateRange.class)
 	@CollectionTable(name = "ir_sequence_date_range")
 	@Description("Subsequences")
 	private List<String> date_range_ids;
