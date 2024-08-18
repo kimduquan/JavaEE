@@ -1,8 +1,7 @@
-package erp.schema.account;
+package erp.account.schema;
 
 import org.eclipse.microprofile.graphql.Description;
-
-import erp.schema.res.Company;
+import erp.base.schema.res.Company;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;

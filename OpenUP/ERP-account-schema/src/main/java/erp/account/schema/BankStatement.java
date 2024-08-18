@@ -1,4 +1,4 @@
-package erp.schema.account;
+package erp.account.schema;
 
 import jakarta.persistence.Entity;
 

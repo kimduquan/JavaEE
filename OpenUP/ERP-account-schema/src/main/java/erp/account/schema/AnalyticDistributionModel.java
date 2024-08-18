@@ -1,4 +1,4 @@
-package erp.schema.account;
+package erp.account.schema;
 
 import org.eclipse.microprofile.graphql.Description;
 import erp.schema.product.Category;

@@ -1,4 +1,4 @@
-package erp.schema.account;
+package erp.account.schema;
 
 import jakarta.persistence.Entity;
 
@@ -6,6 +6,6 @@ import jakarta.persistence.Entity;
  * 
  */
 @Entity
-public class Move {
+public class MoveLine {
 
 }

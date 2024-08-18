@@ -1,4 +1,4 @@
-package erp.schema.account;
+package erp.account.schema;
 
 import org.eclipse.microprofile.graphql.Description;
 import jakarta.persistence.Column;
