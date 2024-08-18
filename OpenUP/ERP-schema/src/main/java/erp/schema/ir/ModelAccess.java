@@ -2,7 +2,8 @@ package erp.schema.ir;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
-import erp.schema.Groups;
+
+import erp.schema.res.Groups;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;

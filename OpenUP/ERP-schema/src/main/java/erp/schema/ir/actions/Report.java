@@ -3,9 +3,9 @@ package erp.schema.ir.actions;
 import java.util.List;
 import org.eclipse.microprofile.graphql.Description;
 
-import erp.schema.Groups;
 import erp.schema.ReportPaperFormat;
 import erp.schema.ir.Model;
+import erp.schema.res.Groups;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
