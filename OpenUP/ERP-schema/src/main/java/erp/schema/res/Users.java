@@ -3,7 +3,6 @@ package erp.schema.res;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
-import erp.schema.Partner;
 import erp.schema.ir.actions.Actions;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;

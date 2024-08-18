@@ -1,16 +1,8 @@
-package erp.schema;
+package erp.schema.res;
 
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
-import erp.schema.res.Bank;
-import erp.schema.res.Company;
-import erp.schema.res.Country;
-import erp.schema.res.CountryState;
-import erp.schema.res.PartnerCategory;
-import erp.schema.res.PartnerIndustry;
-import erp.schema.res.PartnerTitle;
-import erp.schema.res.Users;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
