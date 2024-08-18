@@ -987,5 +987,6 @@
         <!--<module>EPF-installer</module>-->
 		
 		<module>ERP-schema</module>
+		<module>ERP-account-schema</module>
     </modules>
 </project>
