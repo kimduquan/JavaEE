@@ -36,5 +36,11 @@
 		    <artifactId>microprofile-graphql-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>ERP-schema</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>
