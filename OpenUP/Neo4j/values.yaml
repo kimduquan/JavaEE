@@ -10,4 +10,6 @@ service:
 persistence:
   size: 1Gi
 auth:
-  password: "neo4j"
+  password: "090323508"
+image:
+  debug: true
