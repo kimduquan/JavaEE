@@ -1,6 +1,8 @@
 helm repo add scylla https://scylla-operator-charts.storage.googleapis.com/stable
 helm repo update
 
+./cert-manager.sh
+
 helm install scylla-operator scylla/scylla-operator --create-namespace --namespace scylla-operator
 kubectl wait -n scylla-operator --for=condition=ready pod -l "app.kubernetes.io/name=scylla-operator"
 kubectl wait -n scylla-operator --for=condition=ready pod -l "app.kubernetes.io/name=webhook-server"
