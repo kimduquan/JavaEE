@@ -7,6 +7,7 @@ public class GenerateRequest {
 
 	private String model;
 	private String prompt;
+	private String suffix;
 	private String[] images;
 	private int[] context;
 	private boolean raw;
@@ -40,5 +41,11 @@ public class GenerateRequest {
 	}
 	public void setRaw(boolean raw) {
 		this.raw = raw;
+	}
+	public String getSuffix() {
+		return suffix;
+	}
+	public void setSuffix(String suffix) {
+		this.suffix = suffix;
 	}
 }
