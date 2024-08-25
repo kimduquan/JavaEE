@@ -2,50 +2,101 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>openup</groupId>
-        <artifactId>OpenUP-parent</artifactId>
-        <version>1.0.0</version>
-    </parent>
+		<groupId>epf</groupId>
+		<artifactId>EPF-parent-ext</artifactId>
+		<version>1.0.0</version>
+		<relativePath>../EPF-parent-ext/pom.xml</relativePath>
+	</parent>
     <artifactId>EPF-lang</artifactId>
-    <name>Eclipse Process Framework Language Server</name>
-    <packaging>war</packaging>
+    <name>Eclipse Process Framework Language</name>
+    <properties>
+        <maven.compiler.release>21</maven.compiler.release>
+    </properties>
     <dependencies>
-    	<!-- https://mvnrepository.com/artifact/javax.enterprise/cdi-api -->
-		<dependency>
-		    <groupId>javax.enterprise</groupId>
-		    <artifactId>cdi-api</artifactId>
-		    <scope>provided</scope>
-		</dependency>
-    	<!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
-		<dependency>
-		    <groupId>javax.annotation</groupId>
-		    <artifactId>javax.annotation-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.websocket/javax.websocket-api -->
-		<dependency>
-		    <groupId>javax.websocket</groupId>
-		    <artifactId>javax.websocket-api</artifactId>
-		    <scope>provided</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.context-propagation/microprofile-context-propagation-api -->
-		<dependency>
-			<groupId>org.eclipse.microprofile.context-propagation</groupId>
-			<artifactId>microprofile-context-propagation-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-client</artifactId>
-            <version>${project.version}</version>
+    	<dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-rest-client-jsonb</artifactId>
         </dependency>
         <dependency>
-		    <groupId>org.eclipse.lsp4j</groupId>
-		    <artifactId>org.eclipse.lsp4j.websocket</artifactId>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-jsonb</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-rest-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-rest</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-rest-jsonb</artifactId>
+        </dependency>
+        <dependency>
+		    <groupId>io.quarkus</groupId>
+		    <artifactId>quarkus-smallrye-context-propagation</artifactId>
+		</dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-websockets</artifactId>
+        </dependency>
+	  	<dependency>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-smallrye-health</artifactId>
+	    </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-arc</artifactId>
+        </dependency>
+		<dependency>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-kubernetes</artifactId>
 		</dependency>
 		<dependency>
-		    <groupId>org.eclipse.lsp4j</groupId>
-		    <artifactId>org.eclipse.lsp4j</artifactId>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-container-image-jib</artifactId>
 		</dependency>
+        
+        
+		<!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast -->
+		<dependency>
+			<groupId>com.hazelcast</groupId>
+			<artifactId>hazelcast</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.cache/cache-api -->
+		<dependency>
+			<groupId>javax.cache</groupId>
+			<artifactId>cache-api</artifactId>
+		</dependency>
+        
+        <!-- https://mvnrepository.com/artifact/dev.langchain4j/langchain4j-neo4j -->
+		<dependency>
+		    <groupId>dev.langchain4j</groupId>
+		    <artifactId>langchain4j-neo4j</artifactId>
+		    <version>0.32.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/dev.langchain4j/langchain4j -->
+		<dependency>
+		    <groupId>dev.langchain4j</groupId>
+		    <artifactId>langchain4j</artifactId>
+		    <version>0.32.0</version>
+		</dependency>
+        
+        <dependency>
+	        <groupId>openup</groupId>
+	        <artifactId>EPF-logging-utility</artifactId>
+	        <version>${project.version}</version>
+	    </dependency>
+        <dependency>
+	        <groupId>openup</groupId>
+	        <artifactId>EPF-naming</artifactId>
+	        <version>${project.version}</version>
+	    </dependency>
+	    <dependency>
+	        <groupId>openup</groupId>
+	        <artifactId>EPF-lang-schema</artifactId>
+	        <version>${project.version}</version>
+	    </dependency>
     </dependencies>
 </project>

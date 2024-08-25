@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.rules;
 
 import java.io.InputStream;
@@ -13,9 +10,12 @@ import javax.json.bind.JsonbConfig;
 import javax.rules.Handle;
 import javax.rules.StatelessRuleSession;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import org.eclipse.microprofile.health.Readiness;
+import epf.function.LinkFunction;
 import epf.naming.Naming;
 import epf.util.json.Adapter;
 import epf.util.json.Decoder;
@@ -27,7 +27,7 @@ import epf.util.json.Encoder;
  */
 @Path(Naming.RULES)
 @RequestScoped
-public class Rules implements epf.client.rules.Rules {
+public class Rules implements epf.rules.client.Rules {
 	
 	/**
 	 * 
@@ -54,10 +54,23 @@ public class Rules implements epf.client.rules.Rules {
 			final List<Object> input  = decoder.decodeArray(jsonb, stream);
 			final StatelessRuleSession ruleSession = request.createRuleSession(ruleSet);
 			@SuppressWarnings("unchecked")
-			final List<Object> result = (List<Object>)ruleSession.executeRules(input);
+			final List<Object> output = (List<Object>)ruleSession.executeRules(input);
+			ResponseBuilder builder = Response.ok();
+			int linkIndex = 0;
 			final Encoder encoder = new Encoder();
-			final String json = encoder.encodeArray(jsonb, result);
-			return Response.ok(json, MediaType.APPLICATION_JSON).build();
+			for(Object object : output) {
+				if(object instanceof LinkFunction) {
+					final LinkFunction func = (LinkFunction) object;
+					final Link link = func.toLink(linkIndex);
+					builder = builder.links(link);
+					linkIndex++;
+				}
+				else {
+					final String json = encoder.encode(jsonb, object);
+					builder = builder.entity(json).type(MediaType.APPLICATION_JSON);
+				}
+			}
+			return builder.build();
 		}
 	}
 

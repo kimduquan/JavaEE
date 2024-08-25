@@ -1,0 +1,15 @@
+<html xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+<h:head>
+    <f:metadata>
+        <f:viewAction action="#{security_principal.logout}"/>
+    </f:metadata>
+</h:head>
+<h:body>
+	<iframe src="/webapp/security/logout.html" style="display:none;" />
+	<iframe src="/persistence/security/logout.html" style="display:none;" />
+	<iframe src="/workflow/security/logout.html" style="display:none;" />
+</h:body>
+</html>

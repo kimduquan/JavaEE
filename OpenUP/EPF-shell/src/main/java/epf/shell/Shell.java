@@ -1,18 +1,17 @@
-/**
- * 
- */
 package epf.shell;
 
 import java.io.PrintWriter;
+import java.net.URL;
 import java.nio.file.Path;
-import epf.shell.file.PathTypeConverter;
 import io.quarkus.runtime.QuarkusApplication;
 import io.quarkus.runtime.annotations.QuarkusMain;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.control.ActivateRequestContext;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.control.ActivateRequestContext;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import epf.shell.util.file.PathTypeConverter;
+import epf.shell.util.jdbc.URLTypeConverter;
 import picocli.CommandLine;
 import picocli.CommandLine.IFactory;
 
@@ -33,6 +32,11 @@ public class Shell implements QuarkusApplication {
 	 * 
 	 */
 	private transient final PathTypeConverter pathConverter = new PathTypeConverter();
+	
+	/**
+	 * 
+	 */
+	private transient final URLTypeConverter urlConverter = new URLTypeConverter();
 	
 	/**
 	 * 
@@ -59,8 +63,9 @@ public class Shell implements QuarkusApplication {
 	@ActivateRequestContext
 	@Override
 	public int run(String... args) throws Exception {
-		commandLine = new CommandLine(EPFCommand.class, factory);
+		commandLine = new CommandLine(EPFFunction.class, factory);
 		commandLine.registerConverter(Path.class, pathConverter);
+		commandLine.registerConverter(URL.class, urlConverter);
 		commandLine.setTrimQuotes(true);
 		return commandLine.execute(args);
 	}

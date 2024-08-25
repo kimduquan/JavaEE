@@ -1,145 +1,72 @@
+package epf.messaging;
+
+import org.eclipse.microprofile.health.HealthCheck;
+import org.eclipse.microprofile.health.HealthCheckResponse;
+import org.eclipse.microprofile.health.Readiness;
+import org.eclipse.microprofile.reactive.messaging.Channel;
+import org.eclipse.microprofile.reactive.messaging.Emitter;
+import org.eclipse.microprofile.reactive.messaging.Incoming;
+import epf.messaging.schema.ByteMessage;
+import epf.messaging.schema.TextMessage;
+import epf.naming.Naming.Messaging.Internal;
+import io.smallrye.common.annotation.RunOnVirtualThread;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.nosql.column.ColumnTemplate;
+
 /**
  * 
  */
-package epf.messaging;
+@ApplicationScoped 
+@Readiness
+public class Messaging implements HealthCheck {
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.websocket.CloseReason;
-import javax.websocket.OnClose;
-import javax.websocket.OnError;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
-import javax.websocket.server.PathParam;
-import javax.websocket.server.ServerEndpoint;
-import org.eclipse.microprofile.context.ManagedExecutor;
-import epf.messaging.client.MessageDecoder;
-import epf.messaging.client.MessageEncoder;
-import epf.naming.Naming;
-import epf.util.logging.LogManager;
-import epf.util.websocket.Server;
-
-/**
- * @author PC
- *
- */
-@ServerEndpoint(value = "/messaging/{path}", encoders = {MessageEncoder.class}, decoders = {MessageDecoder.class})
-@ApplicationScoped
-public class Messaging {
-	
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = LogManager.getLogger(Messaging.class.getName());
-	
-	/**
-	 * 
-	 */
-	private final static String PATH = "path";
-	
-	/**
-	 * 
-	 */
-	private final transient Map<String, Server> servers = new ConcurrentHashMap<>();
+	@Inject
+    @Channel(Internal.EPF_MESSAGING_TEXT_OUT)
+	transient Emitter<TextMessage> text;
 	
 	/**
 	 * 
 	 */
 	@Inject
-	private transient ManagedExecutor executor;
+    @Channel(Internal.EPF_MESSAGING_BYTES_OUT)
+	transient Emitter<ByteMessage> bytes;
 	
 	/**
 	 * 
 	 */
-	@PostConstruct
-	protected void postConstruct() {
-		final Server persistence = new Server();
-		servers.put(Naming.PERSISTENCE, persistence);
-		executor.submit(persistence);
-		final Server cache = new Server();
-		servers.put(Naming.CACHE, cache);
-		executor.submit(cache);
-		final Server security = new Server();
-		servers.put(Naming.SECURITY, security);
-		executor.submit(security);
-		final Server schedule = new Server();
-		servers.put(Naming.SCHEDULE, schedule);
-		executor.submit(schedule);
-		final Server file = new Server();
-		servers.put(Naming.FILE, file);
-		executor.submit(file);
+	@Inject
+	transient ColumnTemplate column;
+	
+	/**
+	 * @param message
+	 */
+	@Incoming(Internal.EPF_MESSAGING_TEXT_IN)
+	@RunOnVirtualThread
+	public void onMessage(final TextMessage message) {
+		text.send(column.insert(message));
 	}
 	
 	/**
-	 * 
+	 * @param message
 	 */
-	@PreDestroy
-	protected void preDestroy() {
-		servers.values().parallelStream().forEach(server -> {
-			try {
-				server.close();
-			} 
-			catch (Exception e) {
-				LOGGER.throwing(Server.class.getName(), "close", e);
-			}
-		});
+	@Incoming(Internal.EPF_MESSAGING_BYTES_IN)
+	@RunOnVirtualThread
+	public void onMessage(final ByteMessage message) {
+		bytes.send(column.insert(message));
 	}
 
-	/**
-	 * @param path
-	 * @param session
-	 */
-	@OnOpen
-    public void onOpen(@PathParam(PATH) final String path, final Session session) {
-		servers.computeIfPresent(path, (p, server) -> {
-			server.onOpen(session);
-			return server;
-			}
-		);
-	}
-	
-	/**
-	 * @param path
-	 * @param session
-	 * @param closeReason
-	 */
-	@OnClose
-    public void onClose(@PathParam(PATH) final String path, final Session session, final CloseReason closeReason) {
-		servers.computeIfPresent(path, (p, server) -> {
-			server.onClose(session, closeReason);
-			return server;
-		});
-	}
-	
-	/**
-	 * @param path
-	 * @param message
-	 * @param session
-	 */
-	@OnMessage
-    public void onMessage(@PathParam(PATH) final String path, final String message, final Session session) {
-		servers.computeIfPresent(path, (p, server) -> {
-			server.onMessage(message, session);
-			return server;
-		});
-	}
-	
-	/**
-	 * @param path
-	 * @param session
-	 * @param throwable
-	 */
-	@OnError
-    public void onError(@PathParam(PATH) final String path, final Session session, final Throwable throwable) {
-		servers.computeIfPresent(path, (p, server) -> {
-			server.onError(session, throwable);
-			return server;
-		});
+	@Override
+	public HealthCheckResponse call() {
+		if(text.isCancelled()) {
+			return HealthCheckResponse.down(Internal.EPF_MESSAGING_TEXT_OUT);
+		}
+		if(bytes.isCancelled()) {
+			return HealthCheckResponse.down(Internal.EPF_MESSAGING_BYTES_OUT);
+		}
+		return HealthCheckResponse.up("epf-messaging");
 	}
 }

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<entity-mappings
+	xmlns="http://www.eclipse.org/eclipselink/xsds/persistence/orm"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.eclipse.org/eclipselink/xsds/persistence/orm http://www.eclipse.org/eclipselink/xsds/eclipselink_orm_2_7.xsd"
+	version="2.7">
+	<entity class="epf.security.schema.Principal">
+		<multitenant type="TABLE_PER_TENANT">
+			<tenant-table-discriminator type="SCHEMA" context-property="epf.management.tenant" />
+		</multitenant>
+	</entity>
+</entity-mappings>

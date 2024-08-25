@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>openup</groupId>
+        <artifactId>OpenUP-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
+    <artifactId>ERP-account-schema</artifactId>
+    <name>Enterprise Resource Planning Account Schema</name>
+    <packaging>jar</packaging>
+    <dependencies>
+		<dependency>
+		    <groupId>jakarta.persistence</groupId>
+		    <artifactId>jakarta.persistence-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+		    <groupId>jakarta.validation</groupId>
+			<artifactId>jakarta.validation-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+		    <groupId>jakarta.json</groupId>
+		    <artifactId>jakarta.json-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+		    <groupId>jakarta.json.bind</groupId>
+		    <artifactId>jakarta.json.bind-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.graphql/microprofile-graphql-api -->
+		<dependency>
+		    <groupId>org.eclipse.microprofile.graphql</groupId>
+		    <artifactId>microprofile-graphql-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>ERP-base-schema</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+    </dependencies>
+</project>

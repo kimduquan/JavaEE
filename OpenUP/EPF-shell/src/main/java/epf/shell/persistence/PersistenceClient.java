@@ -1,16 +1,16 @@
 package epf.shell.persistence;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import epf.naming.Naming;
 
@@ -55,7 +55,7 @@ public interface PersistenceClient {
 	@PUT
     @Path("{schema}/{entity}/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    void merge(
+    Response merge(
     		@HeaderParam(HttpHeaders.AUTHORIZATION)
     		final String token,
     		@PathParam("schema")
@@ -76,27 +76,6 @@ public interface PersistenceClient {
 	@DELETE
     @Path("{schema}/{entity}/{id}")
     void remove(
-    		@HeaderParam(HttpHeaders.AUTHORIZATION)
-    		final String token,
-    		@PathParam("schema")
-            final String schema,
-            @PathParam("entity")
-            final String entity,
-            @PathParam("id")
-            final String entityId
-            );
-	
-	/**
-	 * @param token
-	 * @param schema
-	 * @param entity
-	 * @param entityId
-	 * @return
-	 */
-	@POST
-    @Path("{schema}/{entity}/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    Response find(
     		@HeaderParam(HttpHeaders.AUTHORIZATION)
     		final String token,
     		@PathParam("schema")

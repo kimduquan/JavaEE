@@ -1,7 +1,7 @@
 package epf.persistence.schema.internal;
 
 import java.util.Comparator;
-import epf.persistence.schema.client.Entity;
+import epf.persistence.schema.Entity;
 
 /**
  * @author PC

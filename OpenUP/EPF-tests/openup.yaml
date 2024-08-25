@@ -1,0 +1,74 @@
+apiVersion: apps.openliberty.io/v1
+kind: OpenLibertyApplication
+metadata:
+  name: openup
+  labels:
+    app.kubernetes.io/name: openup
+    app.kubernetes.io/version: 1.0.0
+spec:
+  applicationImage: openup:1.0.0
+  service:
+    port: 9080
+    portName: http
+    targetPort: 9080
+    ports:
+      - port: 8082
+        name: h2
+  expose: true
+  route:
+    pathType: ImplementationSpecific
+  env:
+    - name: WLP_LOGGING_CONSOLE_FORMAT
+      value: "simple"
+    - name: WLP_LOGGING_CONSOLE_SOURCE
+      value: "message,trace,accessLog,ffdc,audit"
+    - name: WLP_DEBUG_SUSPEND
+      value: "n"
+    - name: WLP_DEBUG_ADDRESS
+      value: "7777"
+    - name: BROWSER
+      value: "curl"
+  probes:
+    liveness:
+      failureThreshold: 12
+      httpGet:
+        path: /health/live
+        port: 9080
+        scheme: HTTP
+      initialDelaySeconds: 60
+      periodSeconds: 60
+      timeoutSeconds: 10
+    readiness:
+      failureThreshold: 12
+      httpGet:
+        path: /health/ready
+        port: 9080
+        scheme: HTTP
+      initialDelaySeconds: 60
+      periodSeconds: 60
+      timeoutSeconds: 10
+  volumeMounts:
+    - name: openup
+      mountPath: /openup
+      readOnly: false
+  initContainers:
+    - name: openup
+      image: busybox
+      command: ["sh", "-c", "chown 1001:0 /openup"]
+      volumeMounts:
+        - name: openup
+          mountPath: /openup
+          readOnly: false
+  statefulSet:
+    storage:
+      volumeClaimTemplate:
+        metadata:
+          name: openup
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          storageClassName: 'hostpath'
+          resources:
+            requests:
+              storage: 1Gi
+          volumeName: "openup"

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.shell.file;
 
 import java.io.File;
@@ -9,16 +6,15 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import javax.ws.rs.core.Response;
-import org.eclipse.microprofile.rest.client.RestClientBuilder;
+import jakarta.ws.rs.core.Response;
 import epf.file.util.PathUtil;
 import epf.naming.Naming;
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
 import epf.shell.security.Credential;
 import epf.shell.security.CallerPrincipal;
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -45,7 +41,7 @@ public class FileStore {
 	 */
 	protected FilesClient buildClient(final Path path) throws Exception {
 		final URI baseUrl = new URI(clientUtil.getUrl(Naming.FILE) + "/" + PathUtil.toURI(path));
-		final FilesClient files = RestClientBuilder.newBuilder().baseUrl(baseUrl.toURL()).build(FilesClient.class);
+		final FilesClient files = clientUtil.newClient(baseUrl, FilesClient.class);
 		return files;
 	}
 	

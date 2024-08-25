@@ -1,22 +1,19 @@
 package epf.delivery_processes.schema;
 
 import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.Id;
-import javax.persistence.NamedEntityGraph;
-import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.delivery_processes.schema.section.Description;
 import epf.delivery_processes.schema.section.TeamAllocation;
 import epf.delivery_processes.schema.section.WorkBreakdownStructure;
 import epf.delivery_processes.schema.section.WorkProductUsage;
-import epf.schema.utility.EntityListener;
 
 /**
  *
@@ -26,8 +23,6 @@ import epf.schema.utility.EntityListener;
 @Schema(name = DeliveryProcesses.CAPABILITY_PATTERN, title = "Capability Pattern")
 @Entity(name = DeliveryProcesses.CAPABILITY_PATTERN)
 @Table(schema = DeliveryProcesses.SCHEMA, name = "CAPABILITY_PATTERN")
-@NamedEntityGraph(includeAllAttributes = true)
-@EntityListeners(EntityListener.class)
 public class CapabilityPattern implements Serializable {
 	
     /**

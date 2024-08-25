@@ -1,19 +1,16 @@
 package epf.work_products.schema;
 
-import java.io.Serializable;
-import javax.json.JsonObject;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.Id;
-import javax.persistence.NamedEntityGraph;
-import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.persistence.Embedded;
+import jakarta.json.JsonObject;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.Embedded;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import epf.schema.utility.EntityListener;
+import epf.schema.utility.EPFEntity;
 import epf.work_products.schema.section.Description;
 import epf.work_products.schema.section.Illustrations;
 import epf.work_products.schema.section.MoreInformation;
@@ -28,9 +25,7 @@ import epf.work_products.schema.section.Tailoring;
 @Schema(name = WorkProducts.ARTIFACT, title = "Artifact")
 @Entity(name = WorkProducts.ARTIFACT)
 @Table(schema = WorkProducts.SCHEMA, name = "ARTIFACT")
-@NamedEntityGraph(includeAllAttributes = true)
-@EntityListeners(EntityListener.class)
-public class Artifact implements Serializable {
+public class Artifact extends EPFEntity {
 
     /**
 	 * 

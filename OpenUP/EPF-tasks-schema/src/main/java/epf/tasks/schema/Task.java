@@ -1,20 +1,17 @@
 package epf.tasks.schema;
 
-import javax.json.bind.annotation.JsonbPropertyOrder;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.Id;
-import javax.persistence.NamedEntityGraph;
-import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
-import javax.json.JsonObject;
-import javax.persistence.Embedded;
+import jakarta.json.bind.annotation.JsonbPropertyOrder;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.json.JsonObject;
+import jakarta.persistence.Embedded;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import epf.schema.utility.EntityListener;
+import epf.schema.utility.EPFEntity;
 import epf.tasks.schema.section.MoreInformation;
 import epf.tasks.schema.section.Relationships;
 
@@ -32,9 +29,7 @@ import epf.tasks.schema.section.Relationships;
     "optional",
     "outputs"
 })
-@NamedEntityGraph(includeAllAttributes = true)
-@EntityListeners(EntityListener.class)
-public class Task implements Serializable {
+public class Task extends EPFEntity {
 
     /**
 	 * 

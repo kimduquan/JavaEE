@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.tests.persistence;
 
 import epf.client.gateway.GatewayUtil;
@@ -23,7 +20,7 @@ public class PersistenceUtil {
     		final T body
             ) throws Exception{
 		try(Client client = ClientUtil.newClient(GatewayUtil.get(Naming.PERSISTENCE))){
-			client.authorization(token);
+			client.authorization(token.toCharArray());
 	    	return Entities.persist(client, cls, schema, name, body);
 		}
     }
@@ -36,7 +33,7 @@ public class PersistenceUtil {
     		final Object body
             ) throws Exception {
 		try(Client client = ClientUtil.newClient(GatewayUtil.get(Naming.PERSISTENCE))){
-			client.authorization(token);
+			client.authorization(token.toCharArray());
 	    	Entities.merge(client, schema, name, entityId, body);
 		}
     }
@@ -48,7 +45,7 @@ public class PersistenceUtil {
     		final String entityId
             ) throws Exception {
 		try(Client client = ClientUtil.newClient(GatewayUtil.get(Naming.PERSISTENCE))){
-			client.authorization(token);
+			client.authorization(token.toCharArray());
 	    	Entities.remove(client, schema, name, entityId);
 		}
     }

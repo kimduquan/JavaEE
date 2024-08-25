@@ -1,18 +1,13 @@
-/**
- * 
- */
 package epf.shell.security;
 
 import epf.naming.Naming;
 import epf.security.schema.Token;
 import epf.shell.Function;
-import epf.shell.client.ClientUtil;
-import epf.util.logging.Logging;
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.ws.rs.core.MultivaluedHashMap;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.ws.rs.core.MultivaluedHashMap;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import picocli.CommandLine.ArgGroup;
@@ -26,7 +21,6 @@ import picocli.CommandLine.Option;
 @Command(name = Naming.SECURITY)
 @RequestScoped
 @Function
-@Logging
 public class Security {
 	
 	/**
@@ -42,18 +36,11 @@ public class Security {
 	 * 
 	 */
 	@Inject
-	transient ClientUtil clientUtil;
-	
-	/**
-	 * 
-	 */
-	@Inject
 	transient IdentityStore identityStore;
 	
 	/**
 	 * 
 	 */
-	@Inject
 	@RestClient
 	transient SecurityClient security;
 	
@@ -61,14 +48,14 @@ public class Security {
 	 * 
 	 */
 	@ConfigProperty(name = Naming.Shell.SHELL_URL)
+	@Inject
 	String shellUrl;
 
 	/**
 	 * @param user
 	 * @param password
 	 * @return
-	 * @throws Exception 
-	 * @throws ShellException
+	 * @throws Exception
 	 */
 	@Command(name = "login")
 	public String login(
@@ -79,11 +66,12 @@ public class Security {
 		    @NotEmpty
 			final char... password
 			) throws Exception {
+		
 		return security.login(user, new String(password), shellUrl);
 	}
 	
 	/**
-	 * @param token
+	 * @param credential
 	 * @return
 	 * @throws Exception
 	 */
@@ -107,15 +95,15 @@ public class Security {
 			@Option(names = {"-t", TOKEN_ARG}, description = TOKEN_DESC) 
 			final String token) throws Exception {
 		final Credential credential = new Credential();
-		credential.token = token;
+		credential.setRawToken(token);
 		final Token authToken = security.authenticate(credential.getAuthHeader());
-		credential.tokenID = authToken.getTokenID();
+		credential.setTokenID(authToken.getTokenID());
 		identityStore.put(credential);
 		return authToken;
 	}
 	
 	/**
-	 * @param token
+	 * @param credential
 	 * @param password
 	 * @throws Exception
 	 */
@@ -131,7 +119,7 @@ public class Security {
 	}
 	
 	/**
-	 * @param token
+	 * @param credential
 	 * @return
 	 * @throws Exception
 	 */

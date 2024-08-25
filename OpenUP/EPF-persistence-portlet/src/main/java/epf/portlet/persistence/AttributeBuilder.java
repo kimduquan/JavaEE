@@ -1,15 +1,11 @@
-/**
- * 
- */
 package epf.portlet.persistence;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.json.JsonValue;
-
-import epf.persistence.schema.client.Attribute;
-import epf.persistence.schema.client.Embeddable;
+import epf.persistence.schema.Attribute;
+import epf.persistence.schema.Embeddable;
 
 /**
  * @author PC
@@ -32,7 +28,7 @@ public class AttributeBuilder {
 	/**
 	 * 
 	 */
-	private transient Map<String, epf.persistence.schema.client.Entity> entities;
+	private transient Map<String, epf.persistence.schema.Entity> entities;
 	
 	/**
 	 * @return
@@ -88,7 +84,7 @@ public class AttributeBuilder {
 		return this;
 	}
 
-	public AttributeBuilder entities(final Map<String, epf.persistence.schema.client.Entity> entities) {
+	public AttributeBuilder entities(final Map<String, epf.persistence.schema.Entity> entities) {
 		this.entities = entities;
 		return this;
 	}

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.tests.rules;
 
 import java.io.InputStream;
@@ -27,9 +24,9 @@ public class RulesUtil {
 
 	public static void registerRuleExecutionSet(String token, Path ruleFile, String ruleSet) throws Exception {
 		try(Client client = ClientUtil.newClient(GatewayUtil.get(Naming.RULES))){
-			client.authorization(token);
+			client.authorization(token.toCharArray());
 			try(InputStream input = Files.newInputStream(ruleFile)){
-				try(Response response = epf.client.rules.admin.Admin.registerRuleExecutionSet(client, ruleSet, input)){
+				try(Response response = epf.rules.client.admin.Admin.registerRuleExecutionSet(client, ruleSet, input)){
 					response.getStatus();
 				}
 			}
@@ -38,24 +35,38 @@ public class RulesUtil {
 	
 	public static void deregisterRuleExecutionSet(String token, String ruleSet) throws Exception {
 		try(Client client = ClientUtil.newClient(GatewayUtil.get("rules"))){
-			client.authorization(token);
-			try(Response response = epf.client.rules.admin.Admin.deregisterRuleExecutionSet(client, ruleSet)){
+			client.authorization(token.toCharArray());
+			try(Response response = epf.rules.client.admin.Admin.deregisterRuleExecutionSet(client, ruleSet)){
 				response.getStatus();
 			}
 		}
 	}
 	
-	public static String encode(List<Object> input) throws Exception {
+	public static String encodeArray(List<Object> input) throws Exception {
 		try(Jsonb jsonb = JsonbBuilder.create(new JsonbConfig().withAdapters(new Adapter()))){
 			Encoder encoder = new Encoder();
 			return encoder.encodeArray(jsonb, input);
 		}
 	}
 	
-	public static List<Object> decode(String input) throws Exception{
+	public static List<Object> decodeArray(String input) throws Exception{
 		try(Jsonb jsonb = JsonbBuilder.create(new JsonbConfig().withAdapters(new Adapter()))){
 			Decoder decoder = new Decoder();
 			return decoder.decodeArray(jsonb, input);
+		}
+	}
+	
+	public static String encode(final Object object) throws Exception {
+		try(Jsonb jsonb = JsonbBuilder.create(new JsonbConfig().withAdapters(new Adapter()))){
+			Encoder encoder = new Encoder();
+			return encoder.encode(jsonb, object);
+		}
+	}
+	
+	public static Object decode(String input) throws Exception{
+		try(Jsonb jsonb = JsonbBuilder.create(new JsonbConfig().withAdapters(new Adapter()))){
+			Decoder decoder = new Decoder();
+			return decoder.decode(jsonb, input);
 		}
 	}
 }

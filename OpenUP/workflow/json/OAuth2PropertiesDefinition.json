@@ -1,0 +1,14 @@
+{
+	"authority": "",
+	"grantType": "",
+	"clientId": "",
+	"clientSecret": "",
+	"scopes": [ "" ],
+	"username": "",
+	"password": "",
+	"audiences": [ "" ]
+	"subjectToken": "",
+	"requestedSubject": "",
+	"requestedIssuer": "",
+	"metadata": {}
+}

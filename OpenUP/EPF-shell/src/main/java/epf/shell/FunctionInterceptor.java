@@ -3,16 +3,16 @@ package epf.shell;
 import java.io.PrintWriter;
 import java.time.Instant;
 import java.util.logging.Logger;
-import javax.json.JsonValue;
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
+import jakarta.json.JsonValue;
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbBuilder;
 import epf.util.logging.LogManager;
-import javax.annotation.Priority;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
+import jakarta.annotation.Priority;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.Interceptor;
+import jakarta.interceptor.InvocationContext;
 
 /**
  * @author PC
@@ -59,7 +59,7 @@ public class FunctionInterceptor {
 			return result;
 		}
 		catch(Exception ex) {
-			err.println(ex.getMessage());
+			ex.printStackTrace(err);
 			return null;
 		}
 	}

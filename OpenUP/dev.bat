@@ -1,18 +1,40 @@
-call ./env.bat
-call ./shutdown.bat
+call ./shutdownc.bat
 call ./clean.bat
-call ./startup.bat
-call ./config.bat
-call mvn clean install -U -DskipTests -T 1C
-cd EPF-gateway
-start mvn quarkus:dev &
+call ./compile.bat
+cd EPF-config
+call ./dev.bat
+cd ../
+cd EPF-messaging
+call ./dev.bat
+cd ../
+cd EPF-logging
+call ./dev.bat
+cd ../
+cd EPF-cache
+call ./dev.bat
+cd ../
+cd EPF-transaction
+call ./dev.bat
 cd ../
 cd EPF-persistence
-start mvn quarkus:dev -Ddebug=5006 &
+call ./dev.bat
+cd ../
+cd EPF-query
+call ./dev.bat
+cd ../
+cd EPF-net
+call ./dev.bat
+cd ../
+cd EPF-registry
+call ./dev.bat
+cd ../
+cd EPF-gateway
+call ./dev.bat
 cd ../
 cd EPF-shell
-call mvn install -Depf-shell-native
+call ./dev.bat
 cd ../
-call ./install.bat &
+call ./webapp_startupc.bat
+call ./webapp_deploy.bat
 cd EPF-tests
-call mvn liberty:dev
+call ./test.bat

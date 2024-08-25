@@ -1,18 +1,59 @@
-. ./env.sh
-./shutdown.sh
+./shutdownc.sh
 ./clean.sh
-./startup.sh
-. ./config.sh
-mvn clean install -U -DskipTests -T 1C
-cd EPF-gateway
-mvn quarkus:dev &
+./compile.sh
+cd EPF-config
+./start.sh
+cd ../
+cd EPF-messaging
+./start.sh
+cd ../
+cd EPF-logging
+./start.sh
+cd ../
+cd EPF-cache
+./dev.sh
+cd ../
+cd EPF-transaction
+./start.sh
 cd ../
 cd EPF-persistence
-mvn quarkus:dev -Ddebug=5006 &
+./dev.sh
+cd ../
+cd EPF-query
+./dev.sh
+cd ../
+cd EPF-net
+./start.sh
+cd ../
+cd EPF-registry
+./start.sh
+cd ../
+cd EPF-concurrent
+./start.sh
+cd ../
+cd EPF-file
+./start.sh
+cd ../
+cd EPF-workflow-management
+./start.sh
+cd ../
+cd EPF-event
+./start.sh
+cd ../
+cd EPF-workflow
+./start.sh
+cd ../
+cd EPF-gateway
+./start.sh
+cd ../
+cd EPF-lang
+./start.sh
 cd ../
 cd EPF-shell
-mvn install -Depf-shell-native
+#./dev.sh
 cd ../
-./install.sh &
+./webapp_startupc.sh
+./webapp_deploy.sh
 cd EPF-tests
-mvn liberty:dev
+./dev.sh
+./test.sh

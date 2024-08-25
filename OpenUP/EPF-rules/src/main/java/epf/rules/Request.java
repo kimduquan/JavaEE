@@ -1,10 +1,8 @@
-/**
- * 
- */
 package epf.rules;
 
 import java.rmi.RemoteException;
 import java.util.HashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.RequestScoped;
@@ -53,7 +51,7 @@ public class Request {
 			catch (
 					InvalidRuleSessionException 
 					| RemoteException e) {
-				LOGGER.throwing(StatelessRuleSession.class.getName(), "release", e);
+				LOGGER.log(Level.SEVERE, "release", e);
 			}
 		}
 	}
@@ -77,7 +75,7 @@ public class Request {
 				| RuleSessionCreateException 
 				| RuleExecutionSetNotFoundException
 				| RemoteException e) {
-			LOGGER.throwing(RuleRuntime.class.getName(), "createRuleSession", e);
+			LOGGER.log(Level.SEVERE, "createRuleSession", e);
 		}
 		return this.ruleSession;
 	}

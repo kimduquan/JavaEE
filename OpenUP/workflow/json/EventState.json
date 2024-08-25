@@ -1,0 +1,13 @@
+{
+	"name": "",
+	"type": "event",
+	"exclusive": true,
+	"onEvents": [],
+	"timeouts": {},
+	"stateDataFilter": {},
+	"transition": {},
+	"onErrors": [],
+	"end": {},
+	"compensatedBy": "",
+	"metadata": {}
+}

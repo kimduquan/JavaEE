@@ -18,6 +18,7 @@
 		<dependency>
 			<groupId>javax.security.enterprise</groupId>
 			<artifactId>javax.security.enterprise-api</artifactId>
+		    <scope>provided</scope>
 		</dependency>
 		<dependency>
 		    <groupId>javax.annotation</groupId>
@@ -41,27 +42,6 @@
 		</dependency>
 		
 		<dependency>
-		    <groupId>org.eclipse.microprofile.jwt</groupId>
-		    <artifactId>microprofile-jwt-auth-api</artifactId>
-		</dependency>
-		<dependency>
-		    <groupId>org.eclipse.microprofile.health</groupId>
-		    <artifactId>microprofile-health-api</artifactId>
-		</dependency>
-		<dependency>
-		    <groupId>org.eclipse.microprofile.context-propagation</groupId>
-		    <artifactId>microprofile-context-propagation-api</artifactId>
-		</dependency>
-		<dependency>
-		    <groupId>org.eclipse.microprofile.graphql</groupId>
-		    <artifactId>microprofile-graphql-api</artifactId>
-		</dependency>
-		<dependency>
-		    <groupId>org.eclipse.microprofile.openapi</groupId>
-		    <artifactId>microprofile-openapi-api</artifactId>
-		</dependency>
-		
-		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-client</artifactId>
             <version>${project.version}</version>
@@ -71,9 +51,39 @@
             <artifactId>EPF-security-client</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-mail-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-view</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-security-view</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-utility</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+	    <dependency>
+	        <groupId>openup</groupId>
+	        <artifactId>EPF-logging-utility</artifactId>
+	        <version>${project.version}</version>
+	    </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-webapp-utility</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-webapp-internal</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
@@ -82,14 +92,6 @@
 			<plugin>
 	        	<groupId>org.wildfly.plugins</groupId>
 			    <artifactId>wildfly-maven-plugin</artifactId>
-			    <executions>
-                    <execution>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>deploy</goal>
-                        </goals>
-                    </execution>
-                </executions>
 	        </plugin>
     	</plugins>
     </build>

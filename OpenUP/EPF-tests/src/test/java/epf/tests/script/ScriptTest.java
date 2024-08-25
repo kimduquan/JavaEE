@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.tests.script;
 
 import java.io.ByteArrayInputStream;
@@ -58,7 +55,7 @@ public class ScriptTest {
 	@Before
 	public void setUp() throws Exception {
 		client = ClientUtil.newClient(scriptUrl);
-		client.authorization(token);
+		client.authorization(token.toCharArray());
 	}
 
 	/**
@@ -67,6 +64,7 @@ public class ScriptTest {
 	@After
 	public void tearDown() throws Exception {
 		client.close();
+		ClientUtil.afterClass();
 	}
 
 	@Test

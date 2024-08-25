@@ -2,9 +2,7 @@ package epf.security.internal.store;
 
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -13,19 +11,18 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.security.enterprise.CallerPrincipal;
-import javax.security.enterprise.identitystore.CredentialValidationResult;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.context.ManagedExecutor;
+import org.eclipse.microprofile.health.HealthCheck;
+import org.eclipse.microprofile.health.HealthCheckResponse;
+import org.eclipse.microprofile.health.Readiness;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.naming.Naming;
-import epf.security.internal.sql.NativeQueries;
+import epf.security.internal.JPAPrincipal;
+import epf.security.internal.NativeQueries;
+import epf.security.schema.Security;
 import epf.security.util.Credential;
-import epf.security.util.CredentialComparator;
-import epf.security.util.IdentityStore;
-import epf.security.util.JPAPrincipal;
-import epf.security.util.JdbcUtil;
+import epf.security.util.TenantUtil;
 import epf.util.StringUtil;
 
 /**
@@ -33,91 +30,73 @@ import epf.util.StringUtil;
  *
  */
 @ApplicationScoped
-public class JPAIdentityStore implements IdentityStore {
+@Readiness
+public class JPAIdentityStore implements HealthCheck {
 	
 	/**
 	 * 
 	 */
 	@Inject
-	transient ManagedExecutor executor;
-	
-	/**
-	 * 
-	 */
-	@Inject
-	@ConfigProperty(name = Naming.Persistence.JDBC.JDBC_URL)
-	transient String jdbcUrl;
-	
-	/**
-	 * 
-	 */
-	@PersistenceContext(unitName = "EPF-Schema")
-	transient EntityManager manager;
-	
-	/**
-	 * 
-	 */
-	@Inject
-	transient JPAPrincipalStore principalStore;
+	private transient ManagedExecutor executor;
 	
 	/**
 	 * @param credential
-	 * @param oldCredential
 	 * @return
 	 */
-	protected CompletionStage<CredentialValidationResult> validate(final Credential credential, final Credential oldCredential){
-		CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
-		final CredentialComparator comparator = new CredentialComparator();
-		if(comparator.compare(credential, oldCredential) == 0) {
-			final Optional<JPAPrincipal> principal = principalStore.getPrincipal(credential.getCaller());
-			if(principal.isPresent()) {
-				result = new CredentialValidationResult(principal.get());
-			}
-		}
-		return CompletableFuture.completedStage(result);
+	public CompletionStage<Set<String>> getCallerGroups(final EntityManager manager, final Credential credential) {
+		Objects.requireNonNull(credential, "Credential");
+		return getCallerGroups(manager, credential.getTenant().orElse(null));
 	}
 
-	@Override
-	public CompletionStage<CredentialValidationResult> validate(final Credential credential) throws Exception {
-		Objects.requireNonNull(credential, "Credential");
-		Objects.requireNonNull(credential.getCaller(), "Credential.caller");
-		Objects.requireNonNull(credential.getPassword(), "Credential.password");
-		final Optional<Credential> oldCredential = principalStore.getCredential(credential.getCaller());
-		if (oldCredential.isPresent()) {
-			return validate(credential, oldCredential.get());
-		}
+	/**
+	 * @param jwt
+	 * @return
+	 */
+	public CompletionStage<Set<String>> getCallerGroups(final JsonWebToken jwt) {
+		Objects.requireNonNull(jwt, "JsonWebToken");
+		return executor.completedStage(jwt.getGroups());
+	}
+	
+	private CompletionStage<Set<String>> getCallerGroups(final EntityManager manager, final String tenant){
+		final String tenantId = TenantUtil.getTenantId(Security.SCHEMA, tenant);
+		manager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenantId);
+		final Query query = manager.createNativeQuery(NativeQueries.GET_CURRENT_ROLES);
+		final Stream<?> stream = query.getResultStream();
+		final Set<String> groups = stream.map(role -> StringUtil.toPascalSnakeCase(role.toString().split("_"))).collect(Collectors.toSet());
+		return executor.completedStage(groups);
+	}
+
+	/**
+	 * @param credential
+	 * @return
+	 * @throws Exception
+	 */
+	public CompletionStage<JPAPrincipal> authenticate(final Credential credential) throws Exception {
 		final Map<String, Object> props = new ConcurrentHashMap<>();
         props.put(Naming.Persistence.JDBC.JDBC_USER, credential.getCaller());
         props.put(Naming.Persistence.JDBC.JDBC_PASSWORD, String.valueOf(credential.getPassword().getValue()));
-        credential.getTenant().ifPresent(tenant -> {
-        	final String tenantUrl = JdbcUtil.formatTenantUrl(jdbcUrl, tenant.toString());
-        	props.put(Naming.Persistence.JDBC.JDBC_URL, tenantUrl);
-        });
-        return executor.supplyAsync(() -> Persistence.createEntityManagerFactory(PERSISTENCE_UNIT, props))
+        final String tenant = TenantUtil.getTenantId(Security.SCHEMA, credential.getTenant().orElse(null));
+        props.put(Naming.Management.MANAGEMENT_TENANT, tenant);
+        return executor.supplyAsync(() -> Persistence.createEntityManagerFactory(Naming.Security.Internal.SECURITY_UNIT_NAME, props))
         		.thenApply(factory -> {
-        			CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
         			try {
-        				final EntityManager manager = factory.createEntityManager();
-        				final JPAPrincipal principal = principalStore.putPrincipaḷ̣̣̣̣(credential, factory, manager);
-        				result = new CredentialValidationResult(principal);
+        				final Map<String, Object> newProps = new ConcurrentHashMap<>();
+        				newProps.put(Naming.Management.MANAGEMENT_TENANT, tenant);
+        				final EntityManager manager = factory.createEntityManager(newProps);
+        				return new JPAPrincipal(credential.getTenant(), credential.getCaller(), factory, manager);
 		        	}
 		        	catch(Exception ex) {
 		        		factory.close();
+		        		return null;
 		        	}
-        			return result;
         		});
 	}
 
 	@Override
-	public CompletionStage<Set<String>> getCallerGroups(final CallerPrincipal callerPrincipal) {
-		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
-		final Query query = manager.createNativeQuery(NativeQueries.GET_CURRENT_ROLES);
-		final Stream<?> stream = query.setParameter(1, callerPrincipal.getName()).getResultStream();
-		return executor.supplyAsync(() -> {
-			final Set<String> groups = stream.map(role -> {
-				return StringUtil.toPascalSnakeCase(role.toString().split("_"));
-				}).collect(Collectors.toSet());
-			return groups;
-		});
+	public HealthCheckResponse call() {
+		if(executor.isShutdown() || executor.isTerminated()) {
+			return HealthCheckResponse.down("epf-security-identity-store");
+		}
+		return HealthCheckResponse.up("epf-security-identity-store");
 	}
 }

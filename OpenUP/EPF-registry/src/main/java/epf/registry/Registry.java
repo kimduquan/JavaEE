@@ -10,17 +10,28 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Link;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.core.UriInfo;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.FormParam;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.Link;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.ResponseBuilder;
+import jakarta.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import epf.naming.Naming;
 import epf.util.logging.LogManager;
+import io.smallrye.common.annotation.RunOnVirtualThread;
 
 /**
  * @author PC
@@ -28,7 +39,7 @@ import epf.util.logging.LogManager;
  */
 @Path(Naming.REGISTRY)
 @ApplicationScoped
-public class Registry implements epf.client.registry.Registry {
+public class Registry {
 	
 	/**
 	 * 
@@ -50,112 +61,168 @@ public class Registry implements epf.client.registry.Registry {
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Net.NET_URL)
-	private transient URI netUrl;
+	transient URI netUrl;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.File.FILE_URL)
-	private transient URI fileUrl;
+	transient URI fileUrl;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	@ConfigProperty(name = Naming.Mail.MAIL_URL)
+	transient URI mailUrl;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Persistence.PERSISTENCE_URL)
-	private transient URI persistenceUrl;
+	transient URI persistenceUrl;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Security.SECURITY_URL)
-	private transient URI securityUrl;
+	transient URI securityUrl;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	@ConfigProperty(name = Naming.Security.Management.SECURITY_MANAGEMENT_URL)
+	transient URI securityManagementUrl;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Registry.REGISTRY_URL)
-	private transient URI registryUrl;
+	transient URI registryUrl;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Messaging.MESSAGING_URL)
-	private transient URI messagingUrl;
+	transient URI messagingUrl;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Cache.CACHE_URL)
-	private transient URI cacheUrl;
+	transient URI cacheUrl;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	@ConfigProperty(name = Naming.Query.QUERY_URL)
+	transient URI queryUrl;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Config.CONFIG_URL)
-	private transient URI configUrl;
+	transient URI configUrl;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Script.SCRIPT_URL)
-	private transient URI scriptUrl;
+	transient URI scriptUrl;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Management.MANAGEMENT_URL)
-	private transient URI managementUrl;
+	transient URI managementUrl;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Rules.RULES_URL)
-	private transient URI rulesUrl;
+	transient URI rulesUrl;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Schema.SCHEMA_URL)
-	private transient URI schemaUrl;
+	transient URI schemaUrl;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Planning.PLANNING_URL)
-	private transient URI planningUrl;
+	transient URI planningUrl;
 
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Image.IMAGE_URL)
-	private transient URI imageUrl;
-
+	transient URI imageUrl;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	@ConfigProperty(name = Naming.Workflow.WORKFLOW_URL)
+	transient URI workflowUrl;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	@ConfigProperty(name = Naming.Workflow.Management.WORKFLOW_MANAGEMENT_URL)
+	transient URI workflowManagementUrl;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	@ConfigProperty(name = Naming.Event.EVENT_URL)
+	transient URI eventUrl;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	@ConfigProperty(name = Naming.Concurrent.CONCURRENT_URL)
+	transient URI concurrentUrl;
+	
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Lang.LANG_URL)
-	private transient URI langUrl;
+	transient URI langUrl;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	@ConfigProperty(name = Naming.Lang.Internal.OLLAMA)
+	transient URI ollamaUrl;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Net.HTTP_PORT)
-	private transient int httpPort;
+	transient int httpPort;
 	
 	/**
 	 * 
@@ -165,11 +232,14 @@ public class Registry implements epf.client.registry.Registry {
 		try {
 			remotes.put(Naming.NET, netUrl);
 			remotes.put(Naming.FILE, fileUrl);
+			remotes.put(Naming.MAIL, mailUrl);
 			remotes.put(Naming.PERSISTENCE, persistenceUrl);
 			remotes.put(Naming.SECURITY, securityUrl);
+			remotes.put(Naming.Security.SECURITY_MANAGEMENT, securityManagementUrl);
 			remotes.put(Naming.REGISTRY, registryUrl);
 			remotes.put(Naming.MESSAGING, messagingUrl);
 			remotes.put(Naming.CACHE, cacheUrl);
+			remotes.put(Naming.QUERY, queryUrl);
 			remotes.put(Naming.CONFIG, configUrl);
 			remotes.put(Naming.SCRIPT, scriptUrl);
 			remotes.put(Naming.MANAGEMENT, managementUrl);
@@ -177,7 +247,15 @@ public class Registry implements epf.client.registry.Registry {
 			remotes.put(Naming.SCHEMA, schemaUrl);
 			remotes.put(Naming.PLANNING, planningUrl);
 			remotes.put(Naming.IMAGE, imageUrl);
-			remotes.put("lang", langUrl);
+			remotes.put(Naming.WORKFLOW, workflowUrl);
+			remotes.put(Naming.Workflow.WORKFLOW_MANAGEMENT, workflowManagementUrl);
+			remotes.put(Naming.EVENT, eventUrl);
+			remotes.put(Naming.CONCURRENT, concurrentUrl);
+			remotes.put(Naming.LANG, langUrl);
+			remotes.put(Naming.Lang.Internal.OLLAMA, ollamaUrl);
+			remotes.forEach((name, url) -> {
+				LOGGER.info(String.format("%s=%s", name, url));
+			});
 		} 
 		catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "postConstruct", e);
@@ -194,6 +272,9 @@ public class Registry implements epf.client.registry.Registry {
 		if(version != null && !version.isEmpty()) {
 			remoteURIs = remoteVersions.computeIfAbsent(version, ver -> new ConcurrentHashMap<>());
 		}
+		remoteURIs.forEach((name, url) -> {
+			LOGGER.info(String.format("%s=%s", name, url));
+		});
 		return remoteURIs;
 	}
 	
@@ -273,13 +354,36 @@ public class Registry implements epf.client.registry.Registry {
 		return stream;
 	}
 
-	@Override
-	public void bind(final String name, final URI remote, final String version) {
+	/**
+	 * @param name
+	 * @param remote
+	 * @param version
+	 */
+	@POST
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@RunOnVirtualThread
+	public void bind(
+			@FormParam(Naming.Registry.Client.NAME) 
+			final String name, 
+			@FormParam(Naming.Registry.Client.REMOTE) 
+			final URI remote, 
+			@QueryParam(Naming.Registry.Client.VERSION) 
+			final String version) {
 		getRemotes(version).put(name, remote);
 	}
 
-	@Override
-	public Response list(final String version, final UriInfo uriInfo) {
+	/**
+	 * @param version
+	 * @param uriInfo
+	 * @return
+	 */
+	@GET
+	@RunOnVirtualThread
+	public Response list(
+			@QueryParam(Naming.Registry.Client.VERSION) 
+			final String version, 
+			@Context 
+			final UriInfo uriInfo) {
 		ResponseBuilder builder = Response.ok();
 		Stream<Link> links = getRemotes(version)
 				.entrySet()
@@ -297,8 +401,19 @@ public class Registry implements epf.client.registry.Registry {
 		return builder.build();
 	}
 
-	@Override
-	public Response lookup(final String name, final String version) {
+	/**
+	 * @param name
+	 * @param version
+	 * @return
+	 */
+	@GET
+	@Path("{name}")
+	@RunOnVirtualThread
+	public Response lookup(
+			@PathParam(Naming.Registry.Client.NAME) 
+			final String name, 
+			@QueryParam(Naming.Registry.Client.VERSION) 
+			final String version) {
 		final ResponseBuilder builder = Response.ok();
 		getRemotes(version).computeIfPresent(name, (key, remote) -> {
 			builder.link(remote, name);
@@ -307,15 +422,39 @@ public class Registry implements epf.client.registry.Registry {
 		return builder.build();
 	}
 
-	@Override
-	public void rebind(final String name, final URI remote, final String version) {
+	/**
+	 * @param name
+	 * @param remote
+	 * @param version
+	 */
+	@PUT
+	@Path("{name}")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@RunOnVirtualThread
+	public void rebind(
+			@PathParam(Naming.Registry.Client.NAME) 
+			final String name, 
+			@FormParam(Naming.Registry.Client.REMOTE) 
+			final URI remote, 
+			@QueryParam(Naming.Registry.Client.VERSION) 
+			final String version) {
 		getRemotes(version).computeIfPresent(name, (key, value) -> {
 			return remote;
 		});
 	}
 
-	@Override
-	public void unbind(final String name, final String version) {
+	/**
+	 * @param name
+	 * @param version
+	 */
+	@DELETE
+	@Path("{name}")
+	@RunOnVirtualThread
+	public void unbind(
+			@PathParam(Naming.Registry.Client.NAME) 
+			final String name, 
+			@QueryParam(Naming.Registry.Client.VERSION) 
+			final String version) {
 		getRemotes(version).remove(name);
 	}
 

@@ -1,16 +1,9 @@
-/**
- * 
- */
 package epf.portlet.persistence;
 
-import java.io.StringReader;
 import java.util.List;
-import javax.json.Json;
-import javax.json.JsonReader;
-
-import epf.persistence.schema.client.Attribute;
-import epf.persistence.schema.client.Embeddable;
-import epf.portlet.util.json.JsonUtil;
+import epf.persistence.schema.Attribute;
+import epf.persistence.schema.Embeddable;
+import epf.util.json.JsonUtil;
 
 /**
  * @author PC
@@ -70,10 +63,6 @@ public class EmbeddedAttribute extends BasicAttribute {
 	 */
 	@Override
 	public void setValue(final String value) {
-		try(StringReader reader = new StringReader(value)){
-			try(JsonReader json = Json.createReader(reader)){
-				getEmbeddedObject().put(getAttribute().getName(), json.readValue());
-			}
-		}
+		getEmbeddedObject().put(getAttribute().getName(), JsonUtil.readValue(value));
 	}
 }

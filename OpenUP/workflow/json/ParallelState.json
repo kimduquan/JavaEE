@@ -1,0 +1,15 @@
+{
+	"name": "",
+	"type": "parallel",
+	"branches": [],
+	"completionType": "allOf",
+	"numCompleted": 1,
+	"timeouts": {},
+	"stateDataFilter": {},
+	"onErrors": [],
+	"transition": {},
+	"compensatedBy": "",
+	"usedForCompensation": false,
+	"metadata": {},
+	"end": {}
+}

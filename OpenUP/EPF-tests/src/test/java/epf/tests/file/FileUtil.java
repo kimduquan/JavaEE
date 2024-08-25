@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.tests.file;
 
 import java.io.InputStream;
@@ -22,9 +19,9 @@ public class FileUtil {
 	public static String createFile(String token, Path file, Path path) throws Exception {
 		URI fileUrl = GatewayUtil.get(Naming.FILE);
 		try(Client client = ClientUtil.newClient(fileUrl)){
-			client.authorization(token);
+			client.authorization(token.toCharArray());
 			try(InputStream input = Files.newInputStream(file)){
-				try(Response response = epf.client.file.Files.createFile(client, input, path)){
+				try(Response response = epf.file.client.Files.createFile(client, input, path)){
 					response.getStatus();
 					return response.getLink("self").getTitle();
 				}
@@ -35,8 +32,8 @@ public class FileUtil {
 	public static void delete(String token, Path path) throws Exception {
 		URI fileUrl = GatewayUtil.get(Naming.FILE);
 		try(Client client = ClientUtil.newClient(fileUrl)){
-			client.authorization(token);
-			epf.client.file.Files.delete(client, path).getStatus();
+			client.authorization(token.toCharArray());
+			epf.file.client.Files.delete(client, path).getStatus();
 		}
 	}
 }

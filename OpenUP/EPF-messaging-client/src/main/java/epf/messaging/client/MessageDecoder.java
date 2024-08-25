@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.messaging.client;
 
 import java.util.logging.Logger;
@@ -10,6 +7,7 @@ import javax.json.bind.JsonbConfig;
 import javax.websocket.DecodeException;
 import javax.websocket.Decoder;
 import javax.websocket.EndpointConfig;
+
 import epf.util.json.Adapter;
 import epf.util.logging.LogManager;
 

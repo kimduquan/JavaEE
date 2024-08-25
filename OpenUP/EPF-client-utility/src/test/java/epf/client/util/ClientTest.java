@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.client.util;
 
 import java.net.URI;
@@ -19,23 +16,24 @@ import org.mockito.Mockito;
  */
 public class ClientTest {
 	
-	ClientQueue mockClientQueue;
 	URI uri;
 	ClientBuilder mockClientBuilder;
 	javax.ws.rs.client.Client mockClient;
 	Client client;
+	
+	void add(URI uri, javax.ws.rs.client.Client rsClient) {
+		
+	}
 
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
-		mockClientQueue = Mockito.mock(ClientQueue.class);
 		uri = new URI("https://locahost:9443");
 		mockClientBuilder = Mockito.mock(ClientBuilder.class);
 		mockClient = Mockito.mock(javax.ws.rs.client.Client.class);
-		Mockito.when(mockClientQueue.poll(Mockito.same(uri), Mockito.any())).thenReturn(mockClient);
-		client = new Client(mockClientQueue, uri, b -> mockClientBuilder);
+		client = new Client(mockClient, uri, this::add);
 	}
 
 	/**
@@ -50,9 +48,7 @@ public class ClientTest {
 	 */
 	@Test
 	public void testClient() {
-		Mockito.verify(mockClientQueue, Mockito.times(1)).poll(Mockito.same(uri), Mockito.any());
 		Assert.assertSame("Client.client", mockClient, client.getClient());
-		Assert.assertSame("Client.clients", mockClientQueue, client.getClients());
 		Assert.assertSame("Client.uri", uri, client.getUri());
 	}
 
@@ -61,13 +57,13 @@ public class ClientTest {
 	 */
 	@Test
 	public void testAuthorization() {
-		Client client = new Client(mockClientQueue, uri, b -> mockClientBuilder);
-		Client returnClient = client.authorization("authorization");
+		Client client = new Client(mockClient, uri, this::add);
+		Client returnClient = client.authorization("authorization".toCharArray());
 		Assert.assertSame(client, returnClient);
-		Assert.assertEquals("Client.authHeader", "Bearer authorization", returnClient.getAuthHeader().get());
-		returnClient = client.authorization("");
+		Assert.assertArrayEquals("Client.authToken", "authorization".toCharArray(), returnClient.getAuthToken());
+		returnClient = client.authorization("".toCharArray());
 		Assert.assertSame(client, returnClient);
-		Assert.assertEquals("Client.authHeader", "Bearer ", returnClient.getAuthHeader().get());
+		Assert.assertArrayEquals("Client.authToken", "".toCharArray(), returnClient.getAuthToken());
 	}
 	
 	/**
@@ -85,7 +81,6 @@ public class ClientTest {
 	@Test
 	public void testClose() throws Exception {
 		client.close();
-		Mockito.verify(mockClientQueue, Mockito.times(1)).add(Mockito.same(uri), Mockito.same(mockClient));
 	}
 
 	/**
@@ -120,7 +115,7 @@ public class ClientTest {
 		Builder mockRequest = Mockito.mock(Builder.class);
 		Mockito.when(mockTarget.request()).thenReturn(mockRequest);
 		Mockito.when(mockRequest.header(Mockito.eq("Authorization"), Mockito.eq("Bearer authorization"))).thenReturn(mockRequest);
-		client.authorization("authorization");
+		client.authorization("authorization".toCharArray());
 		client.request(
 				target -> {
 					Assert.assertSame(mockTarget, target);

@@ -1,12 +1,10 @@
-/**
- * 
- */
 package epf.rules;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.SessionScoped;
@@ -30,7 +28,7 @@ public class Session implements Serializable {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = LogManager.getLogger(Session.class.getName());
+	private transient static final Logger LOGGER = LogManager.getLogger(Session.class.getName());
 
 	/**
 	 * 
@@ -58,7 +56,7 @@ public class Session implements Serializable {
 				session.release();
 			} 
 			catch (InvalidRuleSessionException | RemoteException e) {
-				LOGGER.throwing(StatefulRuleSession.class.getName(), "release", e);
+				LOGGER.log(Level.SEVERE, "statefulSessions", e);
 			}
 		});
 	}
@@ -83,7 +81,7 @@ public class Session implements Serializable {
 				| RuleSessionCreateException
 				| RuleExecutionSetNotFoundException 
 				| RemoteException e) {
-			LOGGER.throwing(RuleRuntime.class.getName(), "createRuleSession", e);
+			LOGGER.log(Level.SEVERE, "createRuleSession", e);
 		}
 		return ruleSession;
 	}

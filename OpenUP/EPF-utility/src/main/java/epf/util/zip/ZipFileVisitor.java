@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.util.zip;
 
 import java.nio.file.FileVisitor;

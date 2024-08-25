@@ -1,15 +1,12 @@
 package epf.work_products.schema;
 
-import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.Id;
-import javax.persistence.NamedEntityGraph;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import epf.schema.utility.EntityListener;
+import epf.schema.utility.EPFEntity;
 
 /**
  * @author PC
@@ -19,9 +16,7 @@ import epf.schema.utility.EntityListener;
 @Schema(name = WorkProducts.REPORT, title = "Report")
 @Entity(name = WorkProducts.REPORT)
 @Table(schema = WorkProducts.SCHEMA, name = "REPORT")
-@NamedEntityGraph(includeAllAttributes = true)
-@EntityListeners(EntityListener.class)
-public class Report implements Serializable {
+public class Report extends EPFEntity {
 
 	/**
 	 * 

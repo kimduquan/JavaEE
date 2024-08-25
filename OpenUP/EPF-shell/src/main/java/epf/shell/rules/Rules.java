@@ -1,17 +1,13 @@
-/**
- * 
- */
 package epf.shell.rules;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import epf.naming.Naming;
 import epf.shell.Function;
 import epf.shell.rules.admin.Admin;
 import epf.shell.security.Credential;
 import epf.shell.security.CallerPrincipal;
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.RequestScoped;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -28,7 +24,6 @@ public class Rules {
 	/**
 	 * 
 	 */
-	@Inject
 	@RestClient
 	transient RulesClient rules;
 	

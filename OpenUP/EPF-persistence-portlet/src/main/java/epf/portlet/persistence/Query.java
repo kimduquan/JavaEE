@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.portlet.persistence;
 
 import java.io.Serializable;
@@ -14,15 +11,15 @@ import javax.inject.Named;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 import epf.client.portlet.persistence.QueryView;
-import epf.persistence.schema.client.Attribute;
-import epf.persistence.schema.client.Entity;
+import epf.persistence.schema.Attribute;
+import epf.persistence.schema.Entity;
 import epf.portlet.internal.config.ConfigUtil;
 import epf.portlet.internal.persistence.EntityUtil;
 import epf.portlet.naming.Naming;
 import epf.portlet.util.EventUtil;
 import epf.portlet.util.ParameterUtil;
 import epf.portlet.util.json.JsonObjectCollector;
-import epf.portlet.util.json.JsonUtil;
+import epf.util.json.JsonUtil;
 import epf.util.logging.LogManager;
 
 /**
@@ -110,8 +107,8 @@ public class Query implements QueryView, Serializable {
 					.collect(Collectors.toList());
 			collector = new JsonObjectCollector(attributes.stream().map(Attribute::getName).collect(Collectors.toList()));
 			try {
-				firstResult = Integer.valueOf(configUtil.getProperty(epf.naming.Naming.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT));
-				maxResults = Integer.valueOf(configUtil.getProperty(epf.naming.Naming.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT));
+				firstResult = Integer.valueOf(configUtil.getProperty(epf.naming.Naming.Query.FIRST_RESULT_DEFAULT));
+				maxResults = Integer.valueOf(configUtil.getProperty(epf.naming.Naming.Query.MAX_RESULTS_DEFAULT));
 				resultList = entityUtil.getEntities(entity.getTable().getSchema(), entity.getName(), firstResult, maxResults);
 			}
 			catch (Exception e) {

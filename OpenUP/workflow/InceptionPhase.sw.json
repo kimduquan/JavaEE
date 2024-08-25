@@ -1,0 +1,52 @@
+{
+	"id": "Inception Phase",
+	"key": "Inception Phase",
+	"name": "Inception Phase",
+	"description": "",
+	"version": "1.0",
+	"start": "Inception Iteration",
+	"specVersion": "0.8",
+	"expressionLang": "el",
+	"keepActive": true,
+	"events": [
+		{
+			"name": "Lifecycle Objectives Milestone",
+			"source": "/openup_lifecycle/inception_phase/lifecycle_objectives_milestone",
+			"type": "openup_lifecycle.inception_phase.lifecycle_objectives_milestone",
+			"kind": "consumed",
+			"dataOnly": true
+		}
+	],
+	"autoRetries": false,
+	"states": [
+		{
+			"name": "Inception Iteration",
+			"type": "foreach",
+			"inputCollection": "InceptionIteration",
+			"iterationParam": "Iteration",
+			"mode": "sequential",
+			"actions": [
+				{
+					"name": "Inception Iteration",
+					"subFlowRef": "Inception Iteration"
+				}
+			],
+			"transition": "Lifecycle Objectives Milestone",
+			"usedForCompensation": false,
+			"end": false
+		},
+		{
+			"name": "Lifecycle Objectives Milestone",
+			"type": "event",
+			"exclusive": true,
+			"onEvents": [
+				{
+					"eventRefs": [
+						"Lifecycle Objectives Milestone"
+					]
+				}
+			],
+			"end": true
+		}
+	]
+}

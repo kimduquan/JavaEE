@@ -2,83 +2,82 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>openup</groupId>
+  <parent>
+	<groupId>epf</groupId>
+	<artifactId>EPF-parent-ext</artifactId>
+	<version>1.0.0</version>
+	<relativePath>../EPF-parent-ext/pom.xml</relativePath>
+  </parent>
   <artifactId>EPF-persistence</artifactId>
   <name>Eclipse Process Framework Persistence</name>
-  <version>1.0.0</version>
   <properties>
-    <compiler-plugin.version>3.10.0</compiler-plugin.version>
-    <maven.compiler.release>11</maven.compiler.release>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
-    <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-    <quarkus.platform.version>2.7.5.Final</quarkus.platform.version>
-    <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
+    <maven.compiler.release>21</maven.compiler.release>
   </properties>
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>${quarkus.platform.group-id}</groupId>
-        <artifactId>${quarkus.platform.artifact-id}</artifactId>
-        <version>${quarkus.platform.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
   <dependencies>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-hibernate-reactive</artifactId>
+      <artifactId>quarkus-hibernate-orm</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-smallrye-opentracing</artifactId>
+      <artifactId>quarkus-smallrye-health</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy-reactive-jsonb</artifactId>
+      <artifactId>quarkus-smallrye-context-propagation</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-rest-client-reactive</artifactId>
+      <artifactId>quarkus-rest-jackson</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-reactive-mysql-client</artifactId>
+      <artifactId>quarkus-jsonb</artifactId>
     </dependency>
-	<dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-rest-client</artifactId>
+    </dependency>
+    <dependency>
 	    <groupId>io.quarkus</groupId>
-	    <artifactId>quarkus-reactive-pg-client</artifactId>
+	    <artifactId>quarkus-jdbc-postgresql</artifactId>
 	</dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-websockets-client</artifactId>
-    </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-hibernate-validator</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-smallrye-reactive-messaging-kafka</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-smallrye-jwt</artifactId>
+      <artifactId>quarkus-messaging-kafka</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-arc</artifactId>
     </dependency>
-	
-	<!-- https://mvnrepository.com/artifact/org.bitbucket.b_c/jose4j -->
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-narayana-lra</artifactId>
+    </dependency>
 	<dependency>
-		<groupId>org.bitbucket.b_c</groupId>
-		<artifactId>jose4j</artifactId>
-		<version>0.7.9</version>
+	   <groupId>io.quarkus</groupId>
+	   <artifactId>quarkus-kubernetes</artifactId>
 	</dependency>
+	<dependency>
+		<groupId>io.quarkus</groupId>
+		<artifactId>quarkus-container-image-jib</artifactId>
+	</dependency>
+	
+	<!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast -->
+	<dependency>
+		<groupId>com.hazelcast</groupId>
+		<artifactId>hazelcast</artifactId>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/javax.cache/cache-api -->
+	<dependency>
+		<groupId>javax.cache</groupId>
+		<artifactId>cache-api</artifactId>
+	</dependency>
+	
 	<dependency>
 		<groupId>openup</groupId>
 		<artifactId>EPF-naming</artifactId>
@@ -91,19 +90,19 @@
 	</dependency>
 	<dependency>
 		<groupId>openup</groupId>
-		<artifactId>EPF-messaging-utility</artifactId>
+		<artifactId>EPF-messaging-utility-ext</artifactId>
 		<version>${project.version}</version>
 	</dependency>
 	<dependency>
 		<groupId>openup</groupId>
-		<artifactId>EPF-client</artifactId>
+		<artifactId>EPF-json-utility-ext</artifactId>
 		<version>${project.version}</version>
 	</dependency>
-	<dependency>
-		<groupId>openup</groupId>
-		<artifactId>EPF-persistence-client</artifactId>
-		<version>${project.version}</version>
-	</dependency>
+    <dependency>
+        <groupId>openup</groupId>
+        <artifactId>EPF-logging-utility</artifactId>
+        <version>${project.version}</version>
+    </dependency>
 	<dependency>
 		<groupId>openup</groupId>
 		<artifactId>EPF-persistence-internal</artifactId>
@@ -111,27 +110,12 @@
 	</dependency>
 	<dependency>
 		<groupId>openup</groupId>
-		<artifactId>EPF-persistence-ext</artifactId>
-		<version>${project.version}</version>
-	</dependency>
-	<dependency>
-		<groupId>openup</groupId>
-		<artifactId>EPF-security-client</artifactId>
-		<version>${project.version}</version>
-	</dependency>
-	<dependency>
-		<groupId>openup</groupId>
-		<artifactId>EPF-security-utility</artifactId>
+		<artifactId>EPF-persistence-utility</artifactId>
 		<version>${project.version}</version>
 	</dependency>
 	<dependency>
 		<groupId>openup</groupId>
 		<artifactId>EPF-schema-utility</artifactId>
-		<version>${project.version}</version>
-	</dependency>
-	<dependency>
-		<groupId>openup</groupId>
-		<artifactId>EPF-security-schema</artifactId>
 		<version>${project.version}</version>
 	</dependency>
 	<dependency>
@@ -154,123 +138,5 @@
 		<artifactId>EPF-work-products-schema</artifactId>
 		<version>${project.version}</version>
 	</dependency>
-	<dependency>
-		<groupId>openup</groupId>
-		<artifactId>EPF-net-schema</artifactId>
-		<version>${project.version}</version>
-	</dependency>
-	<dependency>
-		<groupId>openup</groupId>
-		<artifactId>OpenUP-schema</artifactId>
-		<version>${project.version}</version>
-	</dependency>	
   </dependencies>
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>${quarkus.platform.group-id}</groupId>
-        <artifactId>quarkus-maven-plugin</artifactId>
-        <version>${quarkus.platform.version}</version>
-        <extensions>true</extensions>
-        <executions>
-          <execution>
-            <goals>
-              <goal>build</goal>
-              <goal>generate-code</goal>
-              <goal>generate-code-tests</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>${compiler-plugin.version}</version>
-        <configuration>
-          <compilerArgs>
-            <arg>-parameters</arg>
-          </compilerArgs>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>${surefire-plugin.version}</version>
-        <configuration>
-          <systemPropertyVariables>
-            <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-            <maven.home>${maven.home}</maven.home>
-          </systemPropertyVariables>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-  <profiles>
-    <profile>
-      <id>native</id>
-      <activation>
-        <property>
-          <name>epf-persistence-native</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-failsafe-plugin</artifactId>
-            <version>${surefire-plugin.version}</version>
-            <executions>
-              <execution>
-                <goals>
-                  <goal>integration-test</goal>
-                  <goal>verify</goal>
-                </goals>
-                <configuration>
-                  <systemPropertyVariables>
-                    <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
-                    <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-                    <maven.home>${maven.home}</maven.home>
-                  </systemPropertyVariables>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-			  <groupId>org.jboss.jandex</groupId>
-			  <artifactId>jandex-maven-plugin</artifactId>
-			  <version>1.2.2</version>
-			  <executions>
-				<execution>
-				  <id>make-index</id>
-				  <goals>
-					<goal>jandex</goal>
-				  </goals>
-				</execution>
-			  </executions>
-		  </plugin>
-		  <plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-antrun-plugin</artifactId>
-			<version>3.0.0</version>
-			<executions>
-				<execution>
-					<phase>pre-integration-test</phase>
-						<configuration>
-							<target>
-								<exec executable="jshell">
-									<arg value="../start.jsh"/>
-								    <arg value="-R-Dcmd=${project.build.directory}/${project.build.finalName}-runner"/>
-							  	</exec>
-							</target >
-						</configuration>
-					<goals>
-						<goal>run</goal>
-					</goals>
-				</execution>
-			</executions>
-		  </plugin>
-        </plugins>
-      </build>
-      <properties>
-        <quarkus.package.type>native</quarkus.package.type>
-      </properties>
-    </profile>
-  </profiles>
 </project>

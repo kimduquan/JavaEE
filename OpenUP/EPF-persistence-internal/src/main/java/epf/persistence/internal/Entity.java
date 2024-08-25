@@ -1,6 +1,6 @@
 package epf.persistence.internal;
 
-import javax.persistence.metamodel.EntityType;
+import jakarta.persistence.metamodel.EntityType;
 
 /**
  *

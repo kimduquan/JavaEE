@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.shell.security;
 
 import picocli.CommandLine.Option;
@@ -15,7 +12,7 @@ public class Credential {
 	 * 
 	 */
 	@Option(names = {"-t", "--token"}, required = true, description = "Token") 
-	protected transient String token;
+	protected transient String rawToken;
 	
     /**
      * 
@@ -28,6 +25,22 @@ public class Credential {
      */
     public String getAuthHeader() {
     	final StringBuilder tokenHeader = new StringBuilder();
-    	return tokenHeader.append("Bearer ").append(token).toString();
+    	return tokenHeader.append("Bearer ").append(rawToken).toString();
     }
+    
+    public String getRawToken() {
+    	return rawToken;
+    }
+    
+    public void setRawToken(final String rawToken) {
+    	this.rawToken = rawToken;
+    }
+
+	public String getTokenID() {
+		return tokenID;
+	}
+
+	public void setTokenID(final String tokenID) {
+		this.tokenID = tokenID;
+	}
 }

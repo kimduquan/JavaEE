@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import java.util.Objects;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.StreamingOutput;
-import epf.client.util.io.IOUtil;
+import epf.util.io.IOUtil;
 
 /**
  *
@@ -23,7 +23,7 @@ public class EntityOutput implements StreamingOutput {
      * @param input
      */
     public EntityOutput(final InputStream input) {
-    	Objects.requireNonNull(input);
+    	Objects.requireNonNull(input, "InputStream");
         this.input = input;
     }
 

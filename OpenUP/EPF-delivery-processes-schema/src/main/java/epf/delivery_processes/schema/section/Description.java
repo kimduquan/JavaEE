@@ -1,11 +1,11 @@
 package epf.delivery_processes.schema.section;
 
 import java.io.Serializable;
-import javax.json.JsonObject;
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.Embedded;
-import javax.validation.constraints.NotNull;
+import jakarta.json.JsonObject;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
+import jakarta.validation.constraints.NotNull;
 import org.eclipse.microprofile.graphql.Type;
 
 /**

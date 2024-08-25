@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>openup</groupId>
+        <artifactId>OpenUP-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
+    <artifactId>EPF-security-management</artifactId>
+    <name>Eclipse Process Framework Security Management</name>
+    <packaging>war</packaging>
+    <dependencies>
+    	<!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
+		<dependency>
+		    <groupId>javax.ws.rs</groupId>
+		    <artifactId>javax.ws.rs-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.enterprise/cdi-api -->
+		<dependency>
+		    <groupId>javax.enterprise</groupId>
+		    <artifactId>cdi-api</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.security.enterprise/javax.security.enterprise-api -->
+		<dependency>
+		    <groupId>javax.security.enterprise</groupId>
+		    <artifactId>javax.security.enterprise-api</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
+		<dependency>
+		    <groupId>javax.annotation</groupId>
+		    <artifactId>javax.annotation-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.persistence/javax.persistence-api -->
+		<dependency>
+		    <groupId>javax.persistence</groupId>
+		    <artifactId>javax.persistence-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.transaction/javax.transaction-api -->
+		<dependency>
+		    <groupId>javax.transaction</groupId>
+		    <artifactId>javax.transaction-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.validation/validation-api -->
+		<dependency>
+		    <groupId>javax.validation</groupId>
+		    <artifactId>validation-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.config/microprofile-config-api -->
+		<dependency>
+			<groupId>org.eclipse.microprofile.config</groupId>
+			<artifactId>microprofile-config-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.context-propagation/microprofile-context-propagation-api -->
+		<dependency>
+		    <groupId>org.eclipse.microprofile.context-propagation</groupId>
+		    <artifactId>microprofile-context-propagation-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.jwt/microprofile-jwt-auth-api -->
+		<dependency>
+		    <groupId>org.eclipse.microprofile.jwt</groupId>
+		    <artifactId>microprofile-jwt-auth-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.jaegertracing/jaeger-client -->
+        <dependency>
+            <groupId>io.jaegertracing</groupId>
+            <artifactId>jaeger-client</artifactId>
+        </dependency>
+		<!-- https://mvnrepository.com/artifact/org.bitbucket.b_c/jose4j -->
+		<dependency>
+			<groupId>org.bitbucket.b_c</groupId>
+			<artifactId>jose4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>openup</groupId>
+			<artifactId>EPF-naming</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-security-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-security-utility</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+	    <dependency>
+	        <groupId>openup</groupId>
+	        <artifactId>EPF-logging-utility</artifactId>
+	        <version>${project.version}</version>
+	    </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-concurrent-utility</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-security-internal</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+</project>

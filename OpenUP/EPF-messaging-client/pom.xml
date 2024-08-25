@@ -34,10 +34,25 @@
 			<artifactId>javax.json.bind-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-naming</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-utility</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-json-utility</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+	    <dependency>
+	        <groupId>openup</groupId>
+	        <artifactId>EPF-logging-utility</artifactId>
+	        <version>${project.version}</version>
+	    </dependency>
     </dependencies>
 </project>

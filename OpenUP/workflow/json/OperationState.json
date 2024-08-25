@@ -1,0 +1,14 @@
+{
+	"name": "",
+	"type": "operation",
+	"actionMode": "sequential",
+	"actions": [],
+	"timeouts": {},
+	"stateDataFilter": {},
+	"onErrors": [],
+	"transition": {},
+	"compensatedBy": "",
+	"usedForCompensation": false,
+	"metadata": {},
+	"end": {}
+}

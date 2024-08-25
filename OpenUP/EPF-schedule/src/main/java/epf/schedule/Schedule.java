@@ -1,61 +1,48 @@
-/**
- * 
- */
 package epf.schedule;
 
+import java.io.InputStream;
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 import javax.enterprise.concurrent.ManagedScheduledExecutorService;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
-import org.eclipse.microprofile.context.ManagedExecutor;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.PathSegment;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import org.eclipse.microprofile.health.Readiness;
 import epf.naming.Naming;
-import epf.util.config.ConfigUtil;
-import epf.util.logging.LogManager;
-import epf.util.websocket.Client;
-import epf.util.websocket.MessageQueue;
+import epf.schedule.internal.Messaging;
+import epf.schedule.internal.ScheduledRequest;
+import epf.schedule.internal.RecurringTimeIntervalTrigger;
+import epf.schedule.schema.RecurringTimeInterval;
+import epf.schedule.util.ScheduleUtil;
+import epf.util.StringUtil;
+import epf.util.UUIDUtil;
 
 /**
  * @author PC
+ * @param <ScheduledRequest>
  *
  */
 @ApplicationScoped
 @Path(Naming.SCHEDULE)
-public class Schedule implements epf.client.schedule.Schedule {
+public class Schedule implements epf.schedule.client.Schedule {
 	
 	/**
 	 * 
 	 */
-	private static transient final Logger LOGGER = LogManager.getLogger(Schedule.class.getName());
-	
-	/**
-	 * 
-	 */
-	private transient final AtomicLong id = new AtomicLong(0);
-	
-	/**
-	 * 
-	 */
-	private transient final Map<Long, Scheduled> invokers = new ConcurrentHashMap<>();
-	
-	/**
-	 * 
-	 */
-	private transient MessageQueue shellMessages;
-	
-	/**
-	 * 
-	 */
-	private transient Client shell;
+	private transient final Map<String, ScheduledFuture<Response>> scheduledFutures = new ConcurrentHashMap<>();
 
 	/**
 	 * 
@@ -67,71 +54,62 @@ public class Schedule implements epf.client.schedule.Schedule {
 	 * 
 	 */
 	@Inject
-	private transient ManagedExecutor executor;
+	@Readiness
+	private transient Registry registry;
 	
 	/**
 	 * 
 	 */
-	@PostConstruct
-	protected void postConstruct() {
-		try {
-			final URI messagingUrl = ConfigUtil.getURI(Naming.Messaging.MESSAGING_URL);
-			shell = Client.connectToServer(messagingUrl.resolve("schedule/shell"));
-			shellMessages = new MessageQueue(shell.getSession());
-			executor.submit(shellMessages);
-		}
-		catch(Exception ex) {
-			LOGGER.throwing(LOGGER.getName(), "postConstruct", ex);
-		}
-	}
+	@Inject
+	@Readiness
+	private transient Messaging messaging;
 	
 	/**
 	 * 
 	 */
 	@PreDestroy
 	protected void preDestroy() {
-		shellMessages.close();
-		invokers.values().parallelStream().forEach(Scheduled::close);
-		invokers.clear();
-		try {
-			shell.close();
-		} 
-		catch (Exception e) {
-			LOGGER.throwing(LOGGER.getName(), "preDestroy", e);
+		scheduledFutures.values().parallelStream().forEach(scheduledFuture -> scheduledFuture.cancel(true));
+		scheduledFutures.clear();
+	}
+
+	@Override
+	public Response schedule(final UriInfo uriInfo, final HttpHeaders headers, final List<PathSegment> paths, final InputStream body) {
+		final PathSegment schedulePath = uriInfo.getPathSegments().get(0);
+		final String service = schedulePath.getMatrixParameters().getFirst("service");
+		final String method = schedulePath.getMatrixParameters().getFirst("method");
+		final String recurringTimeIntervalParam = schedulePath.getMatrixParameters().getFirst("recurringTimeInterval");
+		if(!StringUtil.isEmpty(service) && !StringUtil.isEmpty(method) && !StringUtil.isEmpty(recurringTimeIntervalParam)) {
+			final URI serviceUri = registry.lookup(service).orElse(null);
+			final RecurringTimeInterval recurringTimeInterval = ScheduleUtil.parse(recurringTimeIntervalParam);
+			if(serviceUri != null && recurringTimeInterval != null) {
+				final UUID uuid = UUID.randomUUID();
+				final ScheduledRequest call = new ScheduledRequest(uuid, Optional.empty());
+				final ScheduledFuture<Response> response = scheduledExecutor.schedule(call, new RecurringTimeIntervalTrigger(recurringTimeInterval));
+				scheduledFutures.put(uuid.toString(), response);
+				return Response.ok(uuid.toString()).build();
+			}
 		}
+		throw new BadRequestException();
 	}
 
 	@Override
-	public long schedule(final String path, final long delay, final TimeUnit unit) {
-		final Scheduled invoke = new Scheduled(id.incrementAndGet(), shellMessages);
-		final ScheduledFuture<?> future = scheduledExecutor.schedule(invoke, delay, unit);
-		invoke.setScheduled(future);
-		invokers.put(invoke.getId(), invoke);
-		return invoke.getId();
-	}
-
-	@Override
-	public void cancel(final String path, final long id) {
-		if(invokers.containsKey(id)) {
-			invokers.remove(id).close();
+	public Response cancel(final UriInfo uriInfo, final List<PathSegment> paths) {
+		final PathSegment schedulePath = uriInfo.getPathSegments().get(0);
+		final String identityName = schedulePath.getMatrixParameters().getFirst("identityName");
+		if(identityName != null) {
+			final UUID uuid = UUIDUtil.fromString(identityName);
+			if(uuid != null) {
+				final ScheduledFuture<Response> response = scheduledFutures.remove(identityName);
+				if(response != null) {
+					response.cancel(true);
+					return Response.ok().build();
+				}
+				else {
+					throw new NotFoundException();
+				}
+			}
 		}
-	}
-
-	@Override
-	public long scheduleAtFixedRate(final String path, final long initialDelay, final long period, final TimeUnit unit) {
-		final Scheduled invoke = new Scheduled(id.incrementAndGet(), shellMessages);
-		final ScheduledFuture<?> future = scheduledExecutor.scheduleAtFixedRate(invoke, initialDelay, period, unit);
-		invoke.setScheduled(future);
-		invokers.put(invoke.getId(), invoke);
-		return invoke.getId();
-	}
-
-	@Override
-	public long scheduleWithFixedDelay(final String path, final long initialDelay, final long delay, final TimeUnit unit) {
-		final Scheduled invoke = new Scheduled(id.incrementAndGet(), shellMessages);
-		final ScheduledFuture<?> future = scheduledExecutor.scheduleWithFixedDelay(invoke, initialDelay, delay, unit);
-		invoke.setScheduled(future);
-		invokers.put(invoke.getId(), invoke);
-		return invoke.getId();
+		throw new BadRequestException();
 	}
 }

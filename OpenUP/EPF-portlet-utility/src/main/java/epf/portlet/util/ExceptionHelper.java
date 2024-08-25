@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.portlet.util;
 
 import java.util.Iterator;

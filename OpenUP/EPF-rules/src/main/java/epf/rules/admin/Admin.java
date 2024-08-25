@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.rules.admin;
 
 import java.io.InputStream;
@@ -20,7 +17,7 @@ import epf.naming.Naming;
  */
 @Path(Naming.Rules.RULES_ADMIN)
 @ApplicationScoped
-public class Admin implements epf.client.rules.admin.Admin {
+public class Admin implements epf.rules.client.admin.Admin {
 	
 	/**
 	 * 

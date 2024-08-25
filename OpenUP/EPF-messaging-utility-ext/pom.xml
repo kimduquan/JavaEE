@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>openup</groupId>
+        <artifactId>OpenUP-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
+    <artifactId>EPF-messaging-utility-ext</artifactId>
+    <name>Eclipse Process Framework Messaging Utility Ext</name>
+    <packaging>jar</packaging>
+    <dependencies>
+		<!-- https://mvnrepository.com/artifact/javax.json/javax.json-api -->
+		<dependency>
+		    <groupId>jakarta.json</groupId>
+		    <artifactId>jakarta.json-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.json.bind/javax.json.bind-api -->
+		<dependency>
+		    <groupId>jakarta.json.bind</groupId>
+		    <artifactId>jakarta.json.bind-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-json-utility-ext</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+	    <dependency>
+	        <groupId>openup</groupId>
+	        <artifactId>EPF-logging-utility</artifactId>
+	        <version>${project.version}</version>
+	    </dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients -->
+		<dependency>
+		    <groupId>org.apache.kafka</groupId>
+		    <artifactId>kafka-clients</artifactId>
+		</dependency>
+    </dependencies>
+</project>

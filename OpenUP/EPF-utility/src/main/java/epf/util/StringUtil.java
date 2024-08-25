@@ -1,8 +1,13 @@
 package epf.util;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Base64.Decoder;
+import java.util.Base64.Encoder;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -51,11 +56,11 @@ public interface StringUtil {
 	 * @param number
 	 * @return
 	 */
-	static String toShortString(int number) {
+	static String toShortString(long number) {
 		final StringBuffer shortString = new StringBuffer();
         while (number > 0)
         {
-        	shortString.append(SHORT_STRING_CHARS[number % SHORT_STRING_CHARS.length]);
+        	shortString.append(SHORT_STRING_CHARS[(int)(number % SHORT_STRING_CHARS.length)]);
         	number = number / SHORT_STRING_CHARS.length;
         }
         return shortString.reverse().toString();
@@ -65,9 +70,9 @@ public interface StringUtil {
 	 * @param shortString
 	 * @return
 	 */
-	static int fromShortString(final String shortString) {
+	static long fromShortString(final String shortString) {
 		Objects.requireNonNull(shortString, "String");
-		int number = 0;
+		long number = 0;
 		for (char ch : shortString.toCharArray())
         {
             if ('a' <= ch && ch <= 'z') {
@@ -199,4 +204,68 @@ public interface StringUtil {
         }
         return new String(bytes, charset);
     }
+	
+	/**
+	 * @param bytes
+	 * @return
+	 * @throws Exception
+	 */
+	static String encode(final byte[] bytes) throws Exception {
+		return encode(bytes, Base64.getEncoder());
+	}
+	
+	/**
+	 * @param bytes
+	 * @param encoder
+	 * @return
+	 * @throws Exception
+	 */
+	static String encode(final byte[] bytes, final Encoder encoder) throws Exception {
+		return new String(encoder.encode(bytes), "UTF-8");
+	}
+	
+	/**
+	 * @param string
+	 * @return
+	 * @throws Exception
+	 */
+	static byte[] decode(final String string) throws Exception {
+		return decode(string, Base64.getDecoder());
+	}
+	
+	/**
+	 * @param string
+	 * @param decoder
+	 * @return
+	 * @throws Exception
+	 */
+	static byte[] decode(final String string, final Decoder decoder) throws Exception {
+		return decoder.decode(string.getBytes("UTF-8"));
+	}
+	
+	/**
+	 * @param string
+	 * @return
+	 * @throws Exception 
+	 */
+	static String encodeURL(final String string) throws Exception {
+		return URLEncoder.encode(string, "UTF-8");
+	}
+	
+	/**
+	 * @param string
+	 * @return
+	 * @throws Exception
+	 */
+	static String decodeURL(final String string) throws Exception {
+		return URLDecoder.decode(string, "UTF-8");
+	}
+	
+	/**
+	 * @param string
+	 * @return
+	 */
+	static boolean isEmpty(final String string) {
+		return string == null || string.isEmpty();
+	}
 }

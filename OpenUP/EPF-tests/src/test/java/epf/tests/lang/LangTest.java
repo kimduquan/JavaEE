@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.tests.lang;
 
 import org.junit.After;

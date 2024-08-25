@@ -1,16 +1,15 @@
 package epf.net.schema;
 
-import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import epf.schema.utility.EntityListener;
+import epf.schema.utility.EPFEntity;
 
 /**
  * @author PC
@@ -20,8 +19,7 @@ import epf.schema.utility.EntityListener;
 @Schema(name = Net.URL, title = "URL")
 @Entity(name = Net.URL)
 @Table(schema = Net.SCHEMA, name = "URL")
-@EntityListeners(EntityListener.class)
-public class URL implements Serializable {
+public class URL extends EPFEntity {
 
 	/**
 	 * 
@@ -33,8 +31,9 @@ public class URL implements Serializable {
 	 */
 	@Id
 	@Column(name = "ID")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	@SequenceGenerator(name = "EPF_Net_URL_SEQ", sequenceName= "URL_SEQ", allocationSize = 1, initialValue = 1, schema = Net.SCHEMA)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EPF_Net_URL_SEQ")
+	private Long id;
 	
 	/**
 	 * 
@@ -182,11 +181,11 @@ public class URL implements Serializable {
 		this.userInfo = userInfo;
 	}
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(final int id) {
+	public void setId(final Long id) {
 		this.id = id;
 	}
 

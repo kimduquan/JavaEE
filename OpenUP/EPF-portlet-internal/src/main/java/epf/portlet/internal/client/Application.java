@@ -1,14 +1,14 @@
-/**
- * 
- */
 package epf.portlet.internal.client;
 
 import java.net.URI;
+import java.util.Objects;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
+
+import epf.client.internal.ClientQueue;
 import epf.client.util.Client;
-import epf.client.util.ClientQueue;
 
 /**
  * @author PC
@@ -28,7 +28,6 @@ public class Application {
 	@PostConstruct
 	protected void postConstruct() {
 		clients = new ClientQueue();
-		clients.initialize();
 	}
 	
 	/**
@@ -51,6 +50,7 @@ public class Application {
 	 * @return
 	 */
 	public Client newClient(final URI url) {
-		return new Client(clients, url, b -> b);
+		Objects.requireNonNull(url, "URI");
+		return new Client(clients.poll(url, b -> b), url, clients::add);
 	}
 }

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.tests.schema;
 
 import java.net.URI;
@@ -15,11 +12,10 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
-
 import epf.client.util.Client;
 import epf.naming.Naming;
-import epf.persistence.schema.client.Entity;
-import epf.persistence.schema.client.Schema;
+import epf.persistence.schema.Entity;
+import epf.persistence.client.Schema;
 import epf.tests.client.ClientUtil;
 import epf.tests.security.SecurityUtil;
 import epf.client.gateway.GatewayUtil;
@@ -52,6 +48,7 @@ public class SchemaTest {
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		SecurityUtil.logOut(token);
+		ClientUtil.afterClass();
 	}
 
 	/**
@@ -60,7 +57,7 @@ public class SchemaTest {
 	@Before
 	public void setUp() throws Exception {
 		client = ClientUtil.newClient(schemaUrl);
-    	client.authorization(token);
+    	client.authorization(token.toCharArray());
 	}
 
 	/**

@@ -1,25 +1,21 @@
 package epf.tasks.schema;
 
-import java.io.Serializable;
 import java.util.Set;
-import javax.json.JsonObject;
-import javax.json.bind.annotation.JsonbPropertyOrder;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.NamedEntityGraph;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
+import jakarta.json.JsonObject;
+import jakarta.json.bind.annotation.JsonbPropertyOrder;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import epf.schema.utility.EntityListener;
-import javax.persistence.Index;
+import epf.schema.utility.EPFEntity;
+import jakarta.persistence.Index;
 
 /**
  *
@@ -33,22 +29,12 @@ import javax.persistence.Index;
     "name",
     "tasks"
 })
-@NamedQuery(
-        name = Discipline.DISCIPLINES, 
-        query = "SELECT d FROM EPF_Discipline AS d")
-@NamedEntityGraph(includeAllAttributes = true)
-@EntityListeners(EntityListener.class)
-public class Discipline implements Serializable {
+public class Discipline extends EPFEntity {
 
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-    
-    /**
-     * 
-     */
-    public static final String DISCIPLINES = "EPF_Discipline.Disciplines";
 
 	/**
      * 

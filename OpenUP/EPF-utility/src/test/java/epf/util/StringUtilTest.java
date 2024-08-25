@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.util;
 
 import org.junit.After;
@@ -72,7 +69,7 @@ public class StringUtilTest {
 	@Test
 	public void testFromShortString() {
 		String shortString = "dnh";
-		int number = StringUtil.fromShortString(shortString);
+		long number = StringUtil.fromShortString(shortString);
 		Assert.assertEquals(12345, number);
 	}
 	

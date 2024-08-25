@@ -1,8 +1,7 @@
 package epf.management;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.ws.rs.Path;
-
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ws.rs.Path;
 import epf.naming.Naming;
 
 /**
@@ -11,6 +10,6 @@ import epf.naming.Naming;
  */
 @Path(Naming.MANAGEMENT)
 @ApplicationScoped
-public class Management implements epf.client.management.Management {
+public class Management {
 	
 }

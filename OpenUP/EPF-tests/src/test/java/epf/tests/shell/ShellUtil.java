@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.tests.shell;
 
 import java.io.IOException;
@@ -25,11 +22,6 @@ import epf.tests.TestUtil;
  *
  */
 public class ShellUtil {
-	
-	/**
-	 * 
-	 */
-	private static final String COMMAND = System.getProperty(Naming.Shell.SHELL_COMMAND);
 	
 	/**
 	 * 
@@ -113,8 +105,7 @@ public class ShellUtil {
 	 * @throws Exception
 	 */
 	public static List<String> getOutput(final Path path) throws Exception{
-		List<String> lines = Files.readAllLines(path);
-		return lines.subList(7, lines.size() - 1);
+		return Files.readAllLines(path);
 	}
 	
 	/**
@@ -124,7 +115,6 @@ public class ShellUtil {
 	 */
 	static ProcessBuilder command(final ProcessBuilder builder, final String...command) {
 		final List<String> cmd = new ArrayList<>();
-		cmd.add(COMMAND);
 		cmd.add(RUNNER);
 		cmd.addAll(Arrays.asList(command));
 		return builder.command(cmd);

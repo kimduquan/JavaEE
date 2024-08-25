@@ -1,0 +1,271 @@
+{
+	"id": "Inception Iteration",
+	"key": "Inception Iteration",
+	"name": "Inception Iteration",
+	"description": "This iteration template defines the activities (and associated roles and work products) performed in a typical iteration in the Inception phase.",
+	"version": "1.0",
+	"start": "Initiate Project",
+	"specVersion": "0.8",
+	"expressionLang": "el",
+	"keepActive": true,
+	"events": [
+		{
+			"name": "Develop Technical Vision",
+			"source": "/openup_lifecycle/inception_phase/inception_iteration/initiate_project",
+			"type": "develop_technical_vision",
+			"kind": "produced",
+			"dataOnly": true
+		},
+		{
+			"name": "Plan Project",
+			"source": "/openup_lifecycle/inception_phase/inception_iteration/initiate_project",
+			"type": "plan_project",
+			"kind": "produced",
+			"dataOnly": true
+		},
+		{
+			"name": "Plan Iteration",
+			"source": "/openup_lifecycle/inception_phase/inception_iteration/plan_and_manage_iteration",
+			"type": "plan_iteration",
+			"kind": "produced",
+			"dataOnly": true
+		},
+		{
+			"name": "Manage Iteration",
+			"source": "/openup_lifecycle/inception_phase/inception_iteration/plan_and_manage_iteration",
+			"type": "manage_iteration",
+			"kind": "produced",
+			"dataOnly": true
+		},
+		{
+			"name": "Assess Results",
+			"source": "/openup_lifecycle/inception_phase/inception_iteration/plan_and_manage_iteration",
+			"type": "assess_results",
+			"kind": "produced",
+			"dataOnly": true
+		},
+		{
+			"name": "Tailor the Process",
+			"source": "/openup_lifecycle/inception_phase/inception_iteration/prepare_environment",
+			"type": "tailor_the_process",
+			"kind": "produced",
+			"dataOnly": true
+		},
+		{
+			"name": "Set Up Tools",
+			"source": "/openup_lifecycle/inception_phase/inception_iteration/prepare_environment",
+			"type": "set_up_tools",
+			"kind": "produced",
+			"dataOnly": true
+		},
+		{
+			"name": "Verify Tool Configuration and Installation",
+			"source": "/openup_lifecycle/inception_phase/inception_iteration/prepare_environment",
+			"type": "verify_tool_configuration_and_installation",
+			"kind": "produced",
+			"dataOnly": true
+		},
+		{
+			"name": "Deploy the Process",
+			"source": "/openup_lifecycle/inception_phase/inception_iteration/prepare_environment",
+			"type": "deploy_the_process",
+			"kind": "produced",
+			"dataOnly": true
+		},
+		{
+			"name": "Identify and Outline Requirements",
+			"source": "/openup_lifecycle/inception_phase/inception_iteration/identify_and_refine_requirements",
+			"type": "identify_and_outline_requirements",
+			"kind": "produced",
+			"dataOnly": true
+		},
+		{
+			"name": "Detail Use-Case Scenarios",
+			"source": "/openup_lifecycle/inception_phase/inception_iteration/identify_and_refine_requirements",
+			"type": "detail_use_case_scenarios",
+			"kind": "produced",
+			"dataOnly": true
+		},
+		{
+			"name": "Detail System-Wide Requirements",
+			"source": "/openup_lifecycle/inception_phase/inception_iteration/identify_and_refine_requirements",
+			"type": "detail_system_wide_requirements",
+			"kind": "produced",
+			"dataOnly": true
+		},
+		{
+			"name": "Create Test Cases",
+			"source": "/openup_lifecycle/inception_phase/inception_iteration/identify_and_refine_requirements",
+			"type": "create_test_cases",
+			"kind": "produced",
+			"dataOnly": true
+		},
+		{
+			"name": "Envision the Architecture",
+			"source": "/openup_lifecycle/inception_phase/inception_iteration/agree_on_technical_approach",
+			"type": "envision_the_architecture",
+			"kind": "produced",
+			"dataOnly": true
+		}
+	],
+	"autoRetries": false,
+	"states": [
+		{
+			"name": "Initiate Project",
+			"type": "parallel",
+			"branches": [
+				{
+					"name": "Initiate Project",
+					"actions": [
+						{
+							"name": "Develop Technical Vision",
+							"eventRef": {
+								"resultEventRef": "Develop Technical Vision",
+								"triggerEventRef": "Develop Technical Vision",
+								"contextAttributes": {
+									
+								},
+								"invoke": "sync"
+							}
+						},
+						{
+							"name": "Plan Project",
+							"eventRef": {
+								"resultEventRef": "Plan Project",
+								"triggerEventRef": "Plan Project",
+								"invoke": "sync"
+							}
+						}
+					]
+				},
+				{
+					"name": "Plan and Manage Iteration",
+					"actions": [
+						{
+							"name": "Plan Iteration",
+							"eventRef": {
+								"resultEventRef": "Plan Iteration",
+								"triggerEventRef": "Plan Iteration",
+								"invoke": "sync"
+							}
+						},
+						{
+							"name": "Manage Iteration",
+							"eventRef": {
+								"resultEventRef": "Manage Iteration",
+								"triggerEventRef": "Manage Iteration",
+								"invoke": "sync"
+							}
+						},
+						{
+							"name": "Assess Results",
+							"eventRef": {
+								"resultEventRef": "Assess Results",
+								"triggerEventRef": "Assess Results",
+								"invoke": "sync"
+							}
+						}
+					]
+				}
+			],
+			"completionType": "allOf",
+			"transition": "Agree on Technical Approach",
+			"end": false
+		},
+		{
+			"name": "Agree on Technical Approach",
+			"type": "parallel",
+			"branches": [
+				{
+					"name": "Prepare Environment",
+					"actions": [
+						{
+							"name": "Tailor the Process",
+							"eventRef": {
+								"resultEventRef": "Tailor the Process",
+								"triggerEventRef": "Tailor the Process",
+								"invoke": "sync"
+							}
+						},
+						{
+							"name": "Set Up Tools",
+							"eventRef": {
+								"resultEventRef": "Set Up Tools",
+								"triggerEventRef": "Set Up Tools",
+								"invoke": "sync"
+							}
+						},
+						{
+							"name": "Verify Tool Configuration and Installation",
+							"eventRef": {
+								"resultEventRef": "Verify Tool Configuration and Installation",
+								"triggerEventRef": "Verify Tool Configuration and Installation",
+								"invoke": "sync"
+							}
+						},
+						{
+							"name": "Deploy the Process",
+							"eventRef": {
+								"resultEventRef": "Deploy the Process",
+								"triggerEventRef": "Deploy the Process",
+								"invoke": "sync"
+							}
+						}
+					]
+				},
+				{
+					"name": "Identify and Refine Requirements",
+					"actions": [
+						{
+							"name": "Identify and Outline Requirements",
+							"eventRef": {
+								"resultEventRef": "Identify and Outline Requirements",
+								"triggerEventRef": "Identify and Outline Requirements",
+								"invoke": "sync"
+							}
+						},
+						{
+							"name": "Detail Use-Case Scenarios",
+							"eventRef": {
+								"resultEventRef": "Detail Use-Case Scenarios",
+								"triggerEventRef": "Detail Use-Case Scenarios",
+								"invoke": "sync"
+							}
+						},
+						{
+							"name": "Detail System-Wide Requirements",
+							"eventRef": {
+								"resultEventRef": "Detail System-Wide Requirements",
+								"triggerEventRef": "Detail System-Wide Requirements",
+								"invoke": "sync"
+							}
+						},
+						{
+							"name": "Create Test Cases",
+							"eventRef": {
+								"resultEventRef": "Create Test Cases",
+								"triggerEventRef": "Create Test Cases",
+								"invoke": "sync"
+							}
+						}
+					]
+				},
+				{
+					"name": "Agree on Technical Approach",
+					"actions": [
+						{
+							"name": "Envision the Architecture",
+							"eventRef": {
+								"resultEventRef": "Envision the Architecture",
+								"triggerEventRef": "Envision the Architecture",
+								"invoke": "sync"
+							}
+						}
+					]
+				}
+			],
+			"completionType": "allOf",
+			"end": true
+		}
+	]
+}

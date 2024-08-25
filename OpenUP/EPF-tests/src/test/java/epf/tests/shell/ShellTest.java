@@ -22,18 +22,18 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
-
 import epf.file.util.PathUtil;
 import epf.naming.Naming;
-import epf.persistence.schema.client.Entity;
+import epf.net.schema.URL;
+import epf.persistence.schema.Entity;
 import epf.security.schema.Token;
 import epf.tests.TestUtil;
+import epf.tests.client.ClientUtil;
 import epf.tests.file.FileUtil;
 import epf.tests.persistence.PersistenceUtil;
 import epf.tests.rules.RulesUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
-import epf.util.config.ConfigUtil;
 import epf.work_products.schema.Artifact;
 import epf.work_products.schema.WorkProducts;
 import epf.work_products.schema.section.Description;
@@ -79,7 +79,6 @@ public class ShellTest {
 		Path out = Files.createTempFile(tempDir, "out", "out");
 		ProcessBuilder builder = new ProcessBuilder();
 		builder.directory(workingDir.toFile());
-		builder.environment().put(Naming.Gateway.GATEWAY_URL, ConfigUtil.getString(Naming.Gateway.GATEWAY_URL));
 		builder.redirectOutput(out.toFile());
 		tokenID = ShellUtil.securityAuth(builder, token, out).getTokenID();
 		Files.delete(out);
@@ -97,10 +96,10 @@ public class ShellTest {
 	public static void tearDownAfterClass() throws Exception {
 		ProcessBuilder builder = new ProcessBuilder();
 		builder.directory(workingDir.toFile());
-		builder.environment().put(Naming.Gateway.GATEWAY_URL, ConfigUtil.getString(Naming.Gateway.GATEWAY_URL));
 		ShellUtil.securityLogout(builder, tokenID);
 		ShellUtil.securityLogout(builder, otherTokenID);
 		tempDir.toFile().delete();
+		ClientUtil.afterClass();
 	}
 
 	/**
@@ -113,7 +112,6 @@ public class ShellTest {
 		err = Files.createTempFile(tempDir, "err", "err");
 		builder = new ProcessBuilder();
 		builder.directory(workingDir.toFile());
-		builder.environment().put(Naming.Gateway.GATEWAY_URL, ConfigUtil.getString(Naming.Gateway.GATEWAY_URL));
 		builder.redirectError(err.toFile());
 		builder.redirectInput(in.toFile());
 		builder.redirectOutput(out.toFile());
@@ -291,6 +289,28 @@ public class ShellTest {
 	}
 	
 	@Test
+	public void testSearch_Count() throws Exception {
+		builder = ShellUtil.command(builder, Naming.Query.SEARCH, "count", "-tid", tokenID, "-txt", "Artifact");
+		process = ShellUtil.waitFor(builder);
+		List<String> lines = ShellUtil.getOutput(out);
+		Assert.assertFalse(lines.isEmpty());
+		Assert.assertTrue(Integer.parseInt(lines.get(lines.size() - 1)) > 0);
+	}
+	
+	@Test
+	public void testSearch_Fetch() throws Exception {
+		builder = ShellUtil.command(builder, Naming.Query.SEARCH, "fetch", "-tid", tokenID, "-txt", "Artifact");
+		process = ShellUtil.waitFor(builder);
+		List<String> lines = ShellUtil.getOutput(out);
+		Assert.assertFalse(lines.isEmpty());
+		List<Artifact> artifacts;
+		try(Jsonb jsonb = JsonbBuilder.create()){
+			artifacts = jsonb.fromJson(lines.get(lines.size() - 1), (new GenericType<List<Artifact>>() {}).getType());
+		}
+		Assert.assertFalse(artifacts.isEmpty());
+	}
+	
+	@Test
 	public void testFile_Create() throws Exception {
 		Path file = Files.createTempFile("file", ".in");
 		Files.write(file, Arrays.asList("this is a test"));
@@ -395,19 +415,53 @@ public class ShellTest {
 				);
 		List<Object> input = new ArrayList<>();
 		Artifact artifact = new Artifact();
-		artifact.setName(StringUtil.randomString("Artifact"));
+		artifact.setName(StringUtil.randomString("testRules_Execute"));
 		input.add(artifact);
-		String json = RulesUtil.encode(input);
+		String json = RulesUtil.encodeArray(input);
 		process = ShellUtil.waitFor(builder, in, json);
 		List<String> lines = ShellUtil.getOutput(out);
 		List<String> errors = Files.readAllLines(err);
-		List<Object> resultList = RulesUtil.decode(lines.get(lines.size() - 1));
+		Object result = RulesUtil.decode(lines.get(lines.size() - 1));
+		Assert.assertTrue(result instanceof Artifact);
 		Assert.assertTrue(errors.isEmpty());
-		Assert.assertFalse(resultList.isEmpty());
-		Artifact resultArtifact = (Artifact) resultList.get(0);
+		Artifact resultArtifact = (Artifact) result;
 		Assert.assertNotNull("Artifact", resultArtifact);
 		Assert.assertEquals("Artifact.summary", artifact.getName() + " Summary", resultArtifact.getSummary());
 		RulesUtil.deregisterRuleExecutionSet(token, "Artifact1");
+	}
+	
+	@Test
+	public void testRules_Execute2() throws Exception {
+		RulesUtil.registerRuleExecutionSet(token, PathUtil.of("", "Url.drl"), "Url1");
+		builder = ShellUtil.command(builder,
+				Naming.RULES, "execute",
+				"-tid", tokenID,
+				"-r", "Url1",
+				"-i"
+				);
+		List<Object> input = new ArrayList<>();
+		final java.net.URL rawUrl = new java.net.URL("https://www.google.com/");
+		URL url = new URL();
+		url.setAuthority(rawUrl.getAuthority());
+		url.setDefaultPort(rawUrl.getDefaultPort());
+		url.setFile(rawUrl.getFile());
+		url.setHost(rawUrl.getHost());
+		url.setPath(rawUrl.getPath());
+		url.setPort(rawUrl.getPort());
+		url.setProtocol(rawUrl.getProtocol());
+		url.setQuery(rawUrl.getQuery());
+		url.setRef(rawUrl.getRef());
+		url.setUserInfo(rawUrl.getUserInfo());
+		url.setString(rawUrl.toString());
+		input.add(url);
+		String json = RulesUtil.encodeArray(input);
+		process = ShellUtil.waitFor(builder, in, json);
+		List<String> lines = ShellUtil.getOutput(out);
+		List<String> errors = Files.readAllLines(err);
+		Object result = RulesUtil.decode(lines.get(lines.size() - 1));
+		System.out.println(result);
+		Assert.assertTrue(errors.isEmpty());
+		RulesUtil.deregisterRuleExecutionSet(token, "Url1");
 	}
 	
 	@Test
@@ -421,7 +475,7 @@ public class ShellTest {
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = ShellUtil.getOutput(out);
 		List<String> errors = Files.readAllLines(err);
-		List<Object> resultList = RulesUtil.decode(lines.get(lines.size() - 1));
+		List<Object> resultList = RulesUtil.decodeArray(lines.get(lines.size() - 1));
 		Assert.assertTrue(errors.isEmpty());
 		Assert.assertFalse(resultList.isEmpty());
 		RulesUtil.deregisterRuleExecutionSet(token, "Artifact1");

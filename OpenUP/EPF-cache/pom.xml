@@ -1,148 +1,58 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+	<groupId>epf</groupId>
+	<artifactId>EPF-parent-ext</artifactId>
+	<version>1.0.0</version>
+	<relativePath>../EPF-parent-ext/pom.xml</relativePath>
+  </parent>
+  <artifactId>EPF-cache</artifactId>
+  <name>Eclipse Process Framework Cache</name>
+  <properties>
+    <maven.compiler.release>21</maven.compiler.release>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-rest-jsonb</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-smallrye-health</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-arc</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-kubernetes</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-container-image-jib</artifactId>
+    </dependency>
+
+	<dependency>
+		<groupId>com.hazelcast</groupId>
+		<artifactId>hazelcast</artifactId>
+	</dependency>
+	<dependency>
+	    <groupId>javax.cache</groupId>
+	    <artifactId>cache-api</artifactId>
+	</dependency>
+		
+	<dependency>
         <groupId>openup</groupId>
-        <artifactId>OpenUP-parent</artifactId>
-        <version>1.0.0</version>
-    </parent>
-    <artifactId>EPF-cache</artifactId>
-    <name>Eclipse Process Framework Cache</name>
-    <packaging>war</packaging>
-    <dependencies>
-    	<!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
-		<dependency>
-		    <groupId>javax.ws.rs</groupId>
-		    <artifactId>javax.ws.rs-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.enterprise/cdi-api -->
-		<dependency>
-		    <groupId>javax.enterprise</groupId>
-		    <artifactId>cdi-api</artifactId>
-		    <scope>provided</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.websocket/javax.websocket-api -->
-		<dependency>
-		    <groupId>javax.websocket</groupId>
-		    <artifactId>javax.websocket-api</artifactId>
-		    <scope>provided</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.cache/cache-api -->
-		<dependency>
-		    <groupId>javax.cache</groupId>
-		    <artifactId>cache-api</artifactId>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
-		<dependency>
-		    <groupId>javax.annotation</groupId>
-		    <artifactId>javax.annotation-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.json/javax.json-api -->
-		<dependency>
-		    <groupId>javax.json</groupId>
-		    <artifactId>javax.json-api</artifactId>
-		    <scope>provided</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.json.bind/javax.json.bind-api -->
-		<dependency>
-		    <groupId>javax.json.bind</groupId>
-		    <artifactId>javax.json.bind-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.context-propagation/microprofile-context-propagation-api -->
-		<dependency>
-		    <groupId>org.eclipse.microprofile.context-propagation</groupId>
-		    <artifactId>microprofile-context-propagation-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.health/microprofile-health-api -->
-		<dependency>
-		    <groupId>org.eclipse.microprofile.health</groupId>
-		    <artifactId>microprofile-health-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.reactive.messaging/microprofile-reactive-messaging-api -->
-		<dependency>
-		    <groupId>org.eclipse.microprofile.reactive.messaging</groupId>
-		    <artifactId>microprofile-reactive-messaging-api</artifactId>
-		    <scope>provided</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast -->
-		<dependency>
-			<groupId>com.hazelcast</groupId>
-			<artifactId>hazelcast</artifactId>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients -->
-		<dependency>
-		    <groupId>org.apache.kafka</groupId>
-		    <artifactId>kafka-clients</artifactId>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/io.jaegertracing/jaeger-client -->
-        <dependency>
-            <groupId>io.jaegertracing</groupId>
-            <artifactId>jaeger-client</artifactId>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-jdk14 -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-jdk14</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-client</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-messaging-client</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-messaging-utility</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-		<dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-schema-utility</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-delivery-processes-schema</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-roles-schema</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-tasks-schema</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-work-products-schema</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-net-schema</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-security-schema</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>OpenUP-schema</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
+        <artifactId>EPF-naming</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>openup</groupId>
+        <artifactId>EPF-logging-utility</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+  </dependencies>
 </project>

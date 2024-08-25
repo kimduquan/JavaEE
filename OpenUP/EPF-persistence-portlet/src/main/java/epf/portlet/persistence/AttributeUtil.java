@@ -1,19 +1,14 @@
-/**
- * 
- */
 package epf.portlet.persistence;
 
-import java.io.StringReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
-import javax.json.JsonReader;
 import javax.json.JsonValue;
-
-import epf.persistence.schema.client.Attribute;
-import epf.persistence.schema.client.AttributeType;
-import epf.persistence.schema.client.Entity;
+import epf.persistence.schema.Attribute;
+import epf.persistence.schema.AttributeType;
+import epf.persistence.schema.Entity;
+import epf.util.json.JsonUtil;
 
 /**
  * @author PC
@@ -134,12 +129,8 @@ public class AttributeUtil {
 			object.put(attribute.getName(), Json.createValue(value));
 		}
 		else if (value != null && !value.isEmpty()){
-			try(StringReader reader = new StringReader(value)){
-				try(JsonReader jsonReader = Json.createReader(reader)){
-					final JsonValue jsonValue = jsonReader.readValue();
-					object.put(attribute.getName(), jsonValue);
-				}
-			}
+			final JsonValue jsonValue = JsonUtil.readValue(value);
+			object.put(attribute.getName(), jsonValue);
 		}
 	}
 }

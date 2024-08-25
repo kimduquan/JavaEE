@@ -1,0 +1,13 @@
+{
+	"name": "",
+	"type": "switch",
+	"dataConditions": [],
+	"eventConditions": [],
+	"stateDataFilter": {},
+	"onErrors": [],
+	"timeouts": {},
+	"defaultCondition": {},
+	"compensatedBy": "",
+	"usedForCompensation": false,
+	"metadata": {}
+}

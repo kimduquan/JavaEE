@@ -1,105 +1,65 @@
 package epf.function;
 
-import java.util.Objects;
-import java.util.concurrent.Callable;
-import java.util.stream.Stream;
-import epf.util.Var;
+import java.time.Duration;
+import javax.ws.rs.core.Link;
+import epf.naming.Naming;
 
 /**
  * @author PC
  *
  */
-public class Function implements Runnable {
+public abstract class Function implements LinkFunction {
 	
 	/**
 	 * 
 	 */
-	private transient final Stream<Runnable> stream;
-	/**
-	 * 
-	 */
-	private transient Var<Exception> exception;
-	/**
-	 * 
-	 */
-	private transient Var<?> returnVar;
-	/**
-	 * 
-	 */
-	private transient Var<Exception> throwVar;
+	private final String service;
 	
 	/**
-	 * @param stream
+	 * 
 	 */
-	public Function(final Stream<Runnable> stream) {
-		Objects.requireNonNull(stream);
-		this.stream = stream;
+	private final String path;
+	
+	/**
+	 * 
+	 */
+	private final String method;
+	
+	/**
+	 * 
+	 */
+	private Duration wait;
+	
+	/**
+	 * @param service
+	 * @param method
+	 * @param path
+	 */
+	public Function(final String service, final String method, final String path) {
+		this.path = path;
+		this.method = method;
+		this.service = service;
+	}
+	
+	/**
+	 * @return
+	 */
+	protected Link.Builder buildLink(final Integer index) {
+		Link.Builder builder = Link.fromPath(path).type(method).rel(service);
+		if(index != null) {
+    		builder = builder.title("" + index);
+    	}
+    	if(wait != null) {
+        	builder = builder.param(Naming.Client.Link.WAIT, wait.toString());
+    	}
+		return builder;
 	}
 
-	@Override
-	public void run() {
-		apply(getStream())
-		.forEach(runnable -> {
-			if(runnable instanceof Callable) {
-				final Callable<?> callable = (Callable<?>) runnable;
-				try {
-					callable.call();
-				} 
-				catch (Exception e) {
-					exception = new Var<Exception>(e);
-				}
-			}
-			else {
-				runnable.run();
-			}
-		});
+	public Duration getWait() {
+		return wait;
 	}
-	
-	/**
-	 * @param stream
-	 * @return
-	 */
-	protected Stream<Runnable> apply(final Stream<Runnable> stream){
-		return stream
-				.filter(run -> {
-					if(run instanceof Return) {
-						returnVar = (Var<?>) run;
-					}
-					else if(run instanceof Throw) {
-						throwVar = (Throw<?>) run;
-					}
-					return true;
-				})
-				.takeWhile(run -> getReturn() == null && getThrow() == null && getException() == null)
-				.dropWhile(run -> getReturn() != null || getException() != null || getThrow() != null)
-				.flatMap(runnable -> {
-					if(runnable instanceof Function) {
-						final Function func = (Function) runnable;
-						return func.apply(func.getStream());
-					}
-					return Stream.of(runnable);
-				});
-	}
-	
-	protected Stream<Runnable> getStream(){
-		return stream;
-	}
-	
-	protected Var<Exception> getException(){
-		return exception;
-	}
-	
-	/**
-	 * @return
-	 */
-	protected Var<?> getReturn(){
-		return returnVar;
-	}
-	
-	/**
-	 * @return
-	 */
-	protected Var<Exception> getThrow(){
-		return throwVar;
+
+	public void setWait(final Duration wait) {
+		this.wait = wait;
 	}
 }

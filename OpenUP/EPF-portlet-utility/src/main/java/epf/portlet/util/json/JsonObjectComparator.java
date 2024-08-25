@@ -1,11 +1,10 @@
-/**
- * 
- */
 package epf.portlet.util.json;
 
 import java.util.Comparator;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
+
+import epf.util.json.JsonUtil;
 
 /**
  * @author PC

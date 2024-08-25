@@ -1,0 +1,17 @@
+<html xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:h="http://xmlns.jcp.org/jsf/html">
+<ui:composition template="../webapp/blank.xhtml">
+	<ui:define name="title">Tables</ui:define>
+	<ui:define name="page-content">
+		<iframe src="/persistence/webapp/tables.html?schema=EPF_Work_Products&amp;entity=EPF_Artifact" style="width:100%;height:100%;border:none;" />
+	</ui:define>
+	<ui:define name="script">
+		<!-- Page level plugins -->
+	    <script type="text/javascript" src="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/vendor/datatables/jquery.dataTables.min.js" />
+	    <script type="text/javascript" src="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/vendor/datatables/dataTables.bootstrap4.min.js" />
+	
+	    <!-- Page level custom scripts -->
+	    <script type="text/javascript" src="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/js/demo/datatables-demo.js" />
+	</ui:define>
+</ui:composition>
+</html>
+

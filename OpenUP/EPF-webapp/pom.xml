@@ -18,6 +18,7 @@
 		<dependency>
 			<groupId>javax.security.enterprise</groupId>
 			<artifactId>javax.security.enterprise-api</artifactId>
+		    <scope>provided</scope>
 		</dependency>
 		<dependency>
 		    <groupId>javax.annotation</groupId>
@@ -38,6 +39,11 @@
 		    <groupId>javax.servlet</groupId>
 		    <artifactId>javax.servlet-api</artifactId>
 		    <scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.json</groupId>
+			<artifactId>javax.json-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		
 		<dependency>
@@ -61,6 +67,12 @@
 		    <artifactId>microprofile-openapi-api</artifactId>
 		</dependency>
 		
+		<!-- https://mvnrepository.com/artifact/org.primefaces/primefaces -->
+		<dependency>
+		    <groupId>org.primefaces</groupId>
+		    <artifactId>primefaces</artifactId>
+		</dependency>
+		
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-client</artifactId>
@@ -68,12 +80,37 @@
         </dependency>
         <dependency>
             <groupId>openup</groupId>
-            <artifactId>EPF-security-client</artifactId>
+            <artifactId>EPF-persistence-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-security-view</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-security-auth</artifactId>
             <version>${project.version}</version>
         </dependency>
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-utility</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-json-utility</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-webapp-utility</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-webapp-internal</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
@@ -82,14 +119,6 @@
 			<plugin>
 	        	<groupId>org.wildfly.plugins</groupId>
 			    <artifactId>wildfly-maven-plugin</artifactId>
-			    <executions>
-                    <execution>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>deploy</goal>
-                        </goals>
-                    </execution>
-                </executions>
 	        </plugin>
     	</plugins>
     </build>

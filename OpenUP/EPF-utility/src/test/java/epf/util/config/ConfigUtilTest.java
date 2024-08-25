@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.util.config;
 
 import java.net.URI;

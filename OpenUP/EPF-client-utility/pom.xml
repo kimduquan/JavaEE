@@ -16,16 +16,10 @@
 		    <artifactId>javax.ws.rs-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.enterprise/cdi-api -->
+		<!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
 		<dependency>
-		    <groupId>javax.enterprise</groupId>
-		    <artifactId>cdi-api</artifactId>
-		    <scope>provided</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
-		<dependency>
-		    <groupId>javax.annotation</groupId>
-		    <artifactId>javax.annotation-api</artifactId>
+		    <groupId>javax.xml.bind</groupId>
+		    <artifactId>jaxb-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
         <dependency>
@@ -36,6 +30,11 @@
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-naming</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-utility</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

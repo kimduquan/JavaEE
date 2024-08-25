@@ -1,36 +1,35 @@
 package epf.file.internal;
 
-import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchService;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
-import javax.enterprise.concurrent.ManagedScheduledExecutorService;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Event;
+import jakarta.inject.Inject;
 import org.eclipse.microprofile.context.ManagedExecutor;
-import epf.file.IWatchService;
-import epf.messaging.client.Client;
-import epf.messaging.client.Messaging;
-import epf.naming.Naming;
-import epf.util.config.ConfigUtil;
+import org.eclipse.microprofile.health.HealthCheck;
+import org.eclipse.microprofile.health.HealthCheckResponse;
+import org.eclipse.microprofile.health.Readiness;
+import epf.file.client.FileEvent;
+import epf.util.concurrent.ext.Emitter;
+import epf.util.concurrent.ext.EventEmitter;
 import epf.util.logging.LogManager;
-import epf.util.websocket.MessageQueue;
 
 /**
  * @author PC
  *
  */
 @ApplicationScoped
-public class FileWatchService implements IWatchService {
+@Readiness
+public class FileWatchService implements HealthCheck {
 	
 	/**
 	 * 
@@ -40,91 +39,78 @@ public class FileWatchService implements IWatchService {
 	/**
 	 * 
 	 */
-	private transient final Map<String, FileWatch> fileWatches = new ConcurrentHashMap<>();
+	private transient final Map<Path, FileWatch> fileWatches = new ConcurrentHashMap<>();
 	
 	/**
-	 * 
+	 *
 	 */
-	private transient Client client;
-	
-	/**
-	 * 
-	 */
-	private transient MessageQueue events;
+	private transient Emitter<FileEvent> emitter;
 	
 	/**
 	 * 
 	 */
 	@Inject
-	private transient FileSystem system;
+	transient Event<FileEvent> events;
 	
 	/**
 	 * 
 	 */
 	@Inject
-	private transient ManagedExecutor executor;
+	transient FileSystem system;
 	
 	/**
-	 * 
+	 *
 	 */
-	@Resource(lookup = "java:comp/DefaultManagedScheduledExecutorService")
-	private transient ManagedScheduledExecutorService scheduledExecutor;
+	@Inject
+	transient ManagedExecutor executor;
 	
 	/**
 	 * 
 	 */
 	@PostConstruct
-	protected void postConstruct() {
-		try {
-			client = Messaging.connectToServer(ConfigUtil.getURI(Naming.Messaging.MESSAGING_URL).resolve(Naming.FILE));
-			client.onMessage(msg -> {});
-			events = new MessageQueue(client.getSession());
-			executor.submit(events);
-		}
-		catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "postConstruct", e);
-		}
+	void postConstruct() {
+		emitter = new EventEmitter<>(events);
 	}
 	
 	/**
 	 * 
 	 */
 	@PreDestroy
-	protected void preDestroy() {
-		events.close();
-		try {
-			client.close();
-		} 
-		catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "preDestroy", e);
-		}
-		fileWatches.values().parallelStream().forEach(watch -> {
+	void preDestroy() {
+		fileWatches.forEach((p, watch) -> {
 			try {
 				watch.close();
 			} 
-			catch (IOException e) {
-				LOGGER.log(Level.SEVERE, "preDestroy", e);
+			catch (Exception e) {
+				LOGGER.log(Level.SEVERE, "[FileWatchService.preDestroy]", e);
 			}
 		});
 	}
 	
 	/**
-	 * @param security
+	 * @param path
 	 */
-	@Override
 	public void register(final Path path) {
-		fileWatches.computeIfAbsent(path.toString(), name -> {
+		Objects.requireNonNull(path, "Path");
+		fileWatches.computeIfAbsent(path, name -> {
 			try {
 				final WatchService watchService = system.newWatchService();
 				path.register(watchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY, StandardWatchEventKinds.OVERFLOW);
-				final FileWatch fileWatch = new FileWatch(path, watchService, events);
-				fileWatch.setResult(scheduledExecutor.scheduleWithFixedDelay(fileWatch, 0, 40, TimeUnit.MILLISECONDS));
+				final FileWatch fileWatch = new FileWatch(path, watchService, emitter);
 				return fileWatch;
 			} 
-			catch (IOException e) {
-				LOGGER.log(Level.SEVERE, "register", e);
+			catch (Exception e) {
+				LOGGER.log(Level.SEVERE, "[FileWatchService.register]", e);
 				return null;
 			}
 		});
+	}
+
+	@Override
+	public HealthCheckResponse call() {
+		if(executor.isShutdown() || executor.isTerminated()) {
+			return HealthCheckResponse.down("epf-file-file-watch");
+		}
+		return HealthCheckResponse.up("epf-file-file-watch");
 	}
 }

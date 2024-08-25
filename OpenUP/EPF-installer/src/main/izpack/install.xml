@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<izpack:installation version="5.0"
+                     xmlns:izpack="http://izpack.org/schema/installation"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xsi:schemaLocation="http://izpack.org/schema/installation http://izpack.org/schema/5.0/izpack-installation-5.0.xsd">
+                     <info>
+                     	<appname>Eclipse Process Framework</appname>
+                     	<appversion>1.0.0</appversion>
+                     </info>
+                     <locale>
+                     	<langpack iso3="eng"/>
+                     </locale>
+					 <guiprefs height="400" resizable="no" width="640">
+						<modifier key="useButtonIcons" value="yes"/>
+						<modifier key="useLabelIcons" value="no"/>
+						<modifier key="labelGap" value="2"/>
+						<modifier key="layoutAnchor" value="NORTHWEST"/>
+						<modifier key="useHeadingPanel" value="no"/>
+						<modifier key="headingImageOnLeft" value="yes"/>
+						<modifier key="headingLineCount" value="1"/>
+						<modifier key="headingFontSize" value="1.5"/>
+						<modifier key="headingBackgroundColor" value="0x00ffffff"/>
+						<modifier key="headingPanelCounter" value="progressbar"/>
+						<modifier key="headingPanelCounterPos" value="inNavigationPanel"/>
+					</guiprefs>
+                     <panels>
+                     	<panel classname="CheckedHelloPanel"/>
+						<panel classname="TargetPanel"/>
+						<panel classname="PacksPanel"/>
+						<panel classname="InstallPanel"/>
+						<panel classname="FinishPanel"/>
+                     </panels>
+                     <packs>
+                     	<pack name="Eclipse Process Framework" required="yes">
+                     		<description>Eclipse Process Framework</description>
+                     	</pack>
+                     </packs>
+</izpack:installation>

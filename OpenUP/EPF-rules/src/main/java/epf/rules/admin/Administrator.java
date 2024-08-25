@@ -1,15 +1,12 @@
-/**
- * 
- */
 package epf.rules.admin;
 
 import java.rmi.RemoteException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.rules.ConfigurationException;
-import javax.rules.RuleServiceProvider;
 import javax.rules.admin.LocalRuleExecutionSetProvider;
 import javax.rules.admin.RuleAdministrator;
 import org.eclipse.microprofile.health.HealthCheck;
@@ -29,7 +26,7 @@ public class Administrator implements HealthCheck {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = LogManager.getLogger(Administrator.class.getName());
+	private transient static final Logger LOGGER = LogManager.getLogger(Administrator.class.getName());
 	
 	/**
 	 * 
@@ -53,14 +50,14 @@ public class Administrator implements HealthCheck {
 			ruleAdmin = provider.getRuleProvider().getRuleAdministrator();
 		} 
 		catch (ConfigurationException e) {
-			LOGGER.throwing(RuleServiceProvider.class.getName(), "getRuleAdministrator", e);
+			LOGGER.log(Level.SEVERE, "Provider.ruleProvider.ruleAdministrator", e);
 		}
 		if(ruleAdmin != null) {
 			try {
 				localRuleProvider = ruleAdmin.getLocalRuleExecutionSetProvider(null);
 			} 
 			catch (RemoteException e) {
-				LOGGER.throwing(RuleAdministrator.class.getName(), "getLocalRuleExecutionSetProvider", e);
+				LOGGER.log(Level.SEVERE, "RuleAdministrator.localRuleExecutionSetProvider", e);
 			}
 		}
 	}
@@ -75,6 +72,10 @@ public class Administrator implements HealthCheck {
 
 	@Override
 	public HealthCheckResponse call() {
-		return HealthCheckResponse.up("EPF-rules-admin");
+		HealthCheckResponse response = HealthCheckResponse.up("EPF-rules-admin");
+		if(localRuleProvider == null || ruleAdmin == null) {
+			response = HealthCheckResponse.down("EPF-rules-admin");
+		}
+		return response;
 	}
 }

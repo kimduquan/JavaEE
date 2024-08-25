@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.portlet.internal.cache;
 
 import java.io.InputStream;
@@ -9,14 +6,13 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.json.Json;
 import javax.json.JsonObject;
-import javax.json.JsonReader;
 import javax.ws.rs.core.Response;
 import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.portlet.internal.gateway.GatewayUtil;
 import epf.portlet.internal.security.SecurityUtil;
+import epf.util.json.JsonUtil;
 import epf.util.logging.LogManager;
 
 /**
@@ -52,16 +48,13 @@ public class EntityCacheUtil {
 	 */
 	public List<JsonObject> getEntities(final String schema, final String entity, final Integer firstResult, final Integer maxResults) {
 		List<JsonObject> objects = null;
-		try(Client client = securityUtil.newClient(gatewayUtil.get(Naming.CACHE))){
-			try(Response response = epf.client.cache.Cache.getEntities(client, schema, entity, firstResult, maxResults)){
+		try(Client client = securityUtil.newClient(gatewayUtil.get(Naming.QUERY))){
+			try(Response response = epf.query.client.Query.executeQuery(client, schema, t -> t.path(entity), firstResult, maxResults)){
 				try(InputStream stream = response.readEntity(InputStream.class)){
-					try(JsonReader reader = Json.createReader(stream)){
-						objects = reader
-								.readArray()
-								.stream()
-								.map(value -> value.asJsonObject())
-								.collect(Collectors.toList());
-					}
+					objects = JsonUtil.readArray(stream)
+							.stream()
+							.map(value -> value.asJsonObject())
+							.collect(Collectors.toList());
 				}
 			}
 		}
@@ -79,12 +72,10 @@ public class EntityCacheUtil {
 	 */
 	public JsonObject getEntity(final String schema, final String entity, final String id) {
 		JsonObject object = null;
-		try(Client client = securityUtil.newClient(gatewayUtil.get(Naming.CACHE))){
-			try(Response response = epf.client.cache.Cache.getEntity(client, schema, entity, id)){
+		try(Client client = securityUtil.newClient(gatewayUtil.get(Naming.QUERY))){
+			try(Response response = epf.query.client.Query.getEntity(client, schema, entity, id)){
 				try(InputStream stream = response.readEntity(InputStream.class)){
-					try(JsonReader reader = Json.createReader(stream)){
-						object = reader.readObject();
-					}
+					object = JsonUtil.readObject(stream);
 				}
 			}
 		} 

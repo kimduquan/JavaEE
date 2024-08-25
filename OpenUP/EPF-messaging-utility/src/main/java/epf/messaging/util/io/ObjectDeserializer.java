@@ -2,6 +2,7 @@ package epf.messaging.util.io;
 
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.kafka.common.serialization.Deserializer;
 import epf.util.logging.LogManager;
@@ -25,8 +26,8 @@ public class ObjectDeserializer implements Deserializer<Object> {
 			}
 		} 
 		catch (Exception e) {
-			LOGGER.throwing(LOGGER.getName(), "deserialize", e);
-			return null;
+			LOGGER.log(Level.SEVERE, "[ObjectDeserializer.deserialize]", e);
+			return new Object();
 		}
 	}
 }

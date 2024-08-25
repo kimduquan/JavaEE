@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.file.util;
 
 import java.io.IOException;
@@ -20,7 +17,7 @@ public interface FileUtil {
 	 * @param directory
 	 * @throws IOException
 	 */
-	static void deleteDirectories(final Path directory) throws IOException {
+	static void deleteDirectory(final Path directory) throws IOException {
 	    Files.walkFileTree(directory, 
 	      new SimpleFileVisitor<Path>() {
 	    	

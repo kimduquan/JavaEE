@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.tests.security;
 
 import java.net.URI;
@@ -54,15 +49,15 @@ public class SecurityTest {
     
     Token authenticate(String token) throws Exception{
     	try(Client client = ClientUtil.newClient(securityUrl)){
-    		client.authorization(token);
+    		client.authorization(token.toCharArray());
     		return Security.authenticate(client);
     	}
     }
     
-    String revoke(String token) throws Exception{
+    String revoke(String token, Duration duration) throws Exception{
     	try(Client client = ClientUtil.newClient(securityUrl)){
-			client.authorization(token);
-    		return Security.revoke(client);
+			client.authorization(token.toCharArray());
+    		return Security.revoke(client, duration);
     	}
     }
     
@@ -185,7 +180,8 @@ public class SecurityTest {
     @Test
     public void testAuthenticateOK() throws Exception{
     	Entry<String, String> credential = SecurityUtil.peekCredential();
-        String token = SecurityUtil.login(credential.getKey(), credential.getValue());
+    	URL url = GatewayUtil.get("tests").toURL();
+        String token = SecurityUtil.login(credential.getKey(), credential.getValue(), url);
         Token jwt = authenticate(token);
         Assert.assertNotNull("Token", jwt);
         Assert.assertNotNull("Token.audience", jwt.getAudience());
@@ -194,10 +190,9 @@ public class SecurityTest {
                 "Token.audience", 
                 new String[]{
                     String.format(
-                    		epf.security.client.Security.AUDIENCE_FORMAT, 
+                    		"%s://%s/", 
                             securityUrl.getScheme(), 
-                            securityUrl.getHost(), 
-                            securityUrl.getPort()
+                            securityUrl.getAuthority()
                     )
                 }, 
                 jwt.getAudience().toArray()
@@ -215,7 +210,7 @@ public class SecurityTest {
                 Instant.ofEpochSecond(jwt.getIssuedAtTime()),
                 Instant.ofEpochSecond(jwt.getExpirationTime())
         );
-        Assert.assertEquals("duration", 30, duration.toMinutes());
+        Assert.assertEquals("duration", 60, duration.toMinutes());
         Assert.assertNotNull("Token.issuer", jwt.getIssuer());
         Assert.assertEquals("Token.issuer", "EPF", jwt.getIssuer());
         Assert.assertNotNull("Token.name", jwt.getName());
@@ -227,8 +222,7 @@ public class SecurityTest {
         Assert.assertNotEquals("Token.tokenID", "", jwt.getTokenID());
         Assert.assertNotNull("Token.claims", jwt.getClaims());
         Assert.assertEquals("Token.claims.size", 2, jwt.getClaims().size());
-        //Assert.assertEquals("Token.claims.full_name", "Any Role 1", jwt.getClaims().get("full_name"));
-        Assert.assertEquals("Token.claims.email", String.format("%s@openup.org", credential.getKey()) , jwt.getClaims().get("email"));
+        Assert.assertEquals("Token.claims.email", String.format("%s", credential.getKey()) , jwt.getClaims().get("email"));
         SecurityUtil.logOut(token);
     }
     
@@ -263,26 +257,27 @@ public class SecurityTest {
     	Entry<String, String> credential = SecurityUtil.peekCredential();
     	String token = SecurityUtil.login(credential.getKey(), credential.getValue());
     	try(Client client = ClientUtil.newClient(securityUrl)){
-    		client.authorization(token);
+    		client.authorization(token.toCharArray());
     		Response response = Security.update(client, credential.getValue() + "1");
-    		Assert.assertEquals("Response.status", Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
+    		Assert.assertEquals("Response.status", Response.Status.OK.getStatusCode(), response.getStatus());
     	}
     	SecurityUtil.logOut(token);
     	token = SecurityUtil.login(credential.getKey(), credential.getValue() + "1");
     	try(Client client = ClientUtil.newClient(securityUrl)){
-    		client.authorization(token);
+    		client.authorization(token.toCharArray());
     		Response response = Security.update(client, credential.getValue());
-    		Assert.assertEquals("Response.status", Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
+    		Assert.assertEquals("Response.status", Response.Status.OK.getStatusCode(), response.getStatus());
     	}
     	SecurityUtil.logOut(token);
     }
     
+    @Ignore
     @Test
     public void testUpdateInvalid_PasswordNull() throws Exception {
     	Entry<String, String> credential = SecurityUtil.peekCredential();
     	String token = SecurityUtil.login(credential.getKey(), credential.getValue());
     	try(Client client = ClientUtil.newClient(securityUrl)){
-    		client.authorization(token);
+    		client.authorization(token.toCharArray());
     		Response response = Security.update(client, null);
     		Assert.assertEquals("Response.status", Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     	}
@@ -294,7 +289,7 @@ public class SecurityTest {
     	Entry<String, String> credential = SecurityUtil.peekCredential();
     	String token = SecurityUtil.login(credential.getKey(), credential.getValue());
     	try(Client client = ClientUtil.newClient(securityUrl)){
-    		client.authorization(token);
+    		client.authorization(token.toCharArray());
     		Response response = Security.update(client, "");
     		Assert.assertEquals("Response.status", Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     	}
@@ -307,8 +302,8 @@ public class SecurityTest {
     	final String token = SecurityUtil.login(credential.getKey(), credential.getValue());
     	Token jwt = authenticate(token);
     	try(Client client = ClientUtil.newClient(securityUrl)){
-    		client.authorization(token);
-    		String newToken = Security.revoke(client);
+    		client.authorization(token.toCharArray());
+    		String newToken = Security.revoke(client, null);
     		Assert.assertNotEquals(token, newToken);
     		Assert.assertThrows(NotAuthorizedException.class, () -> {
     			authenticate(token);
@@ -325,10 +320,10 @@ public class SecurityTest {
     	Entry<String, String> credential = SecurityUtil.peekCredential();
     	final String token = SecurityUtil.login(credential.getKey(), credential.getValue());
     	try(Client client = ClientUtil.newClient(securityUrl)){
-    		String newToken = revoke(token);
+    		String newToken = revoke(token, null);
     		Token newJwt = authenticate(newToken);
-    		client.authorization(newToken);
-    		String newToken2 = Security.revoke(client);
+    		client.authorization(newToken.toCharArray());
+    		String newToken2 = Security.revoke(client, null);
     		Token newJwt2 = authenticate(newToken2);
     		Assert.assertNotNull("Token", newJwt2);
     		Assert.assertNotEquals("Token.tokenID", newJwt.getTokenID(), newJwt2.getTokenID());

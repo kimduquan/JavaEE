@@ -1,23 +1,19 @@
 package epf.work_products.schema;
 
-import java.io.Serializable;
 import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.NamedEntityGraph;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import epf.schema.utility.EntityListener;
-import javax.persistence.Index;
+import epf.schema.utility.EPFEntity;
+import jakarta.persistence.Index;
 
 /**
  *
@@ -27,22 +23,12 @@ import javax.persistence.Index;
 @Schema(name = WorkProducts.DOMAIN, title = "Domain")
 @Entity(name = WorkProducts.DOMAIN)
 @Table(schema = WorkProducts.SCHEMA, name = "EPF_DOMAIN")
-@NamedQuery(
-        name = Domain.DOMAINS, 
-        query = "SELECT d FROM EPF_Domain AS d")
-@NamedEntityGraph(includeAllAttributes = true)
-@EntityListeners(EntityListener.class)
-public class Domain implements Serializable {
+public class Domain extends EPFEntity {
 
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-    
-    /**
-     * 
-     */
-    public static final String DOMAINS = "EPF_Domain.Domains";
 
 	/**
      * 

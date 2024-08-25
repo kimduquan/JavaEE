@@ -1,22 +1,20 @@
 package epf.roles.schema;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.Id;
-import javax.persistence.NamedEntityGraph;
-import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
-import javax.json.JsonObject;
-import javax.persistence.Embedded;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.json.JsonObject;
+import jakarta.persistence.Embedded;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.roles.schema.section.MoreInformation;
 import epf.roles.schema.section.Relationships;
 import epf.roles.schema.section.Staffing;
-import epf.schema.utility.EntityListener;
+import epf.schema.utility.EPFEntity;
+
 /**
  *
  * @author FOXCONN
@@ -25,9 +23,7 @@ import epf.schema.utility.EntityListener;
 @Schema(name = Roles.ROLE, title = "Role")
 @Entity(name = Roles.ROLE)
 @Table(schema = Roles.SCHEMA, name = "EPF_ROLE")
-@NamedEntityGraph(includeAllAttributes = true)
-@EntityListeners(EntityListener.class)
-public class Role implements Serializable {
+public class Role extends EPFEntity {
 	
 	/**
 	 * 

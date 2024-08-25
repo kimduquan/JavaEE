@@ -1,18 +1,21 @@
 package epf.file;
 
+import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.io.StreamCorruptedException;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.InvalidPathException;
 import java.nio.file.NoSuchFileException;
-import javax.validation.ValidationException;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
-
-import epf.util.EPFException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import jakarta.validation.ValidationException;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.ResponseBuilder;
+import jakarta.ws.rs.core.Response.Status;
+import jakarta.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.ext.Provider;
+import epf.util.logging.LogManager;
 
 /**
  *
@@ -25,13 +28,22 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
     * 
     */
     private static final long serialVersionUID = 1L;
+    
+    /**
+     *
+     */
+    private static transient final Logger LOGGER = LogManager.getLogger(ExceptionHandler.class.getName());
 
     /**
      *
      */
     @Override
     public Response toResponse(final Exception exception) {
-        return handle(exception);
+        final Response response = handle(exception);
+        if(response.getStatus() == Status.INTERNAL_SERVER_ERROR.getStatusCode()) {
+        	LOGGER.log(Level.SEVERE, "[ExceptionHandler.toResponse]", exception);
+        }
+        return response;
     }
     
     /**
@@ -42,10 +54,7 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
     protected static boolean map(final Throwable failure, final Response.ResponseBuilder builder){
         Response.StatusType status = Response.Status.INTERNAL_SERVER_ERROR;
         boolean mapped = true;
-        if(failure instanceof EPFException) {
-        	mapped = false;
-        }
-        else if(failure instanceof java.util.concurrent.TimeoutException){
+        if(failure instanceof java.util.concurrent.TimeoutException){
             status = Response.Status.REQUEST_TIMEOUT;
         }
         else if(failure instanceof ValidationException){
@@ -66,6 +75,9 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
         }
         else if(failure instanceof InvalidPathException) {
         	status = Response.Status.BAD_REQUEST;
+        }
+        else if(failure instanceof FileNotFoundException) {
+        	status = Response.Status.NOT_FOUND;
         }
         else{
             mapped = false;

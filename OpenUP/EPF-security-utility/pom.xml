@@ -15,27 +15,10 @@
 		    <groupId>javax.security.enterprise</groupId>
 		    <artifactId>javax.security.enterprise-api</artifactId>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.persistence/javax.persistence-api -->
-		<dependency>
-		    <groupId>javax.persistence</groupId>
-		    <artifactId>javax.persistence-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.transaction/javax.transaction-api -->
-		<dependency>
-		    <groupId>javax.transaction</groupId>
-		    <artifactId>javax.transaction-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.eclipse.persistence/org.eclipse.persistence.core -->
 		<dependency>
 		    <groupId>org.eclipse.persistence</groupId>
 		    <artifactId>org.eclipse.persistence.core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>openup</groupId>
-			<artifactId>EPF-naming</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>openup</groupId>

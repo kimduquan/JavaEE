@@ -1,16 +1,13 @@
-/**
- * 
- */
 package epf.shell.client;
 
-import epf.client.util.Client;
-import epf.client.util.ClientQueue;
 import epf.naming.Naming;
+import epf.shell.security.SecurityUtil;
 import java.net.URI;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.UriBuilder;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.rest.client.RestClientBuilder;
 
 /**
  * @author PC
@@ -20,48 +17,24 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 public class ClientUtil {
 	
 	/**
-	 * 
+	 *
 	 */
-	private transient ClientQueue clients;
+	@Inject
+	transient SecurityUtil securityUtil;
 	
 	/**
 	 * 
 	 */
 	@ConfigProperty(name = Naming.Client.CLIENT_CONFIG + "/mp-rest/uri")
+	@Inject
 	URI gatewayUrl;
-
-	/**
-	 * 
-	 */
-	@PostConstruct
-	protected void postConstruct() {
-		clients = new ClientQueue();
-		clients.initialize();
-	}
 	
 	/**
-	 * 
-	 */
-	@PreDestroy
-	protected void preDestroy() {
-		clients.close();
-	}
-	
-	/**
-	 * @param uri
+	 * @param builder
 	 * @return
 	 */
-	public Client newClient(final URI uri) {
-		return new Client(clients, uri, builder -> builder);
-	}
-	
-	/**
-	 * @param name
-	 * @return
-	 * @throws Exception
-	 */
-	public Client newClient(final String name) throws Exception {
-		return new Client(clients, gatewayUrl.resolve(name), builder -> builder);
+	private RestClientBuilder build(final RestClientBuilder builder) {
+		return builder.keyStore(securityUtil.getKeyStore(), securityUtil.getKeyPassword()).trustStore(securityUtil.getTrustStore());
 	}
 	
 	/**
@@ -70,5 +43,33 @@ public class ClientUtil {
 	 */
 	public URI getUrl(final String name) {
 		return gatewayUrl.resolve(name);
+	}
+	
+	/**
+	 * @param name
+	 * @return
+	 */
+	public URI getWSUrl(final String name) {
+		final URI url = gatewayUrl.resolve(name);
+		return UriBuilder.fromUri(url).scheme("wss").build();
+	}
+	
+	/**
+	 * @param <T>
+	 * @param cls
+	 * @return
+	 */
+	public <T> T newClient(final Class<T> cls) {
+		return build(RestClientBuilder.newBuilder()).baseUri(gatewayUrl).build(cls);
+	}
+	
+	/**
+	 * @param <T>
+	 * @param baseUri
+	 * @param cls
+	 * @return
+	 */
+	public <T> T newClient(final URI baseUri, final Class<T> cls) {
+		return build(RestClientBuilder.newBuilder()).baseUri(baseUri).build(cls);
 	}
 }

@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
-    <persistence-unit name="EPF-Security" transaction-type="JTA">
-    	<jta-data-source>jdbc/epf_security</jta-data-source>
-		<!--<jar-file>../EPF-security-1.0.0/WEB-INF/lib/EPF-schema-utility-1.0.0.jar</jar-file>
-		<jar-file>../EPF-security-1.0.0/WEB-INF/lib/EPF-security-schema-1.0.0.jar</jar-file>-->
-		<jar-file>../lib/EPF-schema-utility-1.0.0.jar</jar-file>
-		<jar-file>../lib/EPF-security-schema-1.0.0.jar</jar-file>
+    <persistence-unit name="EPF-security-principal" transaction-type="JTA">
+    	<jta-data-source>jdbc/epf_security_principal</jta-data-source>
+		<jar-file>lib/EPF-security-schema-1.0.0.jar</jar-file>
+		<exclude-unlisted-classes>false</exclude-unlisted-classes>
+		<properties>
+			<property name="javax.persistence.schema-generation.database.action" value="create"/>
+			<property name="javax.persistence.schema-generation.create-source" value="metadata"/>
+			<property name="javax.persistence.schema-generation.create-database-schemas" value="true"/>
+        </properties>
     </persistence-unit>
-    <persistence-unit name="EPF-Schema" transaction-type="JTA">
-    	<jta-data-source>jdbc/epf_security_schema</jta-data-source>
+	<persistence-unit name="EPF-security" transaction-type="JTA">
+    	<jta-data-source>jdbc/epf_security</jta-data-source>
     </persistence-unit>
 </persistence>

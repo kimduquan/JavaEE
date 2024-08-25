@@ -8,5 +8,4 @@
 			</entity-listeners>
 		</persistence-unit-defaults>
 	</persistence-unit-metadata>
-	<converter class="epf.schema.utility.JsonConverter" auto-apply="true" />
 </entity-mappings>

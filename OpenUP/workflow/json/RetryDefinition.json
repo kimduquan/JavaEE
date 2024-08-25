@@ -1,0 +1,9 @@
+{
+	"name": "",
+	"delay": "",
+	"maxAttempts": 1,
+	"maxDelay": "",
+	"increment": "",
+	"multiplier": 1.0,
+	"jitter": 0.0
+}

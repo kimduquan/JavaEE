@@ -1,6 +1,7 @@
 package epf.security.client;
 
 import java.net.URL;
+import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
 import javax.validation.constraints.NotBlank;
@@ -36,11 +37,6 @@ import epf.security.schema.Token;
  */
 @Path(Naming.SECURITY)
 public interface Security {
-    
-    /**
-     * 
-     */
-    String AUDIENCE_FORMAT = "%s://%s:%s/";
     /**
      * 
      */
@@ -57,18 +53,22 @@ public interface Security {
     
     /**
      * @param username
-     * @param passwordHash
+     * @param password
      * @param url
+     * @param tenant
+     * @param forwardedHost
      * @return
+     * @throws Exception
      */
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
     CompletionStage<String> login(
-            @FormParam("username")
+            @FormParam(Naming.Security.Credential.USERNAME)
             @NotBlank
             final String username,
-            @FormParam("password")
+            @FormParam(Naming.Security.Credential.PASSWORD)
+            @NotNull
             @NotBlank
             final String password, 
             @QueryParam(URL)
@@ -77,11 +77,7 @@ public interface Security {
             @MatrixParam(Naming.Management.TENANT)
             final String tenant,
             @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_HOST)
-            final List<String> forwardedHost,
-            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PORT)
-            final List<String> forwardedPort,
-            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PROTO)
-            final List<String> forwardedProto
+            final List<String> forwardedHost
     ) throws Exception;
     
     /**
@@ -97,8 +93,8 @@ public interface Security {
     		final String password, 
     		final URL url) {
     	final MultivaluedMap<String, String> form = new MultivaluedHashMap<>();
-    	form.add("username", username);
-    	form.add("password", password);
+    	form.add(Naming.Security.Credential.USERNAME, username);
+    	form.add(Naming.Security.Credential.PASSWORD, password);
     	return client.request(
     			target -> target.queryParam(URL, url),
     			req -> req.accept(MediaType.TEXT_PLAIN))
@@ -106,8 +102,9 @@ public interface Security {
     }
     
     /**
+     * @param context
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
     @DELETE
     @Produces(MediaType.TEXT_PLAIN)
@@ -128,12 +125,16 @@ public interface Security {
     }
     
     /**
+     * @param tenant
+     * @param context
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     Token authenticate(
+    		@MatrixParam(Naming.Management.TENANT)
+    		final String tenant,
             @Context
             final SecurityContext context) throws Exception;
     
@@ -150,13 +151,15 @@ public interface Security {
     }
     
     /**
-     * @param info
-     * @throws Exception 
+     * @param password
+     * @param context
+     * @return
+     * @throws Exception
      */
     @PATCH
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    CompletionStage<Void> update(
-    		@FormParam("password")
+    CompletionStage<Response> update(
+    		@FormParam(Naming.Security.Credential.PASSWORD)
     		@NotNull
     		@NotBlank
     		final String password,
@@ -166,43 +169,123 @@ public interface Security {
     
     /**
      * @param client
-     * @param fields
+     * @param password
      * @return
      */
     static Response update(final Client client, final String password) {
-    	final Form form = new Form().param("password", password);
+    	final Form form = new Form();
     	return client.request(
     			target -> target, 
     			req -> req
     			)
-    	.build(HttpMethod.PATCH, Entity.form(form))
+    	.build(HttpMethod.PATCH, Entity.form(password == null ? form : form.param(Naming.Security.Credential.PASSWORD, password)))
     	.invoke();
     }
     
     /**
+     * @param context
+     * @param forwardedHost
+     * @param duration
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
     @PUT
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
     CompletionStage<String> revoke(
             @Context
             final SecurityContext context,
             @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_HOST)
             final List<String> forwardedHost,
-            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PORT)
-            final List<String> forwardedPort,
-            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PROTO)
-            final List<String> forwardedProto) throws Exception;
+            @FormParam("duration")
+            final String duration) throws Exception;
+    
+    /**
+     * @param client
+     * @param duration
+     * @return
+     */
+    static String revoke(final Client client, final Duration duration) {
+    	final Form form = new Form();
+    	if(duration != null) {
+    		form.param("duration", duration.toString());
+    	}
+    	return client.request(
+    			target -> target,
+    			req -> req.accept(MediaType.TEXT_PLAIN))
+    			.put(Entity.form(form), String.class);
+    }
+
+    /**
+     * @param provider
+     * @param session
+     * @param token
+     * @param url
+     * @param tenant
+     * @param forwardedHost
+     * @throws Exception
+     */
+    @Path(Naming.Security.AUTH)
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    Response authenticateIDToken(
+            @FormParam("provider")
+            final String provider,
+            @FormParam("session")
+            final String session,
+            @FormParam("token")
+            final String token,
+            @FormParam(URL)
+            final URL url,
+            @MatrixParam(Naming.Management.TENANT)
+            final String tenant,
+            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_HOST)
+            final List<String> forwardedHost) throws Exception;
+    
+    /**
+     * @param client
+     * @param provider
+     * @param session
+     * @param token
+     * @param url
+     * @return
+     */
+    static Token authenticateIDToken(
+    		final Client client, 
+    		final String provider, 
+    		final String session, 
+    		final String token,
+    		final URL url) {
+    	return client.request(
+    			target -> target.path(Naming.Security.AUTH), 
+    			req -> req.accept(MediaType.APPLICATION_JSON)
+    			)
+    			.post(Entity.form(new Form().param("provider", provider).param("session", session).param("token", token).param(URL, url.toString())))
+    			.readEntity(Token.class);
+    }
+    
+    /**
+     * @param context
+     * @return
+     * @throws Exception
+     */
+    @Path(Naming.Security.PRINCIPAL)
+    @POST
+    Response createPrincipal(
+    		@Context 
+    		final SecurityContext context) throws Exception;
     
     /**
      * @param client
      * @return
+     * @throws Exception
      */
-    static String revoke(final Client client) {
+    static Response createPrincipal(final Client client) throws Exception {
     	return client.request(
-    			target -> target,
-    			req -> req.accept(MediaType.TEXT_PLAIN))
-    			.put(null, String.class);
+    			target -> target.path(Naming.Security.PRINCIPAL), 
+    			req -> req
+    			)
+    			.post(null);
     }
 }

@@ -7,17 +7,27 @@ import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.concurrent.ScheduledFuture;
-import epf.client.file.EventKind;
-import epf.client.file.FileEvent;
-import epf.util.websocket.Message;
-import epf.util.websocket.MessageQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import epf.file.client.EventKind;
+import epf.file.client.FileEvent;
+import epf.util.concurrent.ext.Emitter;
+import epf.util.logging.LogManager;
 
+/**
+ * 
+ */
 public class FileWatch implements Runnable, Closeable {
+	
+	/**
+	 *
+	 */
+	private transient static final Logger LOGGER = LogManager.getLogger(FileWatch.class.getName());
 	
 	/**
 	 * 
 	 */
-	private transient final MessageQueue events;
+	private transient final Emitter<FileEvent> emitter;
 	
 	/**
 	 * 
@@ -37,10 +47,10 @@ public class FileWatch implements Runnable, Closeable {
 	/**
 	 * @param path
 	 * @param watchService
-	 * @param events
+	 * @param emitter
 	 */
-	public FileWatch(final Path path, final WatchService watchService, final MessageQueue events) {
-		this.events = events;
+	public FileWatch(final Path path, final WatchService watchService, final Emitter<FileEvent> emitter) {
+		this.emitter = emitter;
 		this.path = path;
 		this.watchService = watchService;
 	}
@@ -51,7 +61,12 @@ public class FileWatch implements Runnable, Closeable {
 		if(watchKey != null) {
 			for (WatchEvent<?> event : watchKey.pollEvents()) {
 		        final FileEvent fileEvent = new FileEvent(path, event.context(), event.count(), EventKind.valueOf(event.kind().name()));
-		        events.add(new Message(fileEvent));
+		        try {
+					emitter.sendAsync(fileEvent);
+				} 
+		        catch (Exception e) {
+					LOGGER.log(Level.SEVERE, "[FileWatch.run]", e);
+				}
 		    }
 			watchKey.reset();
 		}

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.portlet.persistence;
 
 import java.io.InputStream;
@@ -18,13 +15,11 @@ import javax.inject.Named;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-import javax.json.JsonReader;
 import javax.json.JsonValue;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
-
 import epf.client.util.Client;
-import epf.persistence.schema.client.Embeddable;
+import epf.persistence.schema.Embeddable;
 import epf.portlet.internal.gateway.GatewayUtil;
 import epf.portlet.internal.persistence.EntityUtil;
 import epf.portlet.internal.security.SecurityUtil;
@@ -32,7 +27,7 @@ import epf.portlet.naming.Naming;
 import epf.portlet.util.EventUtil;
 import epf.portlet.util.ParameterUtil;
 import epf.portlet.util.RequestUtil;
-import epf.portlet.util.json.JsonUtil;
+import epf.util.json.JsonUtil;
 import epf.util.logging.LogManager;
 
 /**
@@ -56,7 +51,7 @@ public class Entity implements Serializable {
 	/**
 	 * 
 	 */
-	private epf.persistence.schema.client.Entity entity;
+	private epf.persistence.schema.Entity entity;
 	
 	/**
 	 * 
@@ -81,7 +76,7 @@ public class Entity implements Serializable {
 	/**
 	 * 
 	 */
-	private Map<String, epf.persistence.schema.client.Entity> entities;
+	private Map<String, epf.persistence.schema.Entity> entities;
 	
 	/**
 	 * 
@@ -134,7 +129,7 @@ public class Entity implements Serializable {
 			try {
 				entities = fetchEntities()
 						.stream()
-						.collect(Collectors.toMap(epf.persistence.schema.client.Entity::getType, e -> e));
+						.collect(Collectors.toMap(epf.persistence.schema.Entity::getType, e -> e));
 				embeddables = fetchEmbeddables()
 						.stream()
 						.collect(Collectors.toMap(Embeddable::getType, e -> e));
@@ -151,7 +146,7 @@ public class Entity implements Serializable {
 	 */
 	protected List<Embeddable> fetchEmbeddables() throws Exception{
 		try(Client client = securityUtil.newClient(gatewayUtil.get(epf.naming.Naming.SCHEMA))){
-			try(Response response = epf.persistence.schema.client.Schema.getEmbeddables(client)){
+			try(Response response = epf.persistence.client.Schema.getEmbeddables(client)){
 				return response.readEntity(new GenericType<List<Embeddable>>() {});
 			}
 		}
@@ -161,10 +156,10 @@ public class Entity implements Serializable {
 	 * @return
 	 * @throws Exception
 	 */
-	protected List<epf.persistence.schema.client.Entity> fetchEntities() throws Exception{
+	protected List<epf.persistence.schema.Entity> fetchEntities() throws Exception{
 		try(Client client = securityUtil.newClient(gatewayUtil.get(epf.naming.Naming.SCHEMA))){
-			try(Response response = epf.persistence.schema.client.Schema.getEntities(client)){
-				return response.readEntity(new GenericType<List<epf.persistence.schema.client.Entity>>() {});
+			try(Response response = epf.persistence.client.Schema.getEntities(client)){
+				return response.readEntity(new GenericType<List<epf.persistence.schema.Entity>>() {});
 			}
 		}
 	}
@@ -210,7 +205,7 @@ public class Entity implements Serializable {
 					.filter(attr -> attr.getAttribute().isAssociation())
 					.forEach(attr -> {
 						final String attrType = attr.getAttribute().getBindableType();
-						final epf.persistence.schema.client.Entity entity = entities.get(attrType);
+						final epf.persistence.schema.Entity entity = entities.get(attrType);
 						associationValues.computeIfAbsent(attrType, type -> {
 							try {
 								return entityUtil.getEntities(entity.getTable().getSchema(), entity.getName(), null, null);
@@ -256,7 +251,7 @@ public class Entity implements Serializable {
 	public List<Identifiable> getAssociationValues(final BasicAttribute attribute){
 		if(attribute.getAttribute().isAssociation()) {
 			final String attrType = attribute.getAttribute().getBindableType();
-			final epf.persistence.schema.client.Entity entity = entities.get(attrType);
+			final epf.persistence.schema.Entity entity = entities.get(attrType);
 			return associationValues.computeIfAbsent(attrType, type -> {
 						try {
 							return entityUtil.getEntities(entity.getTable().getSchema(), entity.getName(), null, null);
@@ -286,9 +281,7 @@ public class Entity implements Serializable {
 					object.merge().toString()
 					)){
 				try(InputStream stream = response.readEntity(InputStream.class)){
-					try(JsonReader reader = Json.createReader(stream)){
-						object = new EntityObject(reader.readObject());
-					}
+					object = new EntityObject(JsonUtil.readObject(stream));
 				}
 			}
 		}
@@ -333,7 +326,7 @@ public class Entity implements Serializable {
 		return "persistence";
 	}
 
-	public epf.persistence.schema.client.Entity getEntity() {
+	public epf.persistence.schema.Entity getEntity() {
 		return entity;
 	}
 }

@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+	<groupId>epf</groupId>
+	<artifactId>EPF-parent-ext</artifactId>
+	<version>1.0.0</version>
+	<relativePath>../EPF-parent-ext/pom.xml</relativePath>
+  </parent>
+  <artifactId>EPF-concurrent</artifactId>
+  <name>Eclipse Process Framework Concurrent</name>
+  <properties>
+    <maven.compiler.release>21</maven.compiler.release>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-websockets</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-arc</artifactId>
+    </dependency>
+    <dependency>
+	   <groupId>io.quarkus</groupId>
+	   <artifactId>quarkus-kubernetes</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>io.quarkus</groupId>
+		<artifactId>quarkus-container-image-jib</artifactId>
+	</dependency>
+    
+    <dependency>
+    	<groupId>openup</groupId>
+    	<artifactId>EPF-naming</artifactId>
+    	<version>${project.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>openup</groupId>
+        <artifactId>EPF-logging-utility</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+</project>

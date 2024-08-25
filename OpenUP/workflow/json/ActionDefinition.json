@@ -1,0 +1,12 @@
+{
+	"name": "",
+	"functionRef": {},
+	"eventRef": {},
+	"subFlowRef": {},
+	"retryRef": "",
+	"nonRetryableErrors": [],
+	"retryableErrors": [],
+	"actionDataFilter": {},
+	"sleep": {},
+	"condition": ""
+}

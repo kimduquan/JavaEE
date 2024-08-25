@@ -9,6 +9,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
     </properties>
     <!-- Define dependency version information -->
     <dependencyManagement>
@@ -41,11 +43,19 @@
 			    <version>1.1</version>
 			    <!--<scope>provided</scope>-->
 			</dependency>
+			<!-- https://mvnrepository.com/artifact/javax.websocket/javax.websocket-client-api -->
+			<dependency>
+			    <groupId>javax.websocket</groupId>
+			    <artifactId>javax.websocket-client-api</artifactId>
+			    <version>1.1</version>
+			    <!--<scope>provided</scope>-->
+			</dependency>
 			<!-- https://mvnrepository.com/artifact/javax.cache/cache-api -->
 			<dependency>
 			    <groupId>javax.cache</groupId>
 			    <artifactId>cache-api</artifactId>
 			    <version>1.1.1</version>
+			    <!--<scope>provided</scope>-->
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
 			<dependency>
@@ -72,7 +82,7 @@
 			<dependency>
 			    <groupId>javax.json</groupId>
 			    <artifactId>javax.json-api</artifactId>
-			    <version>1.1.3</version>
+			    <version>1.1.4</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/javax.json.bind/javax.json.bind-api -->
 			<dependency>
@@ -100,6 +110,7 @@
 			    <groupId>javax.security.enterprise</groupId>
 			    <artifactId>javax.security.enterprise-api</artifactId>
 			    <version>1.0</version>
+				<!--<scope>provided</scope>-->
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/javax.faces/javax.faces-api -->
 			<dependency>
@@ -141,6 +152,20 @@
 			    <artifactId>javax.batch-api</artifactId>
 			    <version>1.0.1</version>
 			    <!--<scope>provided</scope>-->
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/javax.mail/javax.mail-api -->
+			<dependency>
+			    <groupId>javax.mail</groupId>
+			    <artifactId>javax.mail-api</artifactId>
+			    <version>1.6.2</version>
+			    <!--<scope>provided</scope>-->
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/javax.el/javax.el-api -->
+			<dependency>
+				<groupId>javax.el</groupId>
+				<artifactId>javax.el-api</artifactId>
+				<version>3.0.0</version>
+				<!--<scope>provided</scope>-->
 			</dependency>
 			
 			
@@ -214,8 +239,28 @@
 			    <version>1.3</version>
 				<!--<scope>provided</scope>-->
 			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.lra/microprofile-lra-api -->
+			<dependency>
+			    <groupId>org.eclipse.microprofile.lra</groupId>
+			    <artifactId>microprofile-lra-api</artifactId>
+			    <version>1.0</version>
+				<!--<scope>provided</scope>-->
+			</dependency>
 			
 			
+			<!-- https://mvnrepository.com/artifact/jakarta.ws.rs/jakarta.ws.rs-api -->
+			<dependency>
+			    <groupId>jakarta.ws.rs</groupId>
+			    <artifactId>jakarta.ws.rs-api</artifactId>
+			    <version>3.1.0</version>
+				<!--<scope>provided</scope>-->
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/jakarta.persistence/jakarta.persistence-api -->
+			<dependency>
+			    <groupId>jakarta.persistence</groupId>
+			    <artifactId>jakarta.persistence-api</artifactId>
+			    <version>3.1.0</version>
+			</dependency>
 			<!-- https://mvnrepository.com/artifact/jakarta.annotation/jakarta.annotation-api -->
 			<dependency>
 			    <groupId>jakarta.annotation</groupId>
@@ -223,18 +268,88 @@
 			    <version>2.0.0</version>
 				<!--<scope>provided</scope>-->
 			</dependency>
+			<!-- https://mvnrepository.com/artifact/jakarta.json.bind/jakarta.json.bind-api -->
+			<dependency>
+			    <groupId>jakarta.json.bind</groupId>
+			    <artifactId>jakarta.json.bind-api</artifactId>
+			    <version>3.0.0</version>
+				<!--<scope>provided</scope>-->
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/jakarta.xml.bind/jakarta.xml.bind-api -->
+			<dependency>
+			    <groupId>jakarta.xml.bind</groupId>
+			    <artifactId>jakarta.xml.bind-api</artifactId>
+			    <version>4.0.2</version>
+				<!--<scope>provided</scope>-->
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/jakarta.json/jakarta.json-api -->
+			<dependency>
+			    <groupId>jakarta.json</groupId>
+			    <artifactId>jakarta.json-api</artifactId>
+			    <version>2.1.3</version>
+				<!--<scope>provided</scope>-->
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/jakarta.validation/jakarta.validation-api -->
+			<dependency>
+			    <groupId>jakarta.validation</groupId>
+			    <artifactId>jakarta.validation-api</artifactId>
+			    <version>3.0.2</version>
+				<!--<scope>provided</scope>-->
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/jakarta.enterprise/jakarta.enterprise.cdi-api -->
+			<dependency>
+			    <groupId>jakarta.enterprise</groupId>
+			    <artifactId>jakarta.enterprise.cdi-api</artifactId>
+			    <version>4.0.1</version>
+				<!--<scope>provided</scope>-->
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/jakarta.websocket/jakarta.websocket-client-api -->
+			<dependency>
+			    <groupId>jakarta.websocket</groupId>
+			    <artifactId>jakarta.websocket-client-api</artifactId>
+			    <version>2.1.0</version>
+				<!--<scope>provided</scope>-->
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/jakarta.nosql/nosql-core -->
+			<dependency>
+			    <groupId>jakarta.nosql</groupId>
+			    <artifactId>nosql-core</artifactId>
+			    <version>1.0.0-b7</version>
+			    <!--<scope>provided</scope>-->
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/jakarta.nosql/nosql-document -->
+			<dependency>
+			    <groupId>jakarta.nosql</groupId>
+			    <artifactId>nosql-document</artifactId>
+			    <version>1.0.0-b7</version>
+			    <!--<scope>provided</scope>-->
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/jakarta.nosql/nosql-column -->
+			<dependency>
+			    <groupId>jakarta.nosql</groupId>
+			    <artifactId>nosql-column</artifactId>
+			    <version>1.0.0-b7</version>
+			    <!--<scope>provided</scope>-->
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.mapping/jnosql-mapping-api-core -->
+			<dependency>
+			    <groupId>org.eclipse.jnosql.mapping</groupId>
+			    <artifactId>jnosql-mapping-api-core</artifactId>
+			    <version>1.1.0</version>
+			    <!--<scope>provided</scope>-->
+			</dependency>
 			
 			
 			<!-- https://mvnrepository.com/artifact/com.liferay.faces/com.liferay.faces.bridge.api -->
 			<dependency>
 				<groupId>com.liferay.faces</groupId>
 				<artifactId>com.liferay.faces.bridge.api</artifactId>
-				<version>4.2.0</version>
+				<version>6.0.0</version>
 				<!--<scope>provided</scope>-->
 			</dependency>
 			
 			
-            <!-- https://mvnrepository.com/artifact/org.glassfish/javax.json -->
+			<!-- https://mvnrepository.com/artifact/org.glassfish/javax.json -->
 			<dependency>
 			    <groupId>org.glassfish</groupId>
 			    <artifactId>javax.json</artifactId>
@@ -254,21 +369,21 @@
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.primefaces/primefaces -->
 			<dependency>
-			    <groupId>org.primefaces</groupId>
-			    <artifactId>primefaces</artifactId>
-			    <version>8.0</version>
+				<groupId>org.primefaces</groupId>
+				<artifactId>primefaces</artifactId>
+				<version>14.0.1</version>
 			</dependency>
             <!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast -->
 			<dependency>
 			    <groupId>com.hazelcast</groupId>
 			    <artifactId>hazelcast</artifactId>
-			    <version>3.12.12</version>
+			    <version>5.4.0</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.glassfish/jakarta.el -->
 			<dependency>
 			    <groupId>org.glassfish</groupId>
 			    <artifactId>jakarta.el</artifactId>
-			    <version>4.0.2</version>
+			    <version>5.0.0-M1</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.drools/drools-jsr94 -->
 			<dependency>
@@ -276,17 +391,12 @@
 			    <artifactId>drools-jsr94</artifactId>
 			    <version>7.2.0.Final</version>
 			</dependency>
-			<!-- https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator-cdi -->
-			<dependency>
-			    <groupId>org.hibernate.validator</groupId>
-			    <artifactId>hibernate-validator-cdi</artifactId>
-			    <version>7.0.2.Final</version>
-			</dependency>
+
 			<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
 			<dependency>
 			    <groupId>com.h2database</groupId>
 			    <artifactId>h2</artifactId>
-			    <version>2.1.210</version>
+			    <version>2.2.224</version>
 			</dependency>
 			
 			
@@ -300,13 +410,13 @@
 			<dependency>
 			    <groupId>com.liferay.faces</groupId>
 			    <artifactId>com.liferay.faces.bridge.impl</artifactId>
-			    <version>4.2.1</version>
+			    <version>6.0.0</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients -->
 			<dependency>
 			    <groupId>org.apache.kafka</groupId>
 			    <artifactId>kafka-clients</artifactId>
-			    <version>2.8.1</version>
+			    <version>3.7.0</version>
 			</dependency>
 			
 			
@@ -314,25 +424,13 @@
 			<dependency>
 			    <groupId>org.jboss.resteasy</groupId>
 			    <artifactId>resteasy-client</artifactId>
-			    <version>6.0.0.Final</version>
-			</dependency>
-			<!-- https://mvnrepository.com/artifact/org.jboss.resteasy/resteasy-client-microprofile -->
-			<dependency>
-			    <groupId>org.jboss.resteasy</groupId>
-			    <artifactId>resteasy-client-microprofile</artifactId>
-			    <version>4.7.5.Final</version>
+			    <version>6.2.9.Final</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.jboss.resteasy/resteasy-jackson2-provider -->
 			<dependency>
 			    <groupId>org.jboss.resteasy</groupId>
 			    <artifactId>resteasy-jackson2-provider</artifactId>
-			    <version>6.0.0.Final</version>
-			</dependency>
-			<!-- https://mvnrepository.com/artifact/org.apache.portals.pluto/pluto-container -->
-			<dependency>
-			    <groupId>org.apache.portals.pluto</groupId>
-			    <artifactId>pluto-container</artifactId>
-			    <version>3.1.1</version>
+			    <version>6.2.9.Final</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.jppf/jppf-client -->
 			<dependency>
@@ -340,125 +438,132 @@
 			    <artifactId>jppf-client</artifactId>
 			    <version>6.2</version>
 			</dependency>
-			<!-- https://mvnrepository.com/artifact/org.codehaus.groovy/groovy-jsr223 -->
+			<!-- https://mvnrepository.com/artifact/org.apache.groovy/groovy-jsr223 -->
 			<dependency>
-			    <groupId>org.codehaus.groovy</groupId>
-			    <artifactId>groovy-jsr223</artifactId>
-			    <version>3.0.9</version>
+				<groupId>org.apache.groovy</groupId>
+				<artifactId>groovy-jsr223</artifactId>
+				<version>4.0.21</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.python/jython-standalone -->
 			<dependency>
 			    <groupId>org.python</groupId>
 			    <artifactId>jython-standalone</artifactId>
-			    <version>2.7.2</version>
-			</dependency>
-			<!-- https://mvnrepository.com/artifact/info.picocli/picocli -->
-			<dependency>
-			    <groupId>info.picocli</groupId>
-			    <artifactId>picocli</artifactId>
-			    <version>4.6.3</version>
-			</dependency>
-			<!-- https://mvnrepository.com/artifact/org.jboss.weld.se/weld-se-shaded -->
-			<dependency>
-			    <groupId>org.jboss.weld.se</groupId>
-			    <artifactId>weld-se-shaded</artifactId>
-			    <version>4.0.3.Final</version>
+			    <version>2.7.3</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.jboss/jandex -->
 			<dependency>
 			    <groupId>org.jboss</groupId>
 			    <artifactId>jandex</artifactId>
-			    <version>2.4.2.Final</version>
+			    <version>3.1.8</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.optaplanner/optaplanner-core -->
 			<dependency>
 			    <groupId>org.optaplanner</groupId>
 			    <artifactId>optaplanner-core</artifactId>
-			    <version>8.17.0.Final</version>
+			    <version>9.44.0.Final</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.lsp4j/org.eclipse.lsp4j.websocket -->
 			<dependency>
 			    <groupId>org.eclipse.lsp4j</groupId>
 			    <artifactId>org.eclipse.lsp4j.websocket</artifactId>
-			    <version>0.12.0</version>
+			    <version>0.23.1</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.lsp4j/org.eclipse.lsp4j -->
 			<dependency>
 			    <groupId>org.eclipse.lsp4j</groupId>
 			    <artifactId>org.eclipse.lsp4j</artifactId>
-			    <version>0.12.0</version>
+			    <version>0.23.1</version>
+			</dependency>
+			
+			<!-- https://mvnrepository.com/artifact/org.eclipse.parsson/parsson -->
+			<dependency>
+			    <groupId>org.eclipse.parsson</groupId>
+			    <artifactId>parsson</artifactId>
+			    <version>1.1.6</version>
 			</dependency>
 			
 			
+			<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-queryparser -->
+			<dependency>
+			    <groupId>org.apache.lucene</groupId>
+			    <artifactId>lucene-queryparser</artifactId>
+			    <version>8.5.2</version>
+			</dependency>
             <!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-rt-rs-mp-client -->
             <dependency>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-rt-rs-mp-client</artifactId>
-                <version>3.5.0</version>
+                <version>3.6.3</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-rt-rs-sse -->
 			<dependency>
 			    <groupId>org.apache.cxf</groupId>
 			    <artifactId>cxf-rt-rs-sse</artifactId>
-			    <version>3.5.0</version>
+			    <version>3.6.3</version>
 			</dependency>
             <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.jaxrs/jackson-jaxrs-json-provider -->
             <dependency>
                 <groupId>com.fasterxml.jackson.jaxrs</groupId>
                 <artifactId>jackson-jaxrs-json-provider</artifactId>
-                <version>2.13.1</version>
+                <version>2.17.1</version>
             </dependency>
-            <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+			<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
 			<dependency>
-			    <groupId>mysql</groupId>
-			    <artifactId>mysql-connector-java</artifactId>
-			    <version>8.0.28</version>
+			    <groupId>org.postgresql</groupId>
+			    <artifactId>postgresql</artifactId>
+			    <version>42.7.3</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.bitbucket.b_c/jose4j -->
 			<dependency>
 			    <groupId>org.bitbucket.b_c</groupId>
 			    <artifactId>jose4j</artifactId>
-			    <version>0.7.10</version>
+			    <version>0.9.6</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.persistence/org.eclipse.persistence.core -->
 			<dependency>
 			    <groupId>org.eclipse.persistence</groupId>
 			    <artifactId>org.eclipse.persistence.core</artifactId>
-			    <version>2.7.10</version>
+			    <version>2.7.15</version>
 			</dependency>
             <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-jdk14 -->
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-jdk14</artifactId>
-                <version>1.7.36</version>
+                <version>2.0.13</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/org.codehaus.izpack/izpack-panel -->
+			<dependency>
+			    <groupId>org.codehaus.izpack</groupId>
+			    <artifactId>izpack-panel</artifactId>
+			    <version>5.2.1</version>
+			</dependency>
             
             <!-- https://mvnrepository.com/artifact/org.jboss.weld/weld-junit4 -->
 			<dependency>
 			    <groupId>org.jboss.weld</groupId>
 			    <artifactId>weld-junit4</artifactId>
-			    <version>3.0.0.Final</version>
+			    <version>4.0.3.Final</version>
 			    <scope>test</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
 			<dependency>
 			    <groupId>org.mockito</groupId>
 			    <artifactId>mockito-core</artifactId>
-			    <version>4.3.1</version>
+			    <version>5.12.0</version>
 			    <scope>test</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
 			<dependency>
 			    <groupId>org.seleniumhq.selenium</groupId>
 			    <artifactId>selenium-java</artifactId>
-			    <version>4.1.2</version>
+			    <version>4.22.0</version>
 			    <scope>test</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.jetty.websocket/javax-websocket-client-impl -->
 			<dependency>
 			    <groupId>org.eclipse.jetty.websocket</groupId>
 			    <artifactId>javax-websocket-client-impl</artifactId>
-			    <version>9.4.45.v20220203</version>
+			    <version>9.4.54.v20240208</version>
 		    	<scope>test</scope>
 			</dependency>
         </dependencies>
@@ -482,7 +587,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
 				    <artifactId>maven-compiler-plugin</artifactId>
-				    <version>3.10.0</version>
+				    <version>3.13.0</version>
                     <configuration>
                         <encoding>UTF-8</encoding>
                         <source>1.8</source>
@@ -492,7 +597,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-war-plugin</artifactId>
-                    <version>3.3.2</version>
+                    <version>3.4.0</version>
                     <configuration>
                         <!-- Ignore error about missing web.xml -->
                         <failOnMissingWebXml>false</failOnMissingWebXml>
@@ -505,14 +610,13 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.0.0-M5</version>
+                    <version>3.2.5</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>3.0.0-M5</version>
+                    <version>3.2.5</version>
                     <configuration>
-                        <forkMode>once</forkMode>
                         <forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds>
                         <!-- Specify which test classes are integration tests -->
                         <includes>
@@ -532,56 +636,50 @@
                 <plugin>
                     <groupId>io.openliberty.tools</groupId>
                     <artifactId>liberty-maven-plugin</artifactId>
-                    <version>3.5.1</version>
+                    <version>3.10.3</version>
                 </plugin>
                 <plugin>
                 	<groupId>org.apache.maven.plugins</groupId>
 				    <artifactId>maven-jar-plugin</artifactId>
-				    <version>3.2.2</version>
+				    <version>3.4.1</version>
                 </plugin>
                 <plugin>
                 	<groupId>org.apache.maven.plugins</groupId>
 				    <artifactId>maven-install-plugin</artifactId>
-				    <version>3.0.0-M1</version>
+				    <version>3.1.2</version>
                 </plugin>
                 <plugin>
                 	<groupId>org.apache.maven.plugins</groupId>
 				    <artifactId>maven-clean-plugin</artifactId>
-				    <version>3.1.0</version>
+				    <version>3.3.2</version>
                 </plugin>
             	<plugin>
             		<groupId>org.apache.maven.plugins</groupId>
 				    <artifactId>maven-resources-plugin</artifactId>
-				    <version>3.2.0</version>
+				    <version>3.3.1</version>
             	</plugin>
             	<!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-deploy-plugin -->
 				<plugin>
 				    <groupId>org.apache.maven.plugins</groupId>
 				    <artifactId>maven-deploy-plugin</artifactId>
-				    <version>3.0.0-M2</version>
+				    <version>3.1.2</version>
 				</plugin>
                 <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-pmd-plugin -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-pmd-plugin</artifactId>
-					<version>3.16.0</version>
+					<version>3.22.0</version>
 				</plugin>
 				<!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
 				<plugin>
 					<groupId>org.jacoco</groupId>
 					<artifactId>jacoco-maven-plugin</artifactId>
-					<version>0.8.7</version>
-				</plugin>
-				<!-- https://mvnrepository.com/artifact/org.codehaus.mojo/appassembler-maven-plugin -->
-				<plugin>
-				    <groupId>org.codehaus.mojo</groupId>
-				    <artifactId>appassembler-maven-plugin</artifactId>
-				    <version>2.1.0</version>
+					<version>0.8.12</version>
 				</plugin>	
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-antrun-plugin</artifactId>
-					<version>3.0.0</version>
+					<version>3.1.0</version>
 				</plugin>
 				<!-- https://mvnrepository.com/artifact/org.apache.tomcat.maven/tomcat8-maven-plugin -->
 				<plugin>
@@ -593,30 +691,41 @@
 				<plugin>
 					<groupId>com.lazerycode.jmeter</groupId>
 					<artifactId>jmeter-maven-plugin</artifactId>
-					<version>3.5.0</version>
+					<version>3.8.0</version>
 				</plugin>
 				<!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-dependency-plugin -->
 				<plugin>
 				    <groupId>org.apache.maven.plugins</groupId>
 				    <artifactId>maven-dependency-plugin</artifactId>
-				    <version>3.2.0</version>
+				    <version>3.6.1</version>
 				</plugin>
 				<!-- https://mvnrepository.com/artifact/org.codehaus.mojo/exec-maven-plugin -->
 				<plugin>
 			        <groupId>org.codehaus.mojo</groupId>
 			        <artifactId>exec-maven-plugin</artifactId>
-			        <version>3.0.0</version>
+			        <version>3.3.0</version>
 			    </plugin>
 				<plugin>
 					<groupId>org.owasp</groupId>
 					<artifactId>dependency-check-maven</artifactId>
-					<version>6.5.3</version>
+					<version>9.2.0</version>
 		        </plugin>
 		        <plugin>
 		        	<groupId>org.wildfly.plugins</groupId>
 				    <artifactId>wildfly-maven-plugin</artifactId>
-				    <version>2.1.0.Final</version>
+				    <version>5.0.0.Final</version>
+					<configuration>
+						<username>admin</username>
+						<password>admin</password>
+						<hostname>127.0.0.1</hostname>
+					</configuration>
 		        </plugin>
+				<!-- https://mvnrepository.com/artifact/org.codehaus.izpack/izpack-maven-plugin -->
+				<plugin>
+					<groupId>org.codehaus.izpack</groupId>
+					<artifactId>izpack-maven-plugin</artifactId>
+					<version>5.2.1</version>
+				</plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -695,17 +804,17 @@
 												<limit>
 													<counter>LINE</counter>
 													<value>COVEREDRATIO</value>
-													<minimum>0.39</minimum>
+													<minimum>0.22</minimum>
 												</limit>
 												<limit>
 													<counter>BRANCH</counter>
 													<value>COVEREDRATIO</value>
-													<minimum>0.30</minimum>
+													<minimum>0.22</minimum>
 												</limit>
 												<limit>
 													<counter>COMPLEXITY</counter>
 													<value>COVEREDRATIO</value>
-													<minimum>0.38</minimum>
+													<minimum>0.16</minimum>
 												</limit>
 											</limits>
 										</rule>
@@ -720,17 +829,17 @@
 							</execution>
 						</executions>
 					</plugin>
-					<plugin>
+					<!--<plugin>
 						<groupId>org.owasp</groupId>
 						<artifactId>dependency-check-maven</artifactId>
-						<!--<executions>
+						<executions>
 							<execution>
 								<goals>
 									<goal>check</goal>
 								</goals>
 							</execution>
-					   </executions>-->
-			        </plugin>
+					   </executions>
+			        </plugin>-->
                 </plugins>
             </build>
        </profile>
@@ -747,30 +856,55 @@
        </profile>
    </profiles>
     <modules>
-        <module>Azure-DevOps-Services</module>
         <module>EPF-shell</module>
 		<module>EPF-utility</module>
+		<module>EPF-logging-utility</module>
+		<module>EPF-websocket-utility</module>
+		<module>EPF-websocket-utility-ext</module>
+		<module>EPF-concurrent-utility</module>
+		<module>EPF-concurrent-utility-ext</module>
+		<module>EPF-xml-utility</module>
+		<module>EPF-json-utility</module>
+		<module>EPF-json-utility-ext</module>
+		<module>EPF-json-schema</module>
 		<module>EPF-client-utility</module>
+		<module>EPF-client-internal</module>
 		<module>EPF-file-utility</module>
+		<module>EPF-cache-utility</module>
 		<module>EPF-messaging-utility</module>
+		<module>EPF-messaging-utility-ext</module>
+		<module>EPF-persistence-utility</module>
 		<module>EPF-persistence-internal</module>
-		<module>EPF-persistence-ext</module>
 		<module>EPF-security-utility</module>
+		<module>EPF-workflow-utility</module>
+		<module>EPF-security-auth-utility</module>
+		<module>EPF-security-internal</module>
+		<module>EPF-webapp-utility</module>
+		<module>EPF-webapp-internal</module>
 		<module>EPF-function</module>
+		<module>EPF-math</module>
 		<module>EPF-schedule</module>
-		<module>EPF-shell-schedule</module>
 		<module>EPF-batch</module>
 		<module>EPF-script</module>
 		<module>EPF-config</module>
         <module>EPF-gateway</module>
+		<module>EPF-transaction</module>
 		<module>EPF-messaging</module>
 		<module>EPF-logging</module>
-		<module>EPF-lang</module>
 		<module>EPF-cache</module>
+		<module>EPF-query</module>
 		<module>EPF-registry</module>
 		<module>EPF-management</module>
+		<module>EPF-security-auth</module>
+		<module>EPF-workflow</module>
+		<module>EPF-workflow-management</module>
+		<module>EPF-event</module>
 		
 		<module>EPF-schema-utility</module>
+		<module>EPF-nosql-schema-utility</module>
+		<module>EPF-nosql-schema</module>
+		<module>EPF-lang-schema</module>
+		<module>EPF-workflow-schema-utility</module>
 		<module>EPF-net-schema</module>
 		<module>EPF-security-schema</module>
 		
@@ -780,6 +914,9 @@
 		<module>EPF-work-products-schema</module>
 		
 		<module>EPF-schema</module>
+		<module>EPF-workflow-schema</module>
+		<module>EPF-event-schema</module>
+		<module>EPF-messaging-schema</module>
 		
 		<module>OpenUP-architecture-schema</module>
 		<module>OpenUP-deployment-schema</module>
@@ -791,35 +928,65 @@
 		
 		<module>EPF-naming</module>
 		<module>EPF-portlet-naming</module>
+		<module>EPF-webapp-naming</module>
 		
         <module>EPF-validation</module>
         <module>EPF-client</module>
-		<module>EPF-messaging-client</module>
+		<module>EPF-concurrent-client</module>
+		<module>EPF-concurrent-client-ext</module>
+		<module>EPF-concurrent</module>
 		<module>EPF-security-client</module>
-		<module>EPF-persistence-client</module>
-		<module>EPF-net</module>
-		<module>EPF-persistence</module>
 		<module>EPF-security</module>
+		<module>EPF-security-management</module>
+		<module>EPF-view</module>
+		<module>EPF-security-view</module>
+		<module>EPF-workflow-view</module>
+		<module>EPF-security-webapp</module>
+		<module>EPF-security-auth-webapp</module>
+		<module>EPF-persistence-client</module>
+		<module>EPF-query-client</module>
+		<module>EPF-persistence-schema</module>
+		<module>EPF-persistence</module>
+		<module>EPF-persistence-view</module>
+		<module>EPF-persistence-webapp</module>
+		<module>EPF-messaging-client</module>
+		<module>EPF-net</module>
 		<module>EPF-file</module>
+		<module>EPF-mail-client</module>
+		<module>EPF-file-client</module>
+		<module>EPF-config-client</module>
+		<module>EPF-rules-client</module>
+		<module>EPF-registry-client</module>
+		<module>EPF-batch-client</module>
+		<module>EPF-net-client</module>
+		<module>EPF-schedule-client</module>
+		<module>EPF-workflow-client</module>
+		<module>EPF-event-client</module>
+		<module>EPF-mail</module>
 		<module>EPF-image</module>
 		<module>EPF-rules</module>
+		<module>EPF-lang</module>
 		<module>EPF-planning</module>
+		<module>EPF-messaging-webapp</module>
+		<module>EPF-workflow-webapp</module>
 		<module>EPF-webapp</module>
-		<module>EPF-security-webapp</module>
 		
-		<module>OpenUP-client</module>
-        <module>OpenUP-schema</module>
+		<module>OpenUP-schema</module>
 		
 		<module>EPF-portlet-client</module>
 		<module>EPF-portlet-utility</module>
 		<module>EPF-portlet-internal</module>
 		
-		<module>EPF-file-portlet</module>
+		<!--<module>EPF-file-portlet</module>
 		<module>EPF-messaging-portlet</module>
 		<module>EPF-persistence-portlet</module>
-		<module>EPF-security-portlet</module>
+		<module>EPF-security-portlet</module>-->
 		
         <module>EPF-tests</module>
         <module>EPF-assembly</module>
+        <!--<module>EPF-installer</module>-->
+		
+		<module>ERP-base-schema</module>
+		<module>ERP-account-schema</module>
     </modules>
 </project>

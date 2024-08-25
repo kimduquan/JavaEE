@@ -1,20 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.client.util;
 
 import java.net.URI;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.sse.SseEventSource;
-
 import epf.naming.Naming;
 
 /**
@@ -30,15 +24,12 @@ public class Client implements AutoCloseable {
     /**
      * 
      */
-    private transient Optional<String> authHeader = Optional.empty();
-    /**
-     * 
-     */
     private transient final javax.ws.rs.client.Client rsClient;
+    
     /**
      * 
      */
-    private transient final ClientQueue clients;
+    private transient final BiConsumer<URI, javax.ws.rs.client.Client> collector;
     
     /**
      * 
@@ -46,16 +37,22 @@ public class Client implements AutoCloseable {
     private transient Optional<String> tenant = Optional.empty();
     
     /**
-     * @param clients
-     * @param uri
-     * @param buildClient
+     *
      */
-    public Client(final ClientQueue clients, final URI uri, final Function<ClientBuilder, ClientBuilder> buildClient) {
-    	Objects.requireNonNull(clients);
-    	Objects.requireNonNull(uri);
-    	rsClient = clients.poll(uri, buildClient);
+    private transient char[] authToken;
+    
+    /**
+     * @param client
+     * @param uri
+     * @param consumer
+     */
+    public Client(final javax.ws.rs.client.Client client, final URI uri, final BiConsumer<URI, javax.ws.rs.client.Client> consumer) {
+    	Objects.requireNonNull(client, "Client");
+    	Objects.requireNonNull(uri, "URI");
+    	Objects.requireNonNull(consumer);
+    	rsClient = client;
         this.uri = uri;
-        this.clients = clients;
+        this.collector = consumer;
     }
 
 	/**
@@ -64,12 +61,12 @@ public class Client implements AutoCloseable {
 	protected URI getUri() {
 		return uri;
 	}
-
+	
 	/**
-	 * @return the authHeader
+	 * @return
 	 */
-	protected Optional<String> getAuthHeader() {
-		return authHeader;
+	protected char[] getAuthToken() {
+		return authToken;
 	}
 
 	/**
@@ -78,31 +75,14 @@ public class Client implements AutoCloseable {
 	protected javax.ws.rs.client.Client getClient() {
 		return rsClient;
 	}
-
-	/**
-	 * @return the clients
-	 */
-	protected ClientQueue getClients() {
-		return clients;
-	}
-
+	
 	/**
 	 * @param token
 	 * @return
 	 */
-	public Client authorization(final String token) {
+	public Client authorization(final char[] token) {
 		Objects.requireNonNull(token);
-		final StringBuilder tokenHeader = new StringBuilder();
-    	authHeader = Optional.of(tokenHeader.append("Bearer ").append(token).toString());
-		return this;
-	}
-	
-	/**
-	 * @param tenant
-	 * @return
-	 */
-	public Client tenant(final String tenant) {
-		this.tenant = Optional.ofNullable(tenant);
+		authToken = token;
 		return this;
 	}
 	
@@ -111,14 +91,26 @@ public class Client implements AutoCloseable {
 	 * @return
 	 */
 	public Client authorizationHeader(final String header) {
-		authHeader = Optional.of(header);
+		Objects.requireNonNull(header);
+		authToken = header.substring("Bearer ".length()).toCharArray();
+		return this;
+	}
+	
+	/**
+	 * @param tenant
+	 * @return
+	 */
+	public Client tenant(final String tenant) {
+		Objects.requireNonNull(tenant);
+		this.tenant = Optional.of(tenant);
 		return this;
 	}
 
     @Override
     public void close() throws Exception {
-    	authHeader = Optional.empty();
-        clients.add(uri, rsClient);
+    	authToken = null;
+    	tenant = Optional.empty();
+        collector.accept(uri, rsClient);
     }
     
     /**
@@ -135,8 +127,10 @@ public class Client implements AutoCloseable {
     	}
     	target = buildTarget.apply(target);
     	Invocation.Builder request = target.request();
-    	if(authHeader.isPresent()) {
-        	request = request.header(HttpHeaders.AUTHORIZATION, authHeader.get());
+    	if(authToken != null) {
+    		final StringBuilder builder = new StringBuilder();
+    		builder.append("Bearer ").append(authToken);
+        	request = request.header(HttpHeaders.AUTHORIZATION, builder.toString());
     	}
     	return buildRequest.apply(request);
     }
