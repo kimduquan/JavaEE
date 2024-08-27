@@ -12,14 +12,14 @@ zookeeper:
     size: 1Gi
 controller:
   replicaCount: 1
-  resourcesPreset: "micro"
+  resourcesPreset: "nano"
 sasl:
   controller:
     password: "0123456789"
   client:
     passwords: "0123456789"
 broker:
-  resourcesPreset: "micro"
+  resourcesPreset: "nano"
 externalAccess:
   autoDiscovery:
     resourcesPreset: "nano"
@@ -27,6 +27,6 @@ volumePermissions:
   resourcesPreset: "nano"
 metrics:
   jmx:
-    resourcesPreset: "micro"
+    resourcesPreset: "nano"
 provisioning:
-  resourcesPreset: "micro"
+  resourcesPreset: "nano"
