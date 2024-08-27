@@ -1,4 +1,5 @@
-
+image:
+  debug: true
 odooEmail: kimduquan@gmail.com
 odooPassword: "123456"
 loadDemoData: true
