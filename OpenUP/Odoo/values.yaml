@@ -1,3 +1,5 @@
+livenessProbe:
+  initialDelaySeconds: 1200
 odooEmail: kimduquan@gmail.com
 odooPassword: "123456"
 loadDemoData: true
