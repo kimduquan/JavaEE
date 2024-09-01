@@ -2,6 +2,9 @@ package erp.base.schema.ir;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
 import erp.base.schema.ir.model.Model;
 import erp.base.schema.res.Company;
 import jakarta.persistence.Column;
@@ -18,6 +21,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_attachment")
 @Description("Attachment")
+@NodeEntity("Attachment")
 public class Attachment {
 
 	/**
@@ -26,6 +30,7 @@ public class Attachment {
 	@Column(nullable = false)
 	@NotNull
 	@Description("Name")
+	@Property
 	private String name;
 	
 	/**
@@ -33,6 +38,7 @@ public class Attachment {
 	 */
 	@Column
 	@Description("Description")
+	@Property
 	private String description;
 	
 	/**
@@ -40,6 +46,7 @@ public class Attachment {
 	 */
 	@Column
 	@Description("Resource Name")
+	@Property
 	private String res_name;
 	
 	/**
@@ -47,6 +54,7 @@ public class Attachment {
 	 */
 	@Column(updatable = false)
 	@Description("Resource Model")
+	@Property
 	private String res_model;
 	
 	/**
@@ -54,6 +62,7 @@ public class Attachment {
 	 */
 	@Column(updatable = false)
 	@Description("Resource Field")
+	@Property
 	private String res_field;
 	
 	/**
@@ -62,6 +71,8 @@ public class Attachment {
 	@Column(updatable = false)
 	@ManyToOne(targetEntity = Model.class)
 	@Description("Resource ID")
+	@Property
+	@Relationship(type = "RESOURCE")
 	private String res_id;
 	
 	/**
@@ -70,6 +81,8 @@ public class Attachment {
 	@Column
 	@ManyToOne(targetEntity = Company.class)
 	@Description("Company")
+	@Property
+	@Relationship(type = "COMPANY")
 	private String company_id;
 	
 	/**
@@ -80,6 +93,7 @@ public class Attachment {
 	@NotNull
 	@DefaultValue("binary")
 	@Description("Type")
+	@Property
 	private String type = "binary";
 	
 	/**
@@ -87,6 +101,7 @@ public class Attachment {
 	 */
 	@Column(length = 1024)
 	@Description("Url")
+	@Property
 	private String url;
 	
 	/**
@@ -94,6 +109,7 @@ public class Attachment {
 	 */
 	@Column(name = "public")
 	@Description("Is public document")
+	@Property
 	private Boolean _public;
 	
 	/**
@@ -101,6 +117,7 @@ public class Attachment {
 	 */
 	@Column
 	@Description("Access Token")
+	@Property
 	private String access_token;
 	
 	/**
@@ -108,6 +125,7 @@ public class Attachment {
 	 */
 	@Column
 	@Description("File Content (raw)")
+	@Property
 	private byte[] raw;
 	
 	/**
@@ -115,6 +133,7 @@ public class Attachment {
 	 */
 	@Column
 	@Description("File Content (base64)")
+	@Property
 	private byte[] datas;
 	
 	/**
@@ -122,6 +141,7 @@ public class Attachment {
 	 */
 	@Column
 	@Description("Database Data")
+	@Property
 	private byte[] db_datas;
 	
 	/**
@@ -129,6 +149,7 @@ public class Attachment {
 	 */
 	@Column
 	@Description("Stored Filename")
+	@Property
 	private String store_fname;
 	
 	/**
@@ -136,6 +157,7 @@ public class Attachment {
 	 */
 	@Column(updatable = false)
 	@Description("File Size")
+	@Property
 	private Integer file_size;
 	
 	/**
@@ -143,6 +165,7 @@ public class Attachment {
 	 */
 	@Column(updatable = false, length = 40)
 	@Description("Checksum/SHA1")
+	@Property
 	private String checksum;
 	
 	/**
@@ -150,6 +173,7 @@ public class Attachment {
 	 */
 	@Column(updatable = false)
 	@Description("Mime Type")
+	@Property
 	private String mimetype;
 	
 	/**
@@ -157,6 +181,7 @@ public class Attachment {
 	 */
 	@Column
 	@Description("Indexed Content")
+	@Property
 	private String index_content;
 
 	public String getName() {

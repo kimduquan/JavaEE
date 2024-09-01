@@ -1,6 +1,9 @@
 package erp.base.schema.ir.ui;
 
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
 import erp.base.schema.res.users.Users;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,6 +17,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_ui_view_custom")
 @Description("Custom View")
+@NodeEntity("Custom View")
 public class ViewCustom {
 
 	/**
@@ -23,6 +27,8 @@ public class ViewCustom {
 	@ManyToOne(targetEntity = View.class)
 	@NotNull
 	@Description("Original View")
+	@Property
+	@Relationship(type = "ORIGINAL")
 	private String ref_id;
 	
 	/**
@@ -32,6 +38,8 @@ public class ViewCustom {
 	@ManyToOne(targetEntity = Users.class)
 	@NotNull
 	@Description("User")
+	@Property
+	@Relationship(type = "USER")
 	private String user_id;
 	
 	/**
@@ -40,6 +48,7 @@ public class ViewCustom {
 	@Column(nullable = false)
 	@NotNull
 	@Description("View Architecture")
+	@Property
 	private String arch;
 
 	public String getRef_id() {

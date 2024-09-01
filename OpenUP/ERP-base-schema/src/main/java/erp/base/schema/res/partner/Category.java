@@ -3,6 +3,11 @@ package erp.base.schema.res.partner;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.typeconversion.Convert;
+import erp.schema.util.NameAttributeConverter;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -19,6 +24,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "res_partner_category")
 @Description("Partner Tags")
+@NodeEntity("Partner Tags")
 public class Category {
 
 	/**
@@ -27,6 +33,8 @@ public class Category {
 	@Column(nullable = false)
 	@NotNull
 	@Description("Tag Name")
+	@Property
+	@Convert(NameAttributeConverter.class)
 	private String name;
 	
 	/**
@@ -34,6 +42,7 @@ public class Category {
 	 */
 	@Column
 	@Description("Color")
+	@Property
 	private Integer color;
 	
 	/**
@@ -42,6 +51,8 @@ public class Category {
 	@Column
 	@ManyToOne(targetEntity = Category.class)
 	@Description("Parent Category")
+	@Property
+	@Relationship("PARENT")
 	private String parent_id;
 	
 	/**
@@ -52,6 +63,8 @@ public class Category {
 	@ElementCollection(targetClass = Category.class)
 	@CollectionTable(name = "res_partner_category")
 	@Description("Child Tags")
+	@Property
+	@Relationship("CHILDS")
 	private List<String> child_ids;
 	
 	/**
@@ -60,12 +73,14 @@ public class Category {
 	@Column
 	@DefaultValue("true")
 	@Description("The active field allows you to hide the category without removing it.")
+	@Property
 	private Boolean active = true;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String parent_path;
 	
 	/**
@@ -76,6 +91,8 @@ public class Category {
 	@ElementCollection(targetClass = Partner.class)
 	@CollectionTable(name = "res_partner")
 	@Description("Partners")
+	@Property
+	@Relationship(type = "PARTNERS")
 	private List<String> partner_ids;
 
 	public String getName() {

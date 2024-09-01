@@ -1,6 +1,9 @@
 package erp.base.schema.ir;
 
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
 import erp.base.schema.ir.model.Fields;
 import erp.base.schema.res.Company;
 import erp.base.schema.res.users.Users;
@@ -16,31 +19,40 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_default")
 @Description("Default Values")
+@NodeEntity("Default Values")
 public class Default {
 
 	@Column(nullable = false)
 	@ManyToOne(targetEntity = Fields.class)
 	@NotNull
 	@Description("Field")
+	@Property
+	@Relationship(type = "FIELD")
 	private String field_id;
 	
 	@Column
 	@ManyToOne(targetEntity = Users.class)
 	@Description("User")
+	@Property
+	@Relationship(type = "USER")
 	private String user_id;
 	
 	@Column
 	@ManyToOne(targetEntity = Company.class)
 	@Description("Company")
+	@Property
+	@Relationship(type = "COMPANY")
 	private String company_id;
 	
 	@Column
 	@Description("Condition")
+	@Property
 	private String condition;
 	
 	@Column(nullable = false)
 	@NotNull
 	@Description("Default Value (JSON format)")
+	@Property
 	private String json_value;
 
 	public String getField_id() {

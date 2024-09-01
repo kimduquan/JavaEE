@@ -3,6 +3,10 @@ package erp.base.schema.ir;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
+
 import erp.base.schema.res.Company;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -21,6 +25,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_sequence")
 @Description("Sequence")
+@NodeEntity("Sequence")
 public class Sequence {
 
 	/**
@@ -28,6 +33,7 @@ public class Sequence {
 	 */
 	@Column(nullable = false)
 	@NotNull
+	@Property
 	private String name;
 	
 	/**
@@ -35,6 +41,7 @@ public class Sequence {
 	 */
 	@Column
 	@Description("Sequence Code")
+	@Property
 	private String code;
 	
 	/**
@@ -45,6 +52,7 @@ public class Sequence {
 	@NotNull
 	@DefaultValue("standard")
 	@Description("Implementation")
+	@Property
 	private String implementation = "standard";
 	
 	/**
@@ -52,6 +60,7 @@ public class Sequence {
 	 */
 	@Column
 	@DefaultValue("true")
+	@Property
 	private Boolean active = true;
 	
 	/**
@@ -59,6 +68,7 @@ public class Sequence {
 	 */
 	@Column
 	@Description("Prefix value of the record for the sequence")
+	@Property
 	private String prefix;
 	
 	/**
@@ -66,6 +76,7 @@ public class Sequence {
 	 */
 	@Column
 	@Description("Suffix value of the record for the sequence")
+	@Property
 	private String suffix;
 	
 	/**
@@ -75,6 +86,7 @@ public class Sequence {
 	@NotNull
 	@DefaultValue("1")
 	@Description("Next Number")
+	@Property
 	private Integer number_next = 1;
 	
 	/**
@@ -82,6 +94,7 @@ public class Sequence {
 	 */
 	@Column
 	@Description("Actual Next Number")
+	@Property
 	private Integer number_next_actual;
 	
 	/**
@@ -91,6 +104,7 @@ public class Sequence {
 	@NotNull
 	@DefaultValue("1")
 	@Description("Step")
+	@Property
 	private Integer number_increment = 1;
 	
 	/**
@@ -100,6 +114,7 @@ public class Sequence {
 	@NotNull
 	@DefaultValue("0")
 	@Description("Sequence Size")
+	@Property
 	private Integer padding = 0;
 	
 	/**
@@ -108,6 +123,8 @@ public class Sequence {
 	@Column
 	@ManyToOne(targetEntity = Company.class)
 	@Description("Company")
+	@Property
+	@Relationship(type = "COMPANY")
 	private String company_id;
 	
 	/**
@@ -115,6 +132,7 @@ public class Sequence {
 	 */
 	@Column
 	@Description("Use subsequences per date_range")
+	@Property
 	private Boolean use_date_range;
 	
 	/**
@@ -125,6 +143,8 @@ public class Sequence {
 	@ElementCollection(targetClass = DateRange.class)
 	@CollectionTable(name = "ir_sequence_date_range")
 	@Description("Subsequences")
+	@Property
+	@Relationship(type = "SUBSEQUENCES")
 	private List<String> date_range_ids;
 
 	public String getName() {

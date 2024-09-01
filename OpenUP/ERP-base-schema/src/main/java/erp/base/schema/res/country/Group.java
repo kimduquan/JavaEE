@@ -2,6 +2,11 @@ package erp.base.schema.res.country;
 
 import java.util.List;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.typeconversion.Convert;
+import erp.schema.util.NameAttributeConverter;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -16,6 +21,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "res_country_group")
 @Description("Country Group")
+@NodeEntity("Country Group")
 public class Group {
 
 	/**
@@ -23,6 +29,8 @@ public class Group {
 	 */
 	@Column(nullable = false)
 	@NotNull
+	@Property
+	@Convert(NameAttributeConverter.class)
 	private String name;
 	
 	/**
@@ -33,6 +41,8 @@ public class Group {
 	@ElementCollection(targetClass = Country.class)
 	@CollectionTable(name = "res_country")
 	@Description("Countries")
+	@Property
+	@Relationship(type = "COUNTRIES")
 	private List<String> country_ids;
 
 	public String getName() {

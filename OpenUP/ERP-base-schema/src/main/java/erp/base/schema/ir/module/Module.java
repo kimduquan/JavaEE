@@ -3,6 +3,9 @@ package erp.base.schema.ir.module;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -20,6 +23,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_module_module")
 @Description("Module")
+@NodeEntity("Module")
 public class Module {
 
 	/**
@@ -28,6 +32,7 @@ public class Module {
 	@Column(nullable = false, updatable = false)
 	@NotNull
 	@Description("Technical Name")
+	@Property
 	private String name;
 	
 	/**
@@ -36,6 +41,8 @@ public class Module {
 	@Column(updatable = false)
 	@ManyToOne(targetEntity = Category.class)
 	@Description("Category")
+	@Property
+	@Relationship(type = "CATEGORY")
 	private String category_id;
 	
 	/**
@@ -43,6 +50,7 @@ public class Module {
 	 */
 	@Column(updatable = false)
 	@Description("Module Name")
+	@Property
 	private String shortdesc;
 	
 	/**
@@ -50,6 +58,7 @@ public class Module {
 	 */
 	@Column(updatable = false)
 	@Description("Summary")
+	@Property
 	private String summary;
 	
 	/**
@@ -57,6 +66,7 @@ public class Module {
 	 */
 	@Column(updatable = false)
 	@Description("Description")
+	@Property
 	private String description;
 	
 	/**
@@ -64,6 +74,7 @@ public class Module {
 	 */
 	@Column
 	@Description("Description HTML")
+	@Property
 	private String description_html;
 	
 	/**
@@ -71,6 +82,7 @@ public class Module {
 	 */
 	@Column(updatable = false)
 	@Description("Author")
+	@Property
 	private String author;
 	
 	/**
@@ -78,6 +90,7 @@ public class Module {
 	 */
 	@Column(updatable = false)
 	@Description("Maintainer")
+	@Property
 	private String maintainer;
 	
 	/**
@@ -85,6 +98,7 @@ public class Module {
 	 */
 	@Column(updatable = false)
 	@Description("Contributors")
+	@Property
 	private String contributors;
 	
 	/**
@@ -92,6 +106,7 @@ public class Module {
 	 */
 	@Column(updatable = false)
 	@Description("Website")
+	@Property
 	private String website;
 	
 	/**
@@ -99,6 +114,7 @@ public class Module {
 	 */
 	@Column
 	@Description("Latest Version")
+	@Property
 	private String installed_version;
 	
 	/**
@@ -106,6 +122,7 @@ public class Module {
 	 */
 	@Column(updatable = false)
 	@Description("Installed Version")
+	@Property
 	private String latest_version;
 	
 	/**
@@ -113,6 +130,7 @@ public class Module {
 	 */
 	@Column(updatable = false)
 	@Description("Published Version")
+	@Property
 	private String published_version;
 	
 	/**
@@ -120,6 +138,7 @@ public class Module {
 	 */
 	@Column(updatable = false)
 	@Description("URL")
+	@Property
 	private String url;
 	
 	/**
@@ -128,6 +147,7 @@ public class Module {
 	@Column
 	@DefaultValue("100")
 	@Description("Sequence")
+	@Property
 	private Integer sequence = 100;
 	
 	/**
@@ -138,6 +158,8 @@ public class Module {
 	@ElementCollection(targetClass = Dependency.class)
 	@CollectionTable(name = "ir_module_module_dependency")
 	@Description("Dependencies")
+	@Property
+	@Relationship(type = "DEPENDENCIES")
 	private List<String> dependencies_id;
 	
 	/**
@@ -148,6 +170,8 @@ public class Module {
 	@ElementCollection(targetClass = Exclusion.class)
 	@CollectionTable(name = "ir_module_module_exclusion")
 	@Description("Exclusions")
+	@Property
+	@Relationship(type = "EXCLUSIONS")
 	private List<String> exclusion_ids;
 	
 	/**
@@ -155,6 +179,7 @@ public class Module {
 	 */
 	@Column
 	@Description("Automatic Installation")
+	@Property
 	private Boolean auto_install;
 	
 	/**
@@ -164,6 +189,7 @@ public class Module {
 	@Enumerated(EnumType.STRING)
 	@DefaultValue("uninstallable")
 	@Description("Status")
+	@Property
 	private String state = "uninstallable";
 	
 	/**
@@ -172,6 +198,7 @@ public class Module {
 	@Column(updatable = false)
 	@DefaultValue("false")
 	@Description("Demo Data")
+	@Property
 	private Boolean demo = false;
 	
 	/**
@@ -180,6 +207,7 @@ public class Module {
 	@Column(updatable = false)
 	@Enumerated(EnumType.STRING)
 	@DefaultValue("LGPL-3")
+	@Property
 	private String license = "LGPL-3";
 	
 	/**
@@ -187,6 +215,7 @@ public class Module {
 	 */
 	@Column
 	@Description("Menus")
+	@Property
 	private String menus_by_module;
 	
 	/**
@@ -194,6 +223,7 @@ public class Module {
 	 */
 	@Column
 	@Description("Reports")
+	@Property
 	private String reports_by_module;
 	
 	/**
@@ -201,6 +231,7 @@ public class Module {
 	 */
 	@Column
 	@Description("Views")
+	@Property
 	private String views_by_module;
 	
 	/**
@@ -208,6 +239,7 @@ public class Module {
 	 */
 	@Column(updatable = false)
 	@Description("Application")
+	@Property
 	private Boolean application;
 	
 	/**
@@ -215,6 +247,7 @@ public class Module {
 	 */
 	@Column
 	@Description("Icon URL")
+	@Property
 	private String icon;
 	
 	/**
@@ -222,6 +255,7 @@ public class Module {
 	 */
 	@Column
 	@Description("Icon")
+	@Property
 	private byte[] icon_image;
 	
 	/**
@@ -229,6 +263,7 @@ public class Module {
 	 */
 	@Column
 	@Description("Flag")
+	@Property
 	private String icon_flag;
 	
 	/**
@@ -237,12 +272,14 @@ public class Module {
 	@Column
 	@DefaultValue("false")
 	@Description("Odoo Enterprise Module")
+	@Property
 	private Boolean to_buy = false;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private Boolean has_iap;
 
 	public String getName() {

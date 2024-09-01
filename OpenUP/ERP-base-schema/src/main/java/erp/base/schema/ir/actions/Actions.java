@@ -1,7 +1,12 @@
 package erp.base.schema.ir.actions;
 
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.typeconversion.Convert;
 import erp.base.schema.ir.model.Model;
+import erp.schema.util.NameAttributeConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -16,6 +21,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_actions")
 @Description("Actions")
+@NodeEntity("Actions")
 public class Actions {
 
 	/**
@@ -24,6 +30,8 @@ public class Actions {
 	@Column(nullable = false)
 	@NotNull
 	@Description("Action Name")
+	@Property
+	@Convert(NameAttributeConverter.class)
 	private String name;
 	
 	/**
@@ -32,6 +40,7 @@ public class Actions {
 	@Column(nullable = false)
 	@NotNull
 	@Description("Action Type")
+	@Property
 	private String type;
 	
 	/**
@@ -39,6 +48,7 @@ public class Actions {
 	 */
 	@Column
 	@Description("External ID")
+	@Property
 	private String xml_id;
 	
 	/**
@@ -46,6 +56,7 @@ public class Actions {
 	 */
 	@Column
 	@Description("Action Description")
+	@Property
 	private String help;
 	
 	/**
@@ -54,6 +65,8 @@ public class Actions {
 	@Column
 	@ManyToOne(targetEntity = Model.class)
 	@Description("Setting a value makes this action available in the sidebar for the given model.")
+	@Property
+	@Relationship(type = "BINDING_MODEL")
 	private String binding_model_id;
 	
 	/**
@@ -62,12 +75,14 @@ public class Actions {
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	@NotNull
+	@Property
 	private String binding_type = "action";
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String binding_view_types = "list,form";
 
 	public String getName() {

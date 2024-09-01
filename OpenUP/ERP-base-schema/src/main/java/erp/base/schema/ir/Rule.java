@@ -3,6 +3,9 @@ package erp.base.schema.ir;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
 import erp.base.schema.ir.model.Model;
 import erp.base.schema.res.groups.Groups;
 import jakarta.persistence.CollectionTable;
@@ -20,12 +23,14 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_rule")
 @Description("Record Rule")
+@NodeEntity("Record Rule")
 public class Rule {
 
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String name;
 	
 	/**
@@ -33,6 +38,7 @@ public class Rule {
 	 */
 	@Column
 	@DefaultValue("true")
+	@Property
 	private Boolean active = true;
 	
 	/**
@@ -42,6 +48,8 @@ public class Rule {
 	@ManyToOne(targetEntity = Model.class)
 	@NotNull
 	@Description("Model")
+	@Property
+	@Relationship(type = "MODEL")
 	private String model_id;
 	
 	/**
@@ -51,6 +59,8 @@ public class Rule {
 	@ManyToMany(targetEntity = Groups.class)
 	@ElementCollection(targetClass = Groups.class)
 	@CollectionTable(name = "res_groups")
+	@Property
+	@Relationship(type = "GROUPS")
 	private List<String> groups;
 	
 	/**
@@ -58,6 +68,7 @@ public class Rule {
 	 */
 	@Column
 	@Description("Domain")
+	@Property
 	private String domain_force;
 	
 	/**
@@ -66,6 +77,7 @@ public class Rule {
 	@Column
 	@DefaultValue("true")
 	@Description("Read")
+	@Property
 	private Boolean perm_read = true;
 	
 	/**
@@ -74,6 +86,7 @@ public class Rule {
 	@Column
 	@DefaultValue("true")
 	@Description("Write")
+	@Property
 	private Boolean perm_write = true;
 	
 	/**
@@ -82,6 +95,7 @@ public class Rule {
 	@Column
 	@DefaultValue("true")
 	@Description("Create")
+	@Property
 	private Boolean perm_create = true;
 	
 	/**
@@ -90,6 +104,7 @@ public class Rule {
 	@Column
 	@DefaultValue("true")
 	@Description("Delete")
+	@Property
 	private Boolean perm_unlink = true;
 
 	public String getName() {

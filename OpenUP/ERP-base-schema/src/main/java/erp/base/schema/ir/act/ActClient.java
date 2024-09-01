@@ -2,6 +2,9 @@ package erp.base.schema.ir.act;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+
 import erp.base.schema.ir.actions.Actions;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,6 +19,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_act_client")
 @Description("Client Action")
+@NodeEntity("Client Action")
 public class ActClient extends Actions {
 
 	/**
@@ -23,6 +27,7 @@ public class ActClient extends Actions {
 	 */
 	@Column
 	@DefaultValue("ir.actions.client")
+	@Property
 	private String type = "ir.actions.client";
 	
 	/**
@@ -31,6 +36,7 @@ public class ActClient extends Actions {
 	@Column(nullable = false)
 	@NotNull
 	@Description("Client action tag")
+	@Property
 	private String tag;
 	
 	/**
@@ -40,6 +46,7 @@ public class ActClient extends Actions {
 	@Enumerated(EnumType.STRING)
 	@DefaultValue("current")
 	@Description("Target Window")
+	@Property
 	private String target = "current";
 	
 	/**
@@ -47,6 +54,7 @@ public class ActClient extends Actions {
 	 */
 	@Column
 	@Description("Destination Model")
+	@Property
 	private String res_model;
 	
 	/**
@@ -56,6 +64,7 @@ public class ActClient extends Actions {
 	@NotNull
 	@DefaultValue("{}")
 	@Description("Context Value")
+	@Property
 	private String context = "{}";
 	
 	/**
@@ -63,6 +72,7 @@ public class ActClient extends Actions {
 	 */
 	@Column
 	@Description("Supplementary arguments")
+	@Property
 	private byte[] params;
 	
 	/**
@@ -70,6 +80,7 @@ public class ActClient extends Actions {
 	 */
 	@Column(updatable = false)
 	@Description("Params storage")
+	@Property
 	private byte[] params_store;
 
 	public String getType() {

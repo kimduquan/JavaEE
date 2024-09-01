@@ -2,6 +2,9 @@ package erp.base.schema.ir.model;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
 import erp.base.schema.res.groups.Groups;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,6 +18,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_model_access")
 @Description("Model Access")
+@NodeEntity("Model Access")
 public class Access {
 
 	/**
@@ -22,6 +26,7 @@ public class Access {
 	 */
 	@Column(nullable = false)
 	@NotNull
+	@Property
 	private String name;
 	
 	/**
@@ -29,6 +34,7 @@ public class Access {
 	 */
 	@Column
 	@DefaultValue("true")
+	@Property
 	private Boolean active = true;
 	
 	/**
@@ -38,6 +44,8 @@ public class Access {
 	@ManyToOne(targetEntity = Model.class)
 	@NotNull
 	@Description("Model")
+	@Property
+	@Relationship(type = "MODEL")
 	private String model_id;
 	
 	/**
@@ -46,6 +54,8 @@ public class Access {
 	@Column
 	@ManyToOne(targetEntity = Groups.class)
 	@Description("Group")
+	@Property
+	@Relationship(type = "GROUP")
 	private String group_id;
 	
 	/**
@@ -53,6 +63,7 @@ public class Access {
 	 */
 	@Column
 	@Description("Read Access")
+	@Property
 	private Boolean perm_read;
 	
 	/**
@@ -60,6 +71,7 @@ public class Access {
 	 */
 	@Column
 	@Description("Write Access")
+	@Property
 	private Boolean perm_write;
 	
 	/**
@@ -67,6 +79,7 @@ public class Access {
 	 */
 	@Column
 	@Description("Create Access")
+	@Property
 	private Boolean perm_create;
 	
 	/**
@@ -74,6 +87,7 @@ public class Access {
 	 */
 	@Column
 	@Description("Delete Access")
+	@Property
 	private Boolean perm_unlink;
 
 	public String getName() {

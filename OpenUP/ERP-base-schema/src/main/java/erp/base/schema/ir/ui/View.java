@@ -3,6 +3,10 @@ package erp.base.schema.ir.ui;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
+
 import erp.base.schema.ir.model.Model;
 import erp.base.schema.res.groups.Groups;
 import erp.base.schema.ir.model.Data;
@@ -24,6 +28,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_ui_view")
 @Description("View")
+@NodeEntity("View")
 public class View {
 	
 	/**
@@ -32,18 +37,21 @@ public class View {
 	@Column(nullable = false)
 	@NotNull
 	@Description("View Name")
+	@Property
 	private String name;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String model;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String key;
 	
 	/**
@@ -53,6 +61,7 @@ public class View {
 	@NotNull
 	@DefaultValue("16")
 	@Description("Sequence")
+	@Property
 	private Integer priority = 16;
 	
 	/**
@@ -61,6 +70,7 @@ public class View {
 	@Column
 	@Enumerated(EnumType.STRING)
 	@Description("View Type")
+	@Property
 	private String type;
 	
 	/**
@@ -68,6 +78,7 @@ public class View {
 	 */
 	@Column
 	@Description("View Architecture")
+	@Property
 	private String arch;
 	
 	/**
@@ -75,6 +86,7 @@ public class View {
 	 */
 	@Column
 	@Description("Base View Architecture")
+	@Property
 	private String arch_base;
 	
 	/**
@@ -82,6 +94,7 @@ public class View {
 	 */
 	@Column
 	@Description("Arch Blob")
+	@Property
 	private String arch_db;
 	
 	/**
@@ -89,6 +102,7 @@ public class View {
 	 */
 	@Column
 	@Description("Arch Filename")
+	@Property
 	private String arch_fs;
 	
 	/**
@@ -96,6 +110,7 @@ public class View {
 	 */
 	@Column
 	@Description("Modified Architecture")
+	@Property
 	private Boolean arch_updated;
 	
 	/**
@@ -103,6 +118,7 @@ public class View {
 	 */
 	@Column
 	@Description("Previous View Architecture")
+	@Property
 	private String arch_prev;
 	
 	/**
@@ -111,6 +127,8 @@ public class View {
 	@Column
 	@ManyToOne(targetEntity = View.class)
 	@Description("Inherited View")
+	@Property
+	@Relationship(type = "INHERITED_VIEW")
 	private String inherit_id;
 	
 	/**
@@ -121,6 +139,8 @@ public class View {
 	@ElementCollection(targetClass = View.class)
 	@CollectionTable(name = "ir_ui_view")
 	@Description("Views which inherit from this one")
+	@Property
+	@Relationship(type = "INHERITED_CHILDRENS")
 	private List<String> inherit_children_ids;
 	
 	/**
@@ -129,6 +149,8 @@ public class View {
 	@Column
 	@ManyToOne(targetEntity = Data.class)
 	@Description("Model Data")
+	@Property
+	@Relationship(type = "MODEL_DATA")
 	private String model_data_id;
 	
 	/**
@@ -136,6 +158,7 @@ public class View {
 	 */
 	@Column
 	@Description("External ID")
+	@Property
 	private String xml_id;
 	
 	/**
@@ -146,6 +169,8 @@ public class View {
 	@ElementCollection(targetClass = Groups.class)
 	@CollectionTable(name = "res_groups")
 	@Description("Groups")
+	@Property
+	@Relationship(type = "GROUPS")
 	private List<String> groups_id;
 	
 	/**
@@ -155,6 +180,7 @@ public class View {
 	@NotNull
 	@DefaultValue("primary")
 	@Description("View inheritance mode")
+	@Property
 	private String mode = "primary";
 	
 	/**
@@ -162,6 +188,7 @@ public class View {
 	 */
 	@Column
 	@DefaultValue("true")
+	@Property
 	private Boolean active = true;
 	
 	/**
@@ -170,6 +197,8 @@ public class View {
 	@Column
 	@ManyToOne(targetEntity = Model.class)
 	@Description("Model of the view")
+	@Property
+	@Relationship(type = "MODEL")
 	private String model_id;
 
 	public String getName() {

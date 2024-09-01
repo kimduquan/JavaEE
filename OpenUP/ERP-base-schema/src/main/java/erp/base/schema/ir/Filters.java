@@ -2,6 +2,9 @@ package erp.base.schema.ir;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
 import erp.base.schema.ir.actions.Actions;
 import erp.base.schema.res.users.Users;
 import jakarta.persistence.Column;
@@ -18,6 +21,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_filters")
 @Description("Filters")
+@NodeEntity("Filters")
 public class Filters {
 
 	/**
@@ -26,6 +30,7 @@ public class Filters {
 	@Column(nullable = false)
 	@NotNull
 	@Description("Filter Name")
+	@Property
 	private String name;
 	
 	/**
@@ -34,6 +39,8 @@ public class Filters {
 	@Column
 	@ManyToOne(targetEntity = Users.class)
 	@Description("User")
+	@Property
+	@Relationship(type = "USER")
 	private String user_id;
 	
 	/**
@@ -42,6 +49,7 @@ public class Filters {
 	@Column(nullable = false)
 	@NotNull
 	@DefaultValue("[]")
+	@Property
 	private String domain = "[]";
 	
 	/**
@@ -50,6 +58,7 @@ public class Filters {
 	@Column(nullable = false)
 	@NotNull
 	@DefaultValue("{}")
+	@Property
 	private String context = "{}";
 	
 	/**
@@ -58,6 +67,7 @@ public class Filters {
 	@Column(nullable = false)
 	@NotNull
 	@DefaultValue("[]")
+	@Property
 	private String sort = "[]";
 	
 	/**
@@ -67,6 +77,7 @@ public class Filters {
 	@Enumerated(EnumType.STRING)
 	@NotNull
 	@Description("Model")
+	@Property
 	private String model_id;
 	
 	/**
@@ -74,6 +85,7 @@ public class Filters {
 	 */
 	@Column
 	@Description("Default Filter")
+	@Property
 	private Boolean is_default;
 	
 	/**
@@ -82,6 +94,8 @@ public class Filters {
 	@Column
 	@ManyToOne(targetEntity = Actions.class)
 	@Description("Action")
+	@Property
+	@Relationship(type = "ACTION")
 	private String action_id;
 	
 	/**
@@ -89,6 +103,7 @@ public class Filters {
 	 */
 	@Column
 	@DefaultValue("true")
+	@Property
 	private Boolean active = true;
 
 	public String getName() {

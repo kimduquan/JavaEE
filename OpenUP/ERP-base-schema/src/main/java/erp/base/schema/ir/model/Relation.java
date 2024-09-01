@@ -1,6 +1,9 @@
 package erp.base.schema.ir.model;
 
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -13,6 +16,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_model_relation")
 @Description("Relation Model")
+@NodeEntity("Relation")
 public class Relation {
 
 	/**
@@ -21,6 +25,7 @@ public class Relation {
 	@Column(nullable = false)
 	@NotNull
 	@Description("Relation Name")
+	@Property
 	private String name;
 	
 	/**
@@ -29,6 +34,8 @@ public class Relation {
 	@Column(nullable = false)
 	@ManyToOne(targetEntity = Model.class)
 	@NotNull
+	@Property
+	@Relationship(type = "MODEL")
 	private String model;
 	
 	/**
@@ -37,18 +44,22 @@ public class Relation {
 	@Column(nullable = false)
 	@ManyToOne(targetEntity = Module.class)
 	@NotNull
+	@Property
+	@Relationship(type = "MODULE")
 	private String module;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String write_date;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String create_date;
 
 	public String getName() {

@@ -2,6 +2,8 @@ package erp.base.schema.ir;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
 import erp.base.schema.ir.model.Fields;
 import erp.base.schema.res.Company;
 import jakarta.persistence.Column;
@@ -18,12 +20,14 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_property")
 @Description("Company Property")
+@NodeEntity("Company Property")
 public class Property {
 
 	/**
 	 * 
 	 */
 	@Column
+	@org.neo4j.ogm.annotation.Property
 	private String name;
 	
 	/**
@@ -31,6 +35,7 @@ public class Property {
 	 */
 	@Column
 	@Description("Resource")
+	@org.neo4j.ogm.annotation.Property
 	private String res_id;
 	
 	/**
@@ -39,6 +44,8 @@ public class Property {
 	@Column
 	@ManyToOne(targetEntity = Company.class)
 	@Description("Company")
+	@org.neo4j.ogm.annotation.Property
+	@Relationship(type = "COMPANY")
 	private String company_id;
 	
 	/**
@@ -48,42 +55,50 @@ public class Property {
 	@ManyToOne(targetEntity = Fields.class)
 	@NotNull
 	@Description("Field")
+	@org.neo4j.ogm.annotation.Property
+	@Relationship(type = "FIELD")
 	private String fields_id;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@org.neo4j.ogm.annotation.Property
 	private Float value_float;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@org.neo4j.ogm.annotation.Property
 	private Integer value_integer;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@org.neo4j.ogm.annotation.Property
 	private String value_text;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@org.neo4j.ogm.annotation.Property
 	private byte[] value_binary;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@org.neo4j.ogm.annotation.Property
 	private String value_reference;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@org.neo4j.ogm.annotation.Property
 	private String value_datetime;
 	
 	/**
@@ -93,6 +108,7 @@ public class Property {
 	@Enumerated(EnumType.STRING)
 	@NotNull
 	@DefaultValue("many2one")
+	@org.neo4j.ogm.annotation.Property
 	private String type = "many2one";
 
 	public String getName() {

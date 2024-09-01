@@ -3,11 +3,16 @@ package erp.base.schema.ir.act;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.typeconversion.Convert;
 import erp.base.schema.ir.model.Model;
 import erp.base.schema.ir.actions.Actions;
 import erp.base.schema.ir.model.Fields;
 import erp.base.schema.ir.model.Selection;
 import erp.base.schema.res.groups.Groups;
+import erp.schema.util.NameAttributeConverter;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -25,6 +30,7 @@ import jakarta.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "ir_act_server")
+@NodeEntity
 public class Server extends Actions {
 
 	/**
@@ -32,6 +38,8 @@ public class Server extends Actions {
 	 */
 	@Column(nullable = false)
 	@NotNull
+	@Property
+	@Convert(NameAttributeConverter.class)
 	private String name;
 	
 	/**
@@ -39,6 +47,7 @@ public class Server extends Actions {
 	 */
 	@Column
 	@DefaultValue("ir.actions.server")
+	@Property
 	private String type = "ir.actions.server";
 	
 	/**
@@ -49,6 +58,7 @@ public class Server extends Actions {
 	@NotNull
 	@Description("Usage")
 	@DefaultValue("ir_actions_server")
+	@Property
 	private String usage = "ir_actions_server";
 	
 	/**
@@ -59,6 +69,7 @@ public class Server extends Actions {
 	@NotNull
 	@Description("Type")
 	@DefaultValue("object_write")
+	@Property
 	private String state = "object_write";
 	
 	/**
@@ -70,6 +81,7 @@ public class Server extends Actions {
             "based on the sequence. Low number means high priority."
 			)
 	@DefaultValue("5")
+	@Property
 	private Integer sequence = 5;
 	
 	/**
@@ -79,6 +91,8 @@ public class Server extends Actions {
 	@ManyToOne(targetEntity = Model.class)
 	@NotNull
 	@Description("Model")
+	@Property
+	@Relationship(type = "MODEL")
 	private String model_id;
 	
 	/**
@@ -89,6 +103,8 @@ public class Server extends Actions {
 	@ElementCollection(targetClass = Model.class)
 	@CollectionTable(name = "ir_model")
 	@Description("Available Models")
+	@Property
+	@Relationship(type = "AVAILABLE_MODELS")
 	private List<String> available_model_ids;
 	
 	/**
@@ -96,6 +112,7 @@ public class Server extends Actions {
 	 */
 	@Column(updatable = false)
 	@Description("Model Name")
+	@Property
 	private String model_name;
 	
 	/**
@@ -103,6 +120,7 @@ public class Server extends Actions {
 	 */
 	@Column
 	@Description("Python Code")
+	@Property
 	private String code;
 	
 	/**
@@ -116,6 +134,8 @@ public class Server extends Actions {
 			@JoinColumn(name = "action_id")
 	})
 	@Description("Child Actions")
+	@Property
+	@Relationship(type = "CHILD_ACTIONS")
 	private List<String> child_ids;
 	
 	/**
@@ -124,6 +144,8 @@ public class Server extends Actions {
 	@Column
 	@ManyToOne(targetEntity = Model.class)
 	@Description("Record to Create")
+	@Property
+	@Relationship(type = "CRUD_MODEL")
 	private String crud_model_id;
 	
 	/**
@@ -131,6 +153,7 @@ public class Server extends Actions {
 	 */
 	@Column(updatable = false)
 	@Description("Target Model Name")
+	@Property
 	private String crud_model_name;
 	
 	/**
@@ -139,6 +162,8 @@ public class Server extends Actions {
 	@Column
 	@ManyToOne(targetEntity = Fields.class)
 	@Description("Link Field")
+	@Property
+	@Relationship(type = "LINK_FIELD")
 	private String link_field_id;
 	
 	/**
@@ -149,6 +174,8 @@ public class Server extends Actions {
 	@ElementCollection(targetClass = Groups.class)
 	@CollectionTable(name = "res_groups")
 	@Description("Allowed Groups")
+	@Property
+	@Relationship(type = "GROUPS")
 	private List<String> groups_id;
 	
 	/**
@@ -157,6 +184,8 @@ public class Server extends Actions {
 	@Column
 	@ManyToOne(targetEntity = Fields.class)
 	@Description("Field to Update")
+	@Property
+	@Relationship(type = "UPDATE_FIELD")
 	private String update_field_id;
 	
 	/**
@@ -164,6 +193,7 @@ public class Server extends Actions {
 	 */
 	@Column
 	@Description("Field to Update Path")
+	@Property
 	private String update_path;
 	
 	/**
@@ -171,6 +201,8 @@ public class Server extends Actions {
 	 */
 	@Column
 	@ManyToOne(targetEntity = Model.class)
+	@Property
+	@Relationship(type = "UPDATE_RELATED_MODEL")
 	private String update_related_model_id;
 	
 	/**
@@ -178,6 +210,7 @@ public class Server extends Actions {
 	 */
 	@Column(updatable = false)
 	@Enumerated(EnumType.STRING)
+	@Property
 	private String update_field_type;
 	
 	/**
@@ -187,6 +220,7 @@ public class Server extends Actions {
 	@Enumerated(EnumType.STRING)
 	@Description("Many2many Operations")
 	@DefaultValue("add")
+	@Property
 	private String update_m2m_operation = "add";
 	
 	/**
@@ -196,12 +230,14 @@ public class Server extends Actions {
 	@Enumerated(EnumType.STRING)
 	@Description("Boolean Value")
 	@DefaultValue("true")
+	@Property
 	private String update_boolean_value = "true";
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String value;
 	
 	/**
@@ -211,6 +247,7 @@ public class Server extends Actions {
 	@Enumerated(EnumType.STRING)
 	@Description("Value Type")
 	@DefaultValue("value")
+	@Property
 	private String evaluation_type = "value";
 	
 	/**
@@ -218,6 +255,7 @@ public class Server extends Actions {
 	 */
 	@Column
 	@Description("Record")
+	@Property
 	private String resource_ref;
 	
 	/**
@@ -226,6 +264,8 @@ public class Server extends Actions {
 	@Column
 	@ManyToOne(targetEntity = Selection.class)
 	@Description("Custom Value")
+	@Property
+	@Relationship(type = "SELECTION_VALUE")
 	private String selection_value;
 	
 	/**
@@ -233,6 +273,7 @@ public class Server extends Actions {
 	 */
 	@Column
 	@Enumerated(EnumType.STRING)
+	@Property
 	private String value_field_to_show;
 	
 	/**
@@ -240,6 +281,7 @@ public class Server extends Actions {
 	 */
 	@Column
 	@Description("Webhook URL")
+	@Property
 	private String webhook_url;
 	
 	/**
@@ -248,6 +290,8 @@ public class Server extends Actions {
 	@Column
 	@ManyToMany(targetEntity = Fields.class)
 	@Description("Webhook Fields")
+	@Property
+	@Relationship(type = "WEBHOOK_FIELDS")
 	private List<String> webhook_field_ids;
 	
 	/**
@@ -255,6 +299,7 @@ public class Server extends Actions {
 	 */
 	@Column
 	@Description("Sample Payload")
+	@Property
 	private String webhook_sample_payload;
 
 	public String getName() {

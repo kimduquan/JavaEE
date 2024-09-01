@@ -2,6 +2,10 @@ package erp.base.schema.res.partner;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.typeconversion.Convert;
+import erp.schema.util.NameAttributeConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -12,6 +16,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "res_partner_industry")
 @Description("Industry")
+@NodeEntity("Industry")
 public class Industry {
 
 	/**
@@ -19,6 +24,8 @@ public class Industry {
 	 */
 	@Column
 	@Description("Name")
+	@Property
+	@Convert(NameAttributeConverter.class)
 	private String name;
 	
 	/**
@@ -26,6 +33,7 @@ public class Industry {
 	 */
 	@Column
 	@Description("Full Name")
+	@Property
 	private String full_name;
 	
 	/**
@@ -34,6 +42,7 @@ public class Industry {
 	@Column
 	@DefaultValue("true")
 	@Description("Active")
+	@Property
 	private Boolean active = true;
 
 	public String getName() {

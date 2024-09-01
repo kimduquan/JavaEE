@@ -2,6 +2,11 @@ package erp.base.schema.ir.actions;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.typeconversion.Convert;
+import erp.schema.util.NameAttributeConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -16,6 +21,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_actions_todo")
 @Description("Configuration Wizards")
+@NodeEntity("Configuration Wizards")
 public class Todo {
 
 	/**
@@ -25,6 +31,8 @@ public class Todo {
 	@ManyToOne(targetEntity = Actions.class)
 	@NotNull
 	@Description("Action")
+	@Property
+	@Relationship(type = "Action")
 	private String action_id;
 	
 	/**
@@ -32,6 +40,7 @@ public class Todo {
 	 */
 	@Column
 	@DefaultValue("10")
+	@Property
 	private Integer sequence = 10;
 	
 	/**
@@ -42,12 +51,15 @@ public class Todo {
 	@NotNull
 	@Description("Status")
 	@DefaultValue("open")
+	@Property
 	private String state = "open";
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
+	@Convert(NameAttributeConverter.class)
 	private String name;
 
 	public String getAction_id() {

@@ -3,6 +3,9 @@ package erp.base.schema.res.users;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
 import erp.base.schema.ir.actions.Actions;
 import erp.base.schema.res.Company;
 import erp.base.schema.res.groups.Groups;
@@ -23,6 +26,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "res_users")
 @Description("User")
+@NodeEntity("User")
 public class Users {
 
 	/**
@@ -32,6 +36,8 @@ public class Users {
 	@ManyToOne(targetEntity = Partner.class)
 	@NotNull
 	@Description("Related Partner")
+	@Property
+	@Relationship(type = "PARTNER")
 	private String partner_id;
 	
 	/**
@@ -40,6 +46,7 @@ public class Users {
 	@Column(nullable = false)
 	@NotNull
 	@Description("Used to log into the system")
+	@Property
 	private String login;
 	
 	/**
@@ -47,6 +54,7 @@ public class Users {
 	 */
 	@Column
 	@Description("Keep empty if you don't want the user to be able to connect on the system.")
+	@Property
 	private String password;
 	
 	/**
@@ -54,6 +62,7 @@ public class Users {
 	 */
 	@Column
 	@Description("Set Password")
+	@Property
 	private String new_password;
 	
 	/**
@@ -61,6 +70,7 @@ public class Users {
 	 */
 	@Column
 	@Description("Email Signature")
+	@Property
 	private String signature;
 	
 	/**
@@ -68,6 +78,7 @@ public class Users {
 	 */
 	@Column
 	@DefaultValue("true")
+	@Property
 	private Boolean active = true;
 	
 	/**
@@ -75,6 +86,7 @@ public class Users {
 	 */
 	@Column(updatable = false)
 	@Description("Partner is Active")
+	@Property
 	private Boolean active_partner;
 	
 	/**
@@ -83,6 +95,8 @@ public class Users {
 	@Column
 	@ManyToOne(targetEntity = Actions.class)
 	@Description("Home Action")
+	@Property
+	@Relationship(type = "ACTION")
 	private String action_id;
 	
 	/**
@@ -91,6 +105,8 @@ public class Users {
 	@Column
 	@ManyToMany(targetEntity = Groups.class)
 	@Description("Groups")
+	@Property
+	@Relationship(type = "GROUPS")
 	private List<String> groups_id;
 	
 	/**
@@ -101,6 +117,8 @@ public class Users {
 	@ElementCollection(targetClass = Log.class)
 	@CollectionTable(name = "res_users_log")
 	@Description("User log entries")
+	@Property
+	@Relationship(type = "LOGS")
 	private List<String> log_ids;
 	
 	/**
@@ -108,6 +126,7 @@ public class Users {
 	 */
 	@Column
 	@Description("Latest authentication")
+	@Property
 	private String login_date;
 	
 	/**
@@ -115,6 +134,7 @@ public class Users {
 	 */
 	@Column
 	@Description("Share User")
+	@Property
 	private Boolean share;
 	
 	/**
@@ -122,6 +142,7 @@ public class Users {
 	 */
 	@Column
 	@Description("Number of Companies")
+	@Property
 	private Integer companies_count;
 	
 	/**
@@ -129,6 +150,7 @@ public class Users {
 	 */
 	@Column
 	@Description("Timezone offset")
+	@Property
 	private String tz_offset;
 	
 	/**
@@ -138,6 +160,8 @@ public class Users {
 	@OneToMany(targetEntity = Settings.class)
 	@ElementCollection(targetClass = Settings.class)
 	@CollectionTable(name = "res_users_settings")
+	@Property
+	@Relationship(type = "USERS_SETTINGS")
 	private List<String> res_users_settings_ids;
 	
 	/**
@@ -146,6 +170,8 @@ public class Users {
 	@Column
 	@ManyToOne(targetEntity = Settings.class)
 	@Description("Settings")
+	@Property
+	@Relationship(type = "SETTINGS")
 	private String res_users_settings_id;
 	
 	/**
@@ -155,6 +181,8 @@ public class Users {
 	@ManyToOne(targetEntity = Company.class)
 	@NotNull
 	@Description("Company")
+	@Property
+	@Relationship(type = "COMPANY")
 	private String company_id;
 	
 	/**
@@ -165,18 +193,22 @@ public class Users {
 	@ElementCollection(targetClass = Company.class)
 	@CollectionTable(name = "res_company")
 	@Description("Companies")
+	@Property
+	@Relationship(type = "COMPANIES")
 	private List<String> company_ids;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String name;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String email;
 	
 	/**
@@ -184,6 +216,7 @@ public class Users {
 	 */
 	@Column
 	@Description("# Access Rights")
+	@Property
 	private Integer accesses_count;
 	
 	/**
@@ -191,6 +224,7 @@ public class Users {
 	 */
 	@Column
 	@Description("# Record Rules")
+	@Property
 	private Integer rules_count;
 	
 	/**
@@ -198,6 +232,7 @@ public class Users {
 	 */
 	@Column
 	@Description("# Groups")
+	@Property
 	private Integer groups_count;
 
 	public String getPartner_id() {

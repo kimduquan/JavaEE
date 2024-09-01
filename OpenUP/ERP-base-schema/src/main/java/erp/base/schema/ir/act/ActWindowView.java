@@ -1,6 +1,9 @@
 package erp.base.schema.ir.act;
 
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
 import erp.base.schema.ir.ui.View;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,12 +19,14 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_act_window_view")
 @Description("Action Window View")
+@NodeEntity("Action Window View")
 public class ActWindowView {
 
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private Integer sequence;
 	
 	/**
@@ -30,6 +35,8 @@ public class ActWindowView {
 	@Column
 	@ManyToOne(targetEntity = View.class)
 	@Description("View")
+	@Property
+	@Relationship(type = "VIEW")
 	private String view_id;
 	
 	/**
@@ -39,6 +46,7 @@ public class ActWindowView {
 	@Enumerated(EnumType.STRING)
 	@NotNull
 	@Description("View Type")
+	@Property
 	private String view_mode;
 	
 	/**
@@ -47,6 +55,8 @@ public class ActWindowView {
 	@Column
 	@ManyToOne(targetEntity = ActWindow.class)
 	@Description("Action")
+	@Property
+	@Relationship(type = "ACTION")
 	private String act_window_id;
 	
 	/**
@@ -54,6 +64,7 @@ public class ActWindowView {
 	 */
 	@Column
 	@Description("On Multiple Doc.")
+	@Property
 	private Boolean multi;
 
 	public Integer getSequence() {

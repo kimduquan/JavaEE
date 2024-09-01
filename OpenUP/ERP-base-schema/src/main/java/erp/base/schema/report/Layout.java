@@ -2,6 +2,9 @@ package erp.base.schema.report;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
 import erp.base.schema.ir.ui.View;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,6 +18,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "report_layout")
 @Description("Report Layout")
+@NodeEntity("Report Layout")
 public class Layout {
 
 	/**
@@ -24,6 +28,8 @@ public class Layout {
 	@ManyToOne(targetEntity = View.class)
 	@NotNull
 	@Description("Document Template")
+	@Property
+	@Relationship(type = "VIEW")
 	private String view_id;
 	
 	/**
@@ -31,6 +37,7 @@ public class Layout {
 	 */
 	@Column
 	@Description("Preview image src")
+	@Property
 	private String image;
 	
 	/**
@@ -38,6 +45,7 @@ public class Layout {
 	 */
 	@Column
 	@Description("Preview pdf src")
+	@Property
 	private String pdf;
 	
 	/**
@@ -45,9 +53,11 @@ public class Layout {
 	 */
 	@Column
 	@DefaultValue("50")
+	@Property
 	private Integer sequence = 50;
 	
 	@Column
+	@Property
 	private String name;
 
 	public String getView_id() {

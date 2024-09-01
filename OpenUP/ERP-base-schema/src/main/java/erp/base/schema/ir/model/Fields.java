@@ -3,6 +3,10 @@ package erp.base.schema.ir.model;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
+
 import erp.base.schema.res.groups.Groups;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -22,6 +26,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_model_fields")
 @Description("Fields")
+@NodeEntity("Fields")
 public class Fields {
 
 	/**
@@ -31,12 +36,14 @@ public class Fields {
 	@NotNull
 	@DefaultValue("x_")
 	@Description("Field Name")
+	@Property
 	private String name = "x_";
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String complete_name;
 	
 	/**
@@ -45,6 +52,7 @@ public class Fields {
 	@Column(nullable = false)
 	@NotNull
 	@Description("Model Name")
+	@Property
 	private String model;
 	
 	/**
@@ -52,6 +60,7 @@ public class Fields {
 	 */
 	@Column
 	@Description("Related Model")
+	@Property
 	private String relation;
 	
 	/**
@@ -59,6 +68,7 @@ public class Fields {
 	 */
 	@Column
 	@Description("For one2many fields, the field on the target model that implement the opposite many2one relationship")
+	@Property
 	private String relation_field;
 	
 	/**
@@ -67,6 +77,8 @@ public class Fields {
 	@Column
 	@ManyToOne(targetEntity = Fields.class)
 	@Description("Relation field")
+	@Property
+	@Relationship(type = "RELATION_FIELD")
 	private String relation_field_id;
 	
 	/**
@@ -76,6 +88,8 @@ public class Fields {
 	@ManyToOne(targetEntity = Model.class)
 	@NotNull
 	@Description("Model")
+	@Property
+	@Relationship(type = "MODEL")
 	private String model_id;
 	
 	/**
@@ -85,6 +99,7 @@ public class Fields {
 	@NotNull
 	@DefaultValue("")
 	@Description("Field Label")
+	@Property
 	private String field_description = "";
 	
 	/**
@@ -92,6 +107,7 @@ public class Fields {
 	 */
 	@Column
 	@Description("Field Help")
+	@Property
 	private String help;
 	
 	/**
@@ -101,6 +117,7 @@ public class Fields {
 	@Enumerated(EnumType.STRING)
 	@NotNull
 	@Description("Field Type")
+	@Property
 	private String ttype;
 	
 	/**
@@ -108,6 +125,7 @@ public class Fields {
 	 */
 	@Column
 	@Description("Selection Options (Deprecated)")
+	@Property
 	private String selection;
 	
 	/**
@@ -118,6 +136,8 @@ public class Fields {
 	@ElementCollection(targetClass = Selection.class)
 	@CollectionTable(name = "ir_model_fields_selection")
 	@Description("Selection Options")
+	@Property
+	@Relationship(type = "SELECTIONS")
 	private List<String> selection_ids;
 	
 	/**
@@ -125,6 +145,7 @@ public class Fields {
 	 */
 	@Column
 	@Description("Copied")
+	@Property
 	private Boolean copied;
 	
 	/**
@@ -132,6 +153,7 @@ public class Fields {
 	 */
 	@Column
 	@Description("Related Field")
+	@Property
 	private String related;
 	
 	/**
@@ -140,18 +162,22 @@ public class Fields {
 	@Column
 	@ManyToOne(targetEntity = Fields.class)
 	@Description("Related field")
+	@Property
+	@Relationship(type = "RELATED_FIELD")
 	private String related_field_id;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private Boolean required;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private Boolean readonly;
 	
 	/**
@@ -159,6 +185,7 @@ public class Fields {
 	 */
 	@Column
 	@Description("Indexed")
+	@Property
 	private Boolean index;
 	
 	/**
@@ -166,12 +193,14 @@ public class Fields {
 	 */
 	@Column
 	@Description("Translatable")
+	@Property
 	private Boolean translate;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private Integer size;
 	
 	/**
@@ -182,6 +211,7 @@ public class Fields {
 	@NotNull
 	@DefaultValue("manual")
 	@Description("Type")
+	@Property
 	private String state = "manual";
 	
 	/**
@@ -191,6 +221,7 @@ public class Fields {
 	@Enumerated(EnumType.STRING)
 	@DefaultValue("set null")
 	@Description("On Delete")
+	@Property
 	private String on_delete = "set null";
 	
 	/**
@@ -199,6 +230,7 @@ public class Fields {
 	@Column
 	@DefaultValue("[]")
 	@Description("The optional domain to restrict possible values for relationship fields, specified as a Python expression defining a list of triplets. For example: [('color','=','red')]")
+	@Property
 	private String domain = "[]";
 	
 	/**
@@ -208,6 +240,8 @@ public class Fields {
 	@ManyToMany(targetEntity = Groups.class)
 	@ElementCollection(targetClass = Groups.class)
 	@CollectionTable(name = "res_groups")
+	@Property
+	@Relationship(type = "GROUPS")
 	private List<String> groups;
 	
 	/**
@@ -215,6 +249,7 @@ public class Fields {
 	 */
 	@Column
 	@Description("Expand Groups")
+	@Property
 	private Boolean group_expand;
 	
 	/**
@@ -222,6 +257,7 @@ public class Fields {
 	 */
 	@Column
 	@DefaultValue("true")
+	@Property
 	private Boolean selectable = true;
 	
 	/**
@@ -229,6 +265,7 @@ public class Fields {
 	 */
 	@Column
 	@Description("In Apps")
+	@Property
 	private String modules;
 	
 	/**
@@ -236,6 +273,7 @@ public class Fields {
 	 */
 	@Column
 	@Description("Used for custom many2many fields to define a custom relation table name")
+	@Property
 	private String relation_table;
 	
 	/**
@@ -243,6 +281,7 @@ public class Fields {
 	 */
 	@Column
 	@Description("Column 1")
+	@Property
 	private String column1;
 	
 	/**
@@ -250,12 +289,14 @@ public class Fields {
 	 */
 	@Column
 	@Description("Column 2")
+	@Property
 	private String column2;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String compute;
 	
 	/**
@@ -263,6 +304,7 @@ public class Fields {
 	 */
 	@Column
 	@Description("Dependencies")
+	@Property
 	private String depends;
 	
 	/**
@@ -271,6 +313,7 @@ public class Fields {
 	@Column
 	@DefaultValue("true")
 	@Description("Stored")
+	@Property
 	private Boolean store = true;
 	
 	/**
@@ -278,6 +321,7 @@ public class Fields {
 	 */
 	@Column
 	@Description("Currency field")
+	@Property
 	private String currency_field;
 	
 	/**
@@ -286,6 +330,7 @@ public class Fields {
 	@Column
 	@DefaultValue("true")
 	@Description("Sanitize HTML")
+	@Property
 	private Boolean sanitize = true;
 	
 	/**
@@ -294,6 +339,7 @@ public class Fields {
 	@Column
 	@DefaultValue("false")
 	@Description("Sanitize HTML overridable")
+	@Property
 	private Boolean sanitize_overridable = false;
 	
 	/**
@@ -302,6 +348,7 @@ public class Fields {
 	@Column
 	@DefaultValue("true")
 	@Description("Sanitize HTML Tags")
+	@Property
 	private Boolean sanitize_tags = true;
 	
 	/**
@@ -310,6 +357,7 @@ public class Fields {
 	@Column
 	@DefaultValue("true")
 	@Description("Sanitize HTML Attributes")
+	@Property
 	private Boolean sanitize_attributes = true;
 	
 	/**
@@ -318,6 +366,7 @@ public class Fields {
 	@Column
 	@DefaultValue("false")
 	@Description("Sanitize HTML Style")
+	@Property
 	private Boolean sanitize_style = false;
 	
 	/**
@@ -326,6 +375,7 @@ public class Fields {
 	@Column
 	@DefaultValue("true")
 	@Description("Sanitize HTML Form")
+	@Property
 	private Boolean sanitize_form = true;
 	
 	/**
@@ -334,6 +384,7 @@ public class Fields {
 	@Column
 	@DefaultValue("false")
 	@Description("Strip Style Attribute")
+	@Property
 	private Boolean strip_style = false;
 	
 	/**
@@ -342,6 +393,7 @@ public class Fields {
 	@Column
 	@DefaultValue("false")
 	@Description("Strip Class Attribute")
+	@Property
 	private Boolean strip_classes = false;
 
 	public String getName() {

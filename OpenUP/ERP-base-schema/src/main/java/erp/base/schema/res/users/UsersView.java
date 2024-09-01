@@ -1,6 +1,8 @@
 package erp.base.schema.res.users;
 
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 
@@ -8,6 +10,7 @@ import jakarta.persistence.Entity;
  * 
  */
 @Entity
+@NodeEntity
 public class UsersView extends Users {
 
 	/**
@@ -15,6 +18,7 @@ public class UsersView extends Users {
 	 */
 	@Column
 	@Description("User Group Warning")
+	@Property
 	private String user_group_warning;
 
 	public String getUser_group_warning() {

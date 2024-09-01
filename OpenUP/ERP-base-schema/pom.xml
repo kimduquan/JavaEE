@@ -42,5 +42,17 @@
 		    <artifactId>microprofile-openapi-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.neo4j/neo4j-ogm-core -->
+		<dependency>
+		    <groupId>org.neo4j</groupId>
+		    <artifactId>neo4j-ogm-core</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+	    	<groupId>openup</groupId>
+	    	<artifactId>ERP-schema-utility</artifactId>
+	    	<version>${project.version}</version>
+	    </dependency>
     </dependencies>
 </project>

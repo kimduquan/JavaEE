@@ -1,6 +1,8 @@
 package erp.base.schema;
 
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -11,6 +13,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "avatar_mixin")
 @Description("Avatar Mixin")
+@NodeEntity("Avatar Mixin")
 public class AvatarMixin extends ImageMixin {
 
 	/**
@@ -18,6 +21,7 @@ public class AvatarMixin extends ImageMixin {
 	 */
 	@Column
 	@Description("Avatar")
+	@Property
 	private String avatar_1920;
 	
 	/**
@@ -25,6 +29,7 @@ public class AvatarMixin extends ImageMixin {
 	 */
 	@Column
 	@Description("Avatar 1024")
+	@Property
 	private String avatar_1024;
 	
 	/**
@@ -32,6 +37,7 @@ public class AvatarMixin extends ImageMixin {
 	 */
 	@Column
 	@Description("Avatar 512")
+	@Property
 	private String avatar_512;
 	
 	/**
@@ -39,6 +45,7 @@ public class AvatarMixin extends ImageMixin {
 	 */
 	@Column
 	@Description("Avatar 256")
+	@Property
 	private String avatar_256;
 	
 	/**
@@ -46,6 +53,7 @@ public class AvatarMixin extends ImageMixin {
 	 */
 	@Column
 	@Description("Avatar 128")
+	@Property
 	private String avatar_128;
 
 	public String getAvatar_1920() {

@@ -3,7 +3,12 @@ package erp.base.schema.ir.ui;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.typeconversion.Convert;
 import erp.base.schema.res.groups.Groups;
+import erp.schema.util.NameAttributeConverter;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -22,6 +27,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_ui_menu")
 @Description("Menu")
+@NodeEntity("Menu")
 public class Menu {
 
 	/**
@@ -30,6 +36,8 @@ public class Menu {
 	@Column(nullable = false)
 	@NotNull
 	@Description("Menu")
+	@Property
+	@Convert(NameAttributeConverter.class)
 	private String name;
 	
 	/**
@@ -37,6 +45,7 @@ public class Menu {
 	 */
 	@Column
 	@DefaultValue("true")
+	@Property
 	private Boolean active = true;
 	
 	/**
@@ -44,6 +53,7 @@ public class Menu {
 	 */
 	@Column
 	@DefaultValue("10")
+	@Property
 	private Integer sequence = 10;
 	
 	/**
@@ -54,6 +64,8 @@ public class Menu {
 	@ElementCollection(targetClass = Menu.class)
 	@CollectionTable(name = "ir_ui_menu")
 	@Description("Child IDs")
+	@Property
+	@Relationship(type = "CHILDS")
 	private String child_id;
 	
 	/**
@@ -61,12 +73,15 @@ public class Menu {
 	 */
 	@Column
 	@ManyToOne(targetEntity = Menu.class)
+	@Property
+	@Relationship(type = "PARENT")
 	private String parent_id;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String parent_path;
 	
 	/**
@@ -77,6 +92,8 @@ public class Menu {
 	@ElementCollection(targetClass = Groups.class)
 	@CollectionTable(name = "res_groups")
 	@Description("Groups")
+	@Property
+	@Relationship(type = "GROUPS")
 	private List<String> groups_id;
 	
 	/**
@@ -84,6 +101,7 @@ public class Menu {
 	 */
 	@Column
 	@Description("Full Path")
+	@Property
 	private String complete_name;
 	
 	/**
@@ -91,6 +109,7 @@ public class Menu {
 	 */
 	@Column
 	@Description("Web Icon File")
+	@Property
 	private String web_icon;
 	
 	/**
@@ -98,6 +117,7 @@ public class Menu {
 	 */
 	@Column
 	@Enumerated(EnumType.STRING)
+	@Property
 	private String action;
 	
 	/**
@@ -105,6 +125,7 @@ public class Menu {
 	 */
 	@Column
 	@Description("Web Icon Image")
+	@Property
 	private byte[] web_icon_data;
 
 	public String getName() {

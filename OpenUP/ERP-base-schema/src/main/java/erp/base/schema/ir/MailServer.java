@@ -2,6 +2,8 @@ package erp.base.schema.ir;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,6 +17,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_mail_server")
 @Description("Mail Server")
+@NodeEntity("Mail Server")
 public class MailServer {
 
 	/**
@@ -23,6 +26,7 @@ public class MailServer {
 	@Column(nullable = false)
 	@NotNull
 	@Description("Name")
+	@Property
 	private String name;
 	
 	/**
@@ -30,6 +34,7 @@ public class MailServer {
 	 */
 	@Column
 	@Description("FROM Filtering")
+	@Property
 	private String from_filter;
 	
 	/**
@@ -37,6 +42,7 @@ public class MailServer {
 	 */
 	@Column
 	@Description("SMTP Server")
+	@Property
 	private String smtp_host;
 	
 	/**
@@ -45,6 +51,7 @@ public class MailServer {
 	@Column
 	@Description("SMTP Port")
 	@DefaultValue("25")
+	@Property
 	private Integer smtp_port = 25;
 	
 	/**
@@ -55,6 +62,7 @@ public class MailServer {
 	@NotNull
 	@DefaultValue("login")
 	@Description("Authenticate with")
+	@Property
 	private String smtp_authentication = "login";
 	
 	/**
@@ -62,6 +70,7 @@ public class MailServer {
 	 */
 	@Column
 	@Description("Authentication Info")
+	@Property
 	private String smtp_authentication_info;
 	
 	/**
@@ -69,6 +78,7 @@ public class MailServer {
 	 */
 	@Column
 	@Description("Username")
+	@Property
 	private String smtp_user;
 	
 	/**
@@ -76,6 +86,7 @@ public class MailServer {
 	 */
 	@Column
 	@Description("Password")
+	@Property
 	private String smtp_pass;
 	
 	/**
@@ -86,6 +97,7 @@ public class MailServer {
 	@NotNull
 	@DefaultValue("none")
 	@Description("Connection Encryption")
+	@Property
 	private String smtp_encryption = "none";
 	
 	/**
@@ -93,6 +105,7 @@ public class MailServer {
 	 */
 	@Column
 	@Description("SSL Certificate")
+	@Property
 	private byte[] smtp_ssl_certificate;
 	
 	/**
@@ -100,6 +113,7 @@ public class MailServer {
 	 */
 	@Column
 	@Description("SSL Private Key")
+	@Property
 	private byte[] smtp_ssl_private_key;
 	
 	/**
@@ -107,6 +121,7 @@ public class MailServer {
 	 */
 	@Column
 	@Description("Debugging")
+	@Property
 	private Boolean smtp_debug;
 	
 	/**
@@ -115,6 +130,7 @@ public class MailServer {
 	@Column
 	@DefaultValue("10")
 	@Description("Priority")
+	@Property
 	private Integer sequence = 10;
 	
 	/**
@@ -122,6 +138,7 @@ public class MailServer {
 	 */
 	@Column
 	@DefaultValue("true")
+	@Property
 	private Boolean active = true;
 
 	public String getName() {

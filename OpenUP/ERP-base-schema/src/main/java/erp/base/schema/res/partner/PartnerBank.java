@@ -2,6 +2,10 @@ package erp.base.schema.res.partner;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
+
 import erp.base.schema.res.Bank;
 import erp.base.schema.res.Company;
 import erp.base.schema.res.currency.Currency;
@@ -19,6 +23,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "res_partner_bank")
 @Description("Bank Accounts")
+@NodeEntity("Bank Accounts")
 public class PartnerBank {
 
 	/**
@@ -26,6 +31,7 @@ public class PartnerBank {
 	 */
 	@Column
 	@DefaultValue("true")
+	@Property
 	private Boolean active = true;
 	
 	/**
@@ -34,6 +40,7 @@ public class PartnerBank {
 	@Column
 	@Enumerated(EnumType.STRING)
 	@Description("Type")
+	@Property
 	private String acc_type;
 	
 	/**
@@ -42,6 +49,7 @@ public class PartnerBank {
 	@Column(nullable = false)
 	@NotNull
 	@Description("Account Number")
+	@Property
 	private String acc_number;
 	
 	/**
@@ -49,6 +57,7 @@ public class PartnerBank {
 	 */
 	@Column(updatable = false)
 	@Description("Sanitized Account Number")
+	@Property
 	private String sanitized_acc_number;
 	
 	/**
@@ -56,6 +65,7 @@ public class PartnerBank {
 	 */
 	@Column
 	@Description("Account Holder Name")
+	@Property
 	private String acc_holder_name;
 	
 	/**
@@ -65,6 +75,8 @@ public class PartnerBank {
 	@ManyToOne(targetEntity = Partner.class)
 	@NotNull
 	@Description("Account Holder")
+	@Property
+	@Relationship(type = "ACCOUNT_HOLDER")
 	private String partner_id;
 	
 	/**
@@ -73,6 +85,7 @@ public class PartnerBank {
 	@Column
 	@DefaultValue("false")
 	@Description("Send Money")
+	@Property
 	private Boolean allow_out_payment = false;
 	
 	/**
@@ -81,24 +94,29 @@ public class PartnerBank {
 	@Column
 	@ManyToOne(targetEntity = Bank.class)
 	@Description("Bank")
+	@Property
+	@Relationship(type = "BANK")
 	private String bank_id;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String bank_name;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String bank_bic;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private Integer sequence = 10;
 	
 	/**
@@ -107,6 +125,8 @@ public class PartnerBank {
 	@Column
 	@ManyToOne(targetEntity = Currency.class)
 	@Description("Currency")
+	@Property
+	@Relationship(type = "CURRENCY")
 	private String currency_id;
 	
 	/**
@@ -114,6 +134,8 @@ public class PartnerBank {
 	 */
 	@Column(updatable = false)
 	@ManyToOne(targetEntity = Company.class)
+	@Property
+	@Relationship(type = "COMPANY")
 	private String company_id;
 
 	public Boolean getActive() {

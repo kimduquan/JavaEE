@@ -1,6 +1,9 @@
 package erp.base.schema.ir.model;
 
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -13,6 +16,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_model_constraint")
 @Description("Model Constraint")
+@NodeEntity("Model Constraint")
 public class Constraint {
 
 	/**
@@ -21,6 +25,7 @@ public class Constraint {
 	@Column(nullable = false)
 	@NotNull
 	@Description("Constraint")
+	@Property
 	private String name;
 	
 	/**
@@ -28,6 +33,7 @@ public class Constraint {
 	 */
 	@Column
 	@Description("PostgreSQL constraint definition")
+	@Property
 	private String definition;
 	
 	/**
@@ -35,6 +41,7 @@ public class Constraint {
 	 */
 	@Column
 	@Description("Error message returned when the constraint is violated.")
+	@Property
 	private String message;
 	
 	/**
@@ -43,6 +50,8 @@ public class Constraint {
 	@Column(nullable = false)
 	@ManyToOne(targetEntity = Model.class)
 	@NotNull
+	@Property
+	@Relationship(type = "MODEL")
 	private String model;
 	
 	/**
@@ -51,6 +60,8 @@ public class Constraint {
 	@Column(nullable = false)
 	@ManyToOne(targetEntity = Module.class)
 	@NotNull
+	@Property
+	@Relationship(type = "MODULE")
 	private String module;
 	
 	/**
@@ -59,18 +70,21 @@ public class Constraint {
 	@Column(nullable = false, length = 1)
 	@NotNull
 	@Description("Constraint Type")
+	@Property
 	private String type;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String write_date;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String create_date;
 
 	public String getName() {

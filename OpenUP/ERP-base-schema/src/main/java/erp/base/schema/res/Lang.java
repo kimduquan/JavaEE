@@ -2,6 +2,8 @@ package erp.base.schema.res;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,6 +17,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "res_lang")
 @Description("Languages")
+@NodeEntity("Languages")
 public class Lang {
 
 	/**
@@ -22,6 +25,7 @@ public class Lang {
 	 */
 	@Column(nullable = false)
 	@NotNull
+	@Property
 	private String name;
 	
 	/**
@@ -30,6 +34,7 @@ public class Lang {
 	@Column(nullable = false)
 	@NotNull
 	@Description("Locale Code")
+	@Property
 	private String code;
 	
 	/**
@@ -37,6 +42,7 @@ public class Lang {
 	 */
 	@Column
 	@Description("ISO code")
+	@Property
 	private String iso_code;
 	
 	/**
@@ -45,12 +51,14 @@ public class Lang {
 	@Column(nullable = false)
 	@NotNull
 	@Description("URL Code")
+	@Property
 	private String url_code;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private Boolean active;
 	
 	/**
@@ -60,6 +68,7 @@ public class Lang {
 	@Enumerated(EnumType.STRING)
 	@NotNull
 	@DefaultValue("ltr")
+	@Property
 	private String direction = "ltr";
 	
 	/**
@@ -69,6 +78,7 @@ public class Lang {
 	@NotNull
 	@DefaultValue("%m/%d/%Y")
 	@Description("Date Format")
+	@Property
 	private String date_format = "%m/%d/%Y";
 	
 	/**
@@ -78,6 +88,7 @@ public class Lang {
 	@NotNull
 	@DefaultValue("%H:%M:%S")
 	@Description("Time Format")
+	@Property
 	private String time_format = "%H:%M:%S";
 	
 	/**
@@ -88,6 +99,7 @@ public class Lang {
 	@NotNull
 	@DefaultValue("7")
 	@Description("First Day of Week")
+	@Property
 	private String week_start = "7";
 	
 	/**
@@ -97,6 +109,7 @@ public class Lang {
 	@NotNull
 	@DefaultValue("[]")
 	@Description("Separator Format")
+	@Property
 	private String grouping = "[]";
 	
 	/**
@@ -106,6 +119,7 @@ public class Lang {
 	@NotNull
 	@DefaultValue(".")
 	@Description("Decimal Separator")
+	@Property
 	private String decimal_point = ".";
 	
 	/**
@@ -114,6 +128,7 @@ public class Lang {
 	@Column
 	@DefaultValue(",")
 	@Description("Thousands Separator")
+	@Property
 	private String thousands_sep = ",";
 
 	public String getName() {

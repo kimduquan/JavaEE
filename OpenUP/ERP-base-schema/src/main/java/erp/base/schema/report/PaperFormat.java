@@ -3,6 +3,10 @@ package erp.base.schema.report;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
+
 import erp.base.schema.ir.act.Report;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -20,6 +24,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "report_paperformat")
 @Description("Paper Format Config")
+@NodeEntity("Paper Format Config")
 public class PaperFormat {
 
 	/**
@@ -28,6 +33,7 @@ public class PaperFormat {
 	@Column(nullable = false)
 	@NotNull
 	@Description("Name")
+	@Property
 	private String name;
 	
 	/**
@@ -35,6 +41,7 @@ public class PaperFormat {
 	 */
 	@Column(name = "default")
 	@Description("Default paper format?")
+	@Property
 	private Boolean _default;
 	
 	/**
@@ -44,6 +51,7 @@ public class PaperFormat {
 	@Enumerated(EnumType.STRING)
 	@DefaultValue("A4")
 	@Description("Paper size")
+	@Property
 	private String format = "A4";
 	
 	/**
@@ -52,6 +60,7 @@ public class PaperFormat {
 	@Column
 	@DefaultValue("40")
 	@Description("Top Margin (mm)")
+	@Property
 	private Float margin_top = Float.valueOf(40);
 	
 	/**
@@ -60,6 +69,7 @@ public class PaperFormat {
 	@Column
 	@DefaultValue("20")
 	@Description("Bottom Margin (mm)")
+	@Property
 	private Float margin_bottom = Float.valueOf(20);
 	
 	/**
@@ -68,6 +78,7 @@ public class PaperFormat {
 	@Column
 	@DefaultValue("7")
 	@Description("Left Margin (mm)")
+	@Property
 	private Float margin_left = Float.valueOf(7);
 	
 	/**
@@ -76,6 +87,7 @@ public class PaperFormat {
 	@Column
 	@DefaultValue("7")
 	@Description("Right Margin (mm)")
+	@Property
 	private Float margin_right = Float.valueOf(7);
 	
 	/**
@@ -83,6 +95,7 @@ public class PaperFormat {
 	 */
 	@Column
 	@Description("Page height (mm)")
+	@Property
 	private Integer page_height;
 	
 	/**
@@ -90,6 +103,7 @@ public class PaperFormat {
 	 */
 	@Column
 	@Description("Page width (mm)")
+	@Property
 	private Integer page_width;
 	
 	/**
@@ -99,6 +113,7 @@ public class PaperFormat {
 	@Enumerated(EnumType.STRING)
 	@DefaultValue("Landscape")
 	@Description("Orientation")
+	@Property
 	private String orientation = "Landscape";
 	
 	/**
@@ -107,6 +122,7 @@ public class PaperFormat {
 	@Column
 	@DefaultValue("false")
 	@Description("Display a header line")
+	@Property
 	private Boolean header_line = false;
 	
 	/**
@@ -115,6 +131,7 @@ public class PaperFormat {
 	@Column
 	@Description("Header spacing")
 	@DefaultValue("35")
+	@Property
 	private Integer header_spacing = 35;
 	
 	/**
@@ -122,6 +139,7 @@ public class PaperFormat {
 	 */
 	@Column
 	@DefaultValue("disable_shrinking")
+	@Property
 	private Boolean disable_shrinking;
 	
 	/**
@@ -131,6 +149,7 @@ public class PaperFormat {
 	@NotNull
 	@DefaultValue("90")
 	@Description("Output DPI")
+	@Property
 	private Integer dpi = 90;
 	
 	/**
@@ -141,6 +160,8 @@ public class PaperFormat {
 	@ElementCollection(targetClass = Report.class)
 	@CollectionTable(name = "ir_actions_report")
 	@Description("Associated reports")
+	@Property
+	@Relationship(type = "REPORTS")
 	private List<String> report_ids;
 	
 	/**
@@ -148,6 +169,7 @@ public class PaperFormat {
 	 */
 	@Column
 	@Description("Print page width (mm)")
+	@Property
 	private Float print_page_width;
 	
 	/**
@@ -155,6 +177,7 @@ public class PaperFormat {
 	 */
 	@Column
 	@Description("Print page height (mm)")
+	@Property
 	private Float print_page_height;
 
 	public String getName() {

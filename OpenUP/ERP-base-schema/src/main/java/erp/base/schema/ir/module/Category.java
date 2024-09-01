@@ -3,6 +3,11 @@ package erp.base.schema.ir.module;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.typeconversion.Convert;
+import erp.schema.util.NameAttributeConverter;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -18,6 +23,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_module_category")
 @Description("Application")
+@NodeEntity("Category")
 public class Category {
 
 	/**
@@ -26,6 +32,8 @@ public class Category {
 	@Column(nullable = false)
 	@NotNull
 	@Description("Name")
+	@Property
+	@Convert(NameAttributeConverter.class)
 	private String name;
 	
 	/**
@@ -34,6 +42,8 @@ public class Category {
 	@Column
 	@ManyToOne(targetEntity = Category.class)
 	@Description("Parent Application")
+	@Property
+	@Relationship(type = "PARENT")
 	private String parent_id;
 	
 	/**
@@ -44,6 +54,8 @@ public class Category {
 	@ElementCollection(targetClass = Category.class)
 	@CollectionTable(name = "ir_module_category")
 	@Description("Child Applications")
+	@Property
+	@Relationship(type = "CHILDS")
 	private List<String> child_ids;
 	
 	/**
@@ -54,6 +66,8 @@ public class Category {
 	@ElementCollection(targetClass = Module.class)
 	@CollectionTable(name = "ir_module_module")
 	@Description("Modules")
+	@Property
+	@Relationship(type = "MODULES")
 	private List<String> module_ids;
 	
 	/**
@@ -61,6 +75,7 @@ public class Category {
 	 */
 	@Column
 	@Description("Description")
+	@Property
 	private String description;
 	
 	/**
@@ -68,6 +83,7 @@ public class Category {
 	 */
 	@Column
 	@Description("Sequence")
+	@Property
 	private Integer sequence;
 	
 	/**
@@ -76,6 +92,7 @@ public class Category {
 	@Column
 	@DefaultValue("true")
 	@Description("Visible")
+	@Property
 	private Boolean visible = true;
 	
 	/**
@@ -83,6 +100,7 @@ public class Category {
 	 */
 	@Column
 	@Description("Exclusive")
+	@Property
 	private Boolean exclusive;
 	
 	/**
@@ -90,6 +108,7 @@ public class Category {
 	 */
 	@Column
 	@Description("External ID")
+	@Property
 	private String xml_id;
 
 	public String getName() {

@@ -2,6 +2,9 @@ package erp.base.schema.ir.cron;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
 import erp.base.schema.ir.act.Server;
 import erp.base.schema.res.users.Users;
 import jakarta.persistence.Column;
@@ -18,6 +21,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_cron")
 @Description("Scheduled Actions")
+@NodeEntity("Scheduled Actions")
 public class Cron {
 
 	/**
@@ -27,6 +31,8 @@ public class Cron {
 	@ManyToOne(targetEntity = Server.class)
 	@NotNull
 	@Description("Server action")
+	@Property
+	@Relationship(type = "ACTIONS_SERVER")
 	private String ir_actions_server_id;
 	
 	/**
@@ -34,6 +40,7 @@ public class Cron {
 	 */
 	@Column
 	@Description("Name")
+	@Property
 	private String cron_name;
 	
 	/**
@@ -43,6 +50,8 @@ public class Cron {
 	@ManyToOne(targetEntity = Users.class)
 	@NotNull
 	@Description("Scheduler User")
+	@Property
+	@Relationship(type = "SCHEDULER_USER")
 	private String user_id;
 	
 	/**
@@ -50,6 +59,7 @@ public class Cron {
 	 */
 	@Column
 	@DefaultValue("true")
+	@Property
 	private Boolean active = true;
 	
 	/**
@@ -58,6 +68,7 @@ public class Cron {
 	@Column
 	@DefaultValue("1")
 	@Description("Repeat every x.")
+	@Property
 	private Integer interval_number = 1;
 	
 	/**
@@ -67,6 +78,7 @@ public class Cron {
 	@Enumerated(EnumType.STRING)
 	@Description("Interval Unit")
 	@DefaultValue("months")
+	@Property
 	private String interval_type = "months";
 	
 	/**
@@ -75,6 +87,7 @@ public class Cron {
 	@Column
 	@Description("Number of Calls")
 	@DefaultValue("1")
+	@Property
 	private Integer numbercall = 1;
 	
 	/**
@@ -82,6 +95,7 @@ public class Cron {
 	 */
 	@Column
 	@Description("Repeat Missed")
+	@Property
 	private Boolean doall;
 	
 	/**
@@ -89,6 +103,7 @@ public class Cron {
 	 */
 	@Column(nullable = false)
 	@Description("Next Execution Date")
+	@Property
 	private String nextcall;
 	
 	/**
@@ -96,6 +111,7 @@ public class Cron {
 	 */
 	@Column
 	@Description("Last Execution Date")
+	@Property
 	private String lastcall;
 	
 	/**
@@ -103,6 +119,7 @@ public class Cron {
 	 */
 	@Column
 	@DefaultValue("5")
+	@Property
 	private Integer priority = 5;
 
 	public String getIr_actions_server_id() {

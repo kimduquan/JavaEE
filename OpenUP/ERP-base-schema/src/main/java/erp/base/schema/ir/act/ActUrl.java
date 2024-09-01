@@ -2,6 +2,8 @@ package erp.base.schema.ir.act;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
 import erp.base.schema.ir.actions.Actions;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,6 +18,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_act_url")
 @Description("Action URL")
+@NodeEntity("Action URL")
 public class ActUrl extends Actions {
 
 	/**
@@ -23,6 +26,7 @@ public class ActUrl extends Actions {
 	 */
 	@Column
 	@DefaultValue("ir.actions.act_url")
+	@Property
 	private String type = "ir.actions.act_url";
 	
 	/**
@@ -31,6 +35,7 @@ public class ActUrl extends Actions {
 	@Column(nullable = false)
 	@NotNull
 	@Description("Action URL")
+	@Property
 	private String url;
 	
 	/**
@@ -41,6 +46,7 @@ public class ActUrl extends Actions {
 	@NotNull
 	@Description("Action Target")
 	@DefaultValue("new")
+	@Property
 	private String target = "new";
 
 	public String getType() {

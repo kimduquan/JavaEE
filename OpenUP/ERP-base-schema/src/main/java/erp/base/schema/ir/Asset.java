@@ -2,6 +2,8 @@ package erp.base.schema.ir;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,6 +17,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_asset")
 @Description("Asset")
+@NodeEntity("Asset")
 public class Asset {
 
 	/**
@@ -23,6 +26,7 @@ public class Asset {
 	@Column(nullable = false)
 	@NotNull
 	@Description("Name")
+	@Property
 	private String name;
 	
 	/**
@@ -31,6 +35,7 @@ public class Asset {
 	@Column(nullable = false)
 	@NotNull
 	@Description("Bundle name")
+	@Property
 	private String bundle;
 	
 	/**
@@ -39,6 +44,7 @@ public class Asset {
 	@Column
 	@Enumerated(EnumType.STRING)
 	@DefaultValue("append")
+	@Property
 	private String directive = "append";
 	
 	/**
@@ -47,6 +53,7 @@ public class Asset {
 	@Column(nullable = false)
 	@NotNull
 	@Description("Path (or glob pattern)")
+	@Property
 	private String path;
 	
 	/**
@@ -54,6 +61,7 @@ public class Asset {
 	 */
 	@Column
 	@Description("Target")
+	@Property
 	private String target;
 	
 	/**
@@ -62,6 +70,7 @@ public class Asset {
 	@Column
 	@Description("active")
 	@DefaultValue("true")
+	@Property
 	private Boolean active = true;
 	
 	/**
@@ -71,6 +80,7 @@ public class Asset {
 	@NotNull
 	@DefaultValue("16")
 	@Description("Sequence")
+	@Property
 	private Integer sequence = 16;
 
 	public String getName() {

@@ -2,6 +2,8 @@ package erp.base.schema.ir.model;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -13,6 +15,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_model_data")
 @Description("Model Data")
+@NodeEntity("Model Data")
 public class Data {
 
 	/**
@@ -21,6 +24,7 @@ public class Data {
 	@Column(nullable = false)
 	@NotNull
 	@Description("External Identifier")
+	@Property
 	private String name;
 	
 	/**
@@ -28,6 +32,7 @@ public class Data {
 	 */
 	@Column
 	@Description("Complete ID")
+	@Property
 	private String complete_name;
 	
 	/**
@@ -36,6 +41,7 @@ public class Data {
 	@Column(nullable = false)
 	@NotNull
 	@Description("Model Name")
+	@Property
 	private String model;
 	
 	/**
@@ -44,6 +50,7 @@ public class Data {
 	@Column(nullable = false)
 	@NotNull
 	@DefaultValue("")
+	@Property
 	private String module = "";
 	
 	/**
@@ -51,6 +58,7 @@ public class Data {
 	 */
 	@Column
 	@Description("Record ID")
+	@Property
 	private String res_id;
 	
 	/**
@@ -59,6 +67,7 @@ public class Data {
 	@Column
 	@DefaultValue("false")
 	@Description("Non Updatable")
+	@Property
 	private Boolean noupdate = false;
 	
 	/**
@@ -66,6 +75,7 @@ public class Data {
 	 */
 	@Column(updatable = false)
 	@Description("Reference")
+	@Property
 	private String reference;
 
 	public String getName() {

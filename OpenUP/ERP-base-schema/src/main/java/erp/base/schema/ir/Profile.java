@@ -1,6 +1,8 @@
 package erp.base.schema.ir;
 
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -11,6 +13,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "ir_profile")
 @Description("Profiling results")
+@NodeEntity("Profiling results")
 public class Profile {
 
 	/**
@@ -18,6 +21,7 @@ public class Profile {
 	 */
 	@Column
 	@Description("Creation Date")
+	@Property
 	private String create_date;
 	
 	/**
@@ -25,6 +29,7 @@ public class Profile {
 	 */
 	@Column
 	@Description("Session")
+	@Property
 	private String session;
 	
 	/**
@@ -32,6 +37,7 @@ public class Profile {
 	 */
 	@Column
 	@Description("Description")
+	@Property
 	private String name;
 	
 	/**
@@ -39,6 +45,7 @@ public class Profile {
 	 */
 	@Column
 	@Description("Duration")
+	@Property
 	private Float duration;
 	
 	/**
@@ -46,6 +53,7 @@ public class Profile {
 	 */
 	@Column
 	@Description("Initial stack trace")
+	@Property
 	private String init_stack_trace;
 	
 	/**
@@ -53,6 +61,7 @@ public class Profile {
 	 */
 	@Column
 	@Description("Sql")
+	@Property
 	private String sql;
 	
 	/**
@@ -60,6 +69,7 @@ public class Profile {
 	 */
 	@Column
 	@Description("Queries Count")
+	@Property
 	private Integer sql_count;
 	
 	/**
@@ -67,6 +77,7 @@ public class Profile {
 	 */
 	@Column
 	@Description("Traces Async")
+	@Property
 	private String traces_async;
 	
 	/**
@@ -74,6 +85,7 @@ public class Profile {
 	 */
 	@Column
 	@Description("Traces Sync")
+	@Property
 	private String traces_sync;
 	
 	/**
@@ -81,6 +93,7 @@ public class Profile {
 	 */
 	@Column
 	@Description("Qweb")
+	@Property
 	private String qweb;
 	
 	/**
@@ -88,6 +101,7 @@ public class Profile {
 	 */
 	@Column
 	@Description("Entry count")
+	@Property
 	private Integer entry_count;
 	
 	/**
@@ -95,6 +109,7 @@ public class Profile {
 	 */
 	@Column
 	@Description("Speedscope")
+	@Property
 	private byte[] speedscope;
 	
 	/**
@@ -102,6 +117,7 @@ public class Profile {
 	 */
 	@Column
 	@Description("Open")
+	@Property
 	private String speedscope_url;
 
 	public String getCreate_date() {

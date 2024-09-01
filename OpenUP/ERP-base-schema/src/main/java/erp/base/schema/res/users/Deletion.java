@@ -2,6 +2,9 @@ package erp.base.schema.res.users;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -16,6 +19,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "res_users_deletion")
 @Description("Users Deletion Request")
+@NodeEntity("Users Deletion Request")
 public class Deletion {
 
 	/**
@@ -24,6 +28,8 @@ public class Deletion {
 	@Column
 	@ManyToOne(targetEntity = Users.class)
 	@Description("User")
+	@Property
+	@Relationship(type = "USER")
 	private String user_id;
 	
 	/**
@@ -31,6 +37,7 @@ public class Deletion {
 	 */
 	@Column
 	@Description("User Id")
+	@Property
 	private Integer user_id_int;
 	
 	/**
@@ -41,6 +48,7 @@ public class Deletion {
 	@NotNull
 	@DefaultValue("todo")
 	@Description("State")
+	@Property
 	private String state = "todo";
 
 	public String getUser_id() {

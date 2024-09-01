@@ -3,6 +3,11 @@ package erp.base.schema.res;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Relationship.Direction;
+import org.neo4j.ogm.annotation.typeconversion.Convert;
 import erp.base.schema.ir.ui.View;
 import erp.base.schema.report.PaperFormat;
 import erp.base.schema.res.country.Country;
@@ -10,6 +15,7 @@ import erp.base.schema.res.country.State;
 import erp.base.schema.res.currency.Currency;
 import erp.base.schema.res.partner.Partner;
 import erp.base.schema.res.users.Users;
+import erp.schema.util.NameAttributeConverter;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -28,6 +34,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "res_company")
 @Description("Companies")
+@NodeEntity("Companies")
 public class Company {
 
 	/**
@@ -36,6 +43,8 @@ public class Company {
 	@Column(nullable = false)
 	@NotNull
 	@Description("Company Name")
+	@Property
+	@Convert(NameAttributeConverter.class)
 	private String name;
 	
 	/**
@@ -43,6 +52,7 @@ public class Company {
 	 */
 	@Column
 	@DefaultValue("true")
+	@Property
 	private Boolean active = true;
 	
 	/**
@@ -50,6 +60,7 @@ public class Company {
 	 */
 	@Column
 	@DefaultValue("10")
+	@Property
 	private Integer sequence = 10;
 	
 	/**
@@ -57,6 +68,8 @@ public class Company {
 	 */
 	@Column
 	@ManyToOne(targetEntity = Company.class)
+	@Property
+	@Relationship(type = "PARENT")
 	private String parent_id;
 	
 	/**
@@ -67,6 +80,8 @@ public class Company {
 	@ElementCollection(targetClass = Company.class)
 	@CollectionTable(name = "res_company")
 	@Description("Branches")
+	@Property
+	@Relationship(type = "CHILDS", direction = Direction.INCOMING)
 	private List<String> child_ids;
 	
 	/**
@@ -76,6 +91,8 @@ public class Company {
 	@OneToMany(targetEntity =  Company.class)
 	@ElementCollection(targetClass = Company.class)
 	@CollectionTable(name = "res_company")
+	@Property
+	@Relationship(type = "ALL_CHILDS", direction = Direction.INCOMING)
 	private List<String> all_child_ids;
 	
 	/**
@@ -91,6 +108,8 @@ public class Company {
 	@OneToMany(targetEntity =  Company.class)
 	@ElementCollection(targetClass = Company.class)
 	@CollectionTable(name = "res_company")
+	@Property
+	@Relationship(type = "PARENTS")
 	private List<String> parent_ids;
 	
 	/**
@@ -98,6 +117,8 @@ public class Company {
 	 */
 	@Column
 	@ManyToOne(targetEntity = Company.class)
+	@Property
+	@Relationship(type = "ROOT")
 	private String root_id;
 	
 	/**
@@ -107,6 +128,8 @@ public class Company {
 	@ManyToOne(targetEntity = Partner.class)
 	@NotNull
 	@Description("Partner")
+	@Property
+	@Relationship(type = "PARTNER")
 	private String partner_id;
 	
 	/**
@@ -114,6 +137,7 @@ public class Company {
 	 */
 	@Column
 	@Description("Company Tagline")
+	@Property
 	private String report_header;
 	
 	/**
@@ -121,6 +145,7 @@ public class Company {
 	 */
 	@Column
 	@Description("Report Footer")
+	@Property
 	private String report_footer;
 	
 	/**
@@ -128,12 +153,14 @@ public class Company {
 	 */
 	@Column
 	@Description("Company Details")
+	@Property
 	private String company_details;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private Boolean is_company_details_empty;
 	
 	/**
@@ -141,18 +168,21 @@ public class Company {
 	 */
 	@Column
 	@Description("Company Logo")
+	@Property
 	private byte[] logo;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private byte[] logo_web;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private Boolean uses_default_logo;
 	
 	/**
@@ -161,6 +191,8 @@ public class Company {
 	@Column(nullable = false)
 	@ManyToOne(targetEntity = Currency.class)
 	@NotNull
+	@Property
+	@Relationship(type = "CURRENCY")
 	private String currency_id;
 	
 	/**
@@ -171,24 +203,29 @@ public class Company {
 	@ElementCollection(targetClass = Users.class)
 	@CollectionTable(name = "res_users")
 	@Description("Accepted Users")
+	@Property
+	@Relationship(type = "USERS")
 	private List<String> user_ids;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String street;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String street2;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String zip;
 	
 	/**
@@ -197,6 +234,8 @@ public class Company {
 	@Column
 	@ManyToOne(targetEntity = State.class)
 	@Description("Fed. State")
+	@Property
+	@Relationship(type = "STATE")
 	private String state_id;
 	
 	/**
@@ -204,6 +243,8 @@ public class Company {
 	 */
 	@Column
 	@OneToMany
+	@Property
+	@Relationship(type = "BANKS")
 	private List<String> bank_ids;
 	
 	/**
@@ -211,30 +252,36 @@ public class Company {
 	 */
 	@Column
 	@ManyToOne(targetEntity = Country.class)
+	@Property
+	@Relationship(type = "COUNTRY")
 	private String country_id;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String email;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String phone;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String mobile;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String website;
 	
 	/**
@@ -242,6 +289,7 @@ public class Company {
 	 */
 	@Column
 	@Description("Tax ID")
+	@Property
 	private String vat;
 	
 	/**
@@ -249,6 +297,7 @@ public class Company {
 	 */
 	@Column
 	@Description("Company ID")
+	@Property
 	private String company_registry;
 	
 	/**
@@ -257,6 +306,8 @@ public class Company {
 	@Column
 	@ManyToOne(targetEntity = PaperFormat.class)
 	@Description("Paper format")
+	@Property
+	@Relationship(type = "PAPER_FORMAT")
 	private String paperformat_id;
 	
 	/**
@@ -265,6 +316,8 @@ public class Company {
 	@Column
 	@ManyToOne(targetEntity = View.class)
 	@Description("Document Template")
+	@Property
+	@Relationship(type = "EXTERNAL_REPORT_LAYOUT")
 	private String external_report_layout_id;
 	
 	/**
@@ -273,24 +326,28 @@ public class Company {
 	@Column
 	@Enumerated(EnumType.STRING)
 	@DefaultValue("Lato")
+	@Property
 	private String font = "Lato";
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String primary_color;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String secondary_color;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private Integer color;
 	
 	/**
@@ -300,6 +357,7 @@ public class Company {
 	@Enumerated(EnumType.STRING)
 	@NotNull
 	@Description("Blank")
+	@Property
 	private String layout_background;
 	
 	/**
@@ -307,6 +365,7 @@ public class Company {
 	 */
 	@Column
 	@Description("Background Image")
+	@Property
 	private byte[] layout_background_image;
 
 	public String getName() {

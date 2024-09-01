@@ -2,6 +2,9 @@ package erp.base.schema.ir;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -14,6 +17,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_sequence_date_range")
 @Description("Sequence Date Range")
+@NodeEntity("Sequence Date Range")
 public class DateRange {
 
 	/**
@@ -22,6 +26,7 @@ public class DateRange {
 	@Column(nullable = false)
 	@NotNull
 	@Description("From")
+	@Property
 	private String date_from;
 	
 	/**
@@ -30,6 +35,7 @@ public class DateRange {
 	@Column(nullable = false)
 	@NotNull
 	@Description("To")
+	@Property
 	private String date_to;
 	
 	/**
@@ -39,6 +45,8 @@ public class DateRange {
 	@ManyToOne(targetEntity = Sequence.class)
 	@NotNull
 	@Description("Main Sequence")
+	@Property
+	@Relationship(type = "SEQUENCE")
 	private String sequence_id;
 	
 	/**
@@ -47,6 +55,7 @@ public class DateRange {
 	@Column(nullable = false)
 	@NotNull
 	@DefaultValue("1")
+	@Property
 	private Integer number_next = 1;
 	
 	/**
@@ -54,6 +63,7 @@ public class DateRange {
 	 */
 	@Column
 	@Description("Actual Next Number")
+	@Property
 	private Integer number_next_actual;
 
 	public String getDate_from() {

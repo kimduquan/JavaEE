@@ -2,8 +2,13 @@ package erp.base.schema.res;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.typeconversion.Convert;
 import erp.base.schema.res.country.Country;
 import erp.base.schema.res.country.State;
+import erp.schema.util.NameAttributeConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -16,6 +21,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "res_bank")
 @Description("Bank")
+@NodeEntity("Bank")
 public class Bank {
 
 	/**
@@ -23,30 +29,36 @@ public class Bank {
 	 */
 	@Column(nullable = false)
 	@NotNull
+	@Property
+	@Convert(NameAttributeConverter.class)
 	private String name;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String street;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String street2;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String zip;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String city;
 	
 	/**
@@ -55,6 +67,8 @@ public class Bank {
 	@Column
 	@ManyToOne(targetEntity = State.class)
 	@Description("Fed. State")
+	@Property
+	@Relationship(type = "STATE")
 	private String state;
 	
 	/**
@@ -62,18 +76,22 @@ public class Bank {
 	 */
 	@Column
 	@ManyToOne(targetEntity = Country.class)
+	@Property
+	@Relationship(type = "COUNTRY")
 	private String country;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String email;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String phone;
 	
 	/**
@@ -81,6 +99,7 @@ public class Bank {
 	 */
 	@Column
 	@DefaultValue("true")
+	@Property
 	private Boolean active = true;
 	
 	/**
@@ -88,6 +107,7 @@ public class Bank {
 	 */
 	@Column
 	@Description("Bank Identifier Code")
+	@Property
 	private String bic;
 
 	public String getName() {

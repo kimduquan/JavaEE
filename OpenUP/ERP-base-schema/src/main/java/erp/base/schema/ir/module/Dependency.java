@@ -2,6 +2,9 @@ package erp.base.schema.ir.module;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,12 +18,14 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "ir_module_module_dependency")
 @Description("Module dependency")
+@NodeEntity("Dependency")
 public class Dependency {
 
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String name;
 	
 	/**
@@ -29,6 +34,8 @@ public class Dependency {
 	@Column
 	@ManyToOne(targetEntity = Module.class)
 	@Description("Module")
+	@Property
+	@Relationship(type = "MODULE")
 	private String module_id;
 	
 	/**
@@ -37,6 +44,8 @@ public class Dependency {
 	@Column
 	@ManyToOne(targetEntity = Module.class)
 	@Description("Dependency")
+	@Property
+	@Relationship(type = "DEPEND")
 	private String depend_id;
 	
 	/**
@@ -45,6 +54,7 @@ public class Dependency {
 	@Column
 	@Enumerated(EnumType.STRING)
 	@Description("Status")
+	@Property
 	private String state;
 	
 	/**
@@ -52,6 +62,7 @@ public class Dependency {
 	 */
 	@Column
 	@DefaultValue("true")
+	@Property
 	private Boolean auto_install_required = true;
 
 	public String getName() {

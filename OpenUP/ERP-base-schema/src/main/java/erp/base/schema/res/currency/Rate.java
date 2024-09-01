@@ -1,6 +1,10 @@
 package erp.base.schema.res.currency;
 
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
+
 import erp.base.schema.res.Company;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,6 +18,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "res_currency_rate")
 @Description("Currency Rate")
+@NodeEntity("Currency Rate")
 public class Rate {
 
 	/**
@@ -22,6 +27,7 @@ public class Rate {
 	@Column(nullable = false)
 	@NotNull
 	@Description("Date")
+	@Property
 	private String name;
 	
 	/**
@@ -29,6 +35,7 @@ public class Rate {
 	 */
 	@Column
 	@Description("Technical Rate")
+	@Property
 	private Float rate;
 	
 	/**
@@ -36,6 +43,7 @@ public class Rate {
 	 */
 	@Column
 	@Description("The currency of rate 1 to the rate of the currency.")
+	@Property
 	private Float company_rate;
 	
 	/**
@@ -43,6 +51,7 @@ public class Rate {
 	 */
 	@Column
 	@Description("The rate of the currency to the currency of rate 1 ")
+	@Property
 	private Float inverse_company_rate;
 	
 	/**
@@ -52,6 +61,8 @@ public class Rate {
 	@ManyToOne(targetEntity = Currency.class)
 	@NotNull
 	@Description("Currency")
+	@Property
+	@Relationship(type = "CURRENCY")
 	private String currency_id;
 	
 	/**
@@ -60,6 +71,8 @@ public class Rate {
 	@Column
 	@ManyToOne(targetEntity = Company.class)
 	@Description("Company")
+	@Property
+	@Relationship(type = "COMPANY")
 	private String company_id;
 
 	public String getName() {

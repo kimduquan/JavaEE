@@ -3,8 +3,13 @@ package erp.base.schema.ir.model;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.typeconversion.Convert;
 import erp.base.schema.ir.Rule;
 import erp.base.schema.ir.ui.View;
+import erp.schema.util.NameAttributeConverter;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -22,6 +27,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_model")
 @Description("Models")
+@NodeEntity("Models")
 public class Model {
 
 	/**
@@ -30,6 +36,8 @@ public class Model {
 	@Column(nullable = false)
 	@NotNull
 	@Description("Model Description")
+	@Property
+	@Convert(NameAttributeConverter.class)
 	private String name;
 	
 	/**
@@ -38,6 +46,7 @@ public class Model {
 	@Column(nullable = false)
 	@NotNull
 	@DefaultValue("x_")
+	@Property
 	private String model = "x_";
 	
 	/**
@@ -47,6 +56,7 @@ public class Model {
 	@NotNull
 	@DefaultValue("id")
 	@Description("Order")
+	@Property
 	private String order = "id";
 	
 	/**
@@ -54,6 +64,7 @@ public class Model {
 	 */
 	@Column
 	@Description("Information")
+	@Property
 	private String info;
 	
 	/**
@@ -65,6 +76,8 @@ public class Model {
 	@CollectionTable(name = "ir_model_fields")
 	@NotNull
 	@Description("Fields")
+	@Property
+	@Relationship(type = "FIELD")
 	private List<String> field_id;
 	
 	/**
@@ -75,6 +88,8 @@ public class Model {
 	@ElementCollection(targetClass = Model.class)
 	@CollectionTable(name = "ir_model")
 	@Description("Inherited models")
+	@Property
+	@Relationship(type = "INHERITED_MODELS")
 	private List<String> inherited_model_ids;
 	
 	/**
@@ -84,6 +99,7 @@ public class Model {
 	@Enumerated(EnumType.STRING)
 	@DefaultValue("manual")
 	@Description("Type")
+	@Property
 	private String state = "manual";
 	
 	/**
@@ -94,6 +110,8 @@ public class Model {
 	@ElementCollection(targetClass = Access.class)
 	@CollectionTable(name = "ir_model_access")
 	@Description("Access")
+	@Property
+	@Relationship(type = "ACCESSES")
 	private List<String> access_ids;
 	
 	/**
@@ -104,6 +122,8 @@ public class Model {
 	@ElementCollection(targetClass = Rule.class)
 	@CollectionTable(name = "ir_rule")
 	@Description("Record Rules")
+	@Property
+	@Relationship(type = "RULES")
 	private List<String> rule_ids;
 	
 	/**
@@ -111,6 +131,7 @@ public class Model {
 	 */
 	@Column(name = "transient")
 	@Description("Transient Model")
+	@Property
 	private Boolean _transient;
 	
 	/**
@@ -118,6 +139,7 @@ public class Model {
 	 */
 	@Column
 	@Description("In Apps")
+	@Property
 	private String modules;
 	
 	/**
@@ -127,6 +149,8 @@ public class Model {
 	@ElementCollection(targetClass = View.class)
 	@CollectionTable(name = "ir_ui_view")
 	@Description("Views")
+	@Property
+	@Relationship(type = "VIEWS")
 	private List<String> view_ids;
 	
 	/**
@@ -134,6 +158,7 @@ public class Model {
 	 */
 	@Column
 	@Description("Count (Incl. Archived)")
+	@Property
 	private Integer count;
 
 	public String getName() {

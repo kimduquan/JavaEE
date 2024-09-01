@@ -1,6 +1,8 @@
 package erp.base.schema.ir;
 
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -14,55 +16,68 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_logging")
 @Description("Logging")
+@NodeEntity("Logging")
 public class Logging {
 
 	@Column(updatable = false)
 	@Description("Created by")
+	@Property
 	private Integer create_uid;
 	
 	@Column(updatable = false)
 	@Description("Created on")
+	@Property
 	private String create_date;
 	
 	@Column(updatable = false)
 	@Description("Last Updated by")
+	@Property
 	private Integer write_uid;
 	
 	@Column(updatable = false)
 	@Description("Last Updated on")
+	@Property
 	private Integer write_date;
 	
 	@Column(nullable = false)
 	@NotNull
+	@Property
 	private String name;
 	
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	@NotNull
+	@Property
 	private String type;
 	
 	@Column
 	@Description("Database Name")
+	@Property
 	private String dbname;
 	
 	@Column
+	@Property
 	private String level;
 	
 	@Column(nullable = false)
 	@NotNull
+	@Property
 	private String message;
 	
 	@Column(nullable = false)
 	@NotNull
+	@Property
 	private String path;
 	
 	@Column(nullable = false)
 	@NotNull
 	@Description("Function")
+	@Property
 	private String func;
 	
 	@Column(nullable = false)
 	@NotNull
+	@Property
 	private String line;
 
 	public Integer getCreate_uid() {

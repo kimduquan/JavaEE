@@ -3,6 +3,9 @@ package erp.base.schema.ir.act;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
 import erp.base.schema.ir.actions.Actions;
 import erp.base.schema.ir.ui.View;
 import erp.base.schema.res.groups.Groups;
@@ -25,6 +28,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_act_window")
 @Description("Action Window")
+@NodeEntity("Action Window")
 public class ActWindow extends Actions {
 
 	/**
@@ -32,6 +36,7 @@ public class ActWindow extends Actions {
 	 */
 	@Column
 	@DefaultValue("ir.actions.act_window")
+	@Property
 	private String type = "ir.actions.act_window";
 	
 	/**
@@ -40,6 +45,8 @@ public class ActWindow extends Actions {
 	@Column
 	@ManyToOne(targetEntity = View.class)
 	@Description("View Ref.")
+	@Property
+	@Relationship(type = "VIEW")
 	private String view_id;
 	
 	/**
@@ -47,6 +54,7 @@ public class ActWindow extends Actions {
 	 */
 	@Column
 	@Description("Domain Value")
+	@Property
 	private String domain;
 	
 	/**
@@ -56,6 +64,7 @@ public class ActWindow extends Actions {
 	@NotNull
 	@Description("Context Value")
 	@DefaultValue("{}")
+	@Property
 	private String context = "{}";
 	
 	/**
@@ -63,6 +72,7 @@ public class ActWindow extends Actions {
 	 */
 	@Column
 	@Description("Record ID")
+	@Property
 	private Integer res_id;
 	
 	/**
@@ -71,6 +81,7 @@ public class ActWindow extends Actions {
 	@Column(nullable = false)
 	@NotNull
 	@Description("Destination Model")
+	@Property
 	private String res_model;
 	
 	/**
@@ -80,6 +91,7 @@ public class ActWindow extends Actions {
 	@Enumerated(EnumType.STRING)
 	@Description("Target Window")
 	@DefaultValue("current")
+	@Property
 	private String target = "current";
 	
 	/**
@@ -89,6 +101,7 @@ public class ActWindow extends Actions {
 	@NotNull
 	@Description("")
 	@DefaultValue("tree,form")
+	@Property
 	private String view_mode = "tree,form";
 	
 	/**
@@ -97,6 +110,7 @@ public class ActWindow extends Actions {
 	@Column
 	@DefaultValue("kanban")
 	@Description("First view mode in mobile and small screen environments (default='kanban'). If it can't be found among available view modes, the same mode as for wider screens is used)")
+	@Property
 	private String mobile_view_mode = "kanban";
 	
 	/**
@@ -104,6 +118,7 @@ public class ActWindow extends Actions {
 	 */
 	@Column
 	@Description("Action Usage")
+	@Property
 	private String usage;
 	
 	/**
@@ -116,6 +131,8 @@ public class ActWindow extends Actions {
 			@JoinColumn(referencedColumnName = "act_window_id")
 	})
 	@Description("No of Views")
+	@Property
+	@Relationship(type = "VIEWS")
 	private List<String> view_ids;
 	
 	/**
@@ -127,6 +144,7 @@ public class ActWindow extends Actions {
             "when displaying the result of an action, federating view mode, views and " +
             "reference view. The result is returned as an ordered list of pairs (view_id,view_mode)."
             )
+	@Property
 	private byte[] views;
 	
 	/**
@@ -135,6 +153,7 @@ public class ActWindow extends Actions {
 	@Column
 	@DefaultValue("80")
 	@Description("Default limit for the list view")
+	@Property
 	private Integer limit = 80;
 	
 	/**
@@ -147,6 +166,8 @@ public class ActWindow extends Actions {
 			@JoinColumn(name = "act_id", referencedColumnName = "gid")
 	})
 	@Description("Groups")
+	@Property
+	@Relationship(type = "GROUPS")
 	private List<String> groups_id;
 	
 	/**
@@ -155,12 +176,14 @@ public class ActWindow extends Actions {
 	@Column
 	@ManyToOne(targetEntity = View.class)
 	@Description("Search View Ref.")
+	@Property
 	private String search_view_id;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private Boolean filter;
 
 	public String getType() {

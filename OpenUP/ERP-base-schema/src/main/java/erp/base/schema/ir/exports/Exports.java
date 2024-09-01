@@ -2,6 +2,9 @@ package erp.base.schema.ir.exports;
 
 import java.util.List;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -15,6 +18,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "ir_exports")
 @Description("Exports")
+@NodeEntity("Exports")
 public class Exports {
 
 	/**
@@ -22,12 +26,14 @@ public class Exports {
 	 */
 	@Column
 	@Description("Export Name")
+	@Property
 	private String name;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String resource;
 	
 	/**
@@ -38,6 +44,8 @@ public class Exports {
 	@ElementCollection(targetClass = ExportsLine.class)
 	@CollectionTable
 	@Description("Export")
+	@Property
+	@Relationship(type = "EXPORT")
 	private List<String> export_fields;
 
 	public String getName() {

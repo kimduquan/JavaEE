@@ -3,6 +3,10 @@ package erp.base.schema.res.currency;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
+
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -19,6 +23,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "res_currency")
 @Description("Currency")
+@NodeEntity("Currency")
 public class Currency {
 
 	/**
@@ -27,6 +32,7 @@ public class Currency {
 	@Column(nullable = false, length = 3)
 	@NotNull
 	@Description("Currency")
+	@Property
 	private String name;
 	
 	/**
@@ -34,6 +40,7 @@ public class Currency {
 	 */
 	@Column
 	@Description("Name")
+	@Property
 	private String full_name;
 	
 	/**
@@ -41,6 +48,7 @@ public class Currency {
 	 */
 	@Column(nullable = false)
 	@NotNull
+	@Property
 	private String symbol;
 	
 	/**
@@ -48,18 +56,21 @@ public class Currency {
 	 */
 	@Column
 	@Description("Current Rate")
+	@Property
 	private Float rate;
 	
 	/**
 	 * 
 	 */
 	@Column(updatable = false)
+	@Property
 	private Float inverse_rate;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String rate_string;
 	
 	/**
@@ -70,6 +81,8 @@ public class Currency {
 	@ElementCollection(targetClass = Rate.class)
 	@CollectionTable(name = "res_currency_rate")
 	@Description("Rates")
+	@Property
+	@Relationship(type = "RATES")
 	private List<String> rate_ids;
 	
 	/**
@@ -78,12 +91,14 @@ public class Currency {
 	@Column
 	@DefaultValue("0.01")
 	@Description("Rounding Factor")
+	@Property
 	private Float rounding = (float)0.01;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private Integer decimal_places;
 	
 	/**
@@ -91,6 +106,7 @@ public class Currency {
 	 */
 	@Column
 	@DefaultValue("true")
+	@Property
 	private Boolean active = true;
 	
 	/**
@@ -100,12 +116,14 @@ public class Currency {
 	@Enumerated(EnumType.STRING)
 	@DefaultValue("after")
 	@Description("Symbol Position")
+	@Property
 	private String position = "after";
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String date;
 	
 	/**
@@ -113,6 +131,7 @@ public class Currency {
 	 */
 	@Column
 	@Description("Currency Unit")
+	@Property
 	private String currency_unit_label;
 	
 	/**
@@ -120,12 +139,14 @@ public class Currency {
 	 */
 	@Column
 	@Description("Currency Subunit")
+	@Property
 	private String currency_subunit_label;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private Boolean is_current_company_currency;
 
 	public String getName() {

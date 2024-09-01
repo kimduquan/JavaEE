@@ -3,6 +3,9 @@ package erp.base.schema.res.partner;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
 import erp.base.schema.res.Bank;
 import erp.base.schema.res.Company;
 import erp.base.schema.res.country.Country;
@@ -25,24 +28,28 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "res_partner")
 @Description("Contact")
+@NodeEntity("Contact")
 public class Partner {
 
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String name;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String complete_name;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String date;
 	
 	/**
@@ -50,6 +57,8 @@ public class Partner {
 	 */
 	@Column
 	@ManyToOne(targetEntity = Title.class)
+	@Property
+	@Relationship(type = "TTILE")
 	private String title;
 	
 	/**
@@ -58,6 +67,8 @@ public class Partner {
 	@Column
 	@ManyToOne(targetEntity = Partner.class)
 	@Description("Related Company")
+	@Property
+	@Relationship(type = "PARENT")
 	private String parent_id;
 	
 	/**
@@ -65,6 +76,7 @@ public class Partner {
 	 */
 	@Column(updatable = false)
 	@Description("Parent name")
+	@Property
 	private String parent_name;
 	
 	/**
@@ -73,6 +85,8 @@ public class Partner {
 	@Column
 	@OneToMany(targetEntity = Partner.class)
 	@Description("Contact")
+	@Property
+	@Relationship(type = "CHILDS")
 	private List<String> child_ids;
 	
 	/**
@@ -80,6 +94,7 @@ public class Partner {
 	 */
 	@Column
 	@Description("Reference")
+	@Property
 	private String ref;
 	
 	/**
@@ -88,12 +103,14 @@ public class Partner {
 	@Column
 	@Enumerated(EnumType.STRING)
 	@Description("Language")
+	@Property
 	private String lang;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private Integer active_lang_count;
 	
 	/**
@@ -102,6 +119,7 @@ public class Partner {
 	@Column
 	@Enumerated(EnumType.STRING)
 	@Description("Timezone")
+	@Property
 	private String tz;
 	
 	/**
@@ -109,6 +127,7 @@ public class Partner {
 	 */
 	@Column
 	@Description("Timezone offset")
+	@Property
 	private String tz_offset;
 	
 	/**
@@ -117,6 +136,8 @@ public class Partner {
 	@Column
 	@ManyToOne(targetEntity = Partner.class)
 	@Description("Salesperson")
+	@Property
+	@Relationship(type = "SALESPERSON")
 	private String user_id;
 	
 	/**
@@ -124,6 +145,7 @@ public class Partner {
 	 */
 	@Column
 	@Description("Tax ID")
+	@Property
 	private String vat;
 	
 	/**
@@ -132,6 +154,8 @@ public class Partner {
 	@Column
 	@ManyToOne(targetEntity = Partner.class)
 	@Description("Partner with same Tax ID")
+	@Property
+	@Relationship(type = "SAME_VAT_PARTNER")
 	private String same_vat_partner_id;
 	
 	/**
@@ -140,6 +164,8 @@ public class Partner {
 	@Column
 	@ManyToOne(targetEntity = Partner.class)
 	@Description("Partner with same Company Registry")
+	@Property
+	@Relationship(type = "SAME_COMPANY_REGISTRY_PARTNER")
 	private String same_company_registry_partner_id;
 	
 	/**
@@ -147,6 +173,7 @@ public class Partner {
 	 */
 	@Column
 	@Description("Company ID")
+	@Property
 	private String company_registry;
 	
 	/**
@@ -155,6 +182,8 @@ public class Partner {
 	@Column
 	@OneToMany(targetEntity = Bank.class)
 	@Description("Banks")
+	@Property
+	@Relationship(type = "BANKS")
 	private List<String> bank_ids;
 	
 	/**
@@ -162,6 +191,7 @@ public class Partner {
 	 */
 	@Column
 	@Description("Website Link")
+	@Property
 	private String website;
 	
 	/**
@@ -169,6 +199,7 @@ public class Partner {
 	 */
 	@Column
 	@Description("Notes")
+	@Property
 	private String comment;
 	
 	/**
@@ -177,6 +208,8 @@ public class Partner {
 	@Column
 	@ManyToMany(targetEntity = Category.class)
 	@Description("Tags")
+	@Property
+	@Relationship(type = "TAGS")
 	private String category_id;
 	
 	/**
@@ -184,6 +217,7 @@ public class Partner {
 	 */
 	@Column
 	@DefaultValue("true")
+	@Property
 	private Boolean active = true;
 	
 	/**
@@ -191,6 +225,7 @@ public class Partner {
 	 */
 	@Column
 	@Description("Check this box if this contact is an Employee.")
+	@Property
 	private Boolean employee;
 	
 	/**
@@ -198,6 +233,7 @@ public class Partner {
 	 */
 	@Column
 	@Description("Job Position")
+	@Property
 	private String function;
 	
 	/**
@@ -207,30 +243,35 @@ public class Partner {
 	@Enumerated(EnumType.STRING)
 	@DefaultValue("contact")
 	@Description("Address Type")
+	@Property
 	private String type = "contact";
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String street;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String street2;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String zip;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String city;
 	
 	/**
@@ -239,6 +280,8 @@ public class Partner {
 	@Column
 	@ManyToOne(targetEntity = State.class)
 	@Description("State")
+	@Property
+	@Relationship(type = "STATE")
 	private String state_id;
 	
 	/**
@@ -247,6 +290,8 @@ public class Partner {
 	@Column
 	@ManyToOne(targetEntity = Country.class)
 	@Description("Country")
+	@Property
+	@Relationship(type = "COUNTRY")
 	private String country_id;
 	
 	/**
@@ -254,6 +299,7 @@ public class Partner {
 	 */
 	@Column
 	@Description("Country Code")
+	@Property
 	private String country_code;
 	
 	/**
@@ -261,6 +307,7 @@ public class Partner {
 	 */
 	@Column
 	@Description("Geo Latitude")
+	@Property
 	private Float partner_latitude;
 	
 	/**
@@ -268,12 +315,14 @@ public class Partner {
 	 */
 	@Column
 	@Description("Geo Longitude")
+	@Property
 	private Float partner_longitude;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String email;
 	
 	/**
@@ -281,18 +330,21 @@ public class Partner {
 	 */
 	@Column
 	@Description("Formatted Email")
+	@Property
 	private String email_formatted;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String phone;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String mobile;
 	
 	/**
@@ -300,12 +352,14 @@ public class Partner {
 	 */
 	@Column
 	@Description("Is a Company")
+	@Property
 	private Boolean is_company = false;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private Boolean is_public;
 	
 	/**
@@ -314,6 +368,8 @@ public class Partner {
 	@Column
 	@ManyToOne(targetEntity = Industry.class)
 	@Description("Industry")
+	@Property
+	@Relationship(type = "INDUSTRY")
 	private String industry_id;
 	
 	/**
@@ -322,6 +378,8 @@ public class Partner {
 	@Column
 	@Enumerated(EnumType.STRING)
 	@Description("Company Type")
+	@Property
+	@Relationship(type = "INDUSTRY")
 	private String company_type;
 	
 	/**
@@ -330,6 +388,8 @@ public class Partner {
 	@Column
 	@ManyToOne(targetEntity = Company.class)
 	@Description("Company")
+	@Property
+	@Relationship(type = "COMPANY")
 	private String company_id;
 	
 	/**
@@ -338,6 +398,7 @@ public class Partner {
 	@Column
 	@DefaultValue("0")
 	@Description("Color Index")
+	@Property
 	private Integer color = 0;
 	
 	/**
@@ -348,6 +409,8 @@ public class Partner {
 	@ElementCollection(targetClass = Users.class)
 	@CollectionTable(name = "res_users")
 	@Description("Users")
+	@Property
+	@Relationship(type = "USERS")
 	private List<String> user_ids;
 	
 	/**
@@ -355,6 +418,7 @@ public class Partner {
 	 */
 	@Column
 	@Description("Share Partner")
+	@Property
 	private Boolean partner_share;
 	
 	/**
@@ -362,6 +426,7 @@ public class Partner {
 	 */
 	@Column
 	@Description("Complete Address")
+	@Property
 	private String contact_address;
 	
 	/**
@@ -370,6 +435,8 @@ public class Partner {
 	@Column
 	@ManyToOne(targetEntity = Partner.class)
 	@Description("Commercial Entity")
+	@Property
+	@Relationship(type = "COMMERCIAL_PARTNER")
 	private String commercial_partner_id;
 	
 	/**
@@ -377,6 +444,7 @@ public class Partner {
 	 */
 	@Column
 	@Description("Company Name Entity")
+	@Property
 	private String commercial_company_name;
 	
 	/**
@@ -384,6 +452,7 @@ public class Partner {
 	 */
 	@Column
 	@Description("Company Name")
+	@Property
 	private String company_name;
 	
 	/**
@@ -391,6 +460,7 @@ public class Partner {
 	 */
 	@Column
 	@Description("Use a barcode to identify this contact.")
+	@Property
 	private String barcode;
 
 	public String getName() {

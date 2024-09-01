@@ -2,6 +2,11 @@ package erp.base.schema.ir.model;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.typeconversion.Convert;
+import erp.schema.util.NameAttributeConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -14,23 +19,42 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_model_fields_selection")
 @Description("Fields Selection")
+@NodeEntity("Selection")
 public class Selection {
 
+	/**
+	 * 
+	 */
 	@Column(nullable = false)
 	@ManyToOne(targetEntity = Fields.class)
 	@NotNull
+	@Property
+	@Relationship(type = "FIELD")
 	private String field_id;
 	
+	/**
+	 * 
+	 */
 	@Column(nullable = false)
 	@NotNull
+	@Property
 	private String value;
 	
+	/**
+	 * 
+	 */
 	@Column(nullable = false)
 	@NotNull
+	@Property
+	@Convert(NameAttributeConverter.class)
 	private String name;
 	
+	/**
+	 * 
+	 */
 	@Column
 	@DefaultValue("1000")
+	@Property
 	private Integer sequence = 1000;
 
 	public String getField_id() {

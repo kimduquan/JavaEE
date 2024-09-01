@@ -2,12 +2,17 @@ package erp.base.schema.res.groups;
 
 import java.util.List;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.typeconversion.Convert;
 import erp.base.schema.ir.Rule;
 import erp.base.schema.ir.model.Access;
 import erp.base.schema.ir.module.Category;
 import erp.base.schema.ir.ui.Menu;
 import erp.base.schema.ir.ui.View;
 import erp.base.schema.res.users.Users;
+import erp.schema.util.NameAttributeConverter;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -24,6 +29,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "res_groups")
 @Description("Access Groups")
+@NodeEntity("Access Groups")
 public class Groups {
 
 	/**
@@ -31,6 +37,8 @@ public class Groups {
 	 */
 	@Column(nullable = false)
 	@NotNull
+	@Property
+	@Convert(NameAttributeConverter.class)
 	private String name;
 	
 	/**
@@ -40,6 +48,8 @@ public class Groups {
 	@ManyToMany(targetEntity = Users.class)
 	@ElementCollection(targetClass = Users.class)
 	@CollectionTable(name = "res_users")
+	@Property
+	@Relationship(type = "USERS")
 	private List<String> users;
 	
 	/**
@@ -50,6 +60,8 @@ public class Groups {
 	@ElementCollection(targetClass = Access.class)
 	@CollectionTable(name = "ir_model_access")
 	@Description("Access Controls")
+	@Property
+	@Relationship(type = "MODEL_ACCESS")
 	private List<String> model_access;
 	
 	/**
@@ -60,6 +72,8 @@ public class Groups {
 	@ElementCollection(targetClass = Rule.class)
 	@CollectionTable(name = "ir_rule")
 	@Description("Rules")
+	@Property
+	@Relationship(type = "RULES")
 	private List<String> rule_groups;
 	
 	/**
@@ -70,6 +84,8 @@ public class Groups {
 	@ElementCollection(targetClass = Menu.class)
 	@CollectionTable(name = "ir_ui_menu")
 	@Description("Access Menu")
+	@Property
+	@Relationship(type = "MODEL_ACCESS")
 	private List<String> menu_access;
 	
 	/**
@@ -80,12 +96,15 @@ public class Groups {
 	@ElementCollection(targetClass = View.class)
 	@CollectionTable(name = "ir_ui_view")
 	@Description("Views")
+	@Property
+	@Relationship(type = "VIEW_ACCESS")
 	private List<String> view_access;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String comment;
 	
 	/**
@@ -94,6 +113,8 @@ public class Groups {
 	@Column
 	@ManyToOne(targetEntity = Category.class)
 	@Description("Application")
+	@Property
+	@Relationship(type = "APPLICATION")
 	private String category_id;
 	
 	/**
@@ -101,6 +122,7 @@ public class Groups {
 	 */
 	@Column
 	@Description("Color Index")
+	@Property
 	private Integer color;
 	
 	/**
@@ -108,6 +130,7 @@ public class Groups {
 	 */
 	@Column
 	@Description("Group Name")
+	@Property
 	private String full_name;
 	
 	/**
@@ -115,6 +138,7 @@ public class Groups {
 	 */
 	@Column
 	@Description("Share Group")
+	@Property
 	private Boolean share;
 
 	public String getName() {

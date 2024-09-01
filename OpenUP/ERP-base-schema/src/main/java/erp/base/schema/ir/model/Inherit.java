@@ -1,6 +1,9 @@
 package erp.base.schema.ir.model;
 
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -13,6 +16,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_model_inherit")
 @Description("Model Inheritance Tree")
+@NodeEntity("Model Inheritance")
 public class Inherit {
 
 	/**
@@ -21,6 +25,8 @@ public class Inherit {
 	@Column(nullable = false)
 	@ManyToOne(targetEntity = Model.class)
 	@NotNull
+	@Property
+	@Relationship(type = "MODEL")
 	private String model_id;
 	
 	/**
@@ -29,6 +35,8 @@ public class Inherit {
 	@Column(nullable = false)
 	@ManyToOne(targetEntity = Model.class)
 	@NotNull
+	@Property
+	@Relationship(type = "PARENT")
 	private String parent_id;
 	
 	/**
@@ -36,6 +44,8 @@ public class Inherit {
 	 */
 	@Column
 	@ManyToOne(targetEntity = Fields.class)
+	@Property
+	@Relationship(type = "PARENT_FIELD")
 	private String parent_field_id;
 
 	public String getModel_id() {

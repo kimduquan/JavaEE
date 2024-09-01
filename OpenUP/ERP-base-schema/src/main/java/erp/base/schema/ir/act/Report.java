@@ -2,6 +2,9 @@ package erp.base.schema.ir.act;
 
 import java.util.List;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
 import erp.base.schema.ir.actions.Actions;
 import erp.base.schema.ir.model.Model;
 import erp.base.schema.report.PaperFormat;
@@ -21,12 +24,14 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_act_report_xml")
 @Description("Report Action")
+@NodeEntity("Report Action")
 public class Report extends Actions {
 
 	/**
 	 * 
 	 */
 	@Column
+	@Property
 	private String type = "ir.actions.report";
 	
 	/**
@@ -34,6 +39,7 @@ public class Report extends Actions {
 	 */
 	@Column
 	@Enumerated(EnumType.STRING)
+	@Property
 	private String binding_type = "report";
 	
 	/**
@@ -42,6 +48,7 @@ public class Report extends Actions {
 	@Column(nullable = false)
 	@NotNull
 	@Description("Model Name")
+	@Property
 	private String model;
 	
 	/**
@@ -50,6 +57,8 @@ public class Report extends Actions {
 	@Column
 	@ManyToOne(targetEntity = Model.class)
 	@Description("Model")
+	@Property
+	@Relationship(type = "MODEL")
 	private String model_id;
 	
 	/**
@@ -59,6 +68,7 @@ public class Report extends Actions {
 	@Enumerated(EnumType.STRING)
 	@NotNull
 	@Description("qweb-pdf")
+	@Property
 	private String report_type;
 	
 	/**
@@ -67,6 +77,7 @@ public class Report extends Actions {
 	@Column(nullable = false)
 	@NotNull
 	@Description("Template Name")
+	@Property
 	private String report_name;
 	
 	/**
@@ -74,6 +85,7 @@ public class Report extends Actions {
 	 */
 	@Column
 	@Description("Report File")
+	@Property
 	private String report_file;
 	
 	/**
@@ -82,6 +94,8 @@ public class Report extends Actions {
 	@Column
 	@ManyToMany(targetEntity = Groups.class)
 	@Description("Groups")
+	@Property
+	@Relationship(type = "GROUPS")
 	private List<String> groups_id;
 	
 	/**
@@ -89,6 +103,7 @@ public class Report extends Actions {
 	 */
 	@Column
 	@Description("On Multiple Doc.")
+	@Property
 	private Boolean multi;
 	
 	/**
@@ -97,6 +112,8 @@ public class Report extends Actions {
 	@Column
 	@ManyToOne(targetEntity = PaperFormat.class)
 	@Description("Paper Format")
+	@Property
+	@Relationship(type = "PAPER_FORMAT")
 	private String paperformat_id;
 	
 	/**
@@ -104,6 +121,7 @@ public class Report extends Actions {
 	 */
 	@Column
 	@Description("Printed Report Name")
+	@Property
 	private String print_report_name;
 	
 	/**
@@ -111,6 +129,7 @@ public class Report extends Actions {
 	 */
 	@Column
 	@Description("Reload from Attachment")
+	@Property
 	private Boolean attachment_use;
 	
 	/**
@@ -118,6 +137,7 @@ public class Report extends Actions {
 	 */
 	@Column
 	@Description("Save as Attachment Prefix")
+	@Property
 	private String attachment;
 
 	public String getType() {

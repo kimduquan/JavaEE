@@ -1,6 +1,9 @@
 package erp.base.schema.res.country;
 
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -13,6 +16,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "res_country_state")
 @Description("Country state")
+@NodeEntity("Country state")
 public class State {
 
 	/**
@@ -22,6 +26,8 @@ public class State {
 	@ManyToOne(targetEntity = Country.class)
 	@NotNull
 	@Description("Country")
+	@Property
+	@Relationship(type = "COUNTRY")
 	private String country_id;
 	
 	/**
@@ -30,6 +36,7 @@ public class State {
 	@Column(nullable = false)
 	@NotNull
 	@Description("State Name")
+	@Property
 	private String name;
 	
 	/**
@@ -38,6 +45,7 @@ public class State {
 	@Column(nullable = false)
 	@NotNull
 	@Description("State Code")
+	@Property
 	private String code;
 
 	public String getCountry_id() {
