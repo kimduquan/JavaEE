@@ -3,6 +3,7 @@ package erp.base.schema.res.users;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
@@ -28,6 +29,13 @@ import jakarta.validation.constraints.NotNull;
 @Description("User")
 @NodeEntity("User")
 public class Users {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
 	/**
 	 * 
@@ -417,5 +425,13 @@ public class Users {
 
 	public void setGroups_count(Integer groups_count) {
 		this.groups_count = groups_count;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

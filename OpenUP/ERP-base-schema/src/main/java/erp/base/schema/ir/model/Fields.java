@@ -3,10 +3,10 @@ package erp.base.schema.ir.model;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
-
 import erp.base.schema.res.groups.Groups;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -28,6 +28,13 @@ import jakarta.validation.constraints.NotNull;
 @Description("Fields")
 @NodeEntity("Fields")
 public class Fields {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
 	/**
 	 * 
@@ -730,5 +737,13 @@ public class Fields {
 
 	public void setStrip_classes(Boolean strip_classes) {
 		this.strip_classes = strip_classes;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

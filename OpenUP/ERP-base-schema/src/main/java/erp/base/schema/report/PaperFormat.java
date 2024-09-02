@@ -3,10 +3,10 @@ package erp.base.schema.report;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
-
 import erp.base.schema.ir.act.Report;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -26,6 +26,13 @@ import jakarta.validation.constraints.NotNull;
 @Description("Paper Format Config")
 @NodeEntity("Paper Format Config")
 public class PaperFormat {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
 	/**
 	 * 
@@ -314,5 +321,13 @@ public class PaperFormat {
 
 	public void setPrint_page_height(Float print_page_height) {
 		this.print_page_height = print_page_height;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

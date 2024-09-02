@@ -2,6 +2,7 @@ package erp.base.schema.ir.cron;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
@@ -23,6 +24,13 @@ import jakarta.validation.constraints.NotNull;
 @Description("Scheduled Actions")
 @NodeEntity("Scheduled Actions")
 public class Cron {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
 	/**
 	 * 
@@ -208,5 +216,13 @@ public class Cron {
 
 	public void setPriority(Integer priority) {
 		this.priority = priority;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

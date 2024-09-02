@@ -1,6 +1,7 @@
 package erp.base.schema.ir;
 
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import jakarta.persistence.Column;
@@ -18,63 +19,106 @@ import jakarta.validation.constraints.NotNull;
 @Description("Logging")
 @NodeEntity("Logging")
 public class Logging {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
+	/**
+	 * 
+	 */
 	@Column(updatable = false)
 	@Description("Created by")
 	@Property
 	private Integer create_uid;
 	
+	/**
+	 * 
+	 */
 	@Column(updatable = false)
 	@Description("Created on")
 	@Property
 	private String create_date;
 	
+	/**
+	 * 
+	 */
 	@Column(updatable = false)
 	@Description("Last Updated by")
 	@Property
 	private Integer write_uid;
 	
+	/**
+	 * 
+	 */
 	@Column(updatable = false)
 	@Description("Last Updated on")
 	@Property
 	private Integer write_date;
 	
+	/**
+	 * 
+	 */
 	@Column(nullable = false)
 	@NotNull
 	@Property
 	private String name;
 	
+	/**
+	 * 
+	 */
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	@NotNull
 	@Property
 	private String type;
 	
+	/**
+	 * 
+	 */
 	@Column
 	@Description("Database Name")
 	@Property
 	private String dbname;
 	
+	/**
+	 * 
+	 */
 	@Column
 	@Property
 	private String level;
 	
+	/**
+	 * 
+	 */
 	@Column(nullable = false)
 	@NotNull
 	@Property
 	private String message;
 	
+	/**
+	 * 
+	 */
 	@Column(nullable = false)
 	@NotNull
 	@Property
 	private String path;
 	
+	/**
+	 * 
+	 */
 	@Column(nullable = false)
 	@NotNull
 	@Description("Function")
 	@Property
 	private String func;
 	
+	/**
+	 * 
+	 */
 	@Column(nullable = false)
 	@NotNull
 	@Property
@@ -174,5 +218,13 @@ public class Logging {
 
 	public void setLine(String line) {
 		this.line = line;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

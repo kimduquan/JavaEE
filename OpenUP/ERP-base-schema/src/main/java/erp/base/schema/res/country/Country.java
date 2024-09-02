@@ -3,6 +3,7 @@ package erp.base.schema.res.country;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
@@ -30,6 +31,13 @@ import jakarta.validation.constraints.NotNull;
 @Description("Country")
 @NodeEntity("Country")
 public class Country {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
 	/**
 	 * 
@@ -255,5 +263,13 @@ public class Country {
 
 	public void setZip_required(Boolean zip_required) {
 		this.zip_required = zip_required;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

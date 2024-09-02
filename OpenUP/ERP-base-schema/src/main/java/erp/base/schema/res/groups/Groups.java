@@ -2,6 +2,7 @@ package erp.base.schema.res.groups;
 
 import java.util.List;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
@@ -31,6 +32,13 @@ import jakarta.validation.constraints.NotNull;
 @Description("Access Groups")
 @NodeEntity("Access Groups")
 public class Groups {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
 	/**
 	 * 
@@ -227,5 +235,13 @@ public class Groups {
 
 	public void setShare(Boolean share) {
 		this.share = share;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

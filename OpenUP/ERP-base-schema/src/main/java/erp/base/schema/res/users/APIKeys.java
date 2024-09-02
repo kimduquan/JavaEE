@@ -1,6 +1,7 @@
 package erp.base.schema.res.users;
 
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
@@ -18,6 +19,13 @@ import jakarta.validation.constraints.NotNull;
 @Description("Users API Keys")
 @NodeEntity("Users API Keys")
 public class APIKeys {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
 	/**
 	 * 
@@ -84,5 +92,13 @@ public class APIKeys {
 
 	public void setCreate_date(String create_date) {
 		this.create_date = create_date;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

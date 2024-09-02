@@ -3,6 +3,7 @@ package erp.base.schema.ir.module;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
@@ -25,6 +26,13 @@ import jakarta.validation.constraints.NotNull;
 @Description("Application")
 @NodeEntity("Category")
 public class Category {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
 	/**
 	 * 
@@ -181,5 +189,13 @@ public class Category {
 
 	public void setXml_id(String xml_id) {
 		this.xml_id = xml_id;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

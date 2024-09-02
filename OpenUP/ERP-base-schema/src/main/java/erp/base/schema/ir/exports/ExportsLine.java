@@ -1,6 +1,7 @@
 package erp.base.schema.ir.exports;
 
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
@@ -17,6 +18,13 @@ import jakarta.persistence.Table;
 @Description("Exports Line")
 @NodeEntity("Exports Line")
 public class ExportsLine {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
 	/**
 	 * 
@@ -50,5 +58,13 @@ public class ExportsLine {
 
 	public void setExport_id(String export_id) {
 		this.export_id = export_id;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

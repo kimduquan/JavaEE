@@ -2,6 +2,7 @@ package erp.base.schema.ir;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 import erp.base.schema.ir.model.Fields;
@@ -22,6 +23,13 @@ import jakarta.validation.constraints.NotNull;
 @Description("Company Property")
 @NodeEntity("Company Property")
 public class Property {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
 	/**
 	 * 
@@ -197,5 +205,13 @@ public class Property {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

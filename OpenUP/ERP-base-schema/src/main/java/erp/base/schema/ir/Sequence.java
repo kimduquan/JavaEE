@@ -3,10 +3,10 @@ package erp.base.schema.ir;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
-
 import erp.base.schema.res.Company;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -27,6 +27,13 @@ import jakarta.validation.constraints.NotNull;
 @Description("Sequence")
 @NodeEntity("Sequence")
 public class Sequence {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
 	/**
 	 * 
@@ -249,5 +256,13 @@ public class Sequence {
 
 	public void setDate_range_ids(List<String> date_range_ids) {
 		this.date_range_ids = date_range_ids;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

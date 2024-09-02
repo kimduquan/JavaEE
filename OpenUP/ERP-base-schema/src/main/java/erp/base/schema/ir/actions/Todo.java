@@ -2,6 +2,7 @@ package erp.base.schema.ir.actions;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
@@ -23,6 +24,13 @@ import jakarta.validation.constraints.NotNull;
 @Description("Configuration Wizards")
 @NodeEntity("Configuration Wizards")
 public class Todo {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
 	/**
 	 * 
@@ -92,5 +100,13 @@ public class Todo {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

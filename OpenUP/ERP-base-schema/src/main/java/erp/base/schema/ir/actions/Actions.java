@@ -1,6 +1,7 @@
 package erp.base.schema.ir.actions;
 
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
@@ -23,6 +24,13 @@ import jakarta.validation.constraints.NotNull;
 @Description("Actions")
 @NodeEntity("Actions")
 public class Actions {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
 	/**
 	 * 
@@ -139,5 +147,13 @@ public class Actions {
 
 	public void setBinding_view_types(String binding_view_types) {
 		this.binding_view_types = binding_view_types;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

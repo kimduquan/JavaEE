@@ -3,6 +3,7 @@ package erp.base.schema.res;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
@@ -36,6 +37,13 @@ import jakarta.validation.constraints.NotNull;
 @Description("Companies")
 @NodeEntity("Companies")
 public class Company {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
 	/**
 	 * 
@@ -678,5 +686,13 @@ public class Company {
 
 	public void setLayout_background_image(byte[] layout_background_image) {
 		this.layout_background_image = layout_background_image;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

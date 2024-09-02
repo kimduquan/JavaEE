@@ -1,6 +1,7 @@
 package erp.base.schema.ir.module;
 
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
@@ -19,6 +20,13 @@ import jakarta.persistence.Table;
 @Description("Module exclusion")
 @NodeEntity("Exclusion")
 public class Exclusion {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
 	/**
 	 * 
@@ -86,5 +94,13 @@ public class Exclusion {
 
 	public void setState(String state) {
 		this.state = state;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

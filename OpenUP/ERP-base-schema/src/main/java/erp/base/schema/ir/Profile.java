@@ -1,6 +1,7 @@
 package erp.base.schema.ir;
 
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import jakarta.persistence.Column;
@@ -15,6 +16,13 @@ import jakarta.persistence.Table;
 @Description("Profiling results")
 @NodeEntity("Profiling results")
 public class Profile {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
 	/**
 	 * 
@@ -222,5 +230,13 @@ public class Profile {
 
 	public void setSpeedscope_url(String speedscope_url) {
 		this.speedscope_url = speedscope_url;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

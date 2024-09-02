@@ -1,6 +1,7 @@
 package erp.base.schema.res.country;
 
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
@@ -18,6 +19,13 @@ import jakarta.validation.constraints.NotNull;
 @Description("Country state")
 @NodeEntity("Country state")
 public class State {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
 	/**
 	 * 
@@ -70,5 +78,13 @@ public class State {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

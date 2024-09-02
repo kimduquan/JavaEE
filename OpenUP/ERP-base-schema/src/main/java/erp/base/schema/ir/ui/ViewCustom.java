@@ -1,6 +1,7 @@
 package erp.base.schema.ir.ui;
 
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
@@ -19,6 +20,13 @@ import jakarta.validation.constraints.NotNull;
 @Description("Custom View")
 @NodeEntity("Custom View")
 public class ViewCustom {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
 	/**
 	 * 
@@ -73,5 +81,13 @@ public class ViewCustom {
 
 	public void setArch(String arch) {
 		this.arch = arch;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

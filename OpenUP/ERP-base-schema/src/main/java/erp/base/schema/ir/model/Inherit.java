@@ -1,6 +1,7 @@
 package erp.base.schema.ir.model;
 
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
@@ -18,6 +19,13 @@ import jakarta.validation.constraints.NotNull;
 @Description("Model Inheritance Tree")
 @NodeEntity("Model Inheritance")
 public class Inherit {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
 	/**
 	 * 
@@ -70,5 +78,13 @@ public class Inherit {
 
 	public void setParent_field_id(String parent_field_id) {
 		this.parent_field_id = parent_field_id;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

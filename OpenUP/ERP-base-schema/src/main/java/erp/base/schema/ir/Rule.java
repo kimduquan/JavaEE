@@ -3,6 +3,7 @@ package erp.base.schema.ir;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
@@ -25,6 +26,13 @@ import jakarta.validation.constraints.NotNull;
 @Description("Record Rule")
 @NodeEntity("Record Rule")
 public class Rule {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
 	/**
 	 * 
@@ -177,5 +185,13 @@ public class Rule {
 
 	public void setPerm_unlink(Boolean perm_unlink) {
 		this.perm_unlink = perm_unlink;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

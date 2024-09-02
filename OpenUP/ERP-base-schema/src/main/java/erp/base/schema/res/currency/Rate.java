@@ -1,10 +1,10 @@
 package erp.base.schema.res.currency;
 
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
-
 import erp.base.schema.res.Company;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,6 +20,13 @@ import jakarta.validation.constraints.NotNull;
 @Description("Currency Rate")
 @NodeEntity("Currency Rate")
 public class Rate {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
 	/**
 	 * 
@@ -121,5 +128,13 @@ public class Rate {
 
 	public void setCompany_id(String company_id) {
 		this.company_id = company_id;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

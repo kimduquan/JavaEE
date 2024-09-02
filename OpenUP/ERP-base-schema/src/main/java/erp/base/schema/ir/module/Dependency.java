@@ -2,6 +2,7 @@ package erp.base.schema.ir.module;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
@@ -20,6 +21,13 @@ import jakarta.persistence.Table;
 @Description("Module dependency")
 @NodeEntity("Dependency")
 public class Dependency {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
 	/**
 	 * 
@@ -103,5 +111,13 @@ public class Dependency {
 
 	public void setAuto_install_required(Boolean auto_install_required) {
 		this.auto_install_required = auto_install_required;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

@@ -2,6 +2,7 @@ package erp.base.schema.res;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import jakarta.persistence.Column;
@@ -19,6 +20,13 @@ import jakarta.validation.constraints.NotNull;
 @Description("Languages")
 @NodeEntity("Languages")
 public class Lang {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
 	/**
 	 * 
@@ -225,5 +233,13 @@ public class Lang {
 
 	public void setThousands_sep(String thousands_sep) {
 		this.thousands_sep = thousands_sep;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

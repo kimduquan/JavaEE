@@ -3,6 +3,7 @@ package erp.base.schema.ir.ui;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
@@ -29,6 +30,13 @@ import jakarta.validation.constraints.NotNull;
 @Description("Menu")
 @NodeEntity("Menu")
 public class Menu {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
 	/**
 	 * 
@@ -214,5 +222,13 @@ public class Menu {
 
 	public void setWeb_icon_data(byte[] web_icon_data) {
 		this.web_icon_data = web_icon_data;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

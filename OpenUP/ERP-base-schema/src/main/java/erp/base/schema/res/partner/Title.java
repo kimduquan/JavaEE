@@ -1,6 +1,7 @@
 package erp.base.schema.res.partner;
 
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.typeconversion.Convert;
@@ -18,6 +19,13 @@ import jakarta.validation.constraints.NotNull;
 @Description("Partner Title")
 @NodeEntity("Partner Title")
 public class Title {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
 	/**
 	 * 
@@ -51,5 +59,13 @@ public class Title {
 
 	public void setShortcut(String shortcut) {
 		this.shortcut = shortcut;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

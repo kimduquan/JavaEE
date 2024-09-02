@@ -1,6 +1,7 @@
 package erp.base.schema.ir;
 
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
@@ -21,7 +22,17 @@ import jakarta.validation.constraints.NotNull;
 @Description("Default Values")
 @NodeEntity("Default Values")
 public class Default {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
+	/**
+	 * 
+	 */
 	@Column(nullable = false)
 	@ManyToOne(targetEntity = Fields.class)
 	@NotNull
@@ -30,6 +41,9 @@ public class Default {
 	@Relationship(type = "FIELD")
 	private String field_id;
 	
+	/**
+	 * 
+	 */
 	@Column
 	@ManyToOne(targetEntity = Users.class)
 	@Description("User")
@@ -37,6 +51,9 @@ public class Default {
 	@Relationship(type = "USER")
 	private String user_id;
 	
+	/**
+	 * 
+	 */
 	@Column
 	@ManyToOne(targetEntity = Company.class)
 	@Description("Company")
@@ -44,11 +61,17 @@ public class Default {
 	@Relationship(type = "COMPANY")
 	private String company_id;
 	
+	/**
+	 * 
+	 */
 	@Column
 	@Description("Condition")
 	@Property
 	private String condition;
 	
+	/**
+	 * 
+	 */
 	@Column(nullable = false)
 	@NotNull
 	@Description("Default Value (JSON format)")
@@ -93,5 +116,13 @@ public class Default {
 
 	public void setJson_value(String json_value) {
 		this.json_value = json_value;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

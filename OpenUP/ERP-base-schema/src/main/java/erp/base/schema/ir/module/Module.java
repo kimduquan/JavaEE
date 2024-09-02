@@ -3,6 +3,7 @@ package erp.base.schema.ir.module;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
@@ -25,6 +26,13 @@ import jakarta.validation.constraints.NotNull;
 @Description("Module")
 @NodeEntity("Module")
 public class Module {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
 	/**
 	 * 
@@ -520,5 +528,13 @@ public class Module {
 
 	public void setHas_iap(Boolean has_iap) {
 		this.has_iap = has_iap;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

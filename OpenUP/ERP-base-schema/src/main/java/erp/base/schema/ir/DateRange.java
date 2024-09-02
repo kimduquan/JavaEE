@@ -2,6 +2,7 @@ package erp.base.schema.ir;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
@@ -19,6 +20,13 @@ import jakarta.validation.constraints.NotNull;
 @Description("Sequence Date Range")
 @NodeEntity("Sequence Date Range")
 public class DateRange {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
 	/**
 	 * 
@@ -104,5 +112,13 @@ public class DateRange {
 
 	public void setNumber_next_actual(Integer number_next_actual) {
 		this.number_next_actual = number_next_actual;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

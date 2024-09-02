@@ -3,10 +3,10 @@ package erp.base.schema.res.currency;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
-
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -25,6 +25,13 @@ import jakarta.validation.constraints.NotNull;
 @Description("Currency")
 @NodeEntity("Currency")
 public class Currency {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
 	/**
 	 * 
@@ -267,5 +274,13 @@ public class Currency {
 
 	public void setIs_current_company_currency(Boolean is_current_company_currency) {
 		this.is_current_company_currency = is_current_company_currency;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

@@ -3,10 +3,10 @@ package erp.base.schema.ir.ui;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
-
 import erp.base.schema.ir.model.Model;
 import erp.base.schema.res.groups.Groups;
 import erp.base.schema.ir.model.Data;
@@ -30,6 +30,13 @@ import jakarta.validation.constraints.NotNull;
 @Description("View")
 @NodeEntity("View")
 public class View {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 	
 	/**
 	 * 
@@ -351,5 +358,13 @@ public class View {
 
 	public void setModel_id(String model_id) {
 		this.model_id = model_id;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

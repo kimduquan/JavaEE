@@ -2,6 +2,7 @@ package erp.base.schema.ir.exports;
 
 import java.util.List;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
@@ -20,6 +21,13 @@ import jakarta.persistence.Table;
 @Description("Exports")
 @NodeEntity("Exports")
 public class Exports {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
 	/**
 	 * 
@@ -70,5 +78,13 @@ public class Exports {
 
 	public void setExport_fields(List<String> export_fields) {
 		this.export_fields = export_fields;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

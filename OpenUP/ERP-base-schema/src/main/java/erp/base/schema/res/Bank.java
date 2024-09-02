@@ -2,6 +2,7 @@ package erp.base.schema.res;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
@@ -23,6 +24,13 @@ import jakarta.validation.constraints.NotNull;
 @Description("Bank")
 @NodeEntity("Bank")
 public class Bank {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
 	/**
 	 * 
@@ -196,5 +204,13 @@ public class Bank {
 
 	public void setBic(String bic) {
 		this.bic = bic;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

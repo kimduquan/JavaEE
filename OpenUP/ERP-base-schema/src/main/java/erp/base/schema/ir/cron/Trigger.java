@@ -1,6 +1,7 @@
 package erp.base.schema.ir.cron;
 
 import org.eclipse.microprofile.graphql.Description;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
@@ -17,6 +18,13 @@ import jakarta.persistence.Table;
 @Description("Triggered actions")
 @NodeEntity("Triggered actions")
 public class Trigger {
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Id
+	@Id
+	private int id;
 
 	/**
 	 * 
@@ -48,5 +56,13 @@ public class Trigger {
 
 	public void setCall_at(String call_at) {
 		this.call_at = call_at;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }
