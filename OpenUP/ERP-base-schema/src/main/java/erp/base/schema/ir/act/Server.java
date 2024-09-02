@@ -6,6 +6,7 @@ import org.eclipse.microprofile.graphql.Description;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.ogm.annotation.typeconversion.Convert;
 import erp.base.schema.ir.model.Model;
 import erp.base.schema.ir.actions.Actions;
@@ -20,6 +21,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -30,7 +32,8 @@ import jakarta.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "ir_act_server")
-@NodeEntity
+@Description("Server Actions")
+@NodeEntity("Server Actions")
 public class Server extends Actions {
 
 	/**
@@ -88,24 +91,36 @@ public class Server extends Actions {
 	 * 
 	 */
 	@Column(nullable = false)
-	@ManyToOne(targetEntity = Model.class)
 	@NotNull
 	@Description("Model")
-	@Property
-	@Relationship(type = "MODEL")
+	@Transient
 	private String model_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Model.class)
+	@JoinColumn(name = "model_id", nullable = false)
+	@NotNull
+	@Relationship(type = "MODEL")
+	private Model model;
 	
 	/**
 	 * 
 	 */
-	@Column
-	@ManyToMany(targetEntity = Model.class)
 	@ElementCollection(targetClass = Model.class)
 	@CollectionTable(name = "ir_model")
 	@Description("Available Models")
-	@Property
-	@Relationship(type = "AVAILABLE_MODELS")
+	@Transient
 	private List<String> available_model_ids;
+
+	/**
+	 * 
+	 */
+	@ManyToMany(targetEntity = Model.class)
+	@JoinTable(name = "ir_model")
+	@Relationship(type = "AVAILABLE_MODELS")
+	private List<Model> available_models;
 	
 	/**
 	 * 
@@ -126,27 +141,39 @@ public class Server extends Actions {
 	/**
 	 * 
 	 */
-	@Column
-	@ManyToMany(targetEntity = Server.class)
 	@ElementCollection(targetClass = Server.class)
-	@CollectionTable(joinColumns = {
-			@JoinColumn(name = "server_id"),
-			@JoinColumn(name = "action_id")
+	@CollectionTable(name = "rel_server_actions", joinColumns = {
+			@JoinColumn(name = "server_id", referencedColumnName = "action_id")
 	})
 	@Description("Child Actions")
-	@Property
-	@Relationship(type = "CHILD_ACTIONS")
+	@Transient
 	private List<String> child_ids;
+
+	/**
+	 * 
+	 */
+	@ManyToMany(targetEntity = Server.class)
+	@JoinTable(name = "rel_server_actions", joinColumns = {
+			@JoinColumn(name = "server_id", referencedColumnName = "action_id")
+	})
+	@Relationship(type = "CHILD_ACTIONS")
+	private List<Server> childs;
 	
 	/**
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Model.class)
 	@Description("Record to Create")
-	@Property
-	@Relationship(type = "CRUD_MODEL")
+	@Transient
 	private String crud_model_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Model.class)
+	@JoinColumn(name = "crud_model_id")
+	@Relationship(type = "CRUD_MODEL")
+	private Model crud_model;
 	
 	/**
 	 * 
@@ -160,33 +187,54 @@ public class Server extends Actions {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Fields.class)
 	@Description("Link Field")
-	@Property
-	@Relationship(type = "LINK_FIELD")
+	@Transient
 	private String link_field_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Fields.class)
+	@JoinColumn(name = "link_field_id")
+	@Relationship(type = "LINK_FIELD")
+	private String link_field;
 	
 	/**
 	 * 
 	 */
-	@Column
-	@ManyToMany(targetEntity = Groups.class)
 	@ElementCollection(targetClass = Groups.class)
-	@CollectionTable(name = "res_groups")
+	@CollectionTable(name = "ir_act_server_group_rel", joinColumns = {
+			@JoinColumn(name = "act_id", referencedColumnName = "gid")
+	})
 	@Description("Allowed Groups")
-	@Property
-	@Relationship(type = "GROUPS")
+	@Transient
 	private List<String> groups_id;
 	
 	/**
 	 * 
 	 */
+	@ManyToMany(targetEntity = Groups.class)
+	@JoinTable(name = "ir_act_server_group_rel", joinColumns = {
+			@JoinColumn(name = "act_id", referencedColumnName = "gid")
+	})
+	@Relationship(type = "GROUPS")
+	private List<Groups> groups;
+	
+	/**
+	 * 
+	 */
 	@Column
-	@ManyToOne(targetEntity = Fields.class)
 	@Description("Field to Update")
-	@Property
-	@Relationship(type = "UPDATE_FIELD")
+	@Transient
 	private String update_field_id;
+	
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Fields.class)
+	@JoinColumn(name = "update_field_id")
+	@Relationship(type = "UPDATE_FIELD")
+	private Fields update_field;
 	
 	/**
 	 * 
@@ -200,10 +248,16 @@ public class Server extends Actions {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Model.class)
-	@Property
-	@Relationship(type = "UPDATE_RELATED_MODEL")
+	@Transient
 	private String update_related_model_id;
+	
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Model.class)
+	@JoinColumn(name = "update_related_model_id")
+	@Relationship(type = "UPDATE_RELATED_MODEL")
+	private Model update_related_model;
 	
 	/**
 	 * 
@@ -261,12 +315,10 @@ public class Server extends Actions {
 	/**
 	 * 
 	 */
-	@Column
 	@ManyToOne(targetEntity = Selection.class)
 	@Description("Custom Value")
-	@Property
-	@Relationship(type = "SELECTION_VALUE")
-	private String selection_value;
+	@Relationship(type = "CUSTOM_VALUE")
+	private Selection selection_value;
 	
 	/**
 	 * 
@@ -287,12 +339,23 @@ public class Server extends Actions {
 	/**
 	 * 
 	 */
-	@Column
-	@ManyToMany(targetEntity = Fields.class)
+	@ElementCollection(targetClass = Fields.class)
+	@CollectionTable(name = "ir_act_server_webhook_field_rel", joinColumns = {
+			@JoinColumn(name = "server_id", referencedColumnName = "field_id")
+	})
 	@Description("Webhook Fields")
-	@Property
-	@Relationship(type = "WEBHOOK_FIELDS")
+	@Transient
 	private List<String> webhook_field_ids;
+
+	/**
+	 * 
+	 */
+	@ManyToMany(targetEntity = Fields.class)
+	@JoinTable(name = "ir_act_server_webhook_field_rel", joinColumns = {
+			@JoinColumn(name = "server_id", referencedColumnName = "field_id")
+	})
+	@Relationship(type = "WEBHOOK_FIELDS")
+	private List<Fields> webhook_fields;
 	
 	/**
 	 * 
@@ -486,11 +549,11 @@ public class Server extends Actions {
 		this.resource_ref = resource_ref;
 	}
 
-	public String getSelection_value() {
+	public Selection getSelection_value() {
 		return selection_value;
 	}
 
-	public void setSelection_value(String selection_value) {
+	public void setSelection_value(Selection selection_value) {
 		this.selection_value = selection_value;
 	}
 
@@ -524,5 +587,77 @@ public class Server extends Actions {
 
 	public void setWebhook_sample_payload(String webhook_sample_payload) {
 		this.webhook_sample_payload = webhook_sample_payload;
+	}
+
+	public Model getModel() {
+		return model;
+	}
+
+	public void setModel(Model model) {
+		this.model = model;
+	}
+
+	public List<Model> getAvailable_models() {
+		return available_models;
+	}
+
+	public void setAvailable_models(List<Model> available_models) {
+		this.available_models = available_models;
+	}
+
+	public List<Server> getChilds() {
+		return childs;
+	}
+
+	public void setChilds(List<Server> childs) {
+		this.childs = childs;
+	}
+
+	public Model getCrud_model() {
+		return crud_model;
+	}
+
+	public void setCrud_model(Model crud_model) {
+		this.crud_model = crud_model;
+	}
+
+	public String getLink_field() {
+		return link_field;
+	}
+
+	public void setLink_field(String link_field) {
+		this.link_field = link_field;
+	}
+
+	public List<Groups> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(List<Groups> groups) {
+		this.groups = groups;
+	}
+
+	public Fields getUpdate_field() {
+		return update_field;
+	}
+
+	public void setUpdate_field(Fields update_field) {
+		this.update_field = update_field;
+	}
+
+	public Model getUpdate_related_model() {
+		return update_related_model;
+	}
+
+	public void setUpdate_related_model(Model update_related_model) {
+		this.update_related_model = update_related_model;
+	}
+
+	public List<Fields> getWebhook_fields() {
+		return webhook_fields;
+	}
+
+	public void setWebhook_fields(List<Fields> webhook_fields) {
+		this.webhook_fields = webhook_fields;
 	}
 }

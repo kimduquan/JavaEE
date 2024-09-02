@@ -7,12 +7,15 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.ogm.annotation.typeconversion.Convert;
 import erp.schema.util.NameAttributeConverter;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -57,23 +60,35 @@ public class Category {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Category.class)
 	@Description("Parent Category")
-	@Property
-	@Relationship("PARENT")
+	@Transient
 	private String parent_id;
 	
 	/**
 	 * 
 	 */
-	@Column
-	@OneToMany(targetEntity = Category.class)
+	@ManyToOne(targetEntity = Category.class)
+	@JoinColumn(name = "parent_id")
+	@Relationship("PARENT_CATEGORY")
+	private Category parent;
+	
+	/**
+	 * 
+	 */
 	@ElementCollection(targetClass = Category.class)
-	@CollectionTable(name = "res_partner_category")
+	@CollectionTable(name = "res_partner_category", joinColumns = {
+			@JoinColumn(name = "parent_id")
+	})
 	@Description("Child Tags")
-	@Property
-	@Relationship("CHILDS")
+	@Transient
 	private List<String> child_ids;
+
+	/**
+	 * 
+	 */
+	@OneToMany(targetEntity = Category.class, mappedBy = "parent_id")
+	@Relationship("CHILD_TAGS")
+	private List<String> childs;
 	
 	/**
 	 * 
@@ -94,14 +109,25 @@ public class Category {
 	/**
 	 * 
 	 */
-	@Column
-	@ManyToMany(targetEntity = Partner.class)
 	@ElementCollection(targetClass = Partner.class)
-	@CollectionTable(name = "res_partner")
+	@CollectionTable(name = "res_partner", joinColumns = {
+			@JoinColumn(name = "category_id"),
+			@JoinColumn(name = "partner_id")
+	})
 	@Description("Partners")
-	@Property
-	@Relationship(type = "PARTNERS")
+	@Transient
 	private List<String> partner_ids;
+
+	/**
+	 * 
+	 */
+	@ManyToMany(targetEntity = Partner.class)
+	@JoinTable(name = "res_partner", joinColumns = {
+			@JoinColumn(name = "category_id"),
+			@JoinColumn(name = "partner_id")
+	})
+	@Relationship(type = "PARTNERS")
+	private List<Partner> partners;
 
 	public String getName() {
 		return name;
@@ -165,5 +191,29 @@ public class Category {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Category getParent() {
+		return parent;
+	}
+
+	public void setParent(Category parent) {
+		this.parent = parent;
+	}
+
+	public List<String> getChilds() {
+		return childs;
+	}
+
+	public void setChilds(List<String> childs) {
+		this.childs = childs;
+	}
+
+	public List<Partner> getPartners() {
+		return partners;
+	}
+
+	public void setPartners(List<Partner> partners) {
+		this.partners = partners;
 	}
 }

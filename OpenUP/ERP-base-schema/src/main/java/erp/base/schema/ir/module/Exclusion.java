@@ -5,10 +5,12 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -18,7 +20,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "ir_module_module_exclusion")
 @Description("Module exclusion")
-@NodeEntity("Exclusion")
+@NodeEntity("Module Exclusion")
 public class Exclusion {
 	
 	/**
@@ -39,21 +41,33 @@ public class Exclusion {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Module.class)
 	@Description("Module")
-	@Property
-	@Relationship(type = "MODULE")
+	@Transient
 	private String module_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Module.class)
+	@JoinColumn(name = "module_id")
+	@Relationship(type = "MODULE")
+	private Module module;
 	
 	/**
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Module.class)
 	@Description("Exclusion Module")
-	@Property
-	@Relationship(type = "EXCLUSION")
+	@Transient
 	private String exclusion_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Module.class)
+	@JoinColumn(name = "exclusion_id")
+	@Relationship(type = "EXCLUSION_MODULE")
+	private Module exclusion;
 	
 	/**
 	 * 
@@ -102,5 +116,21 @@ public class Exclusion {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Module getModule() {
+		return module;
+	}
+
+	public void setModule(Module module) {
+		this.module = module;
+	}
+
+	public Module getExclusion() {
+		return exclusion;
+	}
+
+	public void setExclusion(Module exclusion) {
+		this.exclusion = exclusion;
 	}
 }

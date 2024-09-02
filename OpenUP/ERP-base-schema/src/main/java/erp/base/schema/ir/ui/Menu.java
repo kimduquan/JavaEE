@@ -7,6 +7,7 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.ogm.annotation.typeconversion.Convert;
 import erp.base.schema.res.groups.Groups;
 import erp.schema.util.NameAttributeConverter;
@@ -20,6 +21,8 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -67,23 +70,35 @@ public class Menu {
 	/**
 	 * 
 	 */
-	@Column
-	@OneToMany(targetEntity = Menu.class)
 	@ElementCollection(targetClass = Menu.class)
-	@CollectionTable(name = "ir_ui_menu")
+	@CollectionTable(name = "ir_ui_menu", joinColumns = {
+			@JoinColumn(name = "parent_id")
+	})
 	@Description("Child IDs")
-	@Property
-	@Relationship(type = "CHILDS")
+	@Transient
 	private String child_id;
+
+	/**
+	 * 
+	 */
+	@OneToMany(targetEntity = Menu.class, mappedBy = "parent_id")
+	@Relationship(type = "CHILD_IDS")
+	private List<Menu> childs;
 	
 	/**
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Menu.class)
-	@Property
-	@Relationship(type = "PARENT")
+	@Transient
 	private String parent_id;
+	
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Menu.class)
+	@JoinColumn(name = "parent_id")
+	@Relationship(type = "PARENT")
+	private Menu parent;
 	
 	/**
 	 * 
@@ -95,14 +110,23 @@ public class Menu {
 	/**
 	 * 
 	 */
-	@Column
-	@ManyToMany(targetEntity = Groups.class)
 	@ElementCollection(targetClass = Groups.class)
-	@CollectionTable(name = "res_groups")
+	@CollectionTable(name = "ir_ui_menu_group_rel", joinColumns = {
+			@JoinColumn(name = "menu_id", referencedColumnName = "gid")
+	})
 	@Description("Groups")
-	@Property
-	@Relationship(type = "GROUPS")
+	@Transient
 	private List<String> groups_id;
+	
+	/**
+	 * 
+	 */
+	@ManyToMany(targetEntity = Groups.class)
+	@JoinTable(name = "ir_ui_menu_group_rel", joinColumns = {
+			@JoinColumn(name = "menu_id", referencedColumnName = "gid")
+	})
+	@Relationship(type = "GROUPS")
+	private List<Groups> groups;
 	
 	/**
 	 * 
@@ -230,5 +254,29 @@ public class Menu {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public List<Menu> getChilds() {
+		return childs;
+	}
+
+	public void setChilds(List<Menu> childs) {
+		this.childs = childs;
+	}
+
+	public Menu getParent() {
+		return parent;
+	}
+
+	public void setParent(Menu parent) {
+		this.parent = parent;
+	}
+
+	public List<Groups> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(List<Groups> groups) {
+		this.groups = groups;
 	}
 }

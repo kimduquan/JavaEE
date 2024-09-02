@@ -58,9 +58,8 @@ public class Constraint {
 	@Column(nullable = false)
 	@ManyToOne(targetEntity = Model.class)
 	@NotNull
-	@Property
 	@Relationship(type = "MODEL")
-	private String model;
+	private Model model;
 	
 	/**
 	 * 
@@ -68,9 +67,8 @@ public class Constraint {
 	@Column(nullable = false)
 	@ManyToOne(targetEntity = Module.class)
 	@NotNull
-	@Property
 	@Relationship(type = "MODULE")
-	private String module;
+	private Module module;
 	
 	/**
 	 * 
@@ -119,19 +117,19 @@ public class Constraint {
 		this.message = message;
 	}
 
-	public String getModel() {
+	public Model getModel() {
 		return model;
 	}
 
-	public void setModel(String model) {
+	public void setModel(Model model) {
 		this.model = model;
 	}
 
-	public String getModule() {
+	public Module getModule() {
 		return module;
 	}
 
-	public void setModule(String module) {
+	public void setModule(Module module) {
 		this.module = module;
 	}
 

@@ -6,12 +6,14 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import erp.base.schema.ir.model.Model;
 import erp.base.schema.res.Company;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -77,21 +79,33 @@ public class Attachment {
 	 * 
 	 */
 	@Column(updatable = false)
-	@ManyToOne(targetEntity = Model.class)
 	@Description("Resource ID")
-	@Property
-	@Relationship(type = "RESOURCE")
+	@Transient
 	private String res_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Model.class)
+	@JoinColumn(name = "res_id", updatable = false)
+	@Relationship(type = "RESOURCE")
+	private Model resource;
 	
 	/**
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Company.class)
 	@Description("Company")
-	@Property
-	@Relationship(type = "COMPANY")
+	@Transient
 	private String company_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Company.class)
+	@JoinColumn(name = "company_id")
+	@Relationship(type = "COMPANY")
+	private Company company;
 	
 	/**
 	 * 
@@ -350,5 +364,21 @@ public class Attachment {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Model getResource() {
+		return resource;
+	}
+
+	public void setResource(Model resource) {
+		this.resource = resource;
+	}
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
 	}
 }

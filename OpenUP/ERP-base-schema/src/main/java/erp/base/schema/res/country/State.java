@@ -5,8 +5,10 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -31,12 +33,19 @@ public class State {
 	 * 
 	 */
 	@Column(nullable = false)
-	@ManyToOne(targetEntity = Country.class)
 	@NotNull
 	@Description("Country")
-	@Property
-	@Relationship(type = "COUNTRY")
+	@Transient
 	private String country_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Country.class)
+	@JoinColumn(name = "country_id", nullable = false)
+	@NotNull
+	@Relationship(type = "COUNTRY")
+	private Country country;
 	
 	/**
 	 * 
@@ -86,5 +95,13 @@ public class State {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Country getCountry() {
+		return country;
+	}
+
+	public void setCountry(Country country) {
+		this.country = country;
 	}
 }

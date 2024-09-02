@@ -6,12 +6,14 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.ogm.annotation.typeconversion.Convert;
 import erp.schema.util.NameAttributeConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -36,12 +38,19 @@ public class Todo {
 	 * 
 	 */
 	@Column(nullable = false)
-	@ManyToOne(targetEntity = Actions.class)
 	@NotNull
 	@Description("Action")
-	@Property
-	@Relationship(type = "Action")
+	@Transient
 	private String action_id;
+	
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Actions.class)
+	@JoinColumn(name = "action_id", nullable = false)
+	@NotNull
+	@Relationship(type = "Action")
+	private Actions action;
 	
 	/**
 	 * 
@@ -108,5 +117,13 @@ public class Todo {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Actions getAction() {
+		return action;
+	}
+
+	public void setAction(Actions action) {
+		this.action = action;
 	}
 }

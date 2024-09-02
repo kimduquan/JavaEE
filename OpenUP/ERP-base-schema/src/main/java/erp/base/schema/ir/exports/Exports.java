@@ -6,9 +6,7 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
-import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -47,14 +45,10 @@ public class Exports {
 	/**
 	 * 
 	 */
-	@Column
-	@OneToMany(targetEntity = ExportsLine.class)
-	@ElementCollection(targetClass = ExportsLine.class)
-	@CollectionTable
+	@OneToMany(targetEntity = ExportsLine.class, mappedBy = "export_id")
 	@Description("Export")
-	@Property
 	@Relationship(type = "EXPORT")
-	private List<String> export_fields;
+	private List<ExportsLine> export_fields;
 
 	public String getName() {
 		return name;
@@ -72,11 +66,11 @@ public class Exports {
 		this.resource = resource;
 	}
 
-	public List<String> getExport_fields() {
+	public List<ExportsLine> getExport_fields() {
 		return export_fields;
 	}
 
-	public void setExport_fields(List<String> export_fields) {
+	public void setExport_fields(List<ExportsLine> export_fields) {
 		this.export_fields = export_fields;
 	}
 

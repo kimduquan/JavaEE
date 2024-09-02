@@ -8,6 +8,7 @@ import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Relationship.Direction;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.ogm.annotation.typeconversion.Convert;
 import erp.base.schema.ir.ui.View;
 import erp.base.schema.report.PaperFormat;
@@ -23,6 +24,8 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -75,33 +78,49 @@ public class Company {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Company.class)
-	@Property
-	@Relationship(type = "PARENT")
+	@Transient
 	private String parent_id;
 	
 	/**
 	 * 
 	 */
-	@Column
-	@OneToMany(targetEntity =  Company.class)
-	@ElementCollection(targetClass = Company.class)
-	@CollectionTable(name = "res_company")
-	@Description("Branches")
-	@Property
-	@Relationship(type = "CHILDS", direction = Direction.INCOMING)
-	private List<String> child_ids;
+	@ManyToOne(targetEntity = Company.class)
+	@JoinColumn(name = "parent_id")
+	@Relationship(type = "PARENT")
+	private Company parent;
 	
 	/**
 	 * 
 	 */
-	@Column
-	@OneToMany(targetEntity =  Company.class)
+	@ElementCollection(targetClass = Company.class)
+	@CollectionTable(name = "res_company", joinColumns = {
+			@JoinColumn(name = "parent_id")
+	})
+	@Description("Branches")
+	@Transient
+	private List<String> child_ids;
+
+	/**
+	 * 
+	 */
+	@OneToMany(targetEntity =  Company.class, mappedBy = "parent_id")
+	@Relationship(type = "BRANCHES")
+	private List<Company> childs;
+	
+	/**
+	 * 
+	 */
 	@ElementCollection(targetClass = Company.class)
 	@CollectionTable(name = "res_company")
-	@Property
-	@Relationship(type = "ALL_CHILDS", direction = Direction.INCOMING)
+	@Transient
 	private List<String> all_child_ids;
+
+	/**
+	 * 
+	 */
+	@OneToMany(targetEntity =  Company.class, mappedBy = "parent_id")
+	@Relationship(type = "ALL_CHILDS", direction = Direction.INCOMING)
+	private List<Company> all_childs;
 	
 	/**
 	 * 
@@ -112,33 +131,50 @@ public class Company {
 	/**
 	 * 
 	 */
-	@Column
-	@OneToMany(targetEntity =  Company.class)
 	@ElementCollection(targetClass = Company.class)
 	@CollectionTable(name = "res_company")
-	@Property
-	@Relationship(type = "PARENTS")
+	@Transient
 	private List<String> parent_ids;
 	
 	/**
 	 * 
 	 */
+	@OneToMany(targetEntity =  Company.class)
+	@Relationship(type = "PARENTS")
+	private List<Company> parents;
+	
+	/**
+	 * 
+	 */
 	@Column
-	@ManyToOne(targetEntity = Company.class)
-	@Property
-	@Relationship(type = "ROOT")
+	@Transient
 	private String root_id;
 	
 	/**
 	 * 
 	 */
+	@ManyToOne(targetEntity = Company.class)
+	@JoinColumn(name = "root_id")
+	@Relationship(type = "ROOT")
+	private Company root;
+	
+	/**
+	 * 
+	 */
 	@Column(nullable = false)
-	@ManyToOne(targetEntity = Partner.class)
 	@NotNull
 	@Description("Partner")
-	@Property
-	@Relationship(type = "PARTNER")
+	@Transient
 	private String partner_id;
+	
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Partner.class)
+	@JoinColumn(name = "partner_id", nullable = false)
+	@NotNull
+	@Relationship(type = "PARTNER")
+	private Partner partner;
 	
 	/**
 	 * 
@@ -197,23 +233,39 @@ public class Company {
 	 * 
 	 */
 	@Column(nullable = false)
-	@ManyToOne(targetEntity = Currency.class)
 	@NotNull
-	@Property
-	@Relationship(type = "CURRENCY")
+	@Transient
 	private String currency_id;
 	
 	/**
 	 * 
 	 */
-	@Column
-	@ManyToMany(targetEntity = Users.class)
+	@ManyToOne(targetEntity = Currency.class)
+	@JoinColumn(name = "currency_id", nullable = false)
+	@NotNull
+	@Relationship(type = "CURRENCY")
+	private Currency currency;
+	
+	/**
+	 * 
+	 */
 	@ElementCollection(targetClass = Users.class)
-	@CollectionTable(name = "res_users")
+	@CollectionTable(name = "res_company_users_rel", joinColumns = {
+			@JoinColumn(name = "cid", referencedColumnName = "user_id")
+	})
 	@Description("Accepted Users")
-	@Property
-	@Relationship(type = "USERS")
+	@Transient
 	private List<String> user_ids;
+
+	/**
+	 * 
+	 */
+	@ManyToMany(targetEntity = Users.class)
+	@JoinTable(name = "res_company_users_rel", joinColumns = {
+			@JoinColumn(name = "cid", referencedColumnName = "user_id")
+	})
+	@Relationship(type = "ACCEPTED_USERS")
+	private List<Users> users;
 	
 	/**
 	 * 
@@ -240,29 +292,46 @@ public class Company {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = State.class)
 	@Description("Fed. State")
-	@Property
-	@Relationship(type = "STATE")
+	@Transient
 	private String state_id;
 	
 	/**
 	 * 
 	 */
-	@Column
-	@OneToMany
-	@Property
-	@Relationship(type = "BANKS")
-	private List<String> bank_ids;
+	@ManyToOne(targetEntity = State.class)
+	@JoinColumn(name = "state_id")
+	@Relationship(type = "FED_STATE")
+	private State state;
 	
 	/**
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Country.class)
-	@Property
-	@Relationship(type = "COUNTRY")
+	@Transient
+	private List<String> bank_ids;
+	
+	/**
+	 * 
+	 */
+	@OneToMany(targetEntity = Bank.class)
+	@Relationship(type = "BANKS")
+	private List<Bank> banks;
+	
+	/**
+	 * 
+	 */
+	@Column
+	@Transient
 	private String country_id;
+	
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Country.class)
+	@JoinColumn(name = "country_id")
+	@Relationship(type = "COUNTRY")
+	private Country country;
 	
 	/**
 	 * 
@@ -312,21 +381,33 @@ public class Company {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = PaperFormat.class)
 	@Description("Paper format")
-	@Property
-	@Relationship(type = "PAPER_FORMAT")
+	@Transient
 	private String paperformat_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = PaperFormat.class)
+	@JoinColumn(name = "paperformat_id")
+	@Relationship(type = "PAPER_FORMAT")
+	private PaperFormat paperformat;
 	
 	/**
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = View.class)
 	@Description("Document Template")
-	@Property
-	@Relationship(type = "EXTERNAL_REPORT_LAYOUT")
+	@Transient
 	private String external_report_layout_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = View.class)
+	@JoinColumn(name = "external_report_layout_id")
+	@Relationship(type = "DOCUMENT_TEMPLATE")
+	private View external_report_layout;
 	
 	/**
 	 * 
@@ -694,5 +775,109 @@ public class Company {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Company getParent() {
+		return parent;
+	}
+
+	public void setParent(Company parent) {
+		this.parent = parent;
+	}
+
+	public List<Company> getChilds() {
+		return childs;
+	}
+
+	public void setChilds(List<Company> childs) {
+		this.childs = childs;
+	}
+
+	public List<Company> getAll_childs() {
+		return all_childs;
+	}
+
+	public void setAll_childs(List<Company> all_childs) {
+		this.all_childs = all_childs;
+	}
+
+	public List<Company> getParents() {
+		return parents;
+	}
+
+	public void setParents(List<Company> parents) {
+		this.parents = parents;
+	}
+
+	public Company getRoot() {
+		return root;
+	}
+
+	public void setRoot(Company root) {
+		this.root = root;
+	}
+
+	public Partner getPartner() {
+		return partner;
+	}
+
+	public void setPartner(Partner partner) {
+		this.partner = partner;
+	}
+
+	public Currency getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(Currency currency) {
+		this.currency = currency;
+	}
+
+	public List<Users> getUsers() {
+		return users;
+	}
+
+	public void setUsers(List<Users> users) {
+		this.users = users;
+	}
+
+	public State getState() {
+		return state;
+	}
+
+	public void setState(State state) {
+		this.state = state;
+	}
+
+	public List<Bank> getBanks() {
+		return banks;
+	}
+
+	public void setBanks(List<Bank> banks) {
+		this.banks = banks;
+	}
+
+	public Country getCountry() {
+		return country;
+	}
+
+	public void setCountry(Country country) {
+		this.country = country;
+	}
+
+	public PaperFormat getPaperformat() {
+		return paperformat;
+	}
+
+	public void setPaperformat(PaperFormat paperformat) {
+		this.paperformat = paperformat;
+	}
+
+	public View getExternal_report_layout() {
+		return external_report_layout;
+	}
+
+	public void setExternal_report_layout(View external_report_layout) {
+		this.external_report_layout = external_report_layout;
 	}
 }

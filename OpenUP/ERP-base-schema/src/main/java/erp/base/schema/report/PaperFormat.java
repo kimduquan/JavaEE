@@ -7,6 +7,7 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import erp.base.schema.ir.act.Report;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -16,6 +17,8 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -162,14 +165,23 @@ public class PaperFormat {
 	/**
 	 * 
 	 */
-	@Column
-	@OneToMany(targetEntity = Report.class)
 	@ElementCollection(targetClass = Report.class)
-	@CollectionTable(name = "ir_actions_report")
+	@CollectionTable(name = "ir_actions_report", joinColumns = {
+			@JoinColumn(name = "paperformat_id")
+	})
 	@Description("Associated reports")
-	@Property
-	@Relationship(type = "REPORTS")
+	@Transient
 	private List<String> report_ids;
+	
+	/**
+	 * 
+	 */
+	@OneToMany(targetEntity = Report.class)
+	@JoinTable(name = "ir_actions_report", joinColumns = {
+			@JoinColumn(name = "paperformat_id")
+	})
+	@Relationship(type = "ASSOCIATED_REPORTS")
+	private List<Report> reports;
 	
 	/**
 	 * 
@@ -329,5 +341,13 @@ public class PaperFormat {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public List<Report> getReports() {
+		return reports;
+	}
+
+	public void setReports(List<Report> reports) {
+		this.reports = reports;
 	}
 }

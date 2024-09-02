@@ -7,6 +7,7 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.ogm.annotation.typeconversion.Convert;
 import erp.base.schema.ir.ui.View;
 import erp.base.schema.res.currency.Currency;
@@ -17,6 +18,8 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -71,21 +74,33 @@ public class Country {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = View.class)
 	@Description("Input View")
-	@Property
-	@Relationship(type = "ADDRESS_VIEW")
+	@Transient
 	private String address_view_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = View.class)
+	@JoinColumn(name = "address_view_id")
+	@Relationship(type = "INPUT_VIEW")
+	private View address_view;
 	
 	/**
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Currency.class)
 	@Description("Currency")
-	@Property
-	@Relationship(type = "CURRENCY")
+	@Transient
 	private String currency_id;
+	
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Currency.class)
+	@JoinColumn(name = "currency_id")
+	@Relationship(type = "CURRENCY")
+	private Currency currency;
 	
 	/**
 	 * 
@@ -106,26 +121,41 @@ public class Country {
 	/**
 	 * 
 	 */
-	@Column
-	@ManyToMany(targetEntity = Group.class)
 	@ElementCollection(targetClass = Group.class)
-	@CollectionTable(name = "res_country_group")
+	@CollectionTable(name = "res_country_res_country_group_rel", joinColumns = {
+			@JoinColumn(name = "res_country_id", referencedColumnName = "res_country_group_id")
+	})
 	@Description("Country Groups")
-	@Property
-	@Relationship(type = "COUNTRY_GROUPS")
+	@Transient
 	private List<String> country_group_ids;
 	
 	/**
 	 * 
 	 */
-	@Column
-	@OneToMany(targetEntity = State.class)
+	@ManyToMany(targetEntity = Group.class)
+	@JoinTable(name = "res_country_res_country_group_rel", joinColumns = {
+			@JoinColumn(name = "res_country_id", referencedColumnName = "res_country_group_id")
+	})
+	@Relationship(type = "COUNTRY_GROUPS")
+	private List<Group> country_groups;
+	
+	/**
+	 * 
+	 */
 	@ElementCollection(targetClass = State.class)
-	@CollectionTable(name = "res_country_state")
+	@CollectionTable(name = "res_country_state", joinColumns = {
+			@JoinColumn(name = "country_id")
+	})
 	@Description("States")
-	@Property
-	@Relationship(type = "STATES")
+	@Transient
 	private List<String> state_ids;
+
+	/**
+	 * 
+	 */
+	@OneToMany(targetEntity = State.class, mappedBy = "country_id")
+	@Relationship(type = "STATES")
+	private List<State> states;
 	
 	/**
 	 * 
@@ -271,5 +301,37 @@ public class Country {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public View getAddress_view() {
+		return address_view;
+	}
+
+	public void setAddress_view(View address_view) {
+		this.address_view = address_view;
+	}
+
+	public Currency getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(Currency currency) {
+		this.currency = currency;
+	}
+
+	public List<Group> getCountry_groups() {
+		return country_groups;
+	}
+
+	public void setCountry_groups(List<Group> country_groups) {
+		this.country_groups = country_groups;
+	}
+
+	public List<State> getStates() {
+		return states;
+	}
+
+	public void setStates(List<State> states) {
+		this.states = states;
 	}
 }

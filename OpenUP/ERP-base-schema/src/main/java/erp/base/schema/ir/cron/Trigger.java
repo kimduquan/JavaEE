@@ -5,8 +5,10 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -30,10 +32,16 @@ public class Trigger {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Cron.class)
-	@Property
-	@Relationship(type = "CRON")
+	@Transient
 	private String cron_id;
+	
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Cron.class)
+	@JoinColumn(name = "cron_id")
+	@Relationship(type = "CRON")
+	private Cron cron;
 	
 	/**
 	 * 
@@ -64,5 +72,13 @@ public class Trigger {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Cron getCron() {
+		return cron;
+	}
+
+	public void setCron(Cron cron) {
+		this.cron = cron;
 	}
 }

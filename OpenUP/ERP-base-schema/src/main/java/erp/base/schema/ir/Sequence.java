@@ -7,6 +7,7 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import erp.base.schema.res.Company;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -14,6 +15,7 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -128,11 +130,17 @@ public class Sequence {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Company.class)
 	@Description("Company")
-	@Property
-	@Relationship(type = "COMPANY")
+	@Transient
 	private String company_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Company.class)
+	@JoinColumn(name = "company_id")
+	@Relationship(type = "COMPANY")
+	private Company company;
 	
 	/**
 	 * 
@@ -145,14 +153,20 @@ public class Sequence {
 	/**
 	 * 
 	 */
-	@Column
-	@OneToMany(targetEntity = DateRange.class)
 	@ElementCollection(targetClass = DateRange.class)
-	@CollectionTable(name = "ir_sequence_date_range")
+	@CollectionTable(name = "ir_sequence_date_range", joinColumns = {
+			@JoinColumn(name = "sequence_id")
+	})
 	@Description("Subsequences")
-	@Property
-	@Relationship(type = "SUBSEQUENCES")
+	@Transient
 	private List<String> date_range_ids;
+
+	/**
+	 * 
+	 */
+	@OneToMany(targetEntity = DateRange.class, mappedBy = "sequence_id")
+	@Relationship(type = "SUBSEQUENCES")
+	private List<DateRange> date_ranges;
 
 	public String getName() {
 		return name;
@@ -264,5 +278,21 @@ public class Sequence {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
+	}
+
+	public List<DateRange> getDate_ranges() {
+		return date_ranges;
+	}
+
+	public void setDate_ranges(List<DateRange> date_ranges) {
+		this.date_ranges = date_ranges;
 	}
 }

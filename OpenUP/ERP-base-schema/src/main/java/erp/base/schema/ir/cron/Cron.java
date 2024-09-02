@@ -6,12 +6,14 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import erp.base.schema.ir.act.Server;
 import erp.base.schema.res.users.Users;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -36,12 +38,19 @@ public class Cron {
 	 * 
 	 */
 	@Column(nullable = false)
-	@ManyToOne(targetEntity = Server.class)
 	@NotNull
 	@Description("Server action")
-	@Property
-	@Relationship(type = "ACTIONS_SERVER")
+	@Transient
 	private String ir_actions_server_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Server.class)
+	@JoinColumn(name = "ir_actions_server_id", nullable = false)
+	@NotNull
+	@Relationship(type = "ACTIONS_SERVER")
+	private Server ir_actions_server;
 	
 	/**
 	 * 
@@ -55,12 +64,19 @@ public class Cron {
 	 * 
 	 */
 	@Column(nullable = false)
-	@ManyToOne(targetEntity = Users.class)
 	@NotNull
 	@Description("Scheduler User")
-	@Property
-	@Relationship(type = "SCHEDULER_USER")
+	@Transient
 	private String user_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Users.class)
+	@JoinColumn(name = "user_id", nullable = false)
+	@NotNull
+	@Relationship(type = "SCHEDULER_USER")
+	private Users user;
 	
 	/**
 	 * 
@@ -224,5 +240,21 @@ public class Cron {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Server getIr_actions_server() {
+		return ir_actions_server;
+	}
+
+	public void setIr_actions_server(Server ir_actions_server) {
+		this.ir_actions_server = ir_actions_server;
+	}
+
+	public Users getUser() {
+		return user;
+	}
+
+	public void setUser(Users user) {
+		this.user = user;
 	}
 }

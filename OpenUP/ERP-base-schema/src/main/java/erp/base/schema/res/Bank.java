@@ -75,18 +75,16 @@ public class Bank {
 	@Column
 	@ManyToOne(targetEntity = State.class)
 	@Description("Fed. State")
-	@Property
 	@Relationship(type = "STATE")
-	private String state;
+	private State state;
 	
 	/**
 	 * 
 	 */
 	@Column
 	@ManyToOne(targetEntity = Country.class)
-	@Property
 	@Relationship(type = "COUNTRY")
-	private String country;
+	private Country country;
 	
 	/**
 	 * 
@@ -158,19 +156,19 @@ public class Bank {
 		this.city = city;
 	}
 
-	public String getState() {
+	public State getState() {
 		return state;
 	}
 
-	public void setState(String state) {
+	public void setState(State state) {
 		this.state = state;
 	}
 
-	public String getCountry() {
+	public Country getCountry() {
 		return country;
 	}
 
-	public void setCountry(String country) {
+	public void setCountry(Country country) {
 		this.country = country;
 	}
 

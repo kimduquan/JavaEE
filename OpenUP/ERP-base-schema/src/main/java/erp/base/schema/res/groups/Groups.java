@@ -6,6 +6,7 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.ogm.annotation.typeconversion.Convert;
 import erp.base.schema.ir.Rule;
 import erp.base.schema.ir.model.Access;
@@ -14,10 +15,10 @@ import erp.base.schema.ir.ui.Menu;
 import erp.base.schema.ir.ui.View;
 import erp.base.schema.res.users.Users;
 import erp.schema.util.NameAttributeConverter;
-import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -52,61 +53,53 @@ public class Groups {
 	/**
 	 * 
 	 */
-	@Column
 	@ManyToMany(targetEntity = Users.class)
-	@ElementCollection(targetClass = Users.class)
-	@CollectionTable(name = "res_users")
-	@Property
+	@JoinTable(name = "res_groups_users_rel", joinColumns = {
+			@JoinColumn(name = "gid", referencedColumnName = "uid")
+	})
 	@Relationship(type = "USERS")
-	private List<String> users;
+	private List<Users> users;
 	
 	/**
 	 * 
 	 */
-	@Column
-	@OneToMany(targetEntity = Access.class)
-	@ElementCollection(targetClass = Access.class)
-	@CollectionTable(name = "ir_model_access")
+	@OneToMany(targetEntity = Access.class, mappedBy = "group_id")
 	@Description("Access Controls")
-	@Property
-	@Relationship(type = "MODEL_ACCESS")
-	private List<String> model_access;
+	@Relationship(type = "ACCESS_CONTROLS")
+	private List<Access> model_access;
 	
 	/**
 	 * 
 	 */
-	@Column
 	@ManyToMany(targetEntity = Rule.class)
-	@ElementCollection(targetClass = Rule.class)
-	@CollectionTable(name = "ir_rule")
+	@JoinTable(name = "rule_group_rel", joinColumns = {
+			@JoinColumn(name = "group_id", referencedColumnName = "rule_group_id")
+	})
 	@Description("Rules")
-	@Property
 	@Relationship(type = "RULES")
-	private List<String> rule_groups;
+	private List<Rule> rule_groups;
 	
 	/**
 	 * 
 	 */
-	@Column
 	@ManyToMany(targetEntity = Menu.class)
-	@ElementCollection(targetClass = Menu.class)
-	@CollectionTable(name = "ir_ui_menu")
+	@JoinTable(name = "ir_ui_menu_group_rel", joinColumns = {
+			@JoinColumn(name = "gid", referencedColumnName = "menu_id")
+	})
 	@Description("Access Menu")
-	@Property
-	@Relationship(type = "MODEL_ACCESS")
-	private List<String> menu_access;
+	@Relationship(type = "ACCESS_MENU")
+	private List<Menu> menu_access;
 	
 	/**
 	 * 
 	 */
-	@Column
 	@ManyToMany(targetEntity = View.class)
-	@ElementCollection(targetClass = View.class)
-	@CollectionTable(name = "ir_ui_view")
+	@JoinTable(name = "ir_ui_view_group_rel", joinColumns = {
+			@JoinColumn(name = "group_id", referencedColumnName = "view_id")
+	})
 	@Description("Views")
-	@Property
-	@Relationship(type = "VIEW_ACCESS")
-	private List<String> view_access;
+	@Relationship(type = "VIEWS")
+	private List<View> view_access;
 	
 	/**
 	 * 
@@ -119,11 +112,17 @@ public class Groups {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Category.class)
 	@Description("Application")
-	@Property
-	@Relationship(type = "APPLICATION")
+	@Transient
 	private String category_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Category.class)
+	@JoinColumn(name = "category_id")
+	@Relationship(type = "APPLICATION")
+	private Category category;
 	
 	/**
 	 * 
@@ -157,43 +156,43 @@ public class Groups {
 		this.name = name;
 	}
 
-	public List<String> getUsers() {
+	public List<Users> getUsers() {
 		return users;
 	}
 
-	public void setUsers(List<String> users) {
+	public void setUsers(List<Users> users) {
 		this.users = users;
 	}
 
-	public List<String> getModel_access() {
+	public List<Access> getModel_access() {
 		return model_access;
 	}
 
-	public void setModel_access(List<String> model_access) {
+	public void setModel_access(List<Access> model_access) {
 		this.model_access = model_access;
 	}
 
-	public List<String> getRule_groups() {
+	public List<Rule> getRule_groups() {
 		return rule_groups;
 	}
 
-	public void setRule_groups(List<String> rule_groups) {
+	public void setRule_groups(List<Rule> rule_groups) {
 		this.rule_groups = rule_groups;
 	}
 
-	public List<String> getMenu_access() {
+	public List<Menu> getMenu_access() {
 		return menu_access;
 	}
 
-	public void setMenu_access(List<String> menu_access) {
+	public void setMenu_access(List<Menu> menu_access) {
 		this.menu_access = menu_access;
 	}
 
-	public List<String> getView_access() {
+	public List<View> getView_access() {
 		return view_access;
 	}
 
-	public void setView_access(List<String> view_access) {
+	public void setView_access(List<View> view_access) {
 		this.view_access = view_access;
 	}
 
@@ -243,5 +242,13 @@ public class Groups {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 }

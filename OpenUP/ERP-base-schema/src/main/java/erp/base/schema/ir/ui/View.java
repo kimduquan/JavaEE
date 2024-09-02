@@ -7,6 +7,7 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import erp.base.schema.ir.model.Model;
 import erp.base.schema.res.groups.Groups;
 import erp.base.schema.ir.model.Data;
@@ -16,6 +17,8 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -132,33 +135,50 @@ public class View {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = View.class)
 	@Description("Inherited View")
-	@Property
-	@Relationship(type = "INHERITED_VIEW")
+	@Transient
 	private String inherit_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = View.class)
+	@JoinColumn(name = "inherit_id")
+	@Relationship(type = "INHERITED_VIEW")
+	private View inherit;
 	
 	/**
 	 * 
 	 */
-	@Column
-	@OneToMany(targetEntity = View.class)
 	@ElementCollection(targetClass = View.class)
 	@CollectionTable(name = "ir_ui_view")
 	@Description("Views which inherit from this one")
-	@Property
-	@Relationship(type = "INHERITED_CHILDRENS")
+	@Transient
 	private List<String> inherit_children_ids;
+
+	/**
+	 * 
+	 */
+	@OneToMany(targetEntity = View.class)
+	@JoinColumn(name = "inherit_id")
+	@Relationship(type = "INHERITED_CHILDRENS")
+	private List<View> inherit_childrens;
 	
 	/**
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Data.class)
 	@Description("Model Data")
-	@Property
-	@Relationship(type = "MODEL_DATA")
+	@Transient
 	private String model_data_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Data.class)
+	@JoinColumn(name = "model_data_id")
+	@Relationship(type = "MODEL_DATA")
+	private Data model_data;
 	
 	/**
 	 * 
@@ -171,14 +191,23 @@ public class View {
 	/**
 	 * 
 	 */
-	@Column
-	@ManyToMany(targetEntity = Groups.class)
 	@ElementCollection(targetClass = Groups.class)
-	@CollectionTable(name = "res_groups")
+	@CollectionTable(name = "ir_ui_view_group_rel", joinColumns = {
+			@JoinColumn(name = "view_id", referencedColumnName = "group_id")
+	})
 	@Description("Groups")
-	@Property
-	@Relationship(type = "GROUPS")
+	@Transient
 	private List<String> groups_id;
+	
+	/**
+	 * 
+	 */
+	@ManyToMany(targetEntity = Groups.class)
+	@JoinTable(name = "ir_ui_view_group_rel", joinColumns = {
+			@JoinColumn(name = "view_id", referencedColumnName = "group_id")
+	})
+	@Relationship(type = "GROUPS")
+	private List<Groups> groups;
 	
 	/**
 	 * 
@@ -202,11 +231,17 @@ public class View {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Model.class)
 	@Description("Model of the view")
-	@Property
-	@Relationship(type = "MODEL")
+	@Transient
 	private String model_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Model.class)
+	@JoinColumn(name = "model_id")
+	@Relationship(type = "MODEL_OF_THE_VIEW")
+	private String _model;
 
 	public String getName() {
 		return name;
@@ -366,5 +401,45 @@ public class View {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public View getInherit() {
+		return inherit;
+	}
+
+	public void setInherit(View inherit) {
+		this.inherit = inherit;
+	}
+
+	public List<View> getInherit_childrens() {
+		return inherit_childrens;
+	}
+
+	public void setInherit_childrens(List<View> inherit_childrens) {
+		this.inherit_childrens = inherit_childrens;
+	}
+
+	public Data getModel_data() {
+		return model_data;
+	}
+
+	public void setModel_data(Data model_data) {
+		this.model_data = model_data;
+	}
+
+	public List<Groups> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(List<Groups> groups) {
+		this.groups = groups;
+	}
+
+	public String get_model() {
+		return _model;
+	}
+
+	public void set_model(String _model) {
+		this._model = _model;
 	}
 }

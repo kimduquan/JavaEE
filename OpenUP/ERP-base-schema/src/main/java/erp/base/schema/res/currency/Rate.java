@@ -5,9 +5,11 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import erp.base.schema.res.Company;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -65,22 +67,35 @@ public class Rate {
 	 * 
 	 */
 	@Column(nullable = false, updatable = false)
-	@ManyToOne(targetEntity = Currency.class)
 	@NotNull
 	@Description("Currency")
-	@Property
-	@Relationship(type = "CURRENCY")
+	@Transient
 	private String currency_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Currency.class)
+	@JoinColumn(name = "currency_id", nullable = false, updatable = false)
+	@NotNull
+	@Relationship(type = "CURRENCY")
+	private Currency currency;
 	
 	/**
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Company.class)
 	@Description("Company")
-	@Property
-	@Relationship(type = "COMPANY")
+	@Transient
 	private String company_id;
+	
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Company.class)
+	@JoinColumn(name = "company_id")
+	@Relationship(type = "COMPANY")
+	private Company company;
 
 	public String getName() {
 		return name;
@@ -136,5 +151,21 @@ public class Rate {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Currency getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(Currency currency) {
+		this.currency = currency;
+	}
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
 	}
 }

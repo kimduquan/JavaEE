@@ -7,6 +7,7 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import erp.base.schema.ir.actions.Actions;
 import erp.base.schema.res.Company;
 import erp.base.schema.res.groups.Groups;
@@ -15,6 +16,8 @@ import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -41,12 +44,19 @@ public class Users {
 	 * 
 	 */
 	@Column(nullable = false)
-	@ManyToOne(targetEntity = Partner.class)
 	@NotNull
 	@Description("Related Partner")
-	@Property
-	@Relationship(type = "PARTNER")
+	@Transient
 	private String partner_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Partner.class)
+	@JoinColumn(name = "partner_id", nullable = false)
+	@NotNull
+	@Relationship(type = "RELATED_PARTNER")
+	private Partner partner;
 	
 	/**
 	 * 
@@ -101,33 +111,56 @@ public class Users {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Actions.class)
 	@Description("Home Action")
-	@Property
-	@Relationship(type = "ACTION")
+	@Transient
 	private String action_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Actions.class)
+	@JoinColumn(name = "action_id")
+	@Relationship(type = "HOME_ACTION")
+	private Actions action;
 	
 	/**
 	 * 
 	 */
-	@Column
-	@ManyToMany(targetEntity = Groups.class)
+	@ElementCollection(targetClass = Groups.class)
+	@CollectionTable(name = "res_groups_users_rel", joinColumns = {
+			@JoinColumn(name = "uid", referencedColumnName = "gid")
+	})
 	@Description("Groups")
-	@Property
-	@Relationship(type = "GROUPS")
+	@Transient
 	private List<String> groups_id;
 	
 	/**
 	 * 
 	 */
-	@Column
-	@OneToMany(targetEntity = Log.class)
+	@ManyToMany(targetEntity = Groups.class)
+	@JoinTable(name = "res_groups_users_rel", joinColumns = {
+			@JoinColumn(name = "uid", referencedColumnName = "gid")
+	})
+	@Relationship(type = "GROUPS")
+	private List<Groups> groups;
+	
+	/**
+	 * 
+	 */
 	@ElementCollection(targetClass = Log.class)
-	@CollectionTable(name = "res_users_log")
+	@CollectionTable(name = "res_users_log", joinColumns = {
+			@JoinColumn(name = "create_uid")
+	})
 	@Description("User log entries")
-	@Property
-	@Relationship(type = "LOGS")
+	@Transient
 	private List<String> log_ids;
+	
+	/**
+	 * 
+	 */
+	@OneToMany(targetEntity = Log.class, mappedBy = "create_uid")
+	@Relationship(type = "USER_LOG_ENTRIES")
+	private List<Log> logs;
 	
 	/**
 	 * 
@@ -164,46 +197,74 @@ public class Users {
 	/**
 	 * 
 	 */
-	@Column
-	@OneToMany(targetEntity = Settings.class)
 	@ElementCollection(targetClass = Settings.class)
-	@CollectionTable(name = "res_users_settings")
-	@Property
-	@Relationship(type = "USERS_SETTINGS")
+	@CollectionTable(name = "res_users_settings", joinColumns = {
+			@JoinColumn(name = "user_id")
+	})
+	@Transient
 	private List<String> res_users_settings_ids;
 	
 	/**
 	 * 
 	 */
+	@OneToMany(targetEntity = Settings.class, mappedBy = "user_id")
+	@Relationship(type = "USERS_SETTINGS")
+	private List<Settings> res_users_settings;
+	
+	/**
+	 * 
+	 */
 	@Column
-	@ManyToOne(targetEntity = Settings.class)
 	@Description("Settings")
-	@Property
-	@Relationship(type = "SETTINGS")
+	@Transient
 	private String res_users_settings_id;
 	
 	/**
 	 * 
 	 */
+	@ManyToOne(targetEntity = Settings.class)
+	@JoinColumn(name = "res_users_settings_id")
+	@Relationship(type = "SETTINGS")
+	private Settings res_users_setting;
+	
+	/**
+	 * 
+	 */
 	@Column(nullable = false)
-	@ManyToOne(targetEntity = Company.class)
 	@NotNull
 	@Description("Company")
-	@Property
-	@Relationship(type = "COMPANY")
+	@Transient
 	private String company_id;
 	
 	/**
 	 * 
 	 */
-	@Column
-	@ManyToMany(targetEntity = Company.class)
+	@ManyToOne(targetEntity = Company.class)
+	@JoinColumn(name = "company_id", nullable = false)
+	@NotNull
+	@Relationship(type = "COMPANY")
+	private Company company;
+	
+	/**
+	 * 
+	 */
 	@ElementCollection(targetClass = Company.class)
-	@CollectionTable(name = "res_company")
+	@CollectionTable(name = "res_company_users_rel", joinColumns = {
+			@JoinColumn(name = "user_id", referencedColumnName = "cid")
+	})
 	@Description("Companies")
-	@Property
-	@Relationship(type = "COMPANIES")
+	@Transient
 	private List<String> company_ids;
+	
+	/**
+	 * 
+	 */
+	@ManyToMany(targetEntity = Company.class)
+	@JoinTable(name = "res_company_users_rel", joinColumns = {
+			@JoinColumn(name = "user_id", referencedColumnName = "cid")
+	})
+	@Relationship(type = "COMPANIES")
+	private List<Company> companies;
 	
 	/**
 	 * 
@@ -433,5 +494,69 @@ public class Users {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Partner getPartner() {
+		return partner;
+	}
+
+	public void setPartner(Partner partner) {
+		this.partner = partner;
+	}
+
+	public Actions getAction() {
+		return action;
+	}
+
+	public void setAction(Actions action) {
+		this.action = action;
+	}
+
+	public List<Groups> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(List<Groups> groups) {
+		this.groups = groups;
+	}
+
+	public List<Log> getLogs() {
+		return logs;
+	}
+
+	public void setLogs(List<Log> logs) {
+		this.logs = logs;
+	}
+
+	public List<Settings> getRes_users_settings() {
+		return res_users_settings;
+	}
+
+	public void setRes_users_settings(List<Settings> res_users_settings) {
+		this.res_users_settings = res_users_settings;
+	}
+
+	public Settings getRes_users_setting() {
+		return res_users_setting;
+	}
+
+	public void setRes_users_setting(Settings res_users_setting) {
+		this.res_users_setting = res_users_setting;
+	}
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
+	}
+
+	public List<Company> getCompanies() {
+		return companies;
+	}
+
+	public void setCompanies(List<Company> companies) {
+		this.companies = companies;
 	}
 }

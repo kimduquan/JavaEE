@@ -7,12 +7,13 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import erp.base.schema.ir.model.Model;
 import erp.base.schema.res.groups.Groups;
-import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -53,23 +54,29 @@ public class Rule {
 	 * 
 	 */
 	@Column(nullable = false)
-	@ManyToOne(targetEntity = Model.class)
 	@NotNull
 	@Description("Model")
-	@Property
-	@Relationship(type = "MODEL")
+	@Transient
 	private String model_id;
 	
 	/**
 	 * 
 	 */
-	@Column
+	@ManyToOne(targetEntity = Model.class)
+	@JoinColumn(name = "model_id", nullable = false)
+	@NotNull
+	@Relationship(type = "MODEL")
+	private Model model;
+	
+	/**
+	 * 
+	 */
 	@ManyToMany(targetEntity = Groups.class)
-	@ElementCollection(targetClass = Groups.class)
-	@CollectionTable(name = "res_groups")
-	@Property
+	@JoinTable(name = "rule_group_rel", joinColumns = {
+			@JoinColumn(name = "rule_group_id", referencedColumnName = "group_id")
+	})
 	@Relationship(type = "GROUPS")
-	private List<String> groups;
+	private List<Groups> groups;
 	
 	/**
 	 * 
@@ -139,11 +146,11 @@ public class Rule {
 		this.model_id = model_id;
 	}
 
-	public List<String> getGroups() {
+	public List<Groups> getGroups() {
 		return groups;
 	}
 
-	public void setGroups(List<String> groups) {
+	public void setGroups(List<Groups> groups) {
 		this.groups = groups;
 	}
 

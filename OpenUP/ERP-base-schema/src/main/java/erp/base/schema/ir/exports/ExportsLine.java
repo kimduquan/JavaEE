@@ -5,8 +5,10 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -38,11 +40,17 @@ public class ExportsLine {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Exports.class)
 	@Description("Export")
-	@Property
-	@Relationship(type = "EXPORT")
+	@Transient
 	private String export_id;
+	
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Exports.class)
+	@JoinColumn(name = "export_id")
+	@Relationship(type = "EXPORT")
+	private Exports export;
 
 	public String getName() {
 		return name;
@@ -66,5 +74,13 @@ public class ExportsLine {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Exports getExport() {
+		return export;
+	}
+
+	public void setExport(Exports export) {
+		this.export = export;
 	}
 }

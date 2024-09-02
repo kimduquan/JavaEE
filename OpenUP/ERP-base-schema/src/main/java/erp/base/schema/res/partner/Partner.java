@@ -7,6 +7,7 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import erp.base.schema.res.Bank;
 import erp.base.schema.res.Company;
 import erp.base.schema.res.country.Country;
@@ -18,6 +19,8 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -65,19 +68,24 @@ public class Partner {
 	 */
 	@Column
 	@ManyToOne(targetEntity = Title.class)
-	@Property
 	@Relationship(type = "TTILE")
-	private String title;
+	private Title title;
 	
 	/**
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Partner.class)
 	@Description("Related Company")
-	@Property
-	@Relationship(type = "PARENT")
+	@Transient
 	private String parent_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Partner.class)
+	@JoinColumn(name = "parent_id")
+	@Relationship(type = "RELATED_COMPANY")
+	private Partner parent;
 	
 	/**
 	 * 
@@ -91,11 +99,16 @@ public class Partner {
 	 * 
 	 */
 	@Column
-	@OneToMany(targetEntity = Partner.class)
 	@Description("Contact")
-	@Property
-	@Relationship(type = "CHILDS")
+	@Transient
 	private List<String> child_ids;
+
+	/**
+	 * 
+	 */
+	@OneToMany(targetEntity = Partner.class, mappedBy = "parent_id")
+	@Relationship(type = "CONTACT")
+	private List<Partner> childs;
 	
 	/**
 	 * 
@@ -142,11 +155,17 @@ public class Partner {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Partner.class)
 	@Description("Salesperson")
-	@Property
-	@Relationship(type = "SALESPERSON")
+	@Transient
 	private String user_id;
+	
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Partner.class)
+	@JoinColumn(name = "user_id")
+	@Relationship(type = "SALESPERSON")
+	private Partner user;
 	
 	/**
 	 * 
@@ -160,21 +179,33 @@ public class Partner {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Partner.class)
 	@Description("Partner with same Tax ID")
-	@Property
-	@Relationship(type = "SAME_VAT_PARTNER")
+	@Transient
 	private String same_vat_partner_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Partner.class)
+	@JoinColumn(name = "same_vat_partner_id")
+	@Relationship(type = "PARTNER_WITH_SAME_TAX_ID")
+	private Partner same_vat_partner;
 	
 	/**
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Partner.class)
 	@Description("Partner with same Company Registry")
-	@Property
-	@Relationship(type = "SAME_COMPANY_REGISTRY_PARTNER")
+	@Transient
 	private String same_company_registry_partner_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Partner.class)
+	@JoinColumn(name = "same_company_registry_partner_id")
+	@Relationship(type = "PARTER_WITH_SAME_COMPANY_REGISTRY")
+	private Partner same_company_registry_partner;
 	
 	/**
 	 * 
@@ -187,12 +218,20 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@Column
-	@OneToMany(targetEntity = Bank.class)
+	@ElementCollection(targetClass = Bank.class)
+	@CollectionTable(name = "res_partner_bank", joinColumns = {
+			@JoinColumn(name = "partner_id")
+	})
 	@Description("Banks")
-	@Property
-	@Relationship(type = "BANKS")
+	@Transient
 	private List<String> bank_ids;
+
+	/**
+	 * 
+	 */
+	@OneToMany(targetEntity = Bank.class, mappedBy = "partner_id")
+	@Relationship(type = "BANKS")
+	private List<Bank> banks;
 	
 	/**
 	 * 
@@ -214,11 +253,20 @@ public class Partner {
 	 * 
 	 */
 	@Column
-	@ManyToMany(targetEntity = Category.class)
 	@Description("Tags")
-	@Property
-	@Relationship(type = "TAGS")
+	@Transient
 	private String category_id;
+	
+	/**
+	 * 
+	 */
+	@ManyToMany(targetEntity = Category.class)
+	@JoinTable(name = "res_partner_category", joinColumns = {
+			@JoinColumn(name = "partner_id"),
+			@JoinColumn(name = "category_id")
+	})
+	@Relationship(type = "TAGS")
+	private List<Category> category;
 	
 	/**
 	 * 
@@ -286,21 +334,33 @@ public class Partner {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = State.class)
 	@Description("State")
-	@Property
-	@Relationship(type = "STATE")
+	@Transient
 	private String state_id;
 	
 	/**
 	 * 
 	 */
+	@ManyToOne(targetEntity = State.class)
+	@JoinColumn(name = "state_id")
+	@Relationship(type = "STATE")
+	private State state;
+	
+	/**
+	 * 
+	 */
 	@Column
-	@ManyToOne(targetEntity = Country.class)
 	@Description("Country")
-	@Property
-	@Relationship(type = "COUNTRY")
+	@Transient
 	private String country_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Country.class)
+	@JoinColumn(name = "country_id")
+	@Relationship(type = "COUNTRY")
+	private Country country;
 	
 	/**
 	 * 
@@ -374,11 +434,17 @@ public class Partner {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Industry.class)
 	@Description("Industry")
-	@Property
-	@Relationship(type = "INDUSTRY")
+	@Transient
 	private String industry_id;
+	
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Industry.class)
+	@JoinColumn(name = "industry_id")
+	@Relationship(type = "INDUSTRY")
+	private Industry industry;
 	
 	/**
 	 * 
@@ -387,18 +453,23 @@ public class Partner {
 	@Enumerated(EnumType.STRING)
 	@Description("Company Type")
 	@Property
-	@Relationship(type = "INDUSTRY")
 	private String company_type;
 	
 	/**
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Company.class)
 	@Description("Company")
-	@Property
-	@Relationship(type = "COMPANY")
+	@Transient
 	private String company_id;
+	
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Company.class)
+	@JoinColumn(name = "company_id")
+	@Relationship(type = "COMPANY")
+	private Company company;
 	
 	/**
 	 * 
@@ -412,14 +483,20 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@Column
-	@OneToMany(targetEntity = Users.class)
 	@ElementCollection(targetClass = Users.class)
-	@CollectionTable(name = "res_users")
+	@CollectionTable(name = "res_users", joinColumns = {
+			@JoinColumn(name = "partner_id")
+	})
 	@Description("Users")
-	@Property
-	@Relationship(type = "USERS")
+	@Transient
 	private List<String> user_ids;
+	
+	/**
+	 * 
+	 */
+	@OneToMany(targetEntity = Users.class, mappedBy = "partner_id")
+	@Relationship(type = "USERS")
+	private List<Users> users;
 	
 	/**
 	 * 
@@ -441,11 +518,17 @@ public class Partner {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Partner.class)
 	@Description("Commercial Entity")
-	@Property
-	@Relationship(type = "COMMERCIAL_PARTNER")
+	@Transient
 	private String commercial_partner_id;
+	
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Partner.class)
+	@JoinColumn(name = "commercial_partner_id")
+	@Relationship(type = "COMMERCIAL_ENTITY")
+	private Partner commercial_partner;
 	
 	/**
 	 * 
@@ -495,11 +578,11 @@ public class Partner {
 		this.date = date;
 	}
 
-	public String getTitle() {
+	public Title getTitle() {
 		return title;
 	}
 
-	public void setTitle(String title) {
+	public void setTitle(Title title) {
 		this.title = title;
 	}
 
@@ -885,5 +968,109 @@ public class Partner {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Partner getParent() {
+		return parent;
+	}
+
+	public void setParent(Partner parent) {
+		this.parent = parent;
+	}
+
+	public List<Partner> getChilds() {
+		return childs;
+	}
+
+	public void setChilds(List<Partner> childs) {
+		this.childs = childs;
+	}
+
+	public Partner getUser() {
+		return user;
+	}
+
+	public void setUser(Partner user) {
+		this.user = user;
+	}
+
+	public Partner getSame_vat_partner() {
+		return same_vat_partner;
+	}
+
+	public void setSame_vat_partner(Partner same_vat_partner) {
+		this.same_vat_partner = same_vat_partner;
+	}
+
+	public Partner getSame_company_registry_partner() {
+		return same_company_registry_partner;
+	}
+
+	public void setSame_company_registry_partner(Partner same_company_registry_partner) {
+		this.same_company_registry_partner = same_company_registry_partner;
+	}
+
+	public List<Bank> getBanks() {
+		return banks;
+	}
+
+	public void setBanks(List<Bank> banks) {
+		this.banks = banks;
+	}
+
+	public List<Category> getCategory() {
+		return category;
+	}
+
+	public void setCategory(List<Category> category) {
+		this.category = category;
+	}
+
+	public State getState() {
+		return state;
+	}
+
+	public void setState(State state) {
+		this.state = state;
+	}
+
+	public Country getCountry() {
+		return country;
+	}
+
+	public void setCountry(Country country) {
+		this.country = country;
+	}
+
+	public Industry getIndustry() {
+		return industry;
+	}
+
+	public void setIndustry(Industry industry) {
+		this.industry = industry;
+	}
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
+	}
+
+	public List<Users> getUsers() {
+		return users;
+	}
+
+	public void setUsers(List<Users> users) {
+		this.users = users;
+	}
+
+	public Partner getCommercial_partner() {
+		return commercial_partner;
+	}
+
+	public void setCommercial_partner(Partner commercial_partner) {
+		this.commercial_partner = commercial_partner;
 	}
 }

@@ -7,12 +7,14 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -47,11 +49,17 @@ public class Module {
 	 * 
 	 */
 	@Column(updatable = false)
-	@ManyToOne(targetEntity = Category.class)
 	@Description("Category")
-	@Property
-	@Relationship(type = "CATEGORY")
+	@Transient
 	private String category_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Category.class)
+	@JoinColumn(name = "category_id", updatable = false)
+	@Relationship(type = "CATEGORY")
+	private Category category;
 	
 	/**
 	 * 
@@ -161,26 +169,38 @@ public class Module {
 	/**
 	 * 
 	 */
-	@Column(updatable = false)
-	@OneToMany(targetEntity = Dependency.class)
 	@ElementCollection(targetClass = Dependency.class)
-	@CollectionTable(name = "ir_module_module_dependency")
+	@CollectionTable(name = "ir_module_module_dependency", joinColumns = {
+			@JoinColumn(name = "module_id")
+	})
 	@Description("Dependencies")
-	@Property
-	@Relationship(type = "DEPENDENCIES")
+	@Transient
 	private List<String> dependencies_id;
+
+	/**
+	 * 
+	 */
+	@OneToMany(targetEntity = Dependency.class, mappedBy = "module_id")
+	@Relationship(type = "DEPENDENCIES")
+	private List<Dependency> dependencies;
 	
 	/**
 	 * 
 	 */
-	@Column(updatable = false)
-	@OneToMany(targetEntity = Exclusion.class)
 	@ElementCollection(targetClass = Exclusion.class)
-	@CollectionTable(name = "ir_module_module_exclusion")
+	@CollectionTable(name = "ir_module_module_exclusion", joinColumns = {
+			@JoinColumn(name = "module_id")
+	})
 	@Description("Exclusions")
-	@Property
-	@Relationship(type = "EXCLUSIONS")
+	@Transient
 	private List<String> exclusion_ids;
+
+	/**
+	 * 
+	 */
+	@OneToMany(targetEntity = Exclusion.class, mappedBy = "module_id")
+	@Relationship(type = "EXCLUSIONS")
+	private List<Exclusion> exclusions;
 	
 	/**
 	 * 
@@ -536,5 +556,29 @@ public class Module {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+
+	public List<Dependency> getDependencies() {
+		return dependencies;
+	}
+
+	public void setDependencies(List<Dependency> dependencies) {
+		this.dependencies = dependencies;
+	}
+
+	public List<Exclusion> getExclusions() {
+		return exclusions;
+	}
+
+	public void setExclusions(List<Exclusion> exclusions) {
+		this.exclusions = exclusions;
 	}
 }

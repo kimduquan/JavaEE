@@ -6,6 +6,7 @@ import org.eclipse.microprofile.graphql.Description;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import erp.base.schema.ir.actions.Actions;
 import erp.base.schema.ir.ui.View;
 import erp.base.schema.res.groups.Groups;
@@ -16,6 +17,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -43,11 +45,17 @@ public class ActWindow extends Actions {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = View.class)
 	@Description("View Ref.")
-	@Property
-	@Relationship(type = "VIEW")
+	@Transient
 	private String view_id;
+	
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = View.class)
+	@JoinColumn(name = "view_id")
+	@Relationship(type = "VIEW_REF")
+	private View view;
 	
 	/**
 	 * 
@@ -124,16 +132,23 @@ public class ActWindow extends Actions {
 	/**
 	 * 
 	 */
-	@Column
-	@OneToMany(targetEntity = ActWindowView.class)
 	@ElementCollection(targetClass = ActWindowView.class)
 	@CollectionTable(name = "ir_actions_act_window_view", joinColumns = {
-			@JoinColumn(referencedColumnName = "act_window_id")
+			@JoinColumn(name = "view_id", referencedColumnName = "act_window_id")
 	})
 	@Description("No of Views")
-	@Property
-	@Relationship(type = "VIEWS")
+	@Transient
 	private List<String> view_ids;
+
+	/**
+	 * 
+	 */
+	@OneToMany(targetEntity = ActWindowView.class)
+	@JoinTable(name = "ir_actions_act_window_view", joinColumns = {
+			@JoinColumn(name = "view_id", referencedColumnName = "act_window_id")
+	})
+	@Relationship(type = "NO_OF_VIEWS")
+	private List<ActWindowView> _views;
 	
 	/**
 	 * 
@@ -159,25 +174,39 @@ public class ActWindow extends Actions {
 	/**
 	 * 
 	 */
-	@Column
-	@ManyToMany(targetEntity = Groups.class)
 	@ElementCollection(targetClass = Groups.class)
-	@CollectionTable(joinColumns = {
+	@CollectionTable(name = "ir_act_window_group_rel", joinColumns = {
 			@JoinColumn(name = "act_id", referencedColumnName = "gid")
 	})
 	@Description("Groups")
-	@Property
-	@Relationship(type = "GROUPS")
+	@Transient
 	private List<String> groups_id;
+
+	/**
+	 * 
+	 */
+	@ManyToMany(targetEntity = Groups.class)
+	@JoinTable(name = "ir_act_window_group_rel", joinColumns = {
+			@JoinColumn(name = "act_id", referencedColumnName = "gid")
+	})
+	@Relationship(type = "GROUPS")
+	private List<Groups> groups;
 	
 	/**
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = View.class)
 	@Description("Search View Ref.")
-	@Property
+	@Transient
 	private String search_view_id;
+	
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = View.class)
+	@JoinColumn(name = "search_view_id")
+	@Relationship(type = "SEARCH_VIEW_REF")
+	private View search_view;
 	
 	/**
 	 * 
@@ -312,5 +341,37 @@ public class ActWindow extends Actions {
 
 	public void setFilter(Boolean filter) {
 		this.filter = filter;
+	}
+
+	public View getView() {
+		return view;
+	}
+
+	public void setView(View view) {
+		this.view = view;
+	}
+
+	public List<ActWindowView> get_views() {
+		return _views;
+	}
+
+	public void set_views(List<ActWindowView> _views) {
+		this._views = _views;
+	}
+
+	public List<Groups> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(List<Groups> groups) {
+		this.groups = groups;
+	}
+
+	public View getSearch_view() {
+		return search_view;
+	}
+
+	public void setSearch_view(View search_view) {
+		this.search_view = search_view;
 	}
 }

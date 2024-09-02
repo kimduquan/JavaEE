@@ -7,6 +7,8 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -83,14 +85,20 @@ public class Currency {
 	/**
 	 * 
 	 */
-	@Column
-	@OneToMany(targetEntity = Rate.class)
 	@ElementCollection(targetClass = Rate.class)
-	@CollectionTable(name = "res_currency_rate")
+	@CollectionTable(name = "res_currency_rate", joinColumns = {
+			@JoinColumn(name = "currency_id")
+	})
 	@Description("Rates")
-	@Property
-	@Relationship(type = "RATES")
+	@Transient
 	private List<String> rate_ids;
+	
+	/**
+	 * 
+	 */
+	@OneToMany(targetEntity = Rate.class, mappedBy = "currency_id")
+	@Relationship(type = "RATES")
+	private List<Rate> rates;
 	
 	/**
 	 * 
@@ -282,5 +290,13 @@ public class Currency {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public List<Rate> getRates() {
+		return rates;
+	}
+
+	public void setRates(List<Rate> rates) {
+		this.rates = rates;
 	}
 }

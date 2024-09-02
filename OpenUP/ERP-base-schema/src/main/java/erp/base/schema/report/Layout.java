@@ -6,9 +6,11 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import erp.base.schema.ir.ui.View;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -33,12 +35,19 @@ public class Layout {
 	 * 
 	 */
 	@Column(nullable = false)
-	@ManyToOne(targetEntity = View.class)
 	@NotNull
 	@Description("Document Template")
-	@Property
-	@Relationship(type = "VIEW")
+	@Transient
 	private String view_id;
+	
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = View.class)
+	@JoinColumn(name = "view_id", nullable = false)
+	@NotNull
+	@Relationship(type = "DOCUMENT_TEMPLATE")
+	private View view;
 	
 	/**
 	 * 
@@ -114,5 +123,13 @@ public class Layout {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public View getView() {
+		return view;
+	}
+
+	public void setView(View view) {
+		this.view = view;
 	}
 }

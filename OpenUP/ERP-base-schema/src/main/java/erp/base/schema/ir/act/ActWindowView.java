@@ -5,11 +5,13 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import erp.base.schema.ir.ui.View;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -41,11 +43,17 @@ public class ActWindowView {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = View.class)
 	@Description("View")
-	@Property
-	@Relationship(type = "VIEW")
+	@Transient
 	private String view_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = View.class)
+	@JoinColumn(name = "view_id")
+	@Relationship(type = "VIEW")
+	private View view;
 	
 	/**
 	 * 
@@ -61,11 +69,17 @@ public class ActWindowView {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = ActWindow.class)
 	@Description("Action")
-	@Property
-	@Relationship(type = "ACTION")
+	@Transient
 	private String act_window_id;
+	
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = ActWindow.class)
+	@JoinColumn(name = "act_window_id")
+	@Relationship(type = "ACTION")
+	private ActWindow act_window;
 	
 	/**
 	 * 
@@ -121,5 +135,21 @@ public class ActWindowView {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public View getView() {
+		return view;
+	}
+
+	public void setView(View view) {
+		this.view = view;
+	}
+
+	public ActWindow getAct_window() {
+		return act_window;
+	}
+
+	public void setAct_window(ActWindow act_window) {
+		this.act_window = act_window;
 	}
 }

@@ -5,9 +5,11 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import erp.base.schema.res.users.Users;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -32,23 +34,37 @@ public class ViewCustom {
 	 * 
 	 */
 	@Column(nullable = false)
-	@ManyToOne(targetEntity = View.class)
 	@NotNull
 	@Description("Original View")
-	@Property
-	@Relationship(type = "ORIGINAL")
+	@Transient
 	private String ref_id;
 	
 	/**
 	 * 
 	 */
+	@ManyToOne(targetEntity = View.class)
+	@JoinColumn(name = "ref_id", nullable = false)
+	@NotNull
+	@Relationship(type = "ORIGINAL_VIEW")
+	private View ref;
+	
+	/**
+	 * 
+	 */
 	@Column(nullable = false)
-	@ManyToOne(targetEntity = Users.class)
 	@NotNull
 	@Description("User")
-	@Property
-	@Relationship(type = "USER")
+	@Transient
 	private String user_id;
+	
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Users.class)
+	@JoinColumn(name = "user_id", nullable = false)
+	@NotNull
+	@Relationship(type = "USER")
+	private Users user;
 	
 	/**
 	 * 
@@ -89,5 +105,21 @@ public class ViewCustom {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public View getRef() {
+		return ref;
+	}
+
+	public void setRef(View ref) {
+		this.ref = ref;
+	}
+
+	public Users getUser() {
+		return user;
+	}
+
+	public void setUser(Users user) {
+		this.user = user;
 	}
 }

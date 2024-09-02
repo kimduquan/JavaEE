@@ -6,8 +6,10 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -50,12 +52,18 @@ public class DateRange {
 	 * 
 	 */
 	@Column(nullable = false)
-	@ManyToOne(targetEntity = Sequence.class)
-	@NotNull
 	@Description("Main Sequence")
-	@Property
-	@Relationship(type = "SEQUENCE")
+	@Transient
 	private String sequence_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Sequence.class)
+	@JoinColumn(name = "sequence_id", nullable = false)
+	@NotNull
+	@Relationship(type = "MAIN_SEQUENCE")
+	private Sequence sequence;
 	
 	/**
 	 * 
@@ -120,5 +128,13 @@ public class DateRange {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Sequence getSequence() {
+		return sequence;
+	}
+
+	public void setSequence(Sequence sequence) {
+		this.sequence = sequence;
 	}
 }

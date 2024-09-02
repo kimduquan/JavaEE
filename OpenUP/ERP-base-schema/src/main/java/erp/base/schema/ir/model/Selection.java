@@ -6,10 +6,12 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.ogm.annotation.typeconversion.Convert;
 import erp.schema.util.NameAttributeConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -20,7 +22,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_model_fields_selection")
 @Description("Fields Selection")
-@NodeEntity("Selection")
+@NodeEntity("Fields Selection")
 public class Selection {
 	
 	/**
@@ -34,11 +36,18 @@ public class Selection {
 	 * 
 	 */
 	@Column(nullable = false)
-	@ManyToOne(targetEntity = Fields.class)
 	@NotNull
-	@Property
-	@Relationship(type = "FIELD")
+	@Transient
 	private String field_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Fields.class)
+	@JoinColumn(name = "field_id", nullable = false)
+	@NotNull
+	@Relationship(type = "FIELD")
+	private Fields field;
 	
 	/**
 	 * 
@@ -103,5 +112,13 @@ public class Selection {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Fields getField() {
+		return field;
+	}
+
+	public void setField(Fields field) {
+		this.field = field;
 	}
 }

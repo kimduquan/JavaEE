@@ -7,12 +7,14 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.ogm.annotation.typeconversion.Convert;
 import erp.schema.util.NameAttributeConverter;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -24,7 +26,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_module_category")
 @Description("Application")
-@NodeEntity("Category")
+@NodeEntity("Application")
 public class Category {
 	
 	/**
@@ -48,35 +50,53 @@ public class Category {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Category.class)
 	@Description("Parent Application")
-	@Property
-	@Relationship(type = "PARENT")
+	@Transient
 	private String parent_id;
 	
 	/**
 	 * 
 	 */
-	@Column
-	@OneToMany(targetEntity = Category.class)
-	@ElementCollection(targetClass = Category.class)
-	@CollectionTable(name = "ir_module_category")
-	@Description("Child Applications")
-	@Property
-	@Relationship(type = "CHILDS")
-	private List<String> child_ids;
+	@ManyToOne(targetEntity = Category.class)
+	@JoinColumn(name = "parent_id")
+	@Relationship(type = "PARENT_APPLICATION")
+	private Category parent;
 	
 	/**
 	 * 
 	 */
-	@Column
-	@OneToMany(targetEntity = Module.class)
+	@ElementCollection(targetClass = Category.class)
+	@CollectionTable(name = "ir_module_category", joinColumns = {
+			@JoinColumn(name = "parent_id")
+	})
+	@Description("Child Applications")
+	@Transient
+	private List<String> child_ids;
+
+	/**
+	 * 
+	 */
+	@OneToMany(targetEntity = Category.class, mappedBy = "parent_id")
+	@Relationship(type = "CHILD_APPLICATIONS")
+	private List<Category> childs;
+	
+	/**
+	 * 
+	 */
 	@ElementCollection(targetClass = Module.class)
-	@CollectionTable(name = "ir_module_module")
+	@CollectionTable(name = "ir_module_module", joinColumns = {
+			@JoinColumn(name = "category_id")
+	})
 	@Description("Modules")
-	@Property
-	@Relationship(type = "MODULES")
+	@Transient
 	private List<String> module_ids;
+	
+	/**
+	 * 
+	 */
+	@OneToMany(targetEntity = Module.class, mappedBy = "category_id")
+	@Relationship(type = "MODULES")
+	private List<Module> modules;
 	
 	/**
 	 * 
@@ -197,5 +217,29 @@ public class Category {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Category getParent() {
+		return parent;
+	}
+
+	public void setParent(Category parent) {
+		this.parent = parent;
+	}
+
+	public List<Category> getChilds() {
+		return childs;
+	}
+
+	public void setChilds(List<Category> childs) {
+		this.childs = childs;
+	}
+
+	public List<Module> getModules() {
+		return modules;
+	}
+
+	public void setModules(List<Module> modules) {
+		this.modules = modules;
 	}
 }

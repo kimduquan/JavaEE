@@ -5,12 +5,14 @@ import org.eclipse.microprofile.graphql.Description;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import erp.base.schema.ir.model.Fields;
 import erp.base.schema.res.Company;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -50,22 +52,35 @@ public class Property {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Company.class)
 	@Description("Company")
-	@org.neo4j.ogm.annotation.Property
-	@Relationship(type = "COMPANY")
+	@Transient
 	private String company_id;
 	
 	/**
 	 * 
 	 */
+	@ManyToOne(targetEntity = Company.class)
+	@JoinColumn(name = "company_id")
+	@Relationship(type = "COMPANY")
+	private Company company;
+	
+	/**
+	 * 
+	 */
 	@Column(nullable = false)
-	@ManyToOne(targetEntity = Fields.class)
 	@NotNull
 	@Description("Field")
-	@org.neo4j.ogm.annotation.Property
-	@Relationship(type = "FIELD")
+	@Transient
 	private String fields_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Fields.class)
+	@JoinColumn(name = "fields_id")
+	@NotNull
+	@Relationship(type = "FIELD")
+	private Fields fields;
 	
 	/**
 	 * 
@@ -213,5 +228,21 @@ public class Property {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
+	}
+
+	public Fields getFields() {
+		return fields;
+	}
+
+	public void setFields(Fields fields) {
+		this.fields = fields;
 	}
 }

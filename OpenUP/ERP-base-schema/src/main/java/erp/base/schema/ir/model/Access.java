@@ -6,9 +6,11 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import erp.base.schema.res.groups.Groups;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -49,22 +51,35 @@ public class Access {
 	 * 
 	 */
 	@Column(nullable = false)
-	@ManyToOne(targetEntity = Model.class)
 	@NotNull
 	@Description("Model")
-	@Property
-	@Relationship(type = "MODEL")
+	@Transient
 	private String model_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Model.class)
+	@JoinColumn(name = "model_id", nullable = false)
+	@NotNull
+	@Relationship(type = "MODEL")
+	private Model model;
 	
 	/**
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Groups.class)
 	@Description("Group")
-	@Property
-	@Relationship(type = "GROUP")
+	@Transient
 	private String group_id;
+	
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Groups.class)
+	@JoinColumn(name = "group_id")
+	@Relationship(type = "GROUP")
+	private Groups group;
 	
 	/**
 	 * 
@@ -168,5 +183,21 @@ public class Access {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Model getModel() {
+		return model;
+	}
+
+	public void setModel(Model model) {
+		this.model = model;
+	}
+
+	public Groups getGroup() {
+		return group;
+	}
+
+	public void setGroup(Groups group) {
+		this.group = group;
 	}
 }

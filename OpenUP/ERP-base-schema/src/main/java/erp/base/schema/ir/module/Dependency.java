@@ -6,10 +6,12 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -19,7 +21,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "ir_module_module_dependency")
 @Description("Module dependency")
-@NodeEntity("Dependency")
+@NodeEntity("Module Dependency")
 public class Dependency {
 	
 	/**
@@ -40,21 +42,33 @@ public class Dependency {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Module.class)
 	@Description("Module")
-	@Property
-	@Relationship(type = "MODULE")
+	@Transient
 	private String module_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Module.class)
+	@JoinColumn(name = "module_id")
+	@Relationship(type = "MODULE")
+	private Module module;
 	
 	/**
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Module.class)
 	@Description("Dependency")
-	@Property
-	@Relationship(type = "DEPEND")
+	@Transient
 	private String depend_id;
+	
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Module.class)
+	@JoinColumn(name = "depend_id")
+	@Relationship(type = "DEPENDENCY")
+	private Module depend;
 	
 	/**
 	 * 
@@ -119,5 +133,21 @@ public class Dependency {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Module getModule() {
+		return module;
+	}
+
+	public void setModule(Module module) {
+		this.module = module;
+	}
+
+	public Module getDepend() {
+		return depend;
+	}
+
+	public void setDepend(Module depend) {
+		this.depend = depend;
 	}
 }

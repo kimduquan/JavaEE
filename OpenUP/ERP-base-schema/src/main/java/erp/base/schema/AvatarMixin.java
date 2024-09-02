@@ -4,14 +4,12 @@ import org.eclipse.microprofile.graphql.Description;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.Embeddable;
 
 /**
  * 
  */
-@Entity
-@Table(name = "avatar_mixin")
+@Embeddable
 @Description("Avatar Mixin")
 @NodeEntity("Avatar Mixin")
 public class AvatarMixin extends ImageMixin {

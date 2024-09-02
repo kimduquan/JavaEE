@@ -7,6 +7,7 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import erp.base.schema.res.groups.Groups;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -14,6 +15,8 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -82,22 +85,35 @@ public class Fields {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Fields.class)
 	@Description("Relation field")
-	@Property
-	@Relationship(type = "RELATION_FIELD")
+	@Transient
 	private String relation_field_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Fields.class)
+	@JoinColumn(name = "relation_field_id")
+	@Relationship(type = "RELATION_FIELD")
+	private Fields _relation_field;
 	
 	/**
 	 * 
 	 */
 	@Column(nullable = false)
-	@ManyToOne(targetEntity = Model.class)
 	@NotNull
 	@Description("Model")
-	@Property
-	@Relationship(type = "MODEL")
+	@Transient
 	private String model_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Model.class)
+	@JoinColumn(name = "model_id", nullable = false)
+	@NotNull
+	@Relationship(type = "MODEL")
+	private Model _model;
 	
 	/**
 	 * 
@@ -138,14 +154,20 @@ public class Fields {
 	/**
 	 * 
 	 */
-	@Column
-	@OneToMany(targetEntity = Selection.class)
 	@ElementCollection(targetClass = Selection.class)
-	@CollectionTable(name = "ir_model_fields_selection")
+	@CollectionTable(name = "ir_model_fields_selection", joinColumns = {
+			@JoinColumn(name = "field_id")
+	})
 	@Description("Selection Options")
-	@Property
-	@Relationship(type = "SELECTIONS")
+	@Transient
 	private List<String> selection_ids;
+
+	/**
+	 * 
+	 */
+	@OneToMany(targetEntity = Selection.class, mappedBy = "field_id")
+	@Relationship(type = "SELECTION_OPTIONS")
+	private List<Selection> selections;
 	
 	/**
 	 * 
@@ -167,11 +189,17 @@ public class Fields {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Fields.class)
 	@Description("Related field")
-	@Property
-	@Relationship(type = "RELATED_FIELD")
+	@Transient
 	private String related_field_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Fields.class)
+	@JoinColumn(name = "related_field_id")
+	@Relationship(type = "RELATED_FIELD")
+	private Fields related_field;
 	
 	/**
 	 * 
@@ -243,13 +271,12 @@ public class Fields {
 	/**
 	 * 
 	 */
-	@Column
 	@ManyToMany(targetEntity = Groups.class)
-	@ElementCollection(targetClass = Groups.class)
-	@CollectionTable(name = "res_groups")
-	@Property
+	@JoinTable(name = "ir_model_fields_group_rel", joinColumns = {
+			@JoinColumn(name = "field_id", referencedColumnName = "group_id")
+	})
 	@Relationship(type = "GROUPS")
-	private List<String> groups;
+	private List<Groups> groups;
 	
 	/**
 	 * 
@@ -587,11 +614,11 @@ public class Fields {
 		this.domain = domain;
 	}
 
-	public List<String> getGroups() {
+	public List<Groups> getGroups() {
 		return groups;
 	}
 
-	public void setGroups(List<String> groups) {
+	public void setGroups(List<Groups> groups) {
 		this.groups = groups;
 	}
 
@@ -745,5 +772,37 @@ public class Fields {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Fields get_relation_field() {
+		return _relation_field;
+	}
+
+	public void set_relation_field(Fields _relation_field) {
+		this._relation_field = _relation_field;
+	}
+
+	public Model get_model() {
+		return _model;
+	}
+
+	public void set_model(Model _model) {
+		this._model = _model;
+	}
+
+	public List<Selection> getSelections() {
+		return selections;
+	}
+
+	public void setSelections(List<Selection> selections) {
+		this.selections = selections;
+	}
+
+	public Fields getRelated_field() {
+		return related_field;
+	}
+
+	public void setRelated_field(Fields related_field) {
+		this.related_field = related_field;
 	}
 }

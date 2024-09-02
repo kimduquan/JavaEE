@@ -5,14 +5,19 @@ import org.eclipse.microprofile.graphql.Description;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import erp.base.schema.ir.actions.Actions;
 import erp.base.schema.ir.model.Model;
 import erp.base.schema.report.PaperFormat;
 import erp.base.schema.res.groups.Groups;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -55,11 +60,17 @@ public class Report extends Actions {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Model.class)
 	@Description("Model")
-	@Property
-	@Relationship(type = "MODEL")
+	@Transient
 	private String model_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Model.class)
+	@JoinColumn(name = "model_id")
+	@Relationship(type = "MODEL")
+	private Model _model;
 	
 	/**
 	 * 
@@ -91,12 +102,23 @@ public class Report extends Actions {
 	/**
 	 * 
 	 */
-	@Column
-	@ManyToMany(targetEntity = Groups.class)
+	@ElementCollection(targetClass = Groups.class)
+	@CollectionTable(name = "res_groups_report_rel", joinColumns = {
+			@JoinColumn(name = "uid", referencedColumnName = "gid")
+	})
 	@Description("Groups")
-	@Property
-	@Relationship(type = "GROUPS")
+	@Transient
 	private List<String> groups_id;
+
+	/**
+	 * 
+	 */
+	@ManyToMany(targetEntity = Groups.class)
+	@JoinTable(name = "res_groups_report_rel", joinColumns = {
+			@JoinColumn(name = "uid", referencedColumnName = "gid")
+	})
+	@Relationship(type = "GROUPS")
+	private List<Groups> groups;
 	
 	/**
 	 * 
@@ -110,11 +132,17 @@ public class Report extends Actions {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = PaperFormat.class)
 	@Description("Paper Format")
-	@Property
-	@Relationship(type = "PAPER_FORMAT")
+	@Transient
 	private String paperformat_id;
+	
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = PaperFormat.class)
+	@JoinColumn(name = "paperformat_id")
+	@Relationship(type = "PAPER_FORMAT")
+	private PaperFormat paperformat;
 	
 	/**
 	 * 
@@ -242,5 +270,29 @@ public class Report extends Actions {
 
 	public void setAttachment(String attachment) {
 		this.attachment = attachment;
+	}
+
+	public Model get_model() {
+		return _model;
+	}
+
+	public void set_model(Model _model) {
+		this._model = _model;
+	}
+
+	public List<Groups> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(List<Groups> groups) {
+		this.groups = groups;
+	}
+
+	public PaperFormat getPaperformat() {
+		return paperformat;
+	}
+
+	public void setPaperformat(PaperFormat paperformat) {
+		this.paperformat = paperformat;
 	}
 }

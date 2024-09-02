@@ -6,6 +6,7 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import erp.base.schema.res.Bank;
 import erp.base.schema.res.Company;
 import erp.base.schema.res.currency.Currency;
@@ -13,6 +14,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -79,12 +81,19 @@ public class PartnerBank {
 	 * 
 	 */
 	@Column(nullable = false)
-	@ManyToOne(targetEntity = Partner.class)
 	@NotNull
 	@Description("Account Holder")
-	@Property
-	@Relationship(type = "ACCOUNT_HOLDER")
+	@Transient
 	private String partner_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Partner.class)
+	@JoinColumn(name = "partner_id", nullable = false)
+	@NotNull
+	@Relationship(type = "ACCOUNT_HOLDER")
+	private Partner partner;
 	
 	/**
 	 * 
@@ -99,11 +108,17 @@ public class PartnerBank {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Bank.class)
 	@Description("Bank")
-	@Property
-	@Relationship(type = "BANK")
+	@Transient
 	private String bank_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Bank.class)
+	@JoinColumn(name = "bank_id")
+	@Relationship(type = "BANK")
+	private String bank;
 	
 	/**
 	 * 
@@ -130,20 +145,32 @@ public class PartnerBank {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Currency.class)
 	@Description("Currency")
-	@Property
-	@Relationship(type = "CURRENCY")
+	@Transient
 	private String currency_id;
 	
 	/**
 	 * 
 	 */
+	@ManyToOne(targetEntity = Currency.class)
+	@JoinColumn(name = "currency_id")
+	@Relationship(type = "CURRENCY")
+	private Currency currency;
+	
+	/**
+	 * 
+	 */
 	@Column(updatable = false)
-	@ManyToOne(targetEntity = Company.class)
-	@Property
-	@Relationship(type = "COMPANY")
+	@Transient
 	private String company_id;
+	
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Company.class)
+	@JoinColumn(name = "company_id", updatable = false)
+	@Relationship(type = "COMPANY")
+	private Company company;
 
 	public Boolean getActive() {
 		return active;
@@ -255,5 +282,37 @@ public class PartnerBank {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Partner getPartner() {
+		return partner;
+	}
+
+	public void setPartner(Partner partner) {
+		this.partner = partner;
+	}
+
+	public String getBank() {
+		return bank;
+	}
+
+	public void setBank(String bank) {
+		this.bank = bank;
+	}
+
+	public Currency getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(Currency currency) {
+		this.currency = currency;
+	}
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
 	}
 }

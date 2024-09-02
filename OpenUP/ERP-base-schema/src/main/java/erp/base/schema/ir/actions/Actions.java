@@ -5,6 +5,7 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.ogm.annotation.typeconversion.Convert;
 import erp.base.schema.ir.model.Model;
 import erp.schema.util.NameAttributeConverter;
@@ -12,6 +13,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -71,11 +73,17 @@ public class Actions {
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Model.class)
 	@Description("Setting a value makes this action available in the sidebar for the given model.")
-	@Property
-	@Relationship(type = "BINDING_MODEL")
+	@Transient
 	private String binding_model_id;
+	
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Model.class)
+	@JoinColumn(name = "binding_model_id")
+	@Relationship(type = "BINDING_MODEL")
+	private Model binding_model;
 	
 	/**
 	 * 
@@ -155,5 +163,13 @@ public class Actions {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Model getBinding_model() {
+		return binding_model;
+	}
+
+	public void setBinding_model(Model binding_model) {
+		this.binding_model = binding_model;
 	}
 }

@@ -3,10 +3,11 @@ package erp.base.schema.ir.model;
 import org.eclipse.microprofile.graphql.Description;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
-import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -17,7 +18,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "ir_model_inherit")
 @Description("Model Inheritance Tree")
-@NodeEntity("Model Inheritance")
+@NodeEntity("Model Inheritance Tree")
 public class Inherit {
 	
 	/**
@@ -31,30 +32,50 @@ public class Inherit {
 	 * 
 	 */
 	@Column(nullable = false)
-	@ManyToOne(targetEntity = Model.class)
 	@NotNull
-	@Property
-	@Relationship(type = "MODEL")
+	@Transient
 	private String model_id;
 	
 	/**
 	 * 
 	 */
-	@Column(nullable = false)
 	@ManyToOne(targetEntity = Model.class)
+	@JoinColumn(name = "model_id", nullable = false)
 	@NotNull
-	@Property
-	@Relationship(type = "PARENT")
+	@Relationship(type = "MODEL")
+	private Model model;
+	
+	/**
+	 * 
+	 */
+	@Column(nullable = false)
+	@NotNull
+	@Transient
 	private String parent_id;
+
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Model.class)
+	@JoinColumn(name = "parent_id", nullable = false)
+	@NotNull
+	@Relationship(type = "PARENT")
+	private Model parent;
 	
 	/**
 	 * 
 	 */
 	@Column
-	@ManyToOne(targetEntity = Fields.class)
-	@Property
-	@Relationship(type = "PARENT_FIELD")
+	@Transient
 	private String parent_field_id;
+	
+	/**
+	 * 
+	 */
+	@ManyToOne(targetEntity = Fields.class)
+	@JoinColumn(name = "parent_field_id")
+	@Relationship(type = "PARENT_FIELD")
+	private Fields parent_field;
 
 	public String getModel_id() {
 		return model_id;
@@ -86,5 +107,29 @@ public class Inherit {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Model getModel() {
+		return model;
+	}
+
+	public void setModel(Model model) {
+		this.model = model;
+	}
+
+	public Model getParent() {
+		return parent;
+	}
+
+	public void setParent(Model parent) {
+		this.parent = parent;
+	}
+
+	public Fields getParent_field() {
+		return parent_field;
+	}
+
+	public void setParent_field(Fields parent_field) {
+		this.parent_field = parent_field;
 	}
 }

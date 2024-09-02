@@ -7,6 +7,7 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.ogm.annotation.typeconversion.Convert;
 import erp.base.schema.ir.Rule;
 import erp.base.schema.ir.ui.View;
@@ -20,6 +21,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.JoinColumn;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -78,27 +80,38 @@ public class Model {
 	/**
 	 * 
 	 */
-	@Column(nullable = false)
-	@OneToMany(targetEntity = Fields.class)
 	@ElementCollection(targetClass = Fields.class)
-	@CollectionTable(name = "ir_model_fields")
+	@CollectionTable(name = "ir_model_fields", joinColumns = {
+			@JoinColumn(name = "model_id")
+	})
 	@NotNull
 	@Description("Fields")
-	@Property
-	@Relationship(type = "FIELD")
+	@Transient
 	private List<String> field_id;
 	
 	/**
 	 * 
 	 */
-	@Column
-	@ManyToMany(targetEntity = Model.class)
+	@OneToMany(targetEntity = Fields.class, mappedBy = "model_id")
+	@NotNull
+	@Relationship(type = "FIELDS")
+	private List<Fields> fields;
+	
+	/**
+	 * 
+	 */
 	@ElementCollection(targetClass = Model.class)
 	@CollectionTable(name = "ir_model")
 	@Description("Inherited models")
-	@Property
-	@Relationship(type = "INHERITED_MODELS")
+	@Transient
 	private List<String> inherited_model_ids;
+
+	/**
+	 * 
+	 */
+	@ManyToMany(targetEntity = Model.class)
+	@Relationship(type = "INHERITED_MODELS")
+	private List<Model> inherited_models;
 	
 	/**
 	 * 
@@ -113,26 +126,38 @@ public class Model {
 	/**
 	 * 
 	 */
-	@Column
-	@OneToMany(targetEntity = Access.class)
 	@ElementCollection(targetClass = Access.class)
-	@CollectionTable(name = "ir_model_access")
+	@CollectionTable(name = "ir_model_access", joinColumns = {
+			@JoinColumn(name = "model_id")
+	})
 	@Description("Access")
-	@Property
-	@Relationship(type = "ACCESSES")
+	@Transient
 	private List<String> access_ids;
 	
 	/**
 	 * 
 	 */
-	@Column
-	@OneToMany(targetEntity = Rule.class)
+	@OneToMany(targetEntity = Access.class, mappedBy = "model_id")
+	@Relationship(type = "Access")
+	private List<Access> accesses;
+	
+	/**
+	 * 
+	 */
 	@ElementCollection(targetClass = Rule.class)
-	@CollectionTable(name = "ir_rule")
+	@CollectionTable(name = "ir_rule", joinColumns = {
+			@JoinColumn(name = "model_id")
+	})
 	@Description("Record Rules")
-	@Property
-	@Relationship(type = "RULES")
+	@Transient
 	private List<String> rule_ids;
+	
+	/**
+	 * 
+	 */
+	@OneToMany(targetEntity = Rule.class, mappedBy = "model_id")
+	@Relationship(type = "RECORD_RULES")
+	private List<Rule> rules;
 	
 	/**
 	 * 
@@ -153,13 +178,18 @@ public class Model {
 	/**
 	 * 
 	 */
-	@OneToMany(targetEntity = View.class)
 	@ElementCollection(targetClass = View.class)
 	@CollectionTable(name = "ir_ui_view")
 	@Description("Views")
-	@Property
-	@Relationship(type = "VIEWS")
+	@Transient
 	private List<String> view_ids;
+	
+	/**
+	 * 
+	 */
+	@OneToMany(targetEntity = View.class)
+	@Relationship(type = "VIEWS")
+	private List<View> views;
 	
 	/**
 	 * 
@@ -279,5 +309,45 @@ public class Model {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public List<Fields> getFields() {
+		return fields;
+	}
+
+	public void setFields(List<Fields> fields) {
+		this.fields = fields;
+	}
+
+	public List<Model> getInherited_models() {
+		return inherited_models;
+	}
+
+	public void setInherited_models(List<Model> inherited_models) {
+		this.inherited_models = inherited_models;
+	}
+
+	public List<Access> getAccesses() {
+		return accesses;
+	}
+
+	public void setAccesses(List<Access> accesses) {
+		this.accesses = accesses;
+	}
+
+	public List<Rule> getRules() {
+		return rules;
+	}
+
+	public void setRules(List<Rule> rules) {
+		this.rules = rules;
+	}
+
+	public List<View> getViews() {
+		return views;
+	}
+
+	public void setViews(List<View> views) {
+		this.views = views;
 	}
 }
