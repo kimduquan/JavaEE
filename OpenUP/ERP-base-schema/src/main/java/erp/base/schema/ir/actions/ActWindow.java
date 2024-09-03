@@ -1,4 +1,4 @@
-package erp.base.schema.ir.act;
+package erp.base.schema.ir.actions;
 
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
@@ -7,7 +7,7 @@ import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
-import erp.base.schema.ir.actions.Actions;
+
 import erp.base.schema.ir.ui.View;
 import erp.base.schema.res.groups.Groups;
 import jakarta.persistence.CollectionTable;

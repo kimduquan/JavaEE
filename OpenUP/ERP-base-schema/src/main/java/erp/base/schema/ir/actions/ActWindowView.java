@@ -1,4 +1,4 @@
-package erp.base.schema.ir.act;
+package erp.base.schema.ir.actions;
 
 import org.eclipse.microprofile.graphql.Description;
 import org.neo4j.ogm.annotation.Id;

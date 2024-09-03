@@ -16,6 +16,12 @@
 		    <artifactId>neo4j-ogm-core</artifactId>
 		    <scope>provided</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/jakarta.json/jakarta.json-api -->
+		<dependency>
+			<groupId>jakarta.json</groupId>
+			<artifactId>jakarta.json-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
 		
 		<dependency>
 	    	<groupId>openup</groupId>

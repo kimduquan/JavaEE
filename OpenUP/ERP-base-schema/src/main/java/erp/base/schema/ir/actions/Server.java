@@ -1,4 +1,4 @@
-package erp.base.schema.ir.act;
+package erp.base.schema.ir.actions;
 
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
@@ -9,7 +9,6 @@ import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.ogm.annotation.typeconversion.Convert;
 import erp.base.schema.ir.model.Model;
-import erp.base.schema.ir.actions.Actions;
 import erp.base.schema.ir.model.Fields;
 import erp.base.schema.ir.model.Selection;
 import erp.base.schema.res.groups.Groups;
