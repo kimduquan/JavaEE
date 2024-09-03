@@ -1,13 +1,13 @@
 set USER_DIR=C:\Users\PC
 set SOURCE_DIR=C:\GIT\JavaEE\OpenUP
-set JAVA8_HOME=C:\jdk8u402-b06
-set JAVA21_HOME=C:\jdk-21.0.3+9
+set JAVA8_HOME=C:\jdk8u422-b05
+set JAVA21_HOME=C:\jdk-21.0.4+7
 set JAVA_HOME=%JAVA21_HOME%
 set PLUTO_HOME="C:\pluto-3.1.1"
 set KAFKA_DIR=C:\kafka_2.13-3.5.1
 set KAFKA_HOME=%KAFKA_DIR%\bin\windows
 set WILDFLY_HOME="C:\wildfly-24.0.1.Final\bin"
 set JAEGER_HOME="C:\jaeger-1.48.0-windows-amd64"
-set MAVEN_HOME=C:\apache-maven-3.9.6\bin
+set MAVEN_HOME=C:\apache-maven-3.9.9\bin
 set HAZELCAST_HOME=C:\hazelcast-5.3.2
 set PATH=%MAVEN_HOME%;%PATH%
