@@ -80,9 +80,9 @@
 				<dependency>
 				    <groupId>openup</groupId>
 				    <artifactId>opencv</artifactId>
-				    <version>4.5.2</version>
+				    <version>4.10.0</version>
 				    <scope>system</scope>
-				    <systemPath>C://Program Files/opencv/build/java/opencv-452.jar</systemPath>
+				    <systemPath>D:/Installed/opencv/opencv/build/java/opencv-4100.jar</systemPath>
 				</dependency>
 			</dependencies>
 		</profile>

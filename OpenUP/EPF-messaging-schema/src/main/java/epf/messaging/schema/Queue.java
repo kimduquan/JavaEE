@@ -13,13 +13,13 @@ public class Queue extends Destination {
 	 * 
 	 */
 	@Column
-	private String queueName​;
+	private String queueName ;
 
-	public String getQueueName​() {
-		return queueName​;
+	public String getQueueName() {
+		return queueName;
 	}
 
-	public void setQueueName​(final String queueName​) {
-		this.queueName​ = queueName​;
+	public void setQueueName(final String queueName) {
+		this.queueName = queueName;
 	}
 }
