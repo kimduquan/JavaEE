@@ -84,7 +84,7 @@ public class Groups {
 	 */
 	@ManyToMany(targetEntity = Menu.class)
 	@JoinTable(name = "ir_ui_menu_group_rel", joinColumns = {
-			@JoinColumn(name = "gid", referencedColumnName = "menu_id")
+			@JoinColumn(name = "menu_id", referencedColumnName = "gid")
 	})
 	@Description("Access Menu")
 	@Relationship(type = "ACCESS_MENU")
@@ -95,7 +95,7 @@ public class Groups {
 	 */
 	@ManyToMany(targetEntity = View.class)
 	@JoinTable(name = "ir_ui_view_group_rel", joinColumns = {
-			@JoinColumn(name = "group_id", referencedColumnName = "view_id")
+			@JoinColumn(name = "view_id", referencedColumnName = "group_id")
 	})
 	@Description("Views")
 	@Relationship(type = "VIEWS")

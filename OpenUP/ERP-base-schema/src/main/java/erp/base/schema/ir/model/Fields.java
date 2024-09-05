@@ -304,7 +304,7 @@ public class Fields {
 	 */
 	@ManyToMany(targetEntity = Groups.class)
 	@JoinTable(name = "ir_model_fields_group_rel", joinColumns = {
-			@JoinColumn(name = "field_id", referencedColumnName = "group_id")
+			@JoinColumn(name = "group_id", referencedColumnName = "field_id")
 	})
 	@Relationship(type = "GROUPS")
 	private List<Groups> groups;

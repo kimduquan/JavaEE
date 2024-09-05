@@ -7,7 +7,6 @@ import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
-
 import erp.schema.util.EnumAttributeConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;

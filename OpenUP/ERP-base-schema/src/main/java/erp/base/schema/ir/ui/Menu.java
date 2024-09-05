@@ -151,7 +151,7 @@ public class Menu {
 	 */
 	@ElementCollection(targetClass = Groups.class)
 	@CollectionTable(name = "ir_ui_menu_group_rel", joinColumns = {
-			@JoinColumn(name = "menu_id", referencedColumnName = "gid")
+			@JoinColumn(name = "gid", referencedColumnName = "menu_id")
 	})
 	@Description("Groups")
 	@Transient
@@ -162,7 +162,7 @@ public class Menu {
 	 */
 	@ManyToMany(targetEntity = Groups.class)
 	@JoinTable(name = "ir_ui_menu_group_rel", joinColumns = {
-			@JoinColumn(name = "menu_id", referencedColumnName = "gid")
+			@JoinColumn(name = "gid", referencedColumnName = "menu_id")
 	})
 	@Relationship(type = "GROUPS")
 	private List<Groups> groups;

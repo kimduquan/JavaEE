@@ -8,7 +8,6 @@ import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
-import erp.base.schema.res.Bank;
 import erp.base.schema.res.Company;
 import erp.base.schema.res.country.Country;
 import erp.base.schema.res.country.State;
@@ -295,8 +294,7 @@ public class Partner {
 	 */
 	@ManyToMany(targetEntity = Category.class)
 	@JoinTable(name = "res_partner_category", joinColumns = {
-			@JoinColumn(name = "partner_id"),
-			@JoinColumn(name = "category_id")
+			@JoinColumn(name = "partner_id", referencedColumnName = "category_id")
 	})
 	@Relationship(type = "TAGS")
 	private List<Category> category;

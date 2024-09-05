@@ -137,7 +137,7 @@ public class Country {
 	 */
 	@ElementCollection(targetClass = Group.class)
 	@CollectionTable(name = "res_country_res_country_group_rel", joinColumns = {
-			@JoinColumn(name = "res_country_id", referencedColumnName = "res_country_group_id")
+			@JoinColumn(name = "res_country_group_id", referencedColumnName = "res_country_id")
 	})
 	@Description("Country Groups")
 	@Transient
@@ -148,7 +148,7 @@ public class Country {
 	 */
 	@ManyToMany(targetEntity = Group.class)
 	@JoinTable(name = "res_country_res_country_group_rel", joinColumns = {
-			@JoinColumn(name = "res_country_id", referencedColumnName = "res_country_group_id")
+			@JoinColumn(name = "res_country_group_id", referencedColumnName = "res_country_id")
 	})
 	@Relationship(type = "COUNTRY_GROUPS")
 	private List<Group> country_groups;
