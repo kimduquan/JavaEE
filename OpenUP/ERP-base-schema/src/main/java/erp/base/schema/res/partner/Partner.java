@@ -102,7 +102,6 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@Column
 	@ManyToOne(targetEntity = Title.class)
 	@Relationship(type = "TTILE")
 	private Title title;

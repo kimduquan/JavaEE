@@ -28,6 +28,40 @@ public class ActWindowView {
 	/**
 	 * 
 	 */
+	public enum ViewType {
+		/**
+		 * 
+		 */
+		tree,
+	    /**
+	     * 
+	     */
+	    form,
+	    /**
+	     * 
+	     */
+	    graph,
+	    /**
+	     * 
+	     */
+	    pivot,
+	    /**
+	     * 
+	     */
+	    calendar,
+	    /**
+	     * 
+	     */
+	    gantt,
+	    /**
+	     * 
+	     */
+	    kanban
+	}
+	
+	/**
+	 * 
+	 */
 	@jakarta.persistence.Id
 	@Id
 	private int id;
@@ -63,7 +97,7 @@ public class ActWindowView {
 	@NotNull
 	@Description("View Type")
 	@Property
-	private String view_mode;
+	private ViewType view_mode;
 	
 	/**
 	 * 
@@ -105,11 +139,11 @@ public class ActWindowView {
 		this.view_id = view_id;
 	}
 
-	public String getView_mode() {
+	public ViewType getView_mode() {
 		return view_mode;
 	}
 
-	public void setView_mode(String view_mode) {
+	public void setView_mode(ViewType view_mode) {
 		this.view_mode = view_mode;
 	}
 

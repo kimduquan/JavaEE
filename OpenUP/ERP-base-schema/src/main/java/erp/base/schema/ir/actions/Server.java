@@ -34,6 +34,104 @@ import jakarta.validation.constraints.NotNull;
 @Description("Server Actions")
 @NodeEntity("Server Actions")
 public class Server extends Actions {
+	
+	/**
+	 * 
+	 */
+	public enum Usage {
+		/**
+		 * 
+		 */
+		ir_actions_server,
+    	/**
+    	 * 
+    	 */
+    	ir_cron
+	}
+	
+	/**
+	 * 
+	 */
+	public enum Type {
+		/**
+		 * 
+		 */
+		object_write,
+        /**
+         * 
+         */
+        object_create,
+        /**
+         * 
+         */
+        code,
+        /**
+         * 
+         */
+        webhook,
+        /**
+         * 
+         */
+        multi
+	}
+	
+	/**
+	 * 
+	 */
+	public enum Many2ManyOperations {
+		/**
+		 * 
+		 */
+		add,
+        /**
+         * 
+         */
+        remove,
+        /**
+         * 
+         */
+        set,
+        /**
+         * 
+         */
+        clear
+	}
+	
+	/**
+	 * 
+	 */
+	public enum ValueType {
+		/**
+		 * 
+		 */
+		value,
+        /**
+         * 
+         */
+        equation
+	}
+	
+	/**
+	 * 
+	 */
+	public enum ValueFieldToShow {
+		/**
+		 * 
+		 */
+		value,
+        /**
+         * 
+         */
+        resource_ref,
+        /**
+         * 
+         */
+        update_boolean_value,
+        /**
+         * 
+         */
+        selection_value
+	}
 
 	/**
 	 * 
@@ -61,7 +159,7 @@ public class Server extends Actions {
 	@Description("Usage")
 	@DefaultValue("ir_actions_server")
 	@Property
-	private String usage = "ir_actions_server";
+	private Usage usage = Usage.ir_actions_server;
 	
 	/**
 	 * 
@@ -72,7 +170,7 @@ public class Server extends Actions {
 	@Description("Type")
 	@DefaultValue("object_write")
 	@Property
-	private String state = "object_write";
+	private Type state = Type.object_write;
 	
 	/**
 	 * 
@@ -262,7 +360,6 @@ public class Server extends Actions {
 	 * 
 	 */
 	@Column(updatable = false)
-	@Enumerated(EnumType.STRING)
 	@Property
 	private String update_field_type;
 	
@@ -274,13 +371,12 @@ public class Server extends Actions {
 	@Description("Many2many Operations")
 	@DefaultValue("add")
 	@Property
-	private String update_m2m_operation = "add";
+	private Many2ManyOperations update_m2m_operation = Many2ManyOperations.add;
 	
 	/**
 	 * 
 	 */
 	@Column
-	@Enumerated(EnumType.STRING)
 	@Description("Boolean Value")
 	@DefaultValue("true")
 	@Property
@@ -301,7 +397,7 @@ public class Server extends Actions {
 	@Description("Value Type")
 	@DefaultValue("value")
 	@Property
-	private String evaluation_type = "value";
+	private ValueType evaluation_type = ValueType.value;
 	
 	/**
 	 * 
@@ -325,7 +421,7 @@ public class Server extends Actions {
 	@Column
 	@Enumerated(EnumType.STRING)
 	@Property
-	private String value_field_to_show;
+	private ValueFieldToShow value_field_to_show;
 	
 	/**
 	 * 
@@ -380,19 +476,19 @@ public class Server extends Actions {
 		this.type = type;
 	}
 
-	public String getUsage() {
+	public Usage getUsage() {
 		return usage;
 	}
 
-	public void setUsage(String usage) {
+	public void setUsage(Usage usage) {
 		this.usage = usage;
 	}
 
-	public String getState() {
+	public Type getState() {
 		return state;
 	}
 
-	public void setState(String state) {
+	public void setState(Type state) {
 		this.state = state;
 	}
 
@@ -508,11 +604,11 @@ public class Server extends Actions {
 		this.update_field_type = update_field_type;
 	}
 
-	public String getUpdate_m2m_operation() {
+	public Many2ManyOperations getUpdate_m2m_operation() {
 		return update_m2m_operation;
 	}
 
-	public void setUpdate_m2m_operation(String update_m2m_operation) {
+	public void setUpdate_m2m_operation(Many2ManyOperations update_m2m_operation) {
 		this.update_m2m_operation = update_m2m_operation;
 	}
 
@@ -532,11 +628,11 @@ public class Server extends Actions {
 		this.value = value;
 	}
 
-	public String getEvaluation_type() {
+	public ValueType getEvaluation_type() {
 		return evaluation_type;
 	}
 
-	public void setEvaluation_type(String evaluation_type) {
+	public void setEvaluation_type(ValueType evaluation_type) {
 		this.evaluation_type = evaluation_type;
 	}
 
@@ -556,11 +652,11 @@ public class Server extends Actions {
 		this.selection_value = selection_value;
 	}
 
-	public String getValue_field_to_show() {
+	public ValueFieldToShow getValue_field_to_show() {
 		return value_field_to_show;
 	}
 
-	public void setValue_field_to_show(String value_field_to_show) {
+	public void setValue_field_to_show(ValueFieldToShow value_field_to_show) {
 		this.value_field_to_show = value_field_to_show;
 	}
 

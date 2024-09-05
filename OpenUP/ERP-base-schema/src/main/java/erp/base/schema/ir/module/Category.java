@@ -23,7 +23,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * 
  */
-@Entity
+@Entity(name = "ModuleCategory")
 @Table(name = "ir_module_category")
 @Description("Application")
 @NodeEntity("Application")

@@ -30,6 +30,20 @@ public class Todo {
 	/**
 	 * 
 	 */
+	public enum Status {
+		/**
+		 * 
+		 */
+		open,
+		/**
+		 * 
+		 */
+		done
+	}
+	
+	/**
+	 * 
+	 */
 	@jakarta.persistence.Id
 	@Id
 	private int id;
@@ -69,7 +83,7 @@ public class Todo {
 	@Description("Status")
 	@DefaultValue("open")
 	@Property
-	private String state = "open";
+	private Status state = Status.open;
 	
 	/**
 	 * 
@@ -95,11 +109,11 @@ public class Todo {
 		this.sequence = sequence;
 	}
 
-	public String getState() {
+	public Status getState() {
 		return state;
 	}
 
-	public void setState(String state) {
+	public void setState(Status state) {
 		this.state = state;
 	}
 

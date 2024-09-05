@@ -6,13 +6,11 @@ import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 
 /**
  * 
  */
 @Entity
-@Table(name = "ir_actions")
 @Description("Action Window Close")
 @NodeEntity("Action Window Close")
 public class WindowClose extends Actions {

@@ -25,7 +25,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * 
  */
-@Entity
+@Entity(name = "PartnerCategory")
 @Table(name = "res_partner_category")
 @Description("Partner Tags")
 @NodeEntity("Partner Tags")

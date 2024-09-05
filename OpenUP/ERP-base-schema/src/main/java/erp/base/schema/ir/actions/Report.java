@@ -6,12 +6,13 @@ import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
-
 import erp.base.schema.ir.model.Model;
 import erp.base.schema.report.PaperFormat;
 import erp.base.schema.res.groups.Groups;
+import erp.schema.util.EnumAttributeConverter;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -31,6 +32,43 @@ import jakarta.validation.constraints.NotNull;
 @Description("Report Action")
 @NodeEntity("Report Action")
 public class Report extends Actions {
+	
+	/**
+	 * 
+	 */
+	public enum ReportType {
+		/**
+		 * 
+		 */
+		qweb_html,
+        /**
+         * 
+         */
+        qweb_pdf,
+        /**
+         * 
+         */
+        qweb_text
+	}
+	
+	/**
+	 * 
+	 */
+	public class ReportTypeAttributeConverter extends EnumAttributeConverter<ReportType> {
+		/**
+		 * 
+		 */
+		public ReportTypeAttributeConverter() {
+			super(ReportType.class, null, null, null);
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	public Report() {
+		setBinding_type(BindingType.report);
+	}
 
 	/**
 	 * 
@@ -38,14 +76,6 @@ public class Report extends Actions {
 	@Column
 	@Property
 	private String type = "ir.actions.report";
-	
-	/**
-	 * 
-	 */
-	@Column
-	@Enumerated(EnumType.STRING)
-	@Property
-	private String binding_type = "report";
 	
 	/**
 	 * 
@@ -77,10 +107,11 @@ public class Report extends Actions {
 	 */
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
+	@Convert(converter = ReportTypeAttributeConverter.class)
 	@NotNull
 	@Description("qweb-pdf")
 	@Property
-	private String report_type;
+	private ReportType report_type = ReportType.qweb_pdf;
 	
 	/**
 	 * 
@@ -176,14 +207,6 @@ public class Report extends Actions {
 		this.type = type;
 	}
 
-	public String getBinding_type() {
-		return binding_type;
-	}
-
-	public void setBinding_type(String binding_type) {
-		this.binding_type = binding_type;
-	}
-
 	public String getModel() {
 		return model;
 	}
@@ -200,11 +223,11 @@ public class Report extends Actions {
 		this.model_id = model_id;
 	}
 
-	public String getReport_type() {
+	public ReportType getReport_type() {
 		return report_type;
 	}
 
-	public void setReport_type(String report_type) {
+	public void setReport_type(ReportType report_type) {
 		this.report_type = report_type;
 	}
 

@@ -7,11 +7,12 @@ import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
-
 import erp.base.schema.ir.ui.View;
 import erp.base.schema.res.groups.Groups;
+import erp.schema.util.EnumAttributeConverter;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -32,6 +33,44 @@ import jakarta.validation.constraints.NotNull;
 @Description("Action Window")
 @NodeEntity("Action Window")
 public class ActWindow extends Actions {
+	
+	/**
+	 * 
+	 */
+	public enum TargetWindow {
+		/**
+		 * 
+		 */
+		current,
+		/**
+		 * 
+		 */
+		_new,
+		/**
+		 * 
+		 */
+		inline,
+		/**
+		 * 
+		 */
+		fullscreen,
+		/**
+		 * 
+		 */
+		main
+	}
+	
+	/**
+	 * 
+	 */
+	public class TargetWindowAttributeConverter extends EnumAttributeConverter<TargetWindow> {
+		/**
+		 * 
+		 */
+		public TargetWindowAttributeConverter() {
+			super(TargetWindow.class, "_", null, null);
+		}
+	}
 
 	/**
 	 * 
@@ -97,10 +136,11 @@ public class ActWindow extends Actions {
 	 */
 	@Column
 	@Enumerated(EnumType.STRING)
+	@Convert(converter = TargetWindowAttributeConverter.class)
 	@Description("Target Window")
 	@DefaultValue("current")
 	@Property
-	private String target = "current";
+	private TargetWindow target = TargetWindow.current;
 	
 	/**
 	 * 
@@ -263,11 +303,11 @@ public class ActWindow extends Actions {
 		this.res_model = res_model;
 	}
 
-	public String getTarget() {
+	public TargetWindow getTarget() {
 		return target;
 	}
 
-	public void setTarget(String target) {
+	public void setTarget(TargetWindow target) {
 		this.target = target;
 	}
 

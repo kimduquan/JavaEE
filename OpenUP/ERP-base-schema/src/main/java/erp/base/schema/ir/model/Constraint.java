@@ -1,7 +1,6 @@
 package erp.base.schema.ir.model;
 
 import java.util.Date;
-
 import org.eclipse.microprofile.graphql.Description;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
@@ -9,9 +8,11 @@ import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import erp.base.schema.ir.module.Module;
 
 /**
  * 
@@ -57,7 +58,7 @@ public class Constraint {
 	/**
 	 * 
 	 */
-	@Column(nullable = false)
+	@JoinColumn(nullable = false)
 	@ManyToOne(targetEntity = Model.class)
 	@NotNull
 	@Relationship(type = "MODEL")
@@ -66,7 +67,7 @@ public class Constraint {
 	/**
 	 * 
 	 */
-	@Column(nullable = false)
+	@JoinColumn(nullable = false)
 	@ManyToOne(targetEntity = Module.class)
 	@NotNull
 	@Relationship(type = "MODULE")

@@ -10,6 +10,7 @@ import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.ogm.annotation.typeconversion.Convert;
 import erp.base.schema.res.groups.Groups;
+import erp.schema.util.EnumAttributeConverter;
 import erp.schema.util.NameAttributeConverter;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -38,11 +39,38 @@ public class Menu {
 	 * 
 	 */
 	public enum Action {
-		irxactionsxreport,
-        irxactionsxact_window,
-        irxactionsxact_url,
-        irxactionsxserver,
-        irxactionsxclient
+		/**
+		 * 
+		 */
+		ir__actions__report,
+        /**
+         * 
+         */
+        ir__actions__act_window,
+        /**
+         * 
+         */
+        ir__actions__act_url,
+        /**
+         * 
+         */
+        ir__actions__server,
+        /**
+         * 
+         */
+        ir__actions__client
+	}
+	
+	/**
+	 * 
+	 */
+	public class ActionAttributeConverter extends EnumAttributeConverter<Action> {
+		/**
+		 * 
+		 */
+		public ActionAttributeConverter() {
+			super(Action.class, null, ".", "__");
+		}
 	}
 	
 	/**
@@ -87,7 +115,7 @@ public class Menu {
 	})
 	@Description("Child IDs")
 	@Transient
-	private String child_id;
+	private List<String> child_id;
 
 	/**
 	 * 
@@ -108,7 +136,7 @@ public class Menu {
 	 */
 	@ManyToOne(targetEntity = Menu.class)
 	@JoinColumn(name = "parent_id")
-	@Relationship(type = "PARENT")
+	@Relationship(type = "PARENT_MENU")
 	private Menu parent;
 	
 	/**
@@ -160,8 +188,9 @@ public class Menu {
 	 */
 	@Column
 	@Enumerated(EnumType.STRING)
+	@jakarta.persistence.Convert(converter = ActionAttributeConverter.class)
 	@Property
-	private String action;
+	private Action action;
 	
 	/**
 	 * 
@@ -195,11 +224,11 @@ public class Menu {
 		this.sequence = sequence;
 	}
 
-	public String getChild_id() {
+	public List<String> getChild_id() {
 		return child_id;
 	}
 
-	public void setChild_id(String child_id) {
+	public void setChild_id(List<String> child_id) {
 		this.child_id = child_id;
 	}
 
@@ -243,11 +272,11 @@ public class Menu {
 		this.web_icon = web_icon;
 	}
 
-	public String getAction() {
+	public Action getAction() {
 		return action;
 	}
 
-	public void setAction(String action) {
+	public void setAction(Action action) {
 		this.action = action;
 	}
 

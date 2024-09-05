@@ -4,7 +4,9 @@ import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
+import erp.schema.util.EnumAttributeConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -19,6 +21,36 @@ import jakarta.validation.constraints.NotNull;
 @Description("Action URL")
 @NodeEntity("Action URL")
 public class ActUrl extends Actions {
+	
+	/**
+	 * 
+	 */
+	public enum ActionTarget {
+		/**
+		 * 
+		 */
+		_new,
+		/**
+		 * 
+		 */
+		self,
+		/**
+		 * 
+		 */
+		download
+	}
+	
+	/**
+	 * 
+	 */
+	public class ActionTargetAttributeConverter extends EnumAttributeConverter<ActionTarget> {
+		/**
+		 * 
+		 */
+		public ActionTargetAttributeConverter() {
+			super(ActionTarget.class, "_", null, null);
+		}
+	}
 
 	/**
 	 * 
@@ -42,11 +74,12 @@ public class ActUrl extends Actions {
 	 */
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
+	@Convert(converter = ActionTargetAttributeConverter.class)
 	@NotNull
 	@Description("Action Target")
 	@DefaultValue("new")
 	@Property
-	private String target = "new";
+	private ActionTarget target = ActionTarget._new;
 
 	public String getType() {
 		return type;
@@ -64,11 +97,11 @@ public class ActUrl extends Actions {
 		this.url = url;
 	}
 
-	public String getTarget() {
+	public ActionTarget getTarget() {
 		return target;
 	}
 
-	public void setTarget(String target) {
+	public void setTarget(ActionTarget target) {
 		this.target = target;
 	}
 }

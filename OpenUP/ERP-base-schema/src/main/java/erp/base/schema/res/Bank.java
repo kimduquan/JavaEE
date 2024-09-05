@@ -72,7 +72,6 @@ public class Bank {
 	/**
 	 * 
 	 */
-	@Column
 	@ManyToOne(targetEntity = State.class)
 	@Description("Fed. State")
 	@Relationship(type = "STATE")
@@ -81,7 +80,6 @@ public class Bank {
 	/**
 	 * 
 	 */
-	@Column
 	@ManyToOne(targetEntity = Country.class)
 	@Relationship(type = "COUNTRY")
 	private Country country;

@@ -4,7 +4,9 @@ import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
+import erp.schema.util.EnumAttributeConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -19,6 +21,40 @@ import jakarta.validation.constraints.NotNull;
 @Description("Client Action")
 @NodeEntity("Client Action")
 public class ActClient extends Actions {
+	
+	/**
+	 * 
+	 */
+	public enum TargetWindow {
+		/**
+		 * 
+		 */
+		current,
+		/**
+		 * 
+		 */
+		_new,
+		/**
+		 * 
+		 */
+		fullscreen,
+		/**
+		 * 
+		 */
+		main
+	}
+	
+	/**
+	 * 
+	 */
+	public class TargetWindowAttributeConverter extends EnumAttributeConverter<TargetWindow> {
+		/**
+		 * 
+		 */
+		public TargetWindowAttributeConverter() {
+			super(TargetWindow.class, "_", null, null);
+		}
+	}
 
 	/**
 	 * 
@@ -42,10 +78,11 @@ public class ActClient extends Actions {
 	 */
 	@Column
 	@Enumerated(EnumType.STRING)
+	@Convert(converter = TargetWindowAttributeConverter.class)
 	@DefaultValue("current")
 	@Description("Target Window")
 	@Property
-	private String target = "current";
+	private TargetWindow target = TargetWindow.current;
 	
 	/**
 	 * 
@@ -97,11 +134,11 @@ public class ActClient extends Actions {
 		this.tag = tag;
 	}
 
-	public String getTarget() {
+	public TargetWindow getTarget() {
 		return target;
 	}
 
-	public void setTarget(String target) {
+	public void setTarget(TargetWindow target) {
 		this.target = target;
 	}
 

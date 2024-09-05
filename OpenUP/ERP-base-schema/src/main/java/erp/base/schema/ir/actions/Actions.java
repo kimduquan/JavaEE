@@ -1,5 +1,6 @@
 package erp.base.schema.ir.actions;
 
+import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
@@ -13,6 +14,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -22,10 +25,25 @@ import jakarta.validation.constraints.NotNull;
  * 
  */
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "ir_actions")
 @Description("Actions")
 @NodeEntity("Actions")
 public class Actions {
+	
+	/**
+	 * 
+	 */
+	public enum BindingType {
+		/**
+		 * 
+		 */
+		action,
+        /**
+         * 
+         */
+        report
+	}
 	
 	/**
 	 * 
@@ -91,8 +109,9 @@ public class Actions {
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	@NotNull
+	@DefaultValue("action")
 	@Property
-	private String binding_type = "action";
+	private BindingType binding_type = BindingType.action;
 	
 	/**
 	 * 
@@ -141,11 +160,11 @@ public class Actions {
 		this.binding_model_id = binding_model_id;
 	}
 
-	public String getBinding_type() {
+	public BindingType getBinding_type() {
 		return binding_type;
 	}
 
-	public void setBinding_type(String binding_type) {
+	public void setBinding_type(BindingType binding_type) {
 		this.binding_type = binding_type;
 	}
 

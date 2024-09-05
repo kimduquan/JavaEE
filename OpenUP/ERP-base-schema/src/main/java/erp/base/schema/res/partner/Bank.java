@@ -7,7 +7,6 @@ import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
-import erp.base.schema.res.Bank;
 import erp.base.schema.res.Company;
 import erp.base.schema.res.currency.Currency;
 import jakarta.persistence.Column;
@@ -20,11 +19,11 @@ import jakarta.validation.constraints.NotNull;
 /**
  * 
  */
-@Entity
+@Entity(name = "PartnerBank")
 @Table(name = "res_partner_bank")
 @Description("Bank Accounts")
 @NodeEntity("Bank Accounts")
-public class PartnerBank {
+public class Bank {
 	
 	/**
 	 * 
