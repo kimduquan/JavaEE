@@ -37,6 +37,17 @@ public class Menu {
 	/**
 	 * 
 	 */
+	public enum Action {
+		irxactionsxreport,
+        irxactionsxact_window,
+        irxactionsxact_url,
+        irxactionsxserver,
+        irxactionsxclient
+	}
+	
+	/**
+	 * 
+	 */
 	@jakarta.persistence.Id
 	@Id
 	private int id;

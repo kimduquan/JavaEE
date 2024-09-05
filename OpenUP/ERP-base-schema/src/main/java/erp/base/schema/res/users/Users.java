@@ -1,5 +1,6 @@
 package erp.base.schema.res.users;
 
+import java.util.Date;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
@@ -168,7 +169,7 @@ public class Users {
 	@Column
 	@Description("Latest authentication")
 	@Property
-	private String login_date;
+	private Date login_date;
 	
 	/**
 	 * 
@@ -384,11 +385,11 @@ public class Users {
 		this.log_ids = log_ids;
 	}
 
-	public String getLogin_date() {
+	public Date getLogin_date() {
 		return login_date;
 	}
 
-	public void setLogin_date(String login_date) {
+	public void setLogin_date(Date login_date) {
 		this.login_date = login_date;
 	}
 

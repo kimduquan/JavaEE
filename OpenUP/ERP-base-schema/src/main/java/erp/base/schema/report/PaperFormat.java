@@ -34,6 +34,150 @@ public class PaperFormat {
 	/**
 	 * 
 	 */
+	public enum PaperSize {
+		/**
+		 * 
+		 */
+		A0,
+		/**
+		 * 
+		 */
+		A1,
+		/**
+		 * 
+		 */
+		A2,
+		/**
+		 * 
+		 */
+		A3,
+		/**
+		 * 
+		 */
+		A4,
+		/**
+		 * 
+		 */
+		A5,
+		/**
+		 * 
+		 */
+		A6,
+		/**
+		 * 
+		 */
+		A7,
+		/**
+		 * 
+		 */
+		A8,
+		/**
+		 * 
+		 */
+		A9,
+		/**
+		 * 
+		 */
+		B0,
+		/**
+		 * 
+		 */
+		B1,
+		/**
+		 * 
+		 */
+		B2,
+		/**
+		 * 
+		 */
+		B3,
+		/**
+		 * 
+		 */
+		B4,
+		/**
+		 * 
+		 */
+		B5,
+		/**
+		 * 
+		 */
+		B6,
+		/**
+		 * 
+		 */
+		B7,
+		/**
+		 * 
+		 */
+		B8,
+		/**
+		 * 
+		 */
+		B9,
+		/**
+		 * 
+		 */
+		B10,
+		/**
+		 * 
+		 */
+		C5E,
+		/**
+		 * 
+		 */
+		Comm10E,
+		/**
+		 * 
+		 */
+		DLE,
+		/**
+		 * 
+		 */
+		Executive,
+		/**
+		 * 
+		 */
+		Folio,
+		/**
+		 * 
+		 */
+		Ledger,
+		/**
+		 * 
+		 */
+		Legal,
+		/**
+		 * 
+		 */
+		Letter,
+		/**
+		 * 
+		 */
+		Tabloid,
+		/**
+		 * 
+		 */
+		custom
+	}
+	
+	/**
+	 * 
+	 */
+	public enum Orientation {
+		/**
+		 * 
+		 */
+		Landscape,
+        /**
+         * 
+         */
+        Portrait
+	}
+	
+	/**
+	 * 
+	 */
 	@jakarta.persistence.Id
 	@Id
 	private int id;
@@ -63,7 +207,7 @@ public class PaperFormat {
 	@DefaultValue("A4")
 	@Description("Paper size")
 	@Property
-	private String format = "A4";
+	private PaperSize format = PaperSize.A4;
 	
 	/**
 	 * 
@@ -125,7 +269,7 @@ public class PaperFormat {
 	@DefaultValue("Landscape")
 	@Description("Orientation")
 	@Property
-	private String orientation = "Landscape";
+	private Orientation orientation = Orientation.Landscape;
 	
 	/**
 	 * 
@@ -216,11 +360,11 @@ public class PaperFormat {
 		this._default = _default;
 	}
 
-	public String getFormat() {
+	public PaperSize getFormat() {
 		return format;
 	}
 
-	public void setFormat(String format) {
+	public void setFormat(PaperSize format) {
 		this.format = format;
 	}
 
@@ -272,11 +416,11 @@ public class PaperFormat {
 		this.page_width = page_width;
 	}
 
-	public String getOrientation() {
+	public Orientation getOrientation() {
 		return orientation;
 	}
 
-	public void setOrientation(String orientation) {
+	public void setOrientation(Orientation orientation) {
 		this.orientation = orientation;
 	}
 

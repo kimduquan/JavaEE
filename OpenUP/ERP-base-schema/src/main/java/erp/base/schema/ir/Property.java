@@ -1,5 +1,6 @@
 package erp.base.schema.ir;
 
+import java.util.Date;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
 import org.neo4j.ogm.annotation.Id;
@@ -8,7 +9,9 @@ import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
 import erp.base.schema.ir.model.Fields;
 import erp.base.schema.res.Company;
+import erp.schema.util.EnumAttributeConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -25,6 +28,68 @@ import jakarta.validation.constraints.NotNull;
 @Description("Company Property")
 @NodeEntity("Company Property")
 public class Property {
+	
+	/**
+	 * 
+	 */
+	public enum Type {
+		/**
+		 * 
+		 */
+		_char,
+        /**
+         * 
+         */
+        _float,
+        /**
+         * 
+         */
+        _boolean,
+        /**
+         * 
+         */
+        _integer,
+        /**
+         * 
+         */
+        _text,
+        /**
+         * 
+         */
+        _binary,
+        /**
+         * 
+         */
+        _many2one,
+        /**
+         * 
+         */
+        _date,
+        /**
+         * 
+         */
+        _datetime,
+        /**
+         * 
+         */
+        _selection,
+        /**
+         * 
+         */
+        _html
+	}
+	
+	/**
+	 * 
+	 */
+	public class TypeAttributeConverter extends EnumAttributeConverter<Type> {
+		/**
+		 * 
+		 */
+		public TypeAttributeConverter() {
+			super(Type.class, "_", null, null);
+		}
+	}
 	
 	/**
 	 * 
@@ -122,17 +187,18 @@ public class Property {
 	 */
 	@Column
 	@org.neo4j.ogm.annotation.Property
-	private String value_datetime;
+	private Date value_datetime;
 	
 	/**
 	 * 
 	 */
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
+	@Convert(converter = TypeAttributeConverter.class)
 	@NotNull
 	@DefaultValue("many2one")
 	@org.neo4j.ogm.annotation.Property
-	private String type = "many2one";
+	private Type type = Type._many2one;
 
 	public String getName() {
 		return name;
@@ -206,19 +272,19 @@ public class Property {
 		this.value_reference = value_reference;
 	}
 
-	public String getValue_datetime() {
+	public Date getValue_datetime() {
 		return value_datetime;
 	}
 
-	public void setValue_datetime(String value_datetime) {
+	public void setValue_datetime(Date value_datetime) {
 		this.value_datetime = value_datetime;
 	}
 
-	public String getType() {
+	public Type getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(Type type) {
 		this.type = type;
 	}
 

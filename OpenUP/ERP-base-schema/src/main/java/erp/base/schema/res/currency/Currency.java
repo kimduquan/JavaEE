@@ -1,5 +1,6 @@
 package erp.base.schema.res.currency;
 
+import java.util.Date;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
@@ -27,6 +28,20 @@ import jakarta.validation.constraints.NotNull;
 @Description("Currency")
 @NodeEntity("Currency")
 public class Currency {
+	
+	/**
+	 * 
+	 */
+	public enum SymbolPosition {
+		/**
+		 * 
+		 */
+		after,
+		/**
+		 * 
+		 */
+		before
+	}
 	
 	/**
 	 * 
@@ -132,14 +147,14 @@ public class Currency {
 	@DefaultValue("after")
 	@Description("Symbol Position")
 	@Property
-	private String position = "after";
+	private SymbolPosition position = SymbolPosition.after;
 	
 	/**
 	 * 
 	 */
 	@Column
 	@Property
-	private String date;
+	private Date date;
 	
 	/**
 	 * 
@@ -244,19 +259,19 @@ public class Currency {
 		this.active = active;
 	}
 
-	public String getPosition() {
+	public SymbolPosition getPosition() {
 		return position;
 	}
 
-	public void setPosition(String position) {
+	public void setPosition(SymbolPosition position) {
 		this.position = position;
 	}
 
-	public String getDate() {
+	public Date getDate() {
 		return date;
 	}
 
-	public void setDate(String date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 

@@ -24,6 +24,42 @@ public class MailServer {
 	/**
 	 * 
 	 */
+	public enum AuthenticateWith {
+		/**
+		 * 
+		 */
+		login,
+        /**
+         * 
+         */
+        certificate,
+        /**
+         * 
+         */
+        cli
+	}
+	
+	/**
+	 * 
+	 */
+	public enum ConnectionEncryption {
+		/**
+		 * 
+		 */
+		none,
+        /**
+         * 
+         */
+        starttls,
+        /**
+         * 
+         */
+        ssl
+	}
+	
+	/**
+	 * 
+	 */
 	@jakarta.persistence.Id
 	@Id
 	private int id;
@@ -71,7 +107,7 @@ public class MailServer {
 	@DefaultValue("login")
 	@Description("Authenticate with")
 	@Property
-	private String smtp_authentication = "login";
+	private AuthenticateWith smtp_authentication = AuthenticateWith.login;
 	
 	/**
 	 * 
@@ -106,7 +142,7 @@ public class MailServer {
 	@DefaultValue("none")
 	@Description("Connection Encryption")
 	@Property
-	private String smtp_encryption = "none";
+	private ConnectionEncryption smtp_encryption = ConnectionEncryption.none;
 	
 	/**
 	 * 
@@ -181,11 +217,11 @@ public class MailServer {
 		this.smtp_port = smtp_port;
 	}
 
-	public String getSmtp_authentication() {
+	public AuthenticateWith getSmtp_authentication() {
 		return smtp_authentication;
 	}
 
-	public void setSmtp_authentication(String smtp_authentication) {
+	public void setSmtp_authentication(AuthenticateWith smtp_authentication) {
 		this.smtp_authentication = smtp_authentication;
 	}
 
@@ -213,11 +249,11 @@ public class MailServer {
 		this.smtp_pass = smtp_pass;
 	}
 
-	public String getSmtp_encryption() {
+	public ConnectionEncryption getSmtp_encryption() {
 		return smtp_encryption;
 	}
 
-	public void setSmtp_encryption(String smtp_encryption) {
+	public void setSmtp_encryption(ConnectionEncryption smtp_encryption) {
 		this.smtp_encryption = smtp_encryption;
 	}
 

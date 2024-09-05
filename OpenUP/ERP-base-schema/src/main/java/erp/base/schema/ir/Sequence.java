@@ -33,6 +33,20 @@ public class Sequence {
 	/**
 	 * 
 	 */
+	public enum Implementation {
+		/**
+		 * 
+		 */
+		standard,
+		/**
+		 * 
+		 */
+		no_gap,
+	}
+	
+	/**
+	 * 
+	 */
 	@jakarta.persistence.Id
 	@Id
 	private int id;
@@ -62,7 +76,7 @@ public class Sequence {
 	@DefaultValue("standard")
 	@Description("Implementation")
 	@Property
-	private String implementation = "standard";
+	private Implementation implementation = Implementation.standard;
 	
 	/**
 	 * 
@@ -184,11 +198,11 @@ public class Sequence {
 		this.code = code;
 	}
 
-	public String getImplementation() {
+	public Implementation getImplementation() {
 		return implementation;
 	}
 
-	public void setImplementation(String implementation) {
+	public void setImplementation(Implementation implementation) {
 		this.implementation = implementation;
 	}
 

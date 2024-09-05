@@ -38,6 +38,42 @@ public class Partner {
 	/**
 	 * 
 	 */
+	public enum AddressType {
+		/**
+		 * 
+		 */
+		contact,
+        /**
+         * 
+         */
+        invoice,
+        /**
+         * 
+         */
+        delivery,
+        /**
+         * 
+         */
+        other
+	}
+	
+	/**
+	 * 
+	 */
+	public enum CompanyType {
+		/**
+		 * 
+		 */
+		person,
+		/**
+		 * 
+		 */
+		company
+	}
+	
+	/**
+	 * 
+	 */
 	@jakarta.persistence.Id
 	@Id
 	private int id;
@@ -122,7 +158,6 @@ public class Partner {
 	 * 
 	 */
 	@Column
-	@Enumerated(EnumType.STRING)
 	@Description("Language")
 	@Property
 	private String lang;
@@ -138,7 +173,6 @@ public class Partner {
 	 * 
 	 */
 	@Column
-	@Enumerated(EnumType.STRING)
 	@Description("Timezone")
 	@Property
 	private String tz;
@@ -300,7 +334,7 @@ public class Partner {
 	@DefaultValue("contact")
 	@Description("Address Type")
 	@Property
-	private String type = "contact";
+	private AddressType type = AddressType.contact;
 	
 	/**
 	 * 
@@ -453,7 +487,7 @@ public class Partner {
 	@Enumerated(EnumType.STRING)
 	@Description("Company Type")
 	@Property
-	private String company_type;
+	private CompanyType company_type;
 	
 	/**
 	 * 
@@ -746,11 +780,11 @@ public class Partner {
 		this.function = function;
 	}
 
-	public String getType() {
+	public AddressType getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(AddressType type) {
 		this.type = type;
 	}
 
@@ -882,11 +916,11 @@ public class Partner {
 		this.industry_id = industry_id;
 	}
 
-	public String getCompany_type() {
+	public CompanyType getCompany_type() {
 		return company_type;
 	}
 
-	public void setCompany_type(String company_type) {
+	public void setCompany_type(CompanyType company_type) {
 		this.company_type = company_type;
 	}
 

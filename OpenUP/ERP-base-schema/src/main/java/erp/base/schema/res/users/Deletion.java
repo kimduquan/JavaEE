@@ -28,6 +28,24 @@ public class Deletion {
 	/**
 	 * 
 	 */
+	public enum State {
+		/**
+		 * 
+		 */
+		todo,
+		/**
+		 * 
+		 */
+		done,
+		/**
+		 * 
+		 */
+		fail
+	}
+	
+	/**
+	 * 
+	 */
 	@jakarta.persistence.Id
 	@Id
 	private int id;
@@ -65,7 +83,7 @@ public class Deletion {
 	@DefaultValue("todo")
 	@Description("State")
 	@Property
-	private String state = "todo";
+	private State state = State.todo;
 
 	public String getUser_id() {
 		return user_id;
@@ -83,11 +101,11 @@ public class Deletion {
 		this.user_id_int = user_id_int;
 	}
 
-	public String getState() {
+	public State getState() {
 		return state;
 	}
 
-	public void setState(String state) {
+	public void setState(State state) {
 		this.state = state;
 	}
 

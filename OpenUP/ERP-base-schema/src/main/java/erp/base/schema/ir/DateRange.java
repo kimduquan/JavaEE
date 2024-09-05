@@ -1,5 +1,6 @@
 package erp.base.schema.ir;
 
+import java.util.Date;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
 import org.neo4j.ogm.annotation.Id;
@@ -37,7 +38,7 @@ public class DateRange {
 	@NotNull
 	@Description("From")
 	@Property
-	private String date_from;
+	private Date date_from;
 	
 	/**
 	 * 
@@ -46,7 +47,7 @@ public class DateRange {
 	@NotNull
 	@Description("To")
 	@Property
-	private String date_to;
+	private Date date_to;
 	
 	/**
 	 * 
@@ -82,19 +83,19 @@ public class DateRange {
 	@Property
 	private Integer number_next_actual;
 
-	public String getDate_from() {
+	public Date getDate_from() {
 		return date_from;
 	}
 
-	public void setDate_from(String date_from) {
+	public void setDate_from(Date date_from) {
 		this.date_from = date_from;
 	}
 
-	public String getDate_to() {
+	public Date getDate_to() {
 		return date_to;
 	}
 
-	public void setDate_to(String date_to) {
+	public void setDate_to(Date date_to) {
 		this.date_to = date_to;
 	}
 

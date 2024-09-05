@@ -44,6 +44,58 @@ public class Company {
 	/**
 	 * 
 	 */
+	public enum Font {
+		/**
+		 * 
+		 */
+		Lato,
+		/**
+		 * 
+		 */
+		Roboto,
+		/**
+		 * 
+		 */
+		Open_Sans,
+		/**
+		 * 
+		 */
+		Montserrat,
+		/**
+		 * 
+		 */
+		Oswald,
+		/**
+		 * 
+		 */
+		Raleway,
+		/**
+		 * 
+		 */
+		Tajawal
+	}
+	
+	/**
+	 * 
+	 */
+	public enum LayoutBackground {
+		/**
+		 * 
+		 */
+		Blank,
+		/**
+		 * 
+		 */
+		Geometric,
+		/**
+		 * 
+		 */
+		Custom
+	}
+	
+	/**
+	 * 
+	 */
 	@jakarta.persistence.Id
 	@Id
 	private int id;
@@ -416,7 +468,7 @@ public class Company {
 	@Enumerated(EnumType.STRING)
 	@DefaultValue("Lato")
 	@Property
-	private String font = "Lato";
+	private Font font = Font.Lato;
 	
 	/**
 	 * 
@@ -445,9 +497,9 @@ public class Company {
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	@NotNull
-	@Description("Blank")
+	@DefaultValue("Blank")
 	@Property
-	private String layout_background;
+	private LayoutBackground layout_background = LayoutBackground.Blank;
 	
 	/**
 	 * 
@@ -721,11 +773,11 @@ public class Company {
 		this.external_report_layout_id = external_report_layout_id;
 	}
 
-	public String getFont() {
+	public Font getFont() {
 		return font;
 	}
 
-	public void setFont(String font) {
+	public void setFont(Font font) {
 		this.font = font;
 	}
 
@@ -753,11 +805,11 @@ public class Company {
 		this.color = color;
 	}
 
-	public String getLayout_background() {
+	public LayoutBackground getLayout_background() {
 		return layout_background;
 	}
 
-	public void setLayout_background(String layout_background) {
+	public void setLayout_background(LayoutBackground layout_background) {
 		this.layout_background = layout_background;
 	}
 

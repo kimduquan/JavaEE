@@ -1,5 +1,6 @@
 package erp.base.schema.ir.cron;
 
+import java.util.Date;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
 import org.neo4j.ogm.annotation.Id;
@@ -7,7 +8,6 @@ import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
-
 import erp.base.schema.ir.actions.Server;
 import erp.base.schema.res.users.Users;
 import jakarta.persistence.Column;
@@ -31,6 +31,32 @@ public class Cron {
 	/**
 	 * 
 	 */
+	public enum IntervalUnit {
+		/**
+		 * 
+		 */
+		minutes,
+        /**
+         * 
+         */
+        hours,
+        /**
+         * 
+         */
+        days,
+        /**
+         * 
+         */
+        weeks,
+        /**
+         * 
+         */
+        months
+	}
+	
+	/**
+	 * 
+	 */
 	@jakarta.persistence.Id
 	@Id
 	private int id;
@@ -50,7 +76,7 @@ public class Cron {
 	@ManyToOne(targetEntity = Server.class)
 	@JoinColumn(name = "ir_actions_server_id", nullable = false)
 	@NotNull
-	@Relationship(type = "ACTIONS_SERVER")
+	@Relationship(type = "SERVER_ACTION")
 	private Server ir_actions_server;
 	
 	/**
@@ -104,7 +130,7 @@ public class Cron {
 	@Description("Interval Unit")
 	@DefaultValue("months")
 	@Property
-	private String interval_type = "months";
+	private IntervalUnit interval_type = IntervalUnit.months;
 	
 	/**
 	 * 
@@ -129,7 +155,7 @@ public class Cron {
 	@Column(nullable = false)
 	@Description("Next Execution Date")
 	@Property
-	private String nextcall;
+	private Date nextcall;
 	
 	/**
 	 * 
@@ -137,7 +163,7 @@ public class Cron {
 	@Column
 	@Description("Last Execution Date")
 	@Property
-	private String lastcall;
+	private Date lastcall;
 	
 	/**
 	 * 
@@ -187,11 +213,11 @@ public class Cron {
 		this.interval_number = interval_number;
 	}
 
-	public String getInterval_type() {
+	public IntervalUnit getInterval_type() {
 		return interval_type;
 	}
 
-	public void setInterval_type(String interval_type) {
+	public void setInterval_type(IntervalUnit interval_type) {
 		this.interval_type = interval_type;
 	}
 
@@ -211,19 +237,19 @@ public class Cron {
 		this.doall = doall;
 	}
 
-	public String getNextcall() {
+	public Date getNextcall() {
 		return nextcall;
 	}
 
-	public void setNextcall(String nextcall) {
+	public void setNextcall(Date nextcall) {
 		this.nextcall = nextcall;
 	}
 
-	public String getLastcall() {
+	public Date getLastcall() {
 		return lastcall;
 	}
 
-	public void setLastcall(String lastcall) {
+	public void setLastcall(Date lastcall) {
 		this.lastcall = lastcall;
 	}
 

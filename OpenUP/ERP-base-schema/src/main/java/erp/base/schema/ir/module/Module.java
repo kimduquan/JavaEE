@@ -8,8 +8,10 @@ import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
+import erp.schema.util.EnumAttributeConverter;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -28,6 +30,94 @@ import jakarta.validation.constraints.NotNull;
 @Description("Module")
 @NodeEntity("Module")
 public class Module {
+	
+	/**
+	 * 
+	 */
+	public enum Status {
+		/**
+		 * 
+		 */
+		uninstallable,
+		/**
+		 * 
+		 */
+		uninstalled,
+		/**
+		 * 
+		 */
+		installed,
+		/**
+		 * 
+		 */
+		to_upgrade,
+		/**
+		 * 
+		 */
+		to_remove,
+		/**
+		 * 
+		 */
+		to_install
+	}
+	
+	/**
+	 * 
+	 */
+	public enum License {
+		/**
+		 * 
+		 */
+		GPL_2,
+        /**
+         * 
+         */
+        GPL_2__or__any__later__version,
+        /**
+         * 
+         */
+        GPL_3,
+        /**
+         * 
+         */
+        GPL_3__or__any__later__version,
+        /**
+         * 
+         */
+        AGPL_3,
+        /**
+         * 
+         */
+        LGPL_3,
+        /**
+         * 
+         */
+        Other__OSI__approved__licence,
+        /**
+         * 
+         */
+        OEEL_1,
+        /**
+         * 
+         */
+        OPL_1,
+        /**
+         * 
+         */
+        Other__proprietary
+	}
+	
+	/**
+	 * 
+	 */
+	public class LicenseEnumAttributeConverter extends EnumAttributeConverter<License> {
+		/**
+		 * 
+		 */
+		public LicenseEnumAttributeConverter() {
+			super(License.class, null, "__", " ");
+		}
+	}
 	
 	/**
 	 * 
@@ -218,7 +308,7 @@ public class Module {
 	@DefaultValue("uninstallable")
 	@Description("Status")
 	@Property
-	private String state = "uninstallable";
+	private Status state = Status.uninstallable;
 	
 	/**
 	 * 
@@ -234,9 +324,10 @@ public class Module {
 	 */
 	@Column(updatable = false)
 	@Enumerated(EnumType.STRING)
+	@Convert(converter = LicenseEnumAttributeConverter.class)
 	@DefaultValue("LGPL-3")
 	@Property
-	private String license = "LGPL-3";
+	private License license = License.LGPL_3;
 	
 	/**
 	 * 
@@ -454,11 +545,11 @@ public class Module {
 		this.auto_install = auto_install;
 	}
 
-	public String getState() {
+	public Status getState() {
 		return state;
 	}
 
-	public void setState(String state) {
+	public void setState(Status state) {
 		this.state = state;
 	}
 
@@ -470,11 +561,11 @@ public class Module {
 		this.demo = demo;
 	}
 
-	public String getLicense() {
+	public License getLicense() {
 		return license;
 	}
 
-	public void setLicense(String license) {
+	public void setLicense(License license) {
 		this.license = license;
 	}
 

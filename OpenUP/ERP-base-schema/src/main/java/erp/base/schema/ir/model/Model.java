@@ -36,6 +36,20 @@ public class Model {
 	/**
 	 * 
 	 */
+	public enum Type {
+		/**
+		 * 
+		 */
+		manual,
+		/**
+		 * 
+		 */
+		base
+	}
+	
+	/**
+	 * 
+	 */
 	@jakarta.persistence.Id
 	@Id
 	private int id;
@@ -121,7 +135,7 @@ public class Model {
 	@DefaultValue("manual")
 	@Description("Type")
 	@Property
-	private String state = "manual";
+	private Type state = Type.manual;
 	
 	/**
 	 * 
@@ -247,11 +261,11 @@ public class Model {
 		this.inherited_model_ids = inherited_model_ids;
 	}
 
-	public String getState() {
+	public Type getState() {
 		return state;
 	}
 
-	public void setState(String state) {
+	public void setState(Type state) {
 		this.state = state;
 	}
 

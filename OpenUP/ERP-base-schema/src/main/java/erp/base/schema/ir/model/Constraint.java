@@ -1,5 +1,7 @@
 package erp.base.schema.ir.model;
 
+import java.util.Date;
+
 import org.eclipse.microprofile.graphql.Description;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
@@ -84,14 +86,14 @@ public class Constraint {
 	 */
 	@Column
 	@Property
-	private String write_date;
+	private Date write_date;
 	
 	/**
 	 * 
 	 */
 	@Column
 	@Property
-	private String create_date;
+	private Date create_date;
 
 	public String getName() {
 		return name;
@@ -141,19 +143,19 @@ public class Constraint {
 		this.type = type;
 	}
 
-	public String getWrite_date() {
+	public Date getWrite_date() {
 		return write_date;
 	}
 
-	public void setWrite_date(String write_date) {
+	public void setWrite_date(Date write_date) {
 		this.write_date = write_date;
 	}
 
-	public String getCreate_date() {
+	public Date getCreate_date() {
 		return create_date;
 	}
 
-	public void setCreate_date(String create_date) {
+	public void setCreate_date(Date create_date) {
 		this.create_date = create_date;
 	}
 

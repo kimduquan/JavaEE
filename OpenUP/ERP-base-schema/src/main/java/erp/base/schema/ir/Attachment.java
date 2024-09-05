@@ -30,6 +30,20 @@ public class Attachment {
 	/**
 	 * 
 	 */
+	public enum Type {
+		/**
+		 * 
+		 */
+		url,
+		/**
+		 * 
+		 */
+		binary
+	}
+	
+	/**
+	 * 
+	 */
 	@jakarta.persistence.Id
 	@Id
 	private int id;
@@ -116,7 +130,7 @@ public class Attachment {
 	@DefaultValue("binary")
 	@Description("Type")
 	@Property
-	private String type = "binary";
+	private Type type = Type.binary;
 	
 	/**
 	 * 
@@ -262,11 +276,11 @@ public class Attachment {
 		this.company_id = company_id;
 	}
 
-	public String getType() {
+	public Type getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(Type type) {
 		this.type = type;
 	}
 

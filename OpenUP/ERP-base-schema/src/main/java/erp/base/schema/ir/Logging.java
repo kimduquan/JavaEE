@@ -1,5 +1,7 @@
 package erp.base.schema.ir;
 
+import java.util.Date;
+
 import org.eclipse.microprofile.graphql.Description;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
@@ -23,6 +25,20 @@ public class Logging {
 	/**
 	 * 
 	 */
+	public enum Type {
+		/**
+		 * 
+		 */
+		client,
+		/**
+		 * 
+		 */
+		server
+	}
+	
+	/**
+	 * 
+	 */
 	@jakarta.persistence.Id
 	@Id
 	private int id;
@@ -41,7 +57,7 @@ public class Logging {
 	@Column(updatable = false)
 	@Description("Created on")
 	@Property
-	private String create_date;
+	private Date create_date;
 	
 	/**
 	 * 
@@ -57,7 +73,7 @@ public class Logging {
 	@Column(updatable = false)
 	@Description("Last Updated on")
 	@Property
-	private Integer write_date;
+	private Date write_date;
 	
 	/**
 	 * 
@@ -74,7 +90,7 @@ public class Logging {
 	@Enumerated(EnumType.STRING)
 	@NotNull
 	@Property
-	private String type;
+	private Type type;
 	
 	/**
 	 * 
@@ -132,11 +148,11 @@ public class Logging {
 		this.create_uid = create_uid;
 	}
 
-	public String getCreate_date() {
+	public Date getCreate_date() {
 		return create_date;
 	}
 
-	public void setCreate_date(String create_date) {
+	public void setCreate_date(Date create_date) {
 		this.create_date = create_date;
 	}
 
@@ -148,11 +164,11 @@ public class Logging {
 		this.write_uid = write_uid;
 	}
 
-	public Integer getWrite_date() {
+	public Date getWrite_date() {
 		return write_date;
 	}
 
-	public void setWrite_date(Integer write_date) {
+	public void setWrite_date(Date write_date) {
 		this.write_date = write_date;
 	}
 
@@ -164,11 +180,11 @@ public class Logging {
 		this.name = name;
 	}
 
-	public String getType() {
+	public Type getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(Type type) {
 		this.type = type;
 	}
 

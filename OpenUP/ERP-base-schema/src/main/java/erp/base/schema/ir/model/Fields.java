@@ -35,6 +35,38 @@ public class Fields {
 	/**
 	 * 
 	 */
+	public enum Type {
+		/**
+		 * 
+		 */
+		manual,
+		/**
+		 * 
+		 */
+		base
+	}
+	
+	/**
+	 * 
+	 */
+	public enum OnDelete {
+		/**
+		 * 
+		 */
+		cascade,
+		/**
+		 * 
+		 */
+		set_null,
+		/**
+		 * 
+		 */
+		restrict
+	}
+	
+	/**
+	 * 
+	 */
 	@jakarta.persistence.Id
 	@Id
 	private int id;
@@ -137,7 +169,6 @@ public class Fields {
 	 * 
 	 */
 	@Column(nullable = false)
-	@Enumerated(EnumType.STRING)
 	@NotNull
 	@Description("Field Type")
 	@Property
@@ -247,7 +278,7 @@ public class Fields {
 	@DefaultValue("manual")
 	@Description("Type")
 	@Property
-	private String state = "manual";
+	private Type state = Type.manual;
 	
 	/**
 	 * 
@@ -257,7 +288,7 @@ public class Fields {
 	@DefaultValue("set null")
 	@Description("On Delete")
 	@Property
-	private String on_delete = "set null";
+	private OnDelete on_delete = OnDelete.set_null;
 	
 	/**
 	 * 
@@ -590,19 +621,19 @@ public class Fields {
 		this.size = size;
 	}
 
-	public String getState() {
+	public Type getState() {
 		return state;
 	}
 
-	public void setState(String state) {
+	public void setState(Type state) {
 		this.state = state;
 	}
 
-	public String getOn_delete() {
+	public OnDelete getOn_delete() {
 		return on_delete;
 	}
 
-	public void setOn_delete(String on_delete) {
+	public void setOn_delete(OnDelete on_delete) {
 		this.on_delete = on_delete;
 	}
 

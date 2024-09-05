@@ -37,6 +37,62 @@ public class View {
 	/**
 	 * 
 	 */
+	public enum ViewType {
+		/**
+		 * 
+		 */
+		tree,
+        /**
+         * 
+         */
+        form,
+        /**
+         * 
+         */
+        graph,
+        /**
+         * 
+         */
+        pivot,
+        /**
+         * 
+         */
+        calendar,
+        /**
+         * 
+         */
+        gantt,
+        /**
+         * 
+         */
+        kanban,
+        /**
+         * 
+         */
+        search,
+        /**
+         * 
+         */
+        qweb
+	}
+	
+	/**
+	 * 
+	 */
+	public enum ViewInheritanceMode {
+		/**
+		 * 
+		 */
+		primary,
+		/**
+		 * 
+		 */
+		extension
+	}
+	
+	/**
+	 * 
+	 */
 	@jakarta.persistence.Id
 	@Id
 	private int id;
@@ -81,7 +137,7 @@ public class View {
 	@Enumerated(EnumType.STRING)
 	@Description("View Type")
 	@Property
-	private String type;
+	private ViewType type;
 	
 	/**
 	 * 
@@ -213,11 +269,12 @@ public class View {
 	 * 
 	 */
 	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
 	@NotNull
 	@DefaultValue("primary")
 	@Description("View inheritance mode")
 	@Property
-	private String mode = "primary";
+	private ViewInheritanceMode mode = ViewInheritanceMode.primary;
 	
 	/**
 	 * 
@@ -275,11 +332,11 @@ public class View {
 		this.priority = priority;
 	}
 
-	public String getType() {
+	public ViewType getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(ViewType type) {
 		this.type = type;
 	}
 
@@ -371,11 +428,11 @@ public class View {
 		this.groups_id = groups_id;
 	}
 
-	public String getMode() {
+	public ViewInheritanceMode getMode() {
 		return mode;
 	}
 
-	public void setMode(String mode) {
+	public void setMode(ViewInheritanceMode mode) {
 		this.mode = mode;
 	}
 

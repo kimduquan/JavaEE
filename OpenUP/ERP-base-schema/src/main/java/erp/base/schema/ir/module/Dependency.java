@@ -7,7 +7,10 @@ import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
+
+import erp.schema.util.EnumAttributeConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -23,6 +26,53 @@ import jakarta.persistence.Table;
 @Description("Module dependency")
 @NodeEntity("Module Dependency")
 public class Dependency {
+	
+	/**
+	 * 
+	 */
+	public enum Status {
+		/**
+		 * 
+		 */
+		uninstallable,
+	    /**
+	     * 
+	     */
+	    uninstalled,
+	    /**
+	     * 
+	     */
+	    installed,
+	    /**
+	     * 
+	     */
+	    to_upgrade,
+	    /**
+	     * 
+	     */
+	    to_remove,
+	    /**
+	     * 
+	     */
+	    to_install,
+	    /**
+	     * 
+	     */
+	    unknown
+	}
+	
+	/**
+	 * 
+	 */
+	public class StatusAttributeConverter extends EnumAttributeConverter<Status> {
+
+		/**
+		 * 
+		 */
+		public StatusAttributeConverter() {
+			super(Status.class, null, "_", " ");
+		}
+	}
 	
 	/**
 	 * 
@@ -75,9 +125,10 @@ public class Dependency {
 	 */
 	@Column
 	@Enumerated(EnumType.STRING)
+	@Convert(converter = StatusAttributeConverter.class)
 	@Description("Status")
 	@Property
-	private String state;
+	private Status state;
 	
 	/**
 	 * 
@@ -111,11 +162,11 @@ public class Dependency {
 		this.depend_id = depend_id;
 	}
 
-	public String getState() {
+	public Status getState() {
 		return state;
 	}
 
-	public void setState(String state) {
+	public void setState(Status state) {
 		this.state = state;
 	}
 

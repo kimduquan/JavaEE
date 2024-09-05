@@ -24,6 +24,40 @@ public class Asset {
 	/**
 	 * 
 	 */
+	public enum Directive {
+		/**
+		 * 
+		 */
+		append,
+		/**
+		 * 
+		 */
+		prepend,
+		/**
+		 * 
+		 */
+		after,
+		/**
+		 * 
+		 */
+		before,
+		/**
+		 * 
+		 */
+		remove,
+		/**
+		 * 
+		 */
+		replace,
+		/**
+		 * 
+		 */
+		include
+	}
+	
+	/**
+	 * 
+	 */
 	@jakarta.persistence.Id
 	@Id
 	private int id;
@@ -53,7 +87,7 @@ public class Asset {
 	@Enumerated(EnumType.STRING)
 	@DefaultValue("append")
 	@Property
-	private String directive = "append";
+	private Directive directive = Directive.append;
 	
 	/**
 	 * 
@@ -107,11 +141,11 @@ public class Asset {
 		this.bundle = bundle;
 	}
 
-	public String getDirective() {
+	public Directive getDirective() {
 		return directive;
 	}
 
-	public void setDirective(String directive) {
+	public void setDirective(Directive directive) {
 		this.directive = directive;
 	}
 

@@ -1,5 +1,7 @@
 package erp.base.schema.res.currency;
 
+import java.util.Date;
+
 import org.eclipse.microprofile.graphql.Description;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
@@ -37,7 +39,7 @@ public class Rate {
 	@NotNull
 	@Description("Date")
 	@Property
-	private String name;
+	private Date name;
 	
 	/**
 	 * 
@@ -97,11 +99,11 @@ public class Rate {
 	@Relationship(type = "COMPANY")
 	private Company company;
 
-	public String getName() {
+	public Date getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(Date name) {
 		this.name = name;
 	}
 

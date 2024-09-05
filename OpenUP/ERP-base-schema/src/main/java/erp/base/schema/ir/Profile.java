@@ -1,5 +1,7 @@
 package erp.base.schema.ir;
 
+import java.util.Date;
+
 import org.eclipse.microprofile.graphql.Description;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
@@ -30,7 +32,7 @@ public class Profile {
 	@Column
 	@Description("Creation Date")
 	@Property
-	private String create_date;
+	private Date create_date;
 	
 	/**
 	 * 
@@ -128,11 +130,11 @@ public class Profile {
 	@Property
 	private String speedscope_url;
 
-	public String getCreate_date() {
+	public Date getCreate_date() {
 		return create_date;
 	}
 
-	public void setCreate_date(String create_date) {
+	public void setCreate_date(Date create_date) {
 		this.create_date = create_date;
 	}
 

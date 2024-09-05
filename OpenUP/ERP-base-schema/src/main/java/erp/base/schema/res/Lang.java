@@ -5,7 +5,10 @@ import org.eclipse.microprofile.graphql.Description;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
+
+import erp.schema.util.EnumAttributeConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -20,6 +23,67 @@ import jakarta.validation.constraints.NotNull;
 @Description("Languages")
 @NodeEntity("Languages")
 public class Lang {
+	
+	/**
+	 * 
+	 */
+	public enum Direction {
+		/**
+		 * 
+		 */
+		ltr,
+		/**
+		 * 
+		 */
+		rtl
+	}
+	
+	/**
+	 * 
+	 */
+	public enum DayOfWeek {
+		/**
+		 * 
+		 */
+		_1,
+		/**
+		 * 
+		 */
+		_2,
+		/**
+		 * 
+		 */
+		_3,
+		/**
+		 * 
+		 */
+		_4,
+		/**
+		 * 
+		 */
+		_5,
+		/**
+		 * 
+		 */
+		_6,
+		/**
+		 * 
+		 */
+		_7
+	}
+	
+	/**
+	 * 
+	 */
+	public class DayOfWeekAttributeConverter extends EnumAttributeConverter<DayOfWeek> {
+
+		/**
+		 * 
+		 */
+		public DayOfWeekAttributeConverter() {
+			super(DayOfWeek.class, "_", null, null);
+		}
+	}
 	
 	/**
 	 * 
@@ -77,7 +141,7 @@ public class Lang {
 	@NotNull
 	@DefaultValue("ltr")
 	@Property
-	private String direction = "ltr";
+	private Direction direction = Direction.ltr;
 	
 	/**
 	 * 
@@ -104,11 +168,12 @@ public class Lang {
 	 */
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
+	@Convert(converter = DayOfWeekAttributeConverter.class)
 	@NotNull
 	@DefaultValue("7")
 	@Description("First Day of Week")
 	@Property
-	private String week_start = "7";
+	private DayOfWeek week_start = DayOfWeek._7;
 	
 	/**
 	 * 
@@ -179,11 +244,11 @@ public class Lang {
 		this.active = active;
 	}
 
-	public String getDirection() {
+	public Direction getDirection() {
 		return direction;
 	}
 
-	public void setDirection(String direction) {
+	public void setDirection(Direction direction) {
 		this.direction = direction;
 	}
 
@@ -203,11 +268,11 @@ public class Lang {
 		this.time_format = time_format;
 	}
 
-	public String getWeek_start() {
+	public DayOfWeek getWeek_start() {
 		return week_start;
 	}
 
-	public void setWeek_start(String week_start) {
+	public void setWeek_start(DayOfWeek week_start) {
 		this.week_start = week_start;
 	}
 

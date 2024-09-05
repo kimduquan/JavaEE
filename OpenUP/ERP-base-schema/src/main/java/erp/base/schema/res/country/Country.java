@@ -38,6 +38,20 @@ public class Country {
 	/**
 	 * 
 	 */
+	public enum CustomerNamePosition {
+		/**
+		 * 
+		 */
+		before,
+        /**
+         * 
+         */
+        after
+	}
+	
+	/**
+	 * 
+	 */
 	@jakarta.persistence.Id
 	@Id
 	private int id;
@@ -165,7 +179,7 @@ public class Country {
 	@DefaultValue("before")
 	@Description("Customer Name Position")
 	@Property
-	private String name_position = "before";
+	private CustomerNamePosition name_position = CustomerNamePosition.before;
 	
 	/**
 	 * 
@@ -263,11 +277,11 @@ public class Country {
 		this.state_ids = state_ids;
 	}
 
-	public String getName_position() {
+	public CustomerNamePosition getName_position() {
 		return name_position;
 	}
 
-	public void setName_position(String name_position) {
+	public void setName_position(CustomerNamePosition name_position) {
 		this.name_position = name_position;
 	}
 
