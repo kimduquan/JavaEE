@@ -111,8 +111,7 @@ public class Category {
 	 */
 	@ElementCollection(targetClass = Partner.class)
 	@CollectionTable(name = "res_partner", joinColumns = {
-			@JoinColumn(name = "category_id"),
-			@JoinColumn(name = "partner_id")
+			@JoinColumn(name = "partner_id", referencedColumnName = "category_id")
 	})
 	@Description("Partners")
 	@Transient

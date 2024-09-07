@@ -240,7 +240,7 @@ public class Server extends Actions {
 	 */
 	@ElementCollection(targetClass = Server.class)
 	@CollectionTable(name = "rel_server_actions", joinColumns = {
-			@JoinColumn(name = "server_id", referencedColumnName = "action_id")
+			@JoinColumn(name = "action_id", referencedColumnName = "server_id")
 	})
 	@Description("Child Actions")
 	@Transient
@@ -251,7 +251,7 @@ public class Server extends Actions {
 	 */
 	@ManyToMany(targetEntity = Server.class)
 	@JoinTable(name = "rel_server_actions", joinColumns = {
-			@JoinColumn(name = "server_id", referencedColumnName = "action_id")
+			@JoinColumn(name = "action_id", referencedColumnName = "server_id")
 	})
 	@Relationship(type = "CHILD_ACTIONS")
 	private List<Server> childs;
@@ -436,7 +436,7 @@ public class Server extends Actions {
 	 */
 	@ElementCollection(targetClass = Fields.class)
 	@CollectionTable(name = "ir_act_server_webhook_field_rel", joinColumns = {
-			@JoinColumn(name = "server_id", referencedColumnName = "field_id")
+			@JoinColumn(name = "field_id", referencedColumnName = "server_id")
 	})
 	@Description("Webhook Fields")
 	@Transient
@@ -447,7 +447,7 @@ public class Server extends Actions {
 	 */
 	@ManyToMany(targetEntity = Fields.class)
 	@JoinTable(name = "ir_act_server_webhook_field_rel", joinColumns = {
-			@JoinColumn(name = "server_id", referencedColumnName = "field_id")
+			@JoinColumn(name = "field_id", referencedColumnName = "server_id")
 	})
 	@Relationship(type = "WEBHOOK_FIELDS")
 	private List<Fields> webhook_fields;

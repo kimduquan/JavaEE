@@ -174,7 +174,7 @@ public class ActWindow extends Actions {
 	 */
 	@ElementCollection(targetClass = ActWindowView.class)
 	@CollectionTable(name = "ir_actions_act_window_view", joinColumns = {
-			@JoinColumn(name = "view_id", referencedColumnName = "act_window_id")
+			@JoinColumn(name = "act_window_id", referencedColumnName = "view_id")
 	})
 	@Description("No of Views")
 	@Transient
@@ -185,7 +185,7 @@ public class ActWindow extends Actions {
 	 */
 	@OneToMany(targetEntity = ActWindowView.class)
 	@JoinTable(name = "ir_actions_act_window_view", joinColumns = {
-			@JoinColumn(name = "view_id", referencedColumnName = "act_window_id")
+			@JoinColumn(name = "act_window_id", referencedColumnName = "view_id")
 	})
 	@Relationship(type = "NO_OF_VIEWS")
 	private List<ActWindowView> _views;

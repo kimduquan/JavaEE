@@ -294,7 +294,7 @@ public class Partner {
 	 */
 	@ManyToMany(targetEntity = Category.class)
 	@JoinTable(name = "res_partner_category", joinColumns = {
-			@JoinColumn(name = "partner_id", referencedColumnName = "category_id")
+			@JoinColumn(name = "category_id", referencedColumnName = "partner_id")
 	})
 	@Relationship(type = "TAGS")
 	private List<Category> category;

@@ -24,7 +24,7 @@ public class GroupsImplied extends Groups {
 	 */
 	@ElementCollection(targetClass = Groups.class)
 	@CollectionTable(name = "res_groups_implied_rel", joinColumns = {
-			@JoinColumn(name = "gid", referencedColumnName = "hid")
+			@JoinColumn(name = "hid", referencedColumnName = "gid")
 	})
 	@Description("Inherits")
 	@Transient
@@ -35,7 +35,7 @@ public class GroupsImplied extends Groups {
 	 */
 	@ManyToMany(targetEntity = Groups.class)
 	@JoinTable(name = "res_groups_implied_rel", joinColumns = {
-			@JoinColumn(name = "gid", referencedColumnName = "hid")
+			@JoinColumn(name = "hid", referencedColumnName = "gid")
 	})
 	@Relationship(type = "INHERITS")
 	private List<Groups> implieds;
