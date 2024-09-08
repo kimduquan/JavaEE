@@ -76,7 +76,7 @@ public class ActWindowView {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("View")
 	@Transient
 	private Integer view_id;
@@ -102,7 +102,7 @@ public class ActWindowView {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Action")
 	@Transient
 	private Integer act_window_id;

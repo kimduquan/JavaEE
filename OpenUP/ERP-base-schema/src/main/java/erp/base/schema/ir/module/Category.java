@@ -49,7 +49,7 @@ public class Category {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Parent Application")
 	@Transient
 	private Integer parent_id;

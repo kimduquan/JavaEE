@@ -35,7 +35,7 @@ public class Selection {
 	/**
 	 * 
 	 */
-	@Column(nullable = false)
+	@Column(nullable = false, insertable = false, updatable = false)
 	@NotNull
 	@Transient
 	private Integer field_id;

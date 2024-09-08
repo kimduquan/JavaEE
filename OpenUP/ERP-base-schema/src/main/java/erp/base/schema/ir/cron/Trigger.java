@@ -31,7 +31,7 @@ public class Trigger {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Transient
 	private Integer cron_id;
 	

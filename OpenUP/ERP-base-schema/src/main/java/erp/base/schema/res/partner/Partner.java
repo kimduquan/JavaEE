@@ -108,7 +108,7 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Related Company")
 	@Transient
 	private Integer parent_id;
@@ -186,7 +186,7 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Salesperson")
 	@Transient
 	private Integer user_id;
@@ -210,7 +210,7 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Partner with same Tax ID")
 	@Transient
 	private Integer same_vat_partner_id;
@@ -226,7 +226,7 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Partner with same Company Registry")
 	@Transient
 	private Integer same_company_registry_partner_id;
@@ -364,7 +364,7 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("State")
 	@Transient
 	private Integer state_id;
@@ -380,7 +380,7 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Country")
 	@Transient
 	private Integer country_id;
@@ -464,7 +464,7 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Industry")
 	@Transient
 	private Integer industry_id;
@@ -489,7 +489,7 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Company")
 	@Transient
 	private Integer company_id;
@@ -548,10 +548,10 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Commercial Entity")
 	@Transient
-	private String commercial_partner_id;
+	private Integer commercial_partner_id;
 	
 	/**
 	 * 
@@ -961,11 +961,11 @@ public class Partner {
 		this.contact_address = contact_address;
 	}
 
-	public String getCommercial_partner_id() {
+	public Integer getCommercial_partner_id() {
 		return commercial_partner_id;
 	}
 
-	public void setCommercial_partner_id(String commercial_partner_id) {
+	public void setCommercial_partner_id(Integer commercial_partner_id) {
 		this.commercial_partner_id = commercial_partner_id;
 	}
 

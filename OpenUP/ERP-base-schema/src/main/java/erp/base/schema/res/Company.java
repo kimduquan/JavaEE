@@ -129,7 +129,7 @@ public class Company {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Transient
 	private Integer parent_id;
 	
@@ -198,7 +198,7 @@ public class Company {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Transient
 	private Integer root_id;
 	
@@ -213,7 +213,7 @@ public class Company {
 	/**
 	 * 
 	 */
-	@Column(nullable = false)
+	@Column(nullable = false, insertable = false, updatable = false)
 	@NotNull
 	@Description("Partner")
 	@Transient
@@ -284,7 +284,7 @@ public class Company {
 	/**
 	 * 
 	 */
-	@Column(nullable = false)
+	@Column(nullable = false, insertable = false, updatable = false)
 	@NotNull
 	@Transient
 	private Integer currency_id;
@@ -340,7 +340,7 @@ public class Company {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Fed. State")
 	@Transient
 	private Integer state_id;
@@ -370,7 +370,7 @@ public class Company {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Transient
 	private Integer country_id;
 	
@@ -429,7 +429,7 @@ public class Company {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Paper format")
 	@Transient
 	private Integer paperformat_id;
@@ -445,7 +445,7 @@ public class Company {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Document Template")
 	@Transient
 	private Integer external_report_layout_id;

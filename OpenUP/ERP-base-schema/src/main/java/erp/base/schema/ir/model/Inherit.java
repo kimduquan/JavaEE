@@ -31,7 +31,7 @@ public class Inherit {
 	/**
 	 * 
 	 */
-	@Column(nullable = false)
+	@Column(nullable = false, insertable = false, updatable = false)
 	@NotNull
 	@Transient
 	private Integer model_id;
@@ -48,7 +48,7 @@ public class Inherit {
 	/**
 	 * 
 	 */
-	@Column(nullable = false)
+	@Column(nullable = false, insertable = false, updatable = false)
 	@NotNull
 	@Transient
 	private Integer parent_id;
@@ -65,7 +65,7 @@ public class Inherit {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Transient
 	private Integer parent_field_id;
 	

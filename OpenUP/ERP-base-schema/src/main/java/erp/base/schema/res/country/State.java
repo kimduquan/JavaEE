@@ -32,7 +32,7 @@ public class State {
 	/**
 	 * 
 	 */
-	@Column(nullable = false)
+	@Column(nullable = false, insertable = false, updatable = false)
 	@NotNull
 	@Description("Country")
 	@Transient

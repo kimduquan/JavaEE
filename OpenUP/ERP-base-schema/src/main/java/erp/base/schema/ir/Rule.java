@@ -53,7 +53,7 @@ public class Rule {
 	/**
 	 * 
 	 */
-	@Column(nullable = false)
+	@Column(nullable = false, insertable = false, updatable = false)
 	@NotNull
 	@Description("Model")
 	@Transient

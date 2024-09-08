@@ -90,7 +90,7 @@ public class Actions {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Setting a value makes this action available in the sidebar for the given model.")
 	@Transient
 	private Integer binding_model_id;

@@ -35,7 +35,7 @@ public class Default {
 	/**
 	 * 
 	 */
-	@Column(nullable = false)
+	@Column(nullable = false, insertable = false, updatable = false)
 	@NotNull
 	@Description("Field")
 	@Transient
@@ -53,7 +53,7 @@ public class Default {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("User")
 	@Transient
 	private Integer user_id;
@@ -69,7 +69,7 @@ public class Default {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Company")
 	@Transient
 	private Integer company_id;

@@ -89,7 +89,7 @@ public class Report extends Actions {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Model")
 	@Transient
 	private Integer model_id;
@@ -159,7 +159,7 @@ public class Report extends Actions {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Paper Format")
 	@Transient
 	private Integer paperformat_id;

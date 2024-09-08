@@ -43,7 +43,7 @@ public class APIKeys {
 	/**
 	 * 
 	 */
-	@Column(nullable = false, updatable = false)
+	@Column(nullable = false, insertable = false, updatable = false)
 	@NotNull
 	@Transient
 	private Integer user_id;

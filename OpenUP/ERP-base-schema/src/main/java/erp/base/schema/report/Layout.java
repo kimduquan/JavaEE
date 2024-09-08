@@ -34,7 +34,7 @@ public class Layout {
 	/**
 	 * 
 	 */
-	@Column(nullable = false)
+	@Column(nullable = false, insertable = false, updatable = false)
 	@NotNull
 	@Description("Document Template")
 	@Transient

@@ -44,7 +44,7 @@ public class Filters {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("User")
 	@Transient
 	private Integer user_id;
@@ -104,7 +104,7 @@ public class Filters {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Action")
 	@Transient
 	private Integer action_id;

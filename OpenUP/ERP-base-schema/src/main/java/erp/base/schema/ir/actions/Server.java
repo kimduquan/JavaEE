@@ -187,7 +187,7 @@ public class Server extends Actions {
 	/**
 	 * 
 	 */
-	@Column(nullable = false)
+	@Column(nullable = false, insertable = false, updatable = false)
 	@NotNull
 	@Description("Model")
 	@Transient
@@ -256,7 +256,7 @@ public class Server extends Actions {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Record to Create")
 	@Transient
 	private Integer crud_model_id;
@@ -280,7 +280,7 @@ public class Server extends Actions {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Link Field")
 	@Transient
 	private Integer link_field_id;
@@ -314,7 +314,7 @@ public class Server extends Actions {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Field to Update")
 	@Transient
 	private Integer update_field_id;
@@ -338,7 +338,7 @@ public class Server extends Actions {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Transient
 	private Integer update_related_model_id;
 	

@@ -138,7 +138,7 @@ public class Module {
 	/**
 	 * 
 	 */
-	@Column(updatable = false)
+	@Column(insertable = false, updatable = false)
 	@Description("Category")
 	@Transient
 	private Integer category_id;

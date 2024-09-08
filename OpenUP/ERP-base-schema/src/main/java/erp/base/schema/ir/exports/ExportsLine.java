@@ -39,7 +39,7 @@ public class ExportsLine {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Export")
 	@Transient
 	private Integer export_id;

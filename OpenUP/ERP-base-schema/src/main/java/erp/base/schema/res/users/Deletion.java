@@ -53,7 +53,7 @@ public class Deletion {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(nullable = false, insertable = false, updatable = false)
 	@Description("User")
 	@Transient
 	private Integer user_id;

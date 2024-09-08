@@ -59,7 +59,7 @@ public class Category {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Parent Category")
 	@Transient
 	private Integer parent_id;

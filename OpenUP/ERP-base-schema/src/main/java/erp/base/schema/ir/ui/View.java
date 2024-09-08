@@ -190,7 +190,7 @@ public class View {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Inherited View")
 	@Transient
 	private Integer inherit_id;
@@ -223,7 +223,7 @@ public class View {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Model Data")
 	@Transient
 	private Integer model_data_id;
@@ -284,10 +284,10 @@ public class View {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Model of the view")
 	@Transient
-	private String model_id;
+	private Integer model_id;
 
 	/**
 	 * 
@@ -441,11 +441,11 @@ public class View {
 		this.active = active;
 	}
 
-	public String getModel_id() {
+	public Integer getModel_id() {
 		return model_id;
 	}
 
-	public void setModel_id(String model_id) {
+	public void setModel_id(Integer model_id) {
 		this.model_id = model_id;
 	}
 

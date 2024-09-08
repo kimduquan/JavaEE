@@ -103,7 +103,7 @@ public class Groups {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Application")
 	@Transient
 	private Integer category_id;

@@ -83,7 +83,7 @@ public class ActWindow extends Actions {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("View Ref.")
 	@Transient
 	private Integer view_id;
@@ -234,7 +234,7 @@ public class ActWindow extends Actions {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Search View Ref.")
 	@Transient
 	private Integer search_view_id;

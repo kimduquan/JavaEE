@@ -67,7 +67,7 @@ public class Rate {
 	/**
 	 * 
 	 */
-	@Column(nullable = false, updatable = false)
+	@Column(nullable = false, insertable = false, updatable = false)
 	@NotNull
 	@Description("Currency")
 	@Transient
@@ -85,7 +85,7 @@ public class Rate {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Company")
 	@Transient
 	private Integer company_id;

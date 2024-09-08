@@ -92,7 +92,7 @@ public class Attachment {
 	/**
 	 * 
 	 */
-	@Column(updatable = false)
+	@Column(insertable = false, updatable = false)
 	@Description("Resource ID")
 	@Transient
 	private Integer res_id;
@@ -108,7 +108,7 @@ public class Attachment {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Company")
 	@Transient
 	private Integer company_id;

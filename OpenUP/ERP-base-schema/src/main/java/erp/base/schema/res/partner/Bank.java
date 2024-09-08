@@ -76,7 +76,7 @@ public class Bank {
 	/**
 	 * 
 	 */
-	@Column(nullable = false)
+	@Column(nullable = false, insertable = false, updatable = false)
 	@NotNull
 	@Description("Account Holder")
 	@Transient
@@ -103,7 +103,7 @@ public class Bank {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Bank")
 	@Transient
 	private Integer bank_id;
@@ -140,7 +140,7 @@ public class Bank {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Currency")
 	@Transient
 	private Integer currency_id;
@@ -156,7 +156,7 @@ public class Bank {
 	/**
 	 * 
 	 */
-	@Column(updatable = false)
+	@Column(insertable = false, updatable = false)
 	@Transient
 	private Integer company_id;
 	

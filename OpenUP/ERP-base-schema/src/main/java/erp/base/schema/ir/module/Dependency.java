@@ -90,7 +90,7 @@ public class Dependency {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Module")
 	@Transient
 	private Integer module_id;
@@ -106,7 +106,7 @@ public class Dependency {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Dependency")
 	@Transient
 	private Integer depend_id;

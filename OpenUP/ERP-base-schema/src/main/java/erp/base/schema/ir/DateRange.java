@@ -52,7 +52,7 @@ public class DateRange {
 	/**
 	 * 
 	 */
-	@Column(nullable = false)
+	@Column(nullable = false, insertable = false, updatable = false)
 	@Description("Main Sequence")
 	@Transient
 	private Integer sequence_id;

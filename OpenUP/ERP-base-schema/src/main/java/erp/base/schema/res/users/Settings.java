@@ -4,6 +4,7 @@ import org.eclipse.microprofile.graphql.Description;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.Transient;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -30,9 +31,10 @@ public class Settings {
 	/**
 	 * 
 	 */
-	@Column(nullable = false, updatable = false)
+	@Column(nullable = false, insertable = false, updatable = false)
 	@NotNull
 	@Description("User")
+	@Transient
 	private Integer user_id;
 
 	/**

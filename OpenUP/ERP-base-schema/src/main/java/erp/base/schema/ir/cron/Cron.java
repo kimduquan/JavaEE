@@ -64,7 +64,7 @@ public class Cron {
 	/**
 	 * 
 	 */
-	@Column(nullable = false)
+	@Column(nullable = false, insertable = false, updatable = false)
 	@NotNull
 	@Description("Server action")
 	@Transient
@@ -90,7 +90,7 @@ public class Cron {
 	/**
 	 * 
 	 */
-	@Column(nullable = false)
+	@Column(nullable = false, insertable = false, updatable = false)
 	@NotNull
 	@Description("Scheduler User")
 	@Transient

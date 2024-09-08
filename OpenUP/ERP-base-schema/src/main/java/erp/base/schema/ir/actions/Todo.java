@@ -51,7 +51,7 @@ public class Todo {
 	/**
 	 * 
 	 */
-	@Column(nullable = false)
+	@Column(nullable = false, insertable = false, updatable = false)
 	@NotNull
 	@Description("Action")
 	@Transient

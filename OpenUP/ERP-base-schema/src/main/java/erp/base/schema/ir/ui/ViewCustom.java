@@ -33,7 +33,7 @@ public class ViewCustom {
 	/**
 	 * 
 	 */
-	@Column(nullable = false)
+	@Column(nullable = false, insertable = false, updatable = false)
 	@NotNull
 	@Description("Original View")
 	@Transient
@@ -51,7 +51,7 @@ public class ViewCustom {
 	/**
 	 * 
 	 */
-	@Column(nullable = false)
+	@Column(nullable = false, insertable = false, updatable = false)
 	@NotNull
 	@Description("User")
 	@Transient

@@ -87,7 +87,7 @@ public class Country {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Input View")
 	@Transient
 	private Integer address_view_id;
@@ -103,7 +103,7 @@ public class Country {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Currency")
 	@Transient
 	private Integer currency_id;

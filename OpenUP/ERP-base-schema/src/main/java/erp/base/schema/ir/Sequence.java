@@ -143,7 +143,7 @@ public class Sequence {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Company")
 	@Transient
 	private Integer company_id;

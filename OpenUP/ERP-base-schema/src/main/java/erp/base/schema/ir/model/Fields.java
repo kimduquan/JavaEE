@@ -116,7 +116,7 @@ public class Fields {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Relation field")
 	@Transient
 	private Integer relation_field_id;
@@ -132,7 +132,7 @@ public class Fields {
 	/**
 	 * 
 	 */
-	@Column(nullable = false)
+	@Column(nullable = false, insertable = false, updatable = false)
 	@NotNull
 	@Description("Model")
 	@Transient
@@ -219,7 +219,7 @@ public class Fields {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Related field")
 	@Transient
 	private Integer related_field_id;

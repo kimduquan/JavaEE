@@ -50,7 +50,7 @@ public class Access {
 	/**
 	 * 
 	 */
-	@Column(nullable = false)
+	@Column(nullable = false, insertable = false, updatable = false)
 	@NotNull
 	@Description("Model")
 	@Transient
@@ -68,7 +68,7 @@ public class Access {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Group")
 	@Transient
 	private Integer group_id;

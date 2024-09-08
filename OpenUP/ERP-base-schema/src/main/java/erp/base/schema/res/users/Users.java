@@ -44,7 +44,7 @@ public class Users {
 	/**
 	 * 
 	 */
-	@Column(nullable = false)
+	@Column(nullable = false, insertable = false, updatable = false)
 	@NotNull
 	@Description("Related Partner")
 	@Transient
@@ -111,7 +111,7 @@ public class Users {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(nullable = false, insertable = false, updatable = false)
 	@Description("Home Action")
 	@Transient
 	private Integer action_id;
@@ -212,7 +212,7 @@ public class Users {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Settings")
 	@Transient
 	private Integer res_users_settings_id;
@@ -228,7 +228,7 @@ public class Users {
 	/**
 	 * 
 	 */
-	@Column(nullable = false)
+	@Column(nullable = false, insertable = false, updatable = false)
 	@NotNull
 	@Description("Company")
 	@Transient

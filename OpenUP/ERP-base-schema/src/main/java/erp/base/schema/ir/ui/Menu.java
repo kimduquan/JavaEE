@@ -127,7 +127,7 @@ public class Menu {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Transient
 	private Integer parent_id;
 	

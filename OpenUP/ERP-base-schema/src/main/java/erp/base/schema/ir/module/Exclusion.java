@@ -89,7 +89,7 @@ public class Exclusion {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Module")
 	@Transient
 	private Integer module_id;
@@ -105,7 +105,7 @@ public class Exclusion {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(insertable = false, updatable = false)
 	@Description("Exclusion Module")
 	@Transient
 	private Integer exclusion_id;
