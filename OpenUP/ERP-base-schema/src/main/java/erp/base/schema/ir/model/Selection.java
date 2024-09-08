@@ -38,7 +38,7 @@ public class Selection {
 	@Column(nullable = false)
 	@NotNull
 	@Transient
-	private String field_id;
+	private Integer field_id;
 
 	/**
 	 * 
@@ -74,11 +74,11 @@ public class Selection {
 	@Property
 	private Integer sequence = 1000;
 
-	public String getField_id() {
+	public Integer getField_id() {
 		return field_id;
 	}
 
-	public void setField_id(String field_id) {
+	public void setField_id(Integer field_id) {
 		this.field_id = field_id;
 	}
 

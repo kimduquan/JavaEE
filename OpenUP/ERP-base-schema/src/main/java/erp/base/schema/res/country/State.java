@@ -36,7 +36,7 @@ public class State {
 	@NotNull
 	@Description("Country")
 	@Transient
-	private String country_id;
+	private Integer country_id;
 
 	/**
 	 * 
@@ -65,11 +65,11 @@ public class State {
 	@Property
 	private String code;
 
-	public String getCountry_id() {
+	public Integer getCountry_id() {
 		return country_id;
 	}
 
-	public void setCountry_id(String country_id) {
+	public void setCountry_id(Integer country_id) {
 		this.country_id = country_id;
 	}
 

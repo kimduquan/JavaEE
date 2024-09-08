@@ -39,7 +39,7 @@ public class Default {
 	@NotNull
 	@Description("Field")
 	@Transient
-	private String field_id;
+	private Integer field_id;
 
 	/**
 	 * 
@@ -56,7 +56,7 @@ public class Default {
 	@Column
 	@Description("User")
 	@Transient
-	private String user_id;
+	private Integer user_id;
 
 	/**
 	 * 
@@ -72,7 +72,7 @@ public class Default {
 	@Column
 	@Description("Company")
 	@Transient
-	private String company_id;
+	private Integer company_id;
 
 	/**
 	 * 
@@ -99,27 +99,27 @@ public class Default {
 	@Property
 	private String json_value;
 
-	public String getField_id() {
+	public Integer getField_id() {
 		return field_id;
 	}
 
-	public void setField_id(String field_id) {
+	public void setField_id(Integer field_id) {
 		this.field_id = field_id;
 	}
 
-	public String getUser_id() {
+	public Integer getUser_id() {
 		return user_id;
 	}
 
-	public void setUser_id(String user_id) {
+	public void setUser_id(Integer user_id) {
 		this.user_id = user_id;
 	}
 
-	public String getCompany_id() {
+	public Integer getCompany_id() {
 		return company_id;
 	}
 
-	public void setCompany_id(String company_id) {
+	public void setCompany_id(Integer company_id) {
 		this.company_id = company_id;
 	}
 

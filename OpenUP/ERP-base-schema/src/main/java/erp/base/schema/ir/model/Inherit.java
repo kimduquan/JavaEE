@@ -34,7 +34,7 @@ public class Inherit {
 	@Column(nullable = false)
 	@NotNull
 	@Transient
-	private String model_id;
+	private Integer model_id;
 	
 	/**
 	 * 
@@ -51,7 +51,7 @@ public class Inherit {
 	@Column(nullable = false)
 	@NotNull
 	@Transient
-	private String parent_id;
+	private Integer parent_id;
 
 	/**
 	 * 
@@ -67,7 +67,7 @@ public class Inherit {
 	 */
 	@Column
 	@Transient
-	private String parent_field_id;
+	private Integer parent_field_id;
 	
 	/**
 	 * 
@@ -77,27 +77,27 @@ public class Inherit {
 	@Relationship(type = "PARENT_FIELD")
 	private Fields parent_field;
 
-	public String getModel_id() {
+	public Integer getModel_id() {
 		return model_id;
 	}
 
-	public void setModel_id(String model_id) {
+	public void setModel_id(Integer model_id) {
 		this.model_id = model_id;
 	}
 
-	public String getParent_id() {
+	public Integer getParent_id() {
 		return parent_id;
 	}
 
-	public void setParent_id(String parent_id) {
+	public void setParent_id(Integer parent_id) {
 		this.parent_id = parent_id;
 	}
 
-	public String getParent_field_id() {
+	public Integer getParent_field_id() {
 		return parent_field_id;
 	}
 
-	public void setParent_field_id(String parent_field_id) {
+	public void setParent_field_id(Integer parent_field_id) {
 		this.parent_field_id = parent_field_id;
 	}
 

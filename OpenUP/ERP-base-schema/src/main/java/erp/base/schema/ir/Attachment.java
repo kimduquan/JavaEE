@@ -95,7 +95,7 @@ public class Attachment {
 	@Column(updatable = false)
 	@Description("Resource ID")
 	@Transient
-	private String res_id;
+	private Integer res_id;
 
 	/**
 	 * 
@@ -111,7 +111,7 @@ public class Attachment {
 	@Column
 	@Description("Company")
 	@Transient
-	private String company_id;
+	private Integer company_id;
 
 	/**
 	 * 
@@ -260,19 +260,19 @@ public class Attachment {
 		this.res_field = res_field;
 	}
 
-	public String getRes_id() {
+	public Integer getRes_id() {
 		return res_id;
 	}
 
-	public void setRes_id(String res_id) {
+	public void setRes_id(Integer res_id) {
 		this.res_id = res_id;
 	}
 
-	public String getCompany_id() {
+	public Integer getCompany_id() {
 		return company_id;
 	}
 
-	public void setCompany_id(String company_id) {
+	public void setCompany_id(Integer company_id) {
 		this.company_id = company_id;
 	}
 

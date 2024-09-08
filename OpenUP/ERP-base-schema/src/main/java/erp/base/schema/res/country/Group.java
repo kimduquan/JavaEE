@@ -47,21 +47,18 @@ public class Group {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Country.class)
-	@CollectionTable(name = "res_country_res_country_group_rel", joinColumns = {
-			@JoinColumn(name = "res_country_group_id", referencedColumnName = "res_country_id")
-	})
+	@ElementCollection
+	@CollectionTable(name = "res_country_res_country_group_rel", joinColumns = {@JoinColumn(name = "res_country_group_id")})
+	@Column(name = "res_country_id")
 	@Description("Countries")
 	@Transient
-	private List<String> country_ids;
+	private List<Integer> country_ids;
 
 	/**
 	 * 
 	 */
 	@ManyToMany(targetEntity = Country.class)
-	@JoinTable(name = "res_country_res_country_group_rel", joinColumns = {
-			@JoinColumn(name = "res_country_group_id", referencedColumnName = "res_country_id")
-	})
+	@JoinTable(name = "res_country_res_country_group_rel", joinColumns = {@JoinColumn(name = "res_country_group_id")}, inverseJoinColumns = {@JoinColumn(name = "res_country_id")})
 	@Relationship(type = "COUNTRIES")
 	private List<Country> countries;
 
@@ -73,11 +70,11 @@ public class Group {
 		this.name = name;
 	}
 
-	public List<String> getCountry_ids() {
+	public List<Integer> getCountry_ids() {
 		return country_ids;
 	}
 
-	public void setCountry_ids(List<String> country_ids) {
+	public void setCountry_ids(List<Integer> country_ids) {
 		this.country_ids = country_ids;
 	}
 

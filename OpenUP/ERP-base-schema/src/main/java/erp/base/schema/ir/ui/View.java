@@ -193,7 +193,7 @@ public class View {
 	@Column
 	@Description("Inherited View")
 	@Transient
-	private String inherit_id;
+	private Integer inherit_id;
 
 	/**
 	 * 
@@ -206,11 +206,11 @@ public class View {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = View.class)
+	@ElementCollection
 	@CollectionTable(name = "ir_ui_view")
 	@Description("Views which inherit from this one")
 	@Transient
-	private List<String> inherit_children_ids;
+	private List<Integer> inherit_children_ids;
 
 	/**
 	 * 
@@ -226,7 +226,7 @@ public class View {
 	@Column
 	@Description("Model Data")
 	@Transient
-	private String model_data_id;
+	private Integer model_data_id;
 
 	/**
 	 * 
@@ -247,21 +247,18 @@ public class View {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Groups.class)
-	@CollectionTable(name = "ir_ui_view_group_rel", joinColumns = {
-			@JoinColumn(name = "view_id", referencedColumnName = "group_id")
-	})
+	@ElementCollection
+	@CollectionTable(name = "ir_ui_view_group_rel", joinColumns = {@JoinColumn(name = "view_id")})
+	@Column(name = "group_id")
 	@Description("Groups")
 	@Transient
-	private List<String> groups_id;
+	private List<Integer> groups_id;
 	
 	/**
 	 * 
 	 */
 	@ManyToMany(targetEntity = Groups.class)
-	@JoinTable(name = "ir_ui_view_group_rel", joinColumns = {
-			@JoinColumn(name = "view_id", referencedColumnName = "group_id")
-	})
+	@JoinTable(name = "ir_ui_view_group_rel", joinColumns = {@JoinColumn(name = "view_id")}, inverseJoinColumns = {@JoinColumn(name = "group_id")})
 	@Relationship(type = "GROUPS")
 	private List<Groups> groups;
 	
@@ -388,27 +385,27 @@ public class View {
 		this.arch_prev = arch_prev;
 	}
 
-	public String getInherit_id() {
+	public Integer getInherit_id() {
 		return inherit_id;
 	}
 
-	public void setInherit_id(String inherit_id) {
+	public void setInherit_id(Integer inherit_id) {
 		this.inherit_id = inherit_id;
 	}
 
-	public List<String> getInherit_children_ids() {
+	public List<Integer> getInherit_children_ids() {
 		return inherit_children_ids;
 	}
 
-	public void setInherit_children_ids(List<String> inherit_children_ids) {
+	public void setInherit_children_ids(List<Integer> inherit_children_ids) {
 		this.inherit_children_ids = inherit_children_ids;
 	}
 
-	public String getModel_data_id() {
+	public Integer getModel_data_id() {
 		return model_data_id;
 	}
 
-	public void setModel_data_id(String model_data_id) {
+	public void setModel_data_id(Integer model_data_id) {
 		this.model_data_id = model_data_id;
 	}
 
@@ -420,11 +417,11 @@ public class View {
 		this.xml_id = xml_id;
 	}
 
-	public List<String> getGroups_id() {
+	public List<Integer> getGroups_id() {
 		return groups_id;
 	}
 
-	public void setGroups_id(List<String> groups_id) {
+	public void setGroups_id(List<Integer> groups_id) {
 		this.groups_id = groups_id;
 	}
 

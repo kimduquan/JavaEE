@@ -119,7 +119,7 @@ public class Fields {
 	@Column
 	@Description("Relation field")
 	@Transient
-	private String relation_field_id;
+	private Integer relation_field_id;
 
 	/**
 	 * 
@@ -136,7 +136,7 @@ public class Fields {
 	@NotNull
 	@Description("Model")
 	@Transient
-	private String model_id;
+	private Integer model_id;
 
 	/**
 	 * 
@@ -185,13 +185,13 @@ public class Fields {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Selection.class)
+	@ElementCollection
 	@CollectionTable(name = "ir_model_fields_selection", joinColumns = {
 			@JoinColumn(name = "field_id")
 	})
 	@Description("Selection Options")
 	@Transient
-	private List<String> selection_ids;
+	private List<Integer> selection_ids;
 
 	/**
 	 * 
@@ -222,7 +222,7 @@ public class Fields {
 	@Column
 	@Description("Related field")
 	@Transient
-	private String related_field_id;
+	private Integer related_field_id;
 
 	/**
 	 * 
@@ -303,9 +303,7 @@ public class Fields {
 	 * 
 	 */
 	@ManyToMany(targetEntity = Groups.class)
-	@JoinTable(name = "ir_model_fields_group_rel", joinColumns = {
-			@JoinColumn(name = "group_id", referencedColumnName = "field_id")
-	})
+	@JoinTable(name = "ir_model_fields_group_rel", joinColumns = {@JoinColumn(name = "field_id")}, inverseJoinColumns = {@JoinColumn(name = "group_id")})
 	@Relationship(type = "GROUPS")
 	private List<Groups> groups;
 	
@@ -501,19 +499,19 @@ public class Fields {
 		this.relation_field = relation_field;
 	}
 
-	public String getRelation_field_id() {
+	public Integer getRelation_field_id() {
 		return relation_field_id;
 	}
 
-	public void setRelation_field_id(String relation_field_id) {
+	public void setRelation_field_id(Integer relation_field_id) {
 		this.relation_field_id = relation_field_id;
 	}
 
-	public String getModel_id() {
+	public Integer getModel_id() {
 		return model_id;
 	}
 
-	public void setModel_id(String model_id) {
+	public void setModel_id(Integer model_id) {
 		this.model_id = model_id;
 	}
 
@@ -549,11 +547,11 @@ public class Fields {
 		this.selection = selection;
 	}
 
-	public List<String> getSelection_ids() {
+	public List<Integer> getSelection_ids() {
 		return selection_ids;
 	}
 
-	public void setSelection_ids(List<String> selection_ids) {
+	public void setSelection_ids(List<Integer> selection_ids) {
 		this.selection_ids = selection_ids;
 	}
 
@@ -573,11 +571,11 @@ public class Fields {
 		this.related = related;
 	}
 
-	public String getRelated_field_id() {
+	public Integer getRelated_field_id() {
 		return related_field_id;
 	}
 
-	public void setRelated_field_id(String related_field_id) {
+	public void setRelated_field_id(Integer related_field_id) {
 		this.related_field_id = related_field_id;
 	}
 

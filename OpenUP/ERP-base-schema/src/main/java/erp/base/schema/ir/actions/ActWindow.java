@@ -86,7 +86,7 @@ public class ActWindow extends Actions {
 	@Column
 	@Description("View Ref.")
 	@Transient
-	private String view_id;
+	private Integer view_id;
 	
 	/**
 	 * 
@@ -172,20 +172,20 @@ public class ActWindow extends Actions {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = ActWindowView.class)
-	@CollectionTable(name = "ir_actions_act_window_view", joinColumns = {
-			@JoinColumn(name = "act_window_id", referencedColumnName = "view_id")
+	@ElementCollection
+	@CollectionTable(name = "ir_act_window_view", joinColumns = {
+			@JoinColumn(name = "act_window_id")
 	})
 	@Description("No of Views")
 	@Transient
-	private List<String> view_ids;
+	private List<Integer> view_ids;
 
 	/**
 	 * 
 	 */
 	@OneToMany(targetEntity = ActWindowView.class)
-	@JoinTable(name = "ir_actions_act_window_view", joinColumns = {
-			@JoinColumn(name = "act_window_id", referencedColumnName = "view_id")
+	@JoinTable(name = "ir_act_window_view", joinColumns = {
+			@JoinColumn(name = "act_window_id")
 	})
 	@Relationship(type = "NO_OF_VIEWS")
 	private List<ActWindowView> _views;
@@ -214,21 +214,20 @@ public class ActWindow extends Actions {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Groups.class)
+	@ElementCollection
 	@CollectionTable(name = "ir_act_window_group_rel", joinColumns = {
-			@JoinColumn(name = "act_id", referencedColumnName = "gid")
+			@JoinColumn(name = "act_id")
 	})
+	@Column(name = "gid")
 	@Description("Groups")
 	@Transient
-	private List<String> groups_id;
+	private List<Integer> groups_id;
 
 	/**
 	 * 
 	 */
 	@ManyToMany(targetEntity = Groups.class)
-	@JoinTable(name = "ir_act_window_group_rel", joinColumns = {
-			@JoinColumn(name = "act_id", referencedColumnName = "gid")
-	})
+	@JoinTable(name = "ir_act_window_group_rel", joinColumns = {@JoinColumn(name = "act_id")}, inverseJoinColumns = {@JoinColumn(name = "gid")})
 	@Relationship(type = "GROUPS")
 	private List<Groups> groups;
 	
@@ -238,7 +237,7 @@ public class ActWindow extends Actions {
 	@Column
 	@Description("Search View Ref.")
 	@Transient
-	private String search_view_id;
+	private Integer search_view_id;
 	
 	/**
 	 * 
@@ -263,11 +262,11 @@ public class ActWindow extends Actions {
 		this.type = type;
 	}
 
-	public String getView_id() {
+	public Integer getView_id() {
 		return view_id;
 	}
 
-	public void setView_id(String view_id) {
+	public void setView_id(Integer view_id) {
 		this.view_id = view_id;
 	}
 
@@ -335,11 +334,11 @@ public class ActWindow extends Actions {
 		this.usage = usage;
 	}
 
-	public List<String> getView_ids() {
+	public List<Integer> getView_ids() {
 		return view_ids;
 	}
 
-	public void setView_ids(List<String> view_ids) {
+	public void setView_ids(List<Integer> view_ids) {
 		this.view_ids = view_ids;
 	}
 
@@ -359,19 +358,19 @@ public class ActWindow extends Actions {
 		this.limit = limit;
 	}
 
-	public List<String> getGroups_id() {
+	public List<Integer> getGroups_id() {
 		return groups_id;
 	}
 
-	public void setGroups_id(List<String> groups_id) {
+	public void setGroups_id(List<Integer> groups_id) {
 		this.groups_id = groups_id;
 	}
 
-	public String getSearch_view_id() {
+	public Integer getSearch_view_id() {
 		return search_view_id;
 	}
 
-	public void setSearch_view_id(String search_view_id) {
+	public void setSearch_view_id(Integer search_view_id) {
 		this.search_view_id = search_view_id;
 	}
 

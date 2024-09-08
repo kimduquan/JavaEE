@@ -52,7 +52,7 @@ public class Category {
 	@Column
 	@Description("Parent Application")
 	@Transient
-	private String parent_id;
+	private Integer parent_id;
 	
 	/**
 	 * 
@@ -65,13 +65,13 @@ public class Category {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Category.class)
+	@ElementCollection
 	@CollectionTable(name = "ir_module_category", joinColumns = {
 			@JoinColumn(name = "parent_id")
 	})
 	@Description("Child Applications")
 	@Transient
-	private List<String> child_ids;
+	private List<Integer> child_ids;
 
 	/**
 	 * 
@@ -83,13 +83,13 @@ public class Category {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Module.class)
+	@ElementCollection
 	@CollectionTable(name = "ir_module_module", joinColumns = {
 			@JoinColumn(name = "category_id")
 	})
 	@Description("Modules")
 	@Transient
-	private List<String> module_ids;
+	private List<Integer> module_ids;
 	
 	/**
 	 * 
@@ -147,27 +147,27 @@ public class Category {
 		this.name = name;
 	}
 
-	public String getParent_id() {
+	public Integer getParent_id() {
 		return parent_id;
 	}
 
-	public void setParent_id(String parent_id) {
+	public void setParent_id(Integer parent_id) {
 		this.parent_id = parent_id;
 	}
 
-	public List<String> getChild_ids() {
+	public List<Integer> getChild_ids() {
 		return child_ids;
 	}
 
-	public void setChild_ids(List<String> child_ids) {
+	public void setChild_ids(List<Integer> child_ids) {
 		this.child_ids = child_ids;
 	}
 
-	public List<String> getModule_ids() {
+	public List<Integer> getModule_ids() {
 		return module_ids;
 	}
 
-	public void setModule_ids(List<String> module_ids) {
+	public void setModule_ids(List<Integer> module_ids) {
 		this.module_ids = module_ids;
 	}
 

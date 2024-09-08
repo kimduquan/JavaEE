@@ -79,7 +79,7 @@ public class ActWindowView {
 	@Column
 	@Description("View")
 	@Transient
-	private String view_id;
+	private Integer view_id;
 
 	/**
 	 * 
@@ -105,7 +105,7 @@ public class ActWindowView {
 	@Column
 	@Description("Action")
 	@Transient
-	private String act_window_id;
+	private Integer act_window_id;
 	
 	/**
 	 * 
@@ -131,11 +131,11 @@ public class ActWindowView {
 		this.sequence = sequence;
 	}
 
-	public String getView_id() {
+	public Integer getView_id() {
 		return view_id;
 	}
 
-	public void setView_id(String view_id) {
+	public void setView_id(Integer view_id) {
 		this.view_id = view_id;
 	}
 
@@ -147,11 +147,11 @@ public class ActWindowView {
 		this.view_mode = view_mode;
 	}
 
-	public String getAct_window_id() {
+	public Integer getAct_window_id() {
 		return act_window_id;
 	}
 
-	public void setAct_window_id(String act_window_id) {
+	public void setAct_window_id(Integer act_window_id) {
 		this.act_window_id = act_window_id;
 	}
 

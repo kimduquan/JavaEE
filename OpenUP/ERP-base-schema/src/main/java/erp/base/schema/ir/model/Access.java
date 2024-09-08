@@ -54,7 +54,7 @@ public class Access {
 	@NotNull
 	@Description("Model")
 	@Transient
-	private String model_id;
+	private Integer model_id;
 
 	/**
 	 * 
@@ -71,7 +71,7 @@ public class Access {
 	@Column
 	@Description("Group")
 	@Transient
-	private String group_id;
+	private Integer group_id;
 	
 	/**
 	 * 
@@ -129,19 +129,19 @@ public class Access {
 		this.active = active;
 	}
 
-	public String getModel_id() {
+	public Integer getModel_id() {
 		return model_id;
 	}
 
-	public void setModel_id(String model_id) {
+	public void setModel_id(Integer model_id) {
 		this.model_id = model_id;
 	}
 
-	public String getGroup_id() {
+	public Integer getGroup_id() {
 		return group_id;
 	}
 
-	public void setGroup_id(String group_id) {
+	public void setGroup_id(Integer group_id) {
 		this.group_id = group_id;
 	}
 

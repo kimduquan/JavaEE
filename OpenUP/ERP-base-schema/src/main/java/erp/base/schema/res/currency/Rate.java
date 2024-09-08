@@ -1,7 +1,6 @@
 package erp.base.schema.res.currency;
 
 import java.util.Date;
-
 import org.eclipse.microprofile.graphql.Description;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
@@ -72,7 +71,7 @@ public class Rate {
 	@NotNull
 	@Description("Currency")
 	@Transient
-	private String currency_id;
+	private Integer currency_id;
 
 	/**
 	 * 
@@ -89,7 +88,7 @@ public class Rate {
 	@Column
 	@Description("Company")
 	@Transient
-	private String company_id;
+	private Integer company_id;
 	
 	/**
 	 * 
@@ -131,19 +130,19 @@ public class Rate {
 		this.inverse_company_rate = inverse_company_rate;
 	}
 
-	public String getCurrency_id() {
+	public Integer getCurrency_id() {
 		return currency_id;
 	}
 
-	public void setCurrency_id(String currency_id) {
+	public void setCurrency_id(Integer currency_id) {
 		this.currency_id = currency_id;
 	}
 
-	public String getCompany_id() {
+	public Integer getCompany_id() {
 		return company_id;
 	}
 
-	public void setCompany_id(String company_id) {
+	public void setCompany_id(Integer company_id) {
 		this.company_id = company_id;
 	}
 

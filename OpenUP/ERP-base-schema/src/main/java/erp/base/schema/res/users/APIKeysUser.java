@@ -21,13 +21,13 @@ public class APIKeysUser extends Users {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = APIKeys.class)
+	@ElementCollection
 	@CollectionTable(name = "res_users_apikeys", joinColumns = {
 			@JoinColumn(name = "user_id")
 	})
 	@Description("API Keys")
 	@Transient
-	private List<String> api_key_ids;
+	private List<Integer> api_key_ids;
 
 	/**
 	 * 
@@ -36,11 +36,11 @@ public class APIKeysUser extends Users {
 	@Relationship(type = "API_KEYS")
 	private List<APIKeys> api_keys;
 
-	public List<String> getApi_key_ids() {
+	public List<Integer> getApi_key_ids() {
 		return api_key_ids;
 	}
 
-	public void setApi_key_ids(List<String> api_key_ids) {
+	public void setApi_key_ids(List<Integer> api_key_ids) {
 		this.api_key_ids = api_key_ids;
 	}
 

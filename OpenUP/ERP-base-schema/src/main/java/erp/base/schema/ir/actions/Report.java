@@ -92,7 +92,7 @@ public class Report extends Actions {
 	@Column
 	@Description("Model")
 	@Transient
-	private String model_id;
+	private Integer model_id;
 
 	/**
 	 * 
@@ -133,21 +133,18 @@ public class Report extends Actions {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Groups.class)
-	@CollectionTable(name = "res_groups_report_rel", joinColumns = {
-			@JoinColumn(name = "uid", referencedColumnName = "gid")
-	})
+	@ElementCollection
+	@CollectionTable(name = "res_groups_report_rel", joinColumns = {@JoinColumn(name = "uid")})
+	@Column(name = "gid")
 	@Description("Groups")
 	@Transient
-	private List<String> groups_id;
+	private List<Integer> groups_id;
 
 	/**
 	 * 
 	 */
 	@ManyToMany(targetEntity = Groups.class)
-	@JoinTable(name = "res_groups_report_rel", joinColumns = {
-			@JoinColumn(name = "uid", referencedColumnName = "gid")
-	})
+	@JoinTable(name = "res_groups_report_rel", joinColumns = {@JoinColumn(name = "uid")}, inverseJoinColumns = {@JoinColumn(name = "gid")})
 	@Relationship(type = "GROUPS")
 	private List<Groups> groups;
 	
@@ -165,7 +162,7 @@ public class Report extends Actions {
 	@Column
 	@Description("Paper Format")
 	@Transient
-	private String paperformat_id;
+	private Integer paperformat_id;
 	
 	/**
 	 * 
@@ -215,11 +212,11 @@ public class Report extends Actions {
 		this.model = model;
 	}
 
-	public String getModel_id() {
+	public Integer getModel_id() {
 		return model_id;
 	}
 
-	public void setModel_id(String model_id) {
+	public void setModel_id(Integer model_id) {
 		this.model_id = model_id;
 	}
 
@@ -247,11 +244,11 @@ public class Report extends Actions {
 		this.report_file = report_file;
 	}
 
-	public List<String> getGroups_id() {
+	public List<Integer> getGroups_id() {
 		return groups_id;
 	}
 
-	public void setGroups_id(List<String> groups_id) {
+	public void setGroups_id(List<Integer> groups_id) {
 		this.groups_id = groups_id;
 	}
 
@@ -263,11 +260,11 @@ public class Report extends Actions {
 		this.multi = multi;
 	}
 
-	public String getPaperformat_id() {
+	public Integer getPaperformat_id() {
 		return paperformat_id;
 	}
 
-	public void setPaperformat_id(String paperformat_id) {
+	public void setPaperformat_id(Integer paperformat_id) {
 		this.paperformat_id = paperformat_id;
 	}
 

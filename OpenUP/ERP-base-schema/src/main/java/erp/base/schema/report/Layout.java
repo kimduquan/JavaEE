@@ -38,7 +38,7 @@ public class Layout {
 	@NotNull
 	@Description("Document Template")
 	@Transient
-	private String view_id;
+	private Integer view_id;
 	
 	/**
 	 * 
@@ -77,11 +77,11 @@ public class Layout {
 	@Property
 	private String name;
 
-	public String getView_id() {
+	public Integer getView_id() {
 		return view_id;
 	}
 
-	public void setView_id(String view_id) {
+	public void setView_id(Integer view_id) {
 		this.view_id = view_id;
 	}
 

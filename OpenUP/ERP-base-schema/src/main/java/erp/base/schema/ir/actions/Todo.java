@@ -55,7 +55,7 @@ public class Todo {
 	@NotNull
 	@Description("Action")
 	@Transient
-	private String action_id;
+	private Integer action_id;
 	
 	/**
 	 * 
@@ -93,11 +93,11 @@ public class Todo {
 	@Convert(NameAttributeConverter.class)
 	private String name;
 
-	public String getAction_id() {
+	public Integer getAction_id() {
 		return action_id;
 	}
 
-	public void setAction_id(String action_id) {
+	public void setAction_id(Integer action_id) {
 		this.action_id = action_id;
 	}
 

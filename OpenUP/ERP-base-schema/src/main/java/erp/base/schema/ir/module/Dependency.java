@@ -93,7 +93,7 @@ public class Dependency {
 	@Column
 	@Description("Module")
 	@Transient
-	private String module_id;
+	private Integer module_id;
 
 	/**
 	 * 
@@ -109,7 +109,7 @@ public class Dependency {
 	@Column
 	@Description("Dependency")
 	@Transient
-	private String depend_id;
+	private Integer depend_id;
 	
 	/**
 	 * 
@@ -145,19 +145,19 @@ public class Dependency {
 		this.name = name;
 	}
 
-	public String getModule_id() {
+	public Integer getModule_id() {
 		return module_id;
 	}
 
-	public void setModule_id(String module_id) {
+	public void setModule_id(Integer module_id) {
 		this.module_id = module_id;
 	}
 
-	public String getDepend_id() {
+	public Integer getDepend_id() {
 		return depend_id;
 	}
 
-	public void setDepend_id(String depend_id) {
+	public void setDepend_id(Integer depend_id) {
 		this.depend_id = depend_id;
 	}
 

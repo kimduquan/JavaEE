@@ -146,7 +146,7 @@ public class Sequence {
 	@Column
 	@Description("Company")
 	@Transient
-	private String company_id;
+	private Integer company_id;
 
 	/**
 	 * 
@@ -167,13 +167,13 @@ public class Sequence {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = DateRange.class)
+	@ElementCollection
 	@CollectionTable(name = "ir_sequence_date_range", joinColumns = {
 			@JoinColumn(name = "sequence_id")
 	})
 	@Description("Subsequences")
 	@Transient
-	private List<String> date_range_ids;
+	private List<Integer> date_range_ids;
 
 	/**
 	 * 
@@ -262,11 +262,11 @@ public class Sequence {
 		this.padding = padding;
 	}
 
-	public String getCompany_id() {
+	public Integer getCompany_id() {
 		return company_id;
 	}
 
-	public void setCompany_id(String company_id) {
+	public void setCompany_id(Integer company_id) {
 		this.company_id = company_id;
 	}
 
@@ -278,11 +278,11 @@ public class Sequence {
 		this.use_date_range = use_date_range;
 	}
 
-	public List<String> getDate_range_ids() {
+	public List<Integer> getDate_range_ids() {
 		return date_range_ids;
 	}
 
-	public void setDate_range_ids(List<String> date_range_ids) {
+	public void setDate_range_ids(List<Integer> date_range_ids) {
 		this.date_range_ids = date_range_ids;
 	}
 

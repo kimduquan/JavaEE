@@ -100,13 +100,13 @@ public class Currency {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Rate.class)
+	@ElementCollection
 	@CollectionTable(name = "res_currency_rate", joinColumns = {
 			@JoinColumn(name = "currency_id")
 	})
 	@Description("Rates")
 	@Transient
-	private List<String> rate_ids;
+	private List<Integer> rate_ids;
 	
 	/**
 	 * 
@@ -227,11 +227,11 @@ public class Currency {
 		this.rate_string = rate_string;
 	}
 
-	public List<String> getRate_ids() {
+	public List<Integer> getRate_ids() {
 		return rate_ids;
 	}
 
-	public void setRate_ids(List<String> rate_ids) {
+	public void setRate_ids(List<Integer> rate_ids) {
 		this.rate_ids = rate_ids;
 	}
 

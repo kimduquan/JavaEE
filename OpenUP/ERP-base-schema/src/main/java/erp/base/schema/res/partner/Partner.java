@@ -111,7 +111,7 @@ public class Partner {
 	@Column
 	@Description("Related Company")
 	@Transient
-	private String parent_id;
+	private Integer parent_id;
 
 	/**
 	 * 
@@ -135,7 +135,7 @@ public class Partner {
 	@Column
 	@Description("Contact")
 	@Transient
-	private List<String> child_ids;
+	private List<Integer> child_ids;
 
 	/**
 	 * 
@@ -189,7 +189,7 @@ public class Partner {
 	@Column
 	@Description("Salesperson")
 	@Transient
-	private String user_id;
+	private Integer user_id;
 	
 	/**
 	 * 
@@ -213,7 +213,7 @@ public class Partner {
 	@Column
 	@Description("Partner with same Tax ID")
 	@Transient
-	private String same_vat_partner_id;
+	private Integer same_vat_partner_id;
 
 	/**
 	 * 
@@ -229,7 +229,7 @@ public class Partner {
 	@Column
 	@Description("Partner with same Company Registry")
 	@Transient
-	private String same_company_registry_partner_id;
+	private Integer same_company_registry_partner_id;
 
 	/**
 	 * 
@@ -250,13 +250,13 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Bank.class)
+	@ElementCollection
 	@CollectionTable(name = "res_partner_bank", joinColumns = {
 			@JoinColumn(name = "partner_id")
 	})
 	@Description("Banks")
 	@Transient
-	private List<String> bank_ids;
+	private List<Integer> bank_ids;
 
 	/**
 	 * 
@@ -284,18 +284,18 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@Column
+	@ElementCollection
+	@CollectionTable(name = "res_partner_category", joinColumns = {@JoinColumn(name = "partner_id")})
+	@Column(name = "category_id")
 	@Description("Tags")
 	@Transient
-	private String category_id;
+	private List<Integer> category_id;
 	
 	/**
 	 * 
 	 */
 	@ManyToMany(targetEntity = Category.class)
-	@JoinTable(name = "res_partner_category", joinColumns = {
-			@JoinColumn(name = "category_id", referencedColumnName = "partner_id")
-	})
+	@JoinTable(joinColumns = {@JoinColumn(name = "partner_id")}, inverseJoinColumns = {@JoinColumn(name = "category_id")})
 	@Relationship(type = "TAGS")
 	private List<Category> category;
 	
@@ -367,7 +367,7 @@ public class Partner {
 	@Column
 	@Description("State")
 	@Transient
-	private String state_id;
+	private Integer state_id;
 	
 	/**
 	 * 
@@ -383,7 +383,7 @@ public class Partner {
 	@Column
 	@Description("Country")
 	@Transient
-	private String country_id;
+	private Integer country_id;
 
 	/**
 	 * 
@@ -467,7 +467,7 @@ public class Partner {
 	@Column
 	@Description("Industry")
 	@Transient
-	private String industry_id;
+	private Integer industry_id;
 	
 	/**
 	 * 
@@ -492,7 +492,7 @@ public class Partner {
 	@Column
 	@Description("Company")
 	@Transient
-	private String company_id;
+	private Integer company_id;
 	
 	/**
 	 * 
@@ -514,13 +514,13 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Users.class)
+	@ElementCollection
 	@CollectionTable(name = "res_users", joinColumns = {
 			@JoinColumn(name = "partner_id")
 	})
 	@Description("Users")
 	@Transient
-	private List<String> user_ids;
+	private List<Integer> user_ids;
 	
 	/**
 	 * 
@@ -617,11 +617,11 @@ public class Partner {
 		this.title = title;
 	}
 
-	public String getParent_id() {
+	public Integer getParent_id() {
 		return parent_id;
 	}
 
-	public void setParent_id(String parent_id) {
+	public void setParent_id(Integer parent_id) {
 		this.parent_id = parent_id;
 	}
 
@@ -633,11 +633,11 @@ public class Partner {
 		this.parent_name = parent_name;
 	}
 
-	public List<String> getChild_ids() {
+	public List<Integer> getChild_ids() {
 		return child_ids;
 	}
 
-	public void setChild_ids(List<String> child_ids) {
+	public void setChild_ids(List<Integer> child_ids) {
 		this.child_ids = child_ids;
 	}
 
@@ -681,11 +681,11 @@ public class Partner {
 		this.tz_offset = tz_offset;
 	}
 
-	public String getUser_id() {
+	public Integer getUser_id() {
 		return user_id;
 	}
 
-	public void setUser_id(String user_id) {
+	public void setUser_id(Integer user_id) {
 		this.user_id = user_id;
 	}
 
@@ -697,19 +697,19 @@ public class Partner {
 		this.vat = vat;
 	}
 
-	public String getSame_vat_partner_id() {
+	public Integer getSame_vat_partner_id() {
 		return same_vat_partner_id;
 	}
 
-	public void setSame_vat_partner_id(String same_vat_partner_id) {
+	public void setSame_vat_partner_id(Integer same_vat_partner_id) {
 		this.same_vat_partner_id = same_vat_partner_id;
 	}
 
-	public String getSame_company_registry_partner_id() {
+	public Integer getSame_company_registry_partner_id() {
 		return same_company_registry_partner_id;
 	}
 
-	public void setSame_company_registry_partner_id(String same_company_registry_partner_id) {
+	public void setSame_company_registry_partner_id(Integer same_company_registry_partner_id) {
 		this.same_company_registry_partner_id = same_company_registry_partner_id;
 	}
 
@@ -721,11 +721,11 @@ public class Partner {
 		this.company_registry = company_registry;
 	}
 
-	public List<String> getBank_ids() {
+	public List<Integer> getBank_ids() {
 		return bank_ids;
 	}
 
-	public void setBank_ids(List<String> bank_ids) {
+	public void setBank_ids(List<Integer> bank_ids) {
 		this.bank_ids = bank_ids;
 	}
 
@@ -745,11 +745,11 @@ public class Partner {
 		this.comment = comment;
 	}
 
-	public String getCategory_id() {
+	public List<Integer> getCategory_id() {
 		return category_id;
 	}
 
-	public void setCategory_id(String category_id) {
+	public void setCategory_id(List<Integer> category_id) {
 		this.category_id = category_id;
 	}
 
@@ -817,19 +817,19 @@ public class Partner {
 		this.city = city;
 	}
 
-	public String getState_id() {
+	public Integer getState_id() {
 		return state_id;
 	}
 
-	public void setState_id(String state_id) {
+	public void setState_id(Integer state_id) {
 		this.state_id = state_id;
 	}
 
-	public String getCountry_id() {
+	public Integer getCountry_id() {
 		return country_id;
 	}
 
-	public void setCountry_id(String country_id) {
+	public void setCountry_id(Integer country_id) {
 		this.country_id = country_id;
 	}
 
@@ -905,11 +905,11 @@ public class Partner {
 		this.is_public = is_public;
 	}
 
-	public String getIndustry_id() {
+	public Integer getIndustry_id() {
 		return industry_id;
 	}
 
-	public void setIndustry_id(String industry_id) {
+	public void setIndustry_id(Integer industry_id) {
 		this.industry_id = industry_id;
 	}
 
@@ -921,11 +921,11 @@ public class Partner {
 		this.company_type = company_type;
 	}
 
-	public String getCompany_id() {
+	public Integer getCompany_id() {
 		return company_id;
 	}
 
-	public void setCompany_id(String company_id) {
+	public void setCompany_id(Integer company_id) {
 		this.company_id = company_id;
 	}
 
@@ -937,11 +937,11 @@ public class Partner {
 		this.color = color;
 	}
 
-	public List<String> getUser_ids() {
+	public List<Integer> getUser_ids() {
 		return user_ids;
 	}
 
-	public void setUser_ids(List<String> user_ids) {
+	public void setUser_ids(List<Integer> user_ids) {
 		this.user_ids = user_ids;
 	}
 

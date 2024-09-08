@@ -42,7 +42,7 @@ public class ExportsLine {
 	@Column
 	@Description("Export")
 	@Transient
-	private String export_id;
+	private Integer export_id;
 	
 	/**
 	 * 
@@ -60,11 +60,11 @@ public class ExportsLine {
 		this.name = name;
 	}
 
-	public String getExport_id() {
+	public Integer getExport_id() {
 		return export_id;
 	}
 
-	public void setExport_id(String export_id) {
+	public void setExport_id(Integer export_id) {
 		this.export_id = export_id;
 	}
 

@@ -47,7 +47,7 @@ public class Filters {
 	@Column
 	@Description("User")
 	@Transient
-	private String user_id;
+	private Integer user_id;
 
 	/**
 	 * 
@@ -107,7 +107,7 @@ public class Filters {
 	@Column
 	@Description("Action")
 	@Transient
-	private String action_id;
+	private Integer action_id;
 
 	/**
 	 * 
@@ -133,11 +133,11 @@ public class Filters {
 		this.name = name;
 	}
 
-	public String getUser_id() {
+	public Integer getUser_id() {
 		return user_id;
 	}
 
-	public void setUser_id(String user_id) {
+	public void setUser_id(Integer user_id) {
 		this.user_id = user_id;
 	}
 
@@ -181,11 +181,11 @@ public class Filters {
 		this.is_default = is_default;
 	}
 
-	public String getAction_id() {
+	public Integer getAction_id() {
 		return action_id;
 	}
 
-	public void setAction_id(String action_id) {
+	public void setAction_id(Integer action_id) {
 		this.action_id = action_id;
 	}
 

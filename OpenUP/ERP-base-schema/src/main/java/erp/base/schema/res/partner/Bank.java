@@ -80,7 +80,7 @@ public class Bank {
 	@NotNull
 	@Description("Account Holder")
 	@Transient
-	private String partner_id;
+	private Integer partner_id;
 
 	/**
 	 * 
@@ -106,7 +106,7 @@ public class Bank {
 	@Column
 	@Description("Bank")
 	@Transient
-	private String bank_id;
+	private Integer bank_id;
 
 	/**
 	 * 
@@ -143,7 +143,7 @@ public class Bank {
 	@Column
 	@Description("Currency")
 	@Transient
-	private String currency_id;
+	private Integer currency_id;
 	
 	/**
 	 * 
@@ -158,7 +158,7 @@ public class Bank {
 	 */
 	@Column(updatable = false)
 	@Transient
-	private String company_id;
+	private Integer company_id;
 	
 	/**
 	 * 
@@ -208,11 +208,11 @@ public class Bank {
 		this.acc_holder_name = acc_holder_name;
 	}
 
-	public String getPartner_id() {
+	public Integer getPartner_id() {
 		return partner_id;
 	}
 
-	public void setPartner_id(String partner_id) {
+	public void setPartner_id(Integer partner_id) {
 		this.partner_id = partner_id;
 	}
 
@@ -224,11 +224,11 @@ public class Bank {
 		this.allow_out_payment = allow_out_payment;
 	}
 
-	public String getBank_id() {
+	public Integer getBank_id() {
 		return bank_id;
 	}
 
-	public void setBank_id(String bank_id) {
+	public void setBank_id(Integer bank_id) {
 		this.bank_id = bank_id;
 	}
 
@@ -256,19 +256,19 @@ public class Bank {
 		this.sequence = sequence;
 	}
 
-	public String getCurrency_id() {
+	public Integer getCurrency_id() {
 		return currency_id;
 	}
 
-	public void setCurrency_id(String currency_id) {
+	public void setCurrency_id(Integer currency_id) {
 		this.currency_id = currency_id;
 	}
 
-	public String getCompany_id() {
+	public Integer getCompany_id() {
 		return company_id;
 	}
 
-	public void setCompany_id(String company_id) {
+	public void setCompany_id(Integer company_id) {
 		this.company_id = company_id;
 	}
 

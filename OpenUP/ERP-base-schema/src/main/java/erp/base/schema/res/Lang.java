@@ -5,7 +5,6 @@ import org.eclipse.microprofile.graphql.Description;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
-
 import erp.schema.util.EnumAttributeConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;

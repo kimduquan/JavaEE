@@ -48,7 +48,7 @@ public class Users {
 	@NotNull
 	@Description("Related Partner")
 	@Transient
-	private String partner_id;
+	private Integer partner_id;
 
 	/**
 	 * 
@@ -114,7 +114,7 @@ public class Users {
 	@Column
 	@Description("Home Action")
 	@Transient
-	private String action_id;
+	private Integer action_id;
 
 	/**
 	 * 
@@ -127,34 +127,31 @@ public class Users {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Groups.class)
-	@CollectionTable(name = "res_groups_users_rel", joinColumns = {
-			@JoinColumn(name = "uid", referencedColumnName = "gid")
-	})
+	@ElementCollection
+	@CollectionTable(name = "res_groups_users_rel", joinColumns = {@JoinColumn(name = "uid")})
+	@Column(name = "gid")
 	@Description("Groups")
 	@Transient
-	private List<String> groups_id;
+	private List<Integer> groups_id;
 	
 	/**
 	 * 
 	 */
 	@ManyToMany(targetEntity = Groups.class)
-	@JoinTable(name = "res_groups_users_rel", joinColumns = {
-			@JoinColumn(name = "uid", referencedColumnName = "gid")
-	})
+	@JoinTable(name = "res_groups_users_rel", joinColumns = {@JoinColumn(name = "uid")}, inverseJoinColumns = {@JoinColumn(name = "gid")})
 	@Relationship(type = "GROUPS")
 	private List<Groups> groups;
 	
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Log.class)
+	@ElementCollection
 	@CollectionTable(name = "res_users_log", joinColumns = {
 			@JoinColumn(name = "create_uid")
 	})
 	@Description("User log entries")
 	@Transient
-	private List<String> log_ids;
+	private List<Integer> log_ids;
 	
 	/**
 	 * 
@@ -198,12 +195,12 @@ public class Users {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Settings.class)
+	@ElementCollection
 	@CollectionTable(name = "res_users_settings", joinColumns = {
 			@JoinColumn(name = "user_id")
 	})
 	@Transient
-	private List<String> res_users_settings_ids;
+	private List<Integer> res_users_settings_ids;
 	
 	/**
 	 * 
@@ -218,7 +215,7 @@ public class Users {
 	@Column
 	@Description("Settings")
 	@Transient
-	private String res_users_settings_id;
+	private Integer res_users_settings_id;
 	
 	/**
 	 * 
@@ -235,7 +232,7 @@ public class Users {
 	@NotNull
 	@Description("Company")
 	@Transient
-	private String company_id;
+	private Integer company_id;
 	
 	/**
 	 * 
@@ -249,21 +246,18 @@ public class Users {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Company.class)
-	@CollectionTable(name = "res_company_users_rel", joinColumns = {
-			@JoinColumn(name = "user_id", referencedColumnName = "cid")
-	})
+	@ElementCollection
+	@CollectionTable(name = "res_company_users_rel", joinColumns = {@JoinColumn(name = "user_id")})
+	@Column(name = "cid")
 	@Description("Companies")
 	@Transient
-	private List<String> company_ids;
+	private List<Integer> company_ids;
 	
 	/**
 	 * 
 	 */
 	@ManyToMany(targetEntity = Company.class)
-	@JoinTable(name = "res_company_users_rel", joinColumns = {
-			@JoinColumn(name = "user_id", referencedColumnName = "cid")
-	})
+	@JoinTable(name = "res_company_users_rel", joinColumns = {@JoinColumn(name = "user_id")}, inverseJoinColumns = {@JoinColumn(name = "cid")})
 	@Relationship(type = "COMPANIES")
 	private List<Company> companies;
 	
@@ -305,11 +299,11 @@ public class Users {
 	@Property
 	private Integer groups_count;
 
-	public String getPartner_id() {
+	public Integer getPartner_id() {
 		return partner_id;
 	}
 
-	public void setPartner_id(String partner_id) {
+	public void setPartner_id(Integer partner_id) {
 		this.partner_id = partner_id;
 	}
 
@@ -361,27 +355,27 @@ public class Users {
 		this.active_partner = active_partner;
 	}
 
-	public String getAction_id() {
+	public Integer getAction_id() {
 		return action_id;
 	}
 
-	public void setAction_id(String action_id) {
+	public void setAction_id(Integer action_id) {
 		this.action_id = action_id;
 	}
 
-	public List<String> getGroups_id() {
+	public List<Integer> getGroups_id() {
 		return groups_id;
 	}
 
-	public void setGroups_id(List<String> groups_id) {
+	public void setGroups_id(List<Integer> groups_id) {
 		this.groups_id = groups_id;
 	}
 
-	public List<String> getLog_ids() {
+	public List<Integer> getLog_ids() {
 		return log_ids;
 	}
 
-	public void setLog_ids(List<String> log_ids) {
+	public void setLog_ids(List<Integer> log_ids) {
 		this.log_ids = log_ids;
 	}
 
@@ -417,35 +411,35 @@ public class Users {
 		this.tz_offset = tz_offset;
 	}
 
-	public List<String> getRes_users_settings_ids() {
+	public List<Integer> getRes_users_settings_ids() {
 		return res_users_settings_ids;
 	}
 
-	public void setRes_users_settings_ids(List<String> res_users_settings_ids) {
+	public void setRes_users_settings_ids(List<Integer> res_users_settings_ids) {
 		this.res_users_settings_ids = res_users_settings_ids;
 	}
 
-	public String getRes_users_settings_id() {
+	public Integer getRes_users_settings_id() {
 		return res_users_settings_id;
 	}
 
-	public void setRes_users_settings_id(String res_users_settings_id) {
+	public void setRes_users_settings_id(Integer res_users_settings_id) {
 		this.res_users_settings_id = res_users_settings_id;
 	}
 
-	public String getCompany_id() {
+	public Integer getCompany_id() {
 		return company_id;
 	}
 
-	public void setCompany_id(String company_id) {
+	public void setCompany_id(Integer company_id) {
 		this.company_id = company_id;
 	}
 
-	public List<String> getCompany_ids() {
+	public List<Integer> getCompany_ids() {
 		return company_ids;
 	}
 
-	public void setCompany_ids(List<String> company_ids) {
+	public void setCompany_ids(List<Integer> company_ids) {
 		this.company_ids = company_ids;
 	}
 

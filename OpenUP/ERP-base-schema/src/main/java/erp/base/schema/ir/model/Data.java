@@ -67,7 +67,7 @@ public class Data {
 	@Column
 	@Description("Record ID")
 	@Property
-	private String res_id;
+	private Integer res_id;
 	
 	/**
 	 * 
@@ -118,11 +118,11 @@ public class Data {
 		this.module = module;
 	}
 
-	public String getRes_id() {
+	public Integer getRes_id() {
 		return res_id;
 	}
 
-	public void setRes_id(String res_id) {
+	public void setRes_id(Integer res_id) {
 		this.res_id = res_id;
 	}
 

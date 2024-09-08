@@ -54,9 +54,7 @@ public class Groups {
 	 * 
 	 */
 	@ManyToMany(targetEntity = Users.class)
-	@JoinTable(name = "res_groups_users_rel", joinColumns = {
-			@JoinColumn(name = "gid", referencedColumnName = "uid")
-	})
+	@JoinTable(name = "res_groups_users_rel", joinColumns = {@JoinColumn(name = "gid")}, inverseJoinColumns = {@JoinColumn(name = "uid")})
 	@Relationship(type = "USERS")
 	private List<Users> users;
 	
@@ -72,9 +70,7 @@ public class Groups {
 	 * 
 	 */
 	@ManyToMany(targetEntity = Rule.class)
-	@JoinTable(name = "rule_group_rel", joinColumns = {
-			@JoinColumn(name = "group_id", referencedColumnName = "rule_group_id")
-	})
+	@JoinTable(name = "rule_group_rel", joinColumns = {@JoinColumn(name = "group_id")}, inverseJoinColumns = {@JoinColumn(name = "rule_group_id")})
 	@Description("Rules")
 	@Relationship(type = "RULES")
 	private List<Rule> rule_groups;
@@ -83,9 +79,7 @@ public class Groups {
 	 * 
 	 */
 	@ManyToMany(targetEntity = Menu.class)
-	@JoinTable(name = "ir_ui_menu_group_rel", joinColumns = {
-			@JoinColumn(name = "gid", referencedColumnName = "menu_id")
-	})
+	@JoinTable(name = "ir_ui_menu_group_rel", joinColumns = {@JoinColumn(name = "gid")}, inverseJoinColumns = {@JoinColumn(name = "menu_id")})
 	@Description("Access Menu")
 	@Relationship(type = "ACCESS_MENU")
 	private List<Menu> menu_access;
@@ -94,9 +88,7 @@ public class Groups {
 	 * 
 	 */
 	@ManyToMany(targetEntity = View.class)
-	@JoinTable(name = "ir_ui_view_group_rel", joinColumns = {
-			@JoinColumn(name = "group_id", referencedColumnName = "view_id")
-	})
+	@JoinTable(name = "ir_ui_view_group_rel", joinColumns = {@JoinColumn(name = "group_id")}, inverseJoinColumns = {@JoinColumn(name = "view_id")})
 	@Description("Views")
 	@Relationship(type = "VIEWS")
 	private List<View> view_access;
@@ -114,7 +106,7 @@ public class Groups {
 	@Column
 	@Description("Application")
 	@Transient
-	private String category_id;
+	private Integer category_id;
 
 	/**
 	 * 
@@ -204,11 +196,11 @@ public class Groups {
 		this.comment = comment;
 	}
 
-	public String getCategory_id() {
+	public Integer getCategory_id() {
 		return category_id;
 	}
 
-	public void setCategory_id(String category_id) {
+	public void setCategory_id(Integer category_id) {
 		this.category_id = category_id;
 	}
 

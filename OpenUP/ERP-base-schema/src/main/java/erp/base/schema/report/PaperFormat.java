@@ -310,13 +310,13 @@ public class PaperFormat {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Report.class)
+	@ElementCollection
 	@CollectionTable(name = "ir_actions_report", joinColumns = {
 			@JoinColumn(name = "paperformat_id")
 	})
 	@Description("Associated reports")
 	@Transient
-	private List<String> report_ids;
+	private List<Integer> report_ids;
 	
 	/**
 	 * 
@@ -456,11 +456,11 @@ public class PaperFormat {
 		this.dpi = dpi;
 	}
 
-	public List<String> getReport_ids() {
+	public List<Integer> getReport_ids() {
 		return report_ids;
 	}
 
-	public void setReport_ids(List<String> report_ids) {
+	public void setReport_ids(List<Integer> report_ids) {
 		this.report_ids = report_ids;
 	}
 

@@ -92,7 +92,7 @@ public class Exclusion {
 	@Column
 	@Description("Module")
 	@Transient
-	private String module_id;
+	private Integer module_id;
 
 	/**
 	 * 
@@ -108,7 +108,7 @@ public class Exclusion {
 	@Column
 	@Description("Exclusion Module")
 	@Transient
-	private String exclusion_id;
+	private Integer exclusion_id;
 
 	/**
 	 * 
@@ -136,19 +136,19 @@ public class Exclusion {
 		this.name = name;
 	}
 
-	public String getModule_id() {
+	public Integer getModule_id() {
 		return module_id;
 	}
 
-	public void setModule_id(String module_id) {
+	public void setModule_id(Integer module_id) {
 		this.module_id = module_id;
 	}
 
-	public String getExclusion_id() {
+	public Integer getExclusion_id() {
 		return exclusion_id;
 	}
 
-	public void setExclusion_id(String exclusion_id) {
+	public void setExclusion_id(Integer exclusion_id) {
 		this.exclusion_id = exclusion_id;
 	}
 

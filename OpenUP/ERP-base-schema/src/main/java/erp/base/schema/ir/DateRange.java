@@ -55,7 +55,7 @@ public class DateRange {
 	@Column(nullable = false)
 	@Description("Main Sequence")
 	@Transient
-	private String sequence_id;
+	private Integer sequence_id;
 
 	/**
 	 * 
@@ -99,11 +99,11 @@ public class DateRange {
 		this.date_to = date_to;
 	}
 
-	public String getSequence_id() {
+	public Integer getSequence_id() {
 		return sequence_id;
 	}
 
-	public void setSequence_id(String sequence_id) {
+	public void setSequence_id(Integer sequence_id) {
 		this.sequence_id = sequence_id;
 	}
 

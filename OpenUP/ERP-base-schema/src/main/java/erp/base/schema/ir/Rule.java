@@ -57,7 +57,7 @@ public class Rule {
 	@NotNull
 	@Description("Model")
 	@Transient
-	private String model_id;
+	private Integer model_id;
 	
 	/**
 	 * 
@@ -72,9 +72,7 @@ public class Rule {
 	 * 
 	 */
 	@ManyToMany(targetEntity = Groups.class)
-	@JoinTable(name = "rule_group_rel", joinColumns = {
-			@JoinColumn(name = "rule_group_id", referencedColumnName = "group_id")
-	})
+	@JoinTable(name = "rule_group_rel", joinColumns = {@JoinColumn(name = "rule_group_id")}, inverseJoinColumns = {@JoinColumn(name = "group_id")})
 	@Relationship(type = "GROUPS")
 	private List<Groups> groups;
 	
@@ -138,11 +136,11 @@ public class Rule {
 		this.active = active;
 	}
 
-	public String getModel_id() {
+	public Integer getModel_id() {
 		return model_id;
 	}
 
-	public void setModel_id(String model_id) {
+	public void setModel_id(Integer model_id) {
 		this.model_id = model_id;
 	}
 

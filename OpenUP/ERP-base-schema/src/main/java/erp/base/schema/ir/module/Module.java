@@ -141,7 +141,7 @@ public class Module {
 	@Column(updatable = false)
 	@Description("Category")
 	@Transient
-	private String category_id;
+	private Integer category_id;
 
 	/**
 	 * 
@@ -259,13 +259,13 @@ public class Module {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Dependency.class)
+	@ElementCollection
 	@CollectionTable(name = "ir_module_module_dependency", joinColumns = {
 			@JoinColumn(name = "module_id")
 	})
 	@Description("Dependencies")
 	@Transient
-	private List<String> dependencies_id;
+	private List<Integer> dependencies_id;
 
 	/**
 	 * 
@@ -277,13 +277,13 @@ public class Module {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Exclusion.class)
+	@ElementCollection
 	@CollectionTable(name = "ir_module_module_exclusion", joinColumns = {
 			@JoinColumn(name = "module_id")
 	})
 	@Description("Exclusions")
 	@Transient
-	private List<String> exclusion_ids;
+	private List<Integer> exclusion_ids;
 
 	/**
 	 * 
@@ -409,11 +409,11 @@ public class Module {
 		this.name = name;
 	}
 
-	public String getCategory_id() {
+	public Integer getCategory_id() {
 		return category_id;
 	}
 
-	public void setCategory_id(String category_id) {
+	public void setCategory_id(Integer category_id) {
 		this.category_id = category_id;
 	}
 
@@ -521,19 +521,19 @@ public class Module {
 		this.sequence = sequence;
 	}
 
-	public List<String> getDependencies_id() {
+	public List<Integer> getDependencies_id() {
 		return dependencies_id;
 	}
 
-	public void setDependencies_id(List<String> dependencies_id) {
+	public void setDependencies_id(List<Integer> dependencies_id) {
 		this.dependencies_id = dependencies_id;
 	}
 
-	public List<String> getExclusion_ids() {
+	public List<Integer> getExclusion_ids() {
 		return exclusion_ids;
 	}
 
-	public void setExclusion_ids(List<String> exclusion_ids) {
+	public void setExclusion_ids(List<Integer> exclusion_ids) {
 		this.exclusion_ids = exclusion_ids;
 	}
 

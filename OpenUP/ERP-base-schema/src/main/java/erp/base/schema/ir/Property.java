@@ -119,7 +119,7 @@ public class Property {
 	@Column
 	@Description("Company")
 	@Transient
-	private String company_id;
+	private Integer company_id;
 	
 	/**
 	 * 
@@ -136,7 +136,7 @@ public class Property {
 	@NotNull
 	@Description("Field")
 	@Transient
-	private String fields_id;
+	private Integer fields_id;
 
 	/**
 	 * 
@@ -216,19 +216,19 @@ public class Property {
 		this.res_id = res_id;
 	}
 
-	public String getCompany_id() {
+	public Integer getCompany_id() {
 		return company_id;
 	}
 
-	public void setCompany_id(String company_id) {
+	public void setCompany_id(Integer company_id) {
 		this.company_id = company_id;
 	}
 
-	public String getFields_id() {
+	public Integer getFields_id() {
 		return fields_id;
 	}
 
-	public void setFields_id(String fields_id) {
+	public void setFields_id(Integer fields_id) {
 		this.fields_id = fields_id;
 	}
 

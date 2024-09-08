@@ -94,14 +94,14 @@ public class Model {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Fields.class)
+	@ElementCollection
 	@CollectionTable(name = "ir_model_fields", joinColumns = {
 			@JoinColumn(name = "model_id")
 	})
 	@NotNull
 	@Description("Fields")
 	@Transient
-	private List<String> field_id;
+	private List<Integer> field_id;
 	
 	/**
 	 * 
@@ -114,11 +114,11 @@ public class Model {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Model.class)
+	@ElementCollection
 	@CollectionTable(name = "ir_model")
 	@Description("Inherited models")
 	@Transient
-	private List<String> inherited_model_ids;
+	private List<Integer> inherited_model_ids;
 
 	/**
 	 * 
@@ -140,13 +140,11 @@ public class Model {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Access.class)
-	@CollectionTable(name = "ir_model_access", joinColumns = {
-			@JoinColumn(name = "model_id")
-	})
+	@ElementCollection
+	@CollectionTable(name = "ir_model_access", joinColumns = {@JoinColumn(name = "model_id")})
 	@Description("Access")
 	@Transient
-	private List<String> access_ids;
+	private List<Integer> access_ids;
 	
 	/**
 	 * 
@@ -158,13 +156,11 @@ public class Model {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Rule.class)
-	@CollectionTable(name = "ir_rule", joinColumns = {
-			@JoinColumn(name = "model_id")
-	})
+	@ElementCollection
+	@CollectionTable(name = "ir_rule", joinColumns = {@JoinColumn(name = "model_id")})
 	@Description("Record Rules")
 	@Transient
-	private List<String> rule_ids;
+	private List<Integer> rule_ids;
 	
 	/**
 	 * 
@@ -192,11 +188,11 @@ public class Model {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = View.class)
+	@ElementCollection
 	@CollectionTable(name = "ir_ui_view")
 	@Description("Views")
 	@Transient
-	private List<String> view_ids;
+	private List<Integer> view_ids;
 	
 	/**
 	 * 
@@ -245,19 +241,19 @@ public class Model {
 		this.info = info;
 	}
 
-	public List<String> getField_id() {
+	public List<Integer> getField_id() {
 		return field_id;
 	}
 
-	public void setField_id(List<String> field_id) {
+	public void setField_id(List<Integer> field_id) {
 		this.field_id = field_id;
 	}
 
-	public List<String> getInherited_model_ids() {
+	public List<Integer> getInherited_model_ids() {
 		return inherited_model_ids;
 	}
 
-	public void setInherited_model_ids(List<String> inherited_model_ids) {
+	public void setInherited_model_ids(List<Integer> inherited_model_ids) {
 		this.inherited_model_ids = inherited_model_ids;
 	}
 
@@ -269,19 +265,19 @@ public class Model {
 		this.state = state;
 	}
 
-	public List<String> getAccess_ids() {
+	public List<Integer> getAccess_ids() {
 		return access_ids;
 	}
 
-	public void setAccess_ids(List<String> access_ids) {
+	public void setAccess_ids(List<Integer> access_ids) {
 		this.access_ids = access_ids;
 	}
 
-	public List<String> getRule_ids() {
+	public List<Integer> getRule_ids() {
 		return rule_ids;
 	}
 
-	public void setRule_ids(List<String> rule_ids) {
+	public void setRule_ids(List<Integer> rule_ids) {
 		this.rule_ids = rule_ids;
 	}
 
@@ -301,11 +297,11 @@ public class Model {
 		this.modules = modules;
 	}
 
-	public List<String> getView_ids() {
+	public List<Integer> getView_ids() {
 		return view_ids;
 	}
 
-	public void setView_ids(List<String> view_ids) {
+	public void setView_ids(List<Integer> view_ids) {
 		this.view_ids = view_ids;
 	}
 

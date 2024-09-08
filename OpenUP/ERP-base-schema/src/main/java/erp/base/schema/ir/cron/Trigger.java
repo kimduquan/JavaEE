@@ -33,7 +33,7 @@ public class Trigger {
 	 */
 	@Column
 	@Transient
-	private String cron_id;
+	private Integer cron_id;
 	
 	/**
 	 * 
@@ -50,11 +50,11 @@ public class Trigger {
 	@Property
 	private String call_at;
 
-	public String getCron_id() {
+	public Integer getCron_id() {
 		return cron_id;
 	}
 
-	public void setCron_id(String cron_id) {
+	public void setCron_id(Integer cron_id) {
 		this.cron_id = cron_id;
 	}
 

@@ -191,7 +191,7 @@ public class Server extends Actions {
 	@NotNull
 	@Description("Model")
 	@Transient
-	private String model_id;
+	private Integer model_id;
 
 	/**
 	 * 
@@ -205,11 +205,11 @@ public class Server extends Actions {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Model.class)
+	@ElementCollection
 	@CollectionTable(name = "ir_model")
 	@Description("Available Models")
 	@Transient
-	private List<String> available_model_ids;
+	private List<Integer> available_model_ids;
 
 	/**
 	 * 
@@ -238,21 +238,18 @@ public class Server extends Actions {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Server.class)
-	@CollectionTable(name = "rel_server_actions", joinColumns = {
-			@JoinColumn(name = "action_id", referencedColumnName = "server_id")
-	})
+	@ElementCollection
+	@CollectionTable(name = "rel_server_actions", joinColumns = {@JoinColumn(name = "server_id")})
+	@Column(name = "action_id")
 	@Description("Child Actions")
 	@Transient
-	private List<String> child_ids;
+	private List<Integer> child_ids;
 
 	/**
 	 * 
 	 */
 	@ManyToMany(targetEntity = Server.class)
-	@JoinTable(name = "rel_server_actions", joinColumns = {
-			@JoinColumn(name = "action_id", referencedColumnName = "server_id")
-	})
+	@JoinTable(name = "rel_server_actions", joinColumns = {@JoinColumn(name = "server_id")}, inverseJoinColumns = {@JoinColumn(name = "action_id")})
 	@Relationship(type = "CHILD_ACTIONS")
 	private List<Server> childs;
 	
@@ -262,7 +259,7 @@ public class Server extends Actions {
 	@Column
 	@Description("Record to Create")
 	@Transient
-	private String crud_model_id;
+	private Integer crud_model_id;
 
 	/**
 	 * 
@@ -286,7 +283,7 @@ public class Server extends Actions {
 	@Column
 	@Description("Link Field")
 	@Transient
-	private String link_field_id;
+	private Integer link_field_id;
 
 	/**
 	 * 
@@ -299,21 +296,18 @@ public class Server extends Actions {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Groups.class)
-	@CollectionTable(name = "ir_act_server_group_rel", joinColumns = {
-			@JoinColumn(name = "act_id", referencedColumnName = "gid")
-	})
+	@ElementCollection
+	@CollectionTable(name = "ir_act_server_group_rel", joinColumns = {@JoinColumn(name = "act_id")})
+	@Column(name = "gid")
 	@Description("Allowed Groups")
 	@Transient
-	private List<String> groups_id;
+	private List<Integer> groups_id;
 	
 	/**
 	 * 
 	 */
 	@ManyToMany(targetEntity = Groups.class)
-	@JoinTable(name = "ir_act_server_group_rel", joinColumns = {
-			@JoinColumn(name = "act_id", referencedColumnName = "gid")
-	})
+	@JoinTable(name = "ir_act_server_group_rel", joinColumns = {@JoinColumn(name = "act_id")}, inverseJoinColumns = {@JoinColumn(name = "gid")})
 	@Relationship(type = "GROUPS")
 	private List<Groups> groups;
 	
@@ -323,7 +317,7 @@ public class Server extends Actions {
 	@Column
 	@Description("Field to Update")
 	@Transient
-	private String update_field_id;
+	private Integer update_field_id;
 	
 	/**
 	 * 
@@ -346,7 +340,7 @@ public class Server extends Actions {
 	 */
 	@Column
 	@Transient
-	private String update_related_model_id;
+	private Integer update_related_model_id;
 	
 	/**
 	 * 
@@ -434,21 +428,18 @@ public class Server extends Actions {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Fields.class)
-	@CollectionTable(name = "ir_act_server_webhook_field_rel", joinColumns = {
-			@JoinColumn(name = "field_id", referencedColumnName = "server_id")
-	})
+	@ElementCollection
+	@CollectionTable(name = "ir_act_server_webhook_field_rel", joinColumns = {@JoinColumn(name = "server_id")})
+	@Column(name = "field_id")
 	@Description("Webhook Fields")
 	@Transient
-	private List<String> webhook_field_ids;
+	private List<Integer> webhook_field_ids;
 
 	/**
 	 * 
 	 */
 	@ManyToMany(targetEntity = Fields.class)
-	@JoinTable(name = "ir_act_server_webhook_field_rel", joinColumns = {
-			@JoinColumn(name = "field_id", referencedColumnName = "server_id")
-	})
+	@JoinTable(name = "ir_act_server_webhook_field_rel", joinColumns = {@JoinColumn(name = "server_id")}, inverseJoinColumns = {@JoinColumn(name = "field_id")})
 	@Relationship(type = "WEBHOOK_FIELDS")
 	private List<Fields> webhook_fields;
 	
@@ -500,19 +491,19 @@ public class Server extends Actions {
 		this.sequence = sequence;
 	}
 
-	public String getModel_id() {
+	public Integer getModel_id() {
 		return model_id;
 	}
 
-	public void setModel_id(String model_id) {
+	public void setModel_id(Integer model_id) {
 		this.model_id = model_id;
 	}
 
-	public List<String> getAvailable_model_ids() {
+	public List<Integer> getAvailable_model_ids() {
 		return available_model_ids;
 	}
 
-	public void setAvailable_model_ids(List<String> available_model_ids) {
+	public void setAvailable_model_ids(List<Integer> available_model_ids) {
 		this.available_model_ids = available_model_ids;
 	}
 
@@ -532,19 +523,19 @@ public class Server extends Actions {
 		this.code = code;
 	}
 
-	public List<String> getChild_ids() {
+	public List<Integer> getChild_ids() {
 		return child_ids;
 	}
 
-	public void setChild_ids(List<String> child_ids) {
+	public void setChild_ids(List<Integer> child_ids) {
 		this.child_ids = child_ids;
 	}
 
-	public String getCrud_model_id() {
+	public Integer getCrud_model_id() {
 		return crud_model_id;
 	}
 
-	public void setCrud_model_id(String crud_model_id) {
+	public void setCrud_model_id(Integer crud_model_id) {
 		this.crud_model_id = crud_model_id;
 	}
 
@@ -556,27 +547,27 @@ public class Server extends Actions {
 		this.crud_model_name = crud_model_name;
 	}
 
-	public String getLink_field_id() {
+	public Integer getLink_field_id() {
 		return link_field_id;
 	}
 
-	public void setLink_field_id(String link_field_id) {
+	public void setLink_field_id(Integer link_field_id) {
 		this.link_field_id = link_field_id;
 	}
 
-	public List<String> getGroups_id() {
+	public List<Integer> getGroups_id() {
 		return groups_id;
 	}
 
-	public void setGroups_id(List<String> groups_id) {
+	public void setGroups_id(List<Integer> groups_id) {
 		this.groups_id = groups_id;
 	}
 
-	public String getUpdate_field_id() {
+	public Integer getUpdate_field_id() {
 		return update_field_id;
 	}
 
-	public void setUpdate_field_id(String update_field_id) {
+	public void setUpdate_field_id(Integer update_field_id) {
 		this.update_field_id = update_field_id;
 	}
 
@@ -588,11 +579,11 @@ public class Server extends Actions {
 		this.update_path = update_path;
 	}
 
-	public String getUpdate_related_model_id() {
+	public Integer getUpdate_related_model_id() {
 		return update_related_model_id;
 	}
 
-	public void setUpdate_related_model_id(String update_related_model_id) {
+	public void setUpdate_related_model_id(Integer update_related_model_id) {
 		this.update_related_model_id = update_related_model_id;
 	}
 
@@ -668,11 +659,11 @@ public class Server extends Actions {
 		this.webhook_url = webhook_url;
 	}
 
-	public List<String> getWebhook_field_ids() {
+	public List<Integer> getWebhook_field_ids() {
 		return webhook_field_ids;
 	}
 
-	public void setWebhook_field_ids(List<String> webhook_field_ids) {
+	public void setWebhook_field_ids(List<Integer> webhook_field_ids) {
 		this.webhook_field_ids = webhook_field_ids;
 	}
 

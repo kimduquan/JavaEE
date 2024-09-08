@@ -109,13 +109,13 @@ public class Menu {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Menu.class)
+	@ElementCollection
 	@CollectionTable(name = "ir_ui_menu", joinColumns = {
 			@JoinColumn(name = "parent_id")
 	})
 	@Description("Child IDs")
 	@Transient
-	private List<String> child_id;
+	private List<Integer> child_id;
 
 	/**
 	 * 
@@ -129,7 +129,7 @@ public class Menu {
 	 */
 	@Column
 	@Transient
-	private String parent_id;
+	private Integer parent_id;
 	
 	/**
 	 * 
@@ -149,21 +149,18 @@ public class Menu {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Groups.class)
-	@CollectionTable(name = "ir_ui_menu_group_rel", joinColumns = {
-			@JoinColumn(name = "gid", referencedColumnName = "menu_id")
-	})
+	@ElementCollection
+	@CollectionTable(name = "ir_ui_menu_group_rel", joinColumns = {@JoinColumn(name = "menu_id")})
+	@Column(name = "gid")
 	@Description("Groups")
 	@Transient
-	private List<String> groups_id;
+	private List<Integer> groups_id;
 	
 	/**
 	 * 
 	 */
 	@ManyToMany(targetEntity = Groups.class)
-	@JoinTable(name = "ir_ui_menu_group_rel", joinColumns = {
-			@JoinColumn(name = "gid", referencedColumnName = "menu_id")
-	})
+	@JoinTable(name = "ir_ui_menu_group_rel", joinColumns = {@JoinColumn(name = "menu_id")}, inverseJoinColumns = {@JoinColumn(name = "gid")})
 	@Relationship(type = "GROUPS")
 	private List<Groups> groups;
 	
@@ -224,19 +221,19 @@ public class Menu {
 		this.sequence = sequence;
 	}
 
-	public List<String> getChild_id() {
+	public List<Integer> getChild_id() {
 		return child_id;
 	}
 
-	public void setChild_id(List<String> child_id) {
+	public void setChild_id(List<Integer> child_id) {
 		this.child_id = child_id;
 	}
 
-	public String getParent_id() {
+	public Integer getParent_id() {
 		return parent_id;
 	}
 
-	public void setParent_id(String parent_id) {
+	public void setParent_id(Integer parent_id) {
 		this.parent_id = parent_id;
 	}
 
@@ -248,11 +245,11 @@ public class Menu {
 		this.parent_path = parent_path;
 	}
 
-	public List<String> getGroups_id() {
+	public List<Integer> getGroups_id() {
 		return groups_id;
 	}
 
-	public void setGroups_id(List<String> groups_id) {
+	public void setGroups_id(List<Integer> groups_id) {
 		this.groups_id = groups_id;
 	}
 

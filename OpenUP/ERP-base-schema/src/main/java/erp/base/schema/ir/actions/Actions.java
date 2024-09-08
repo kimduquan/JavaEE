@@ -93,7 +93,7 @@ public class Actions {
 	@Column
 	@Description("Setting a value makes this action available in the sidebar for the given model.")
 	@Transient
-	private String binding_model_id;
+	private Integer binding_model_id;
 	
 	/**
 	 * 
@@ -152,11 +152,11 @@ public class Actions {
 		this.help = help;
 	}
 
-	public String getBinding_model_id() {
+	public Integer getBinding_model_id() {
 		return binding_model_id;
 	}
 
-	public void setBinding_model_id(String binding_model_id) {
+	public void setBinding_model_id(Integer binding_model_id) {
 		this.binding_model_id = binding_model_id;
 	}
 

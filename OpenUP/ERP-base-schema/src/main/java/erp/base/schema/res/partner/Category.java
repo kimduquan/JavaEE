@@ -62,7 +62,7 @@ public class Category {
 	@Column
 	@Description("Parent Category")
 	@Transient
-	private String parent_id;
+	private Integer parent_id;
 	
 	/**
 	 * 
@@ -75,13 +75,13 @@ public class Category {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Category.class)
+	@ElementCollection
 	@CollectionTable(name = "res_partner_category", joinColumns = {
 			@JoinColumn(name = "parent_id")
 	})
 	@Description("Child Tags")
 	@Transient
-	private List<String> child_ids;
+	private List<Integer> child_ids;
 
 	/**
 	 * 
@@ -109,22 +109,18 @@ public class Category {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Partner.class)
-	@CollectionTable(name = "res_partner", joinColumns = {
-			@JoinColumn(name = "partner_id", referencedColumnName = "category_id")
-	})
+	@ElementCollection
+	@CollectionTable(joinColumns = {@JoinColumn(name = "category_id")})
+	@Column(name = "partner_id")
 	@Description("Partners")
 	@Transient
-	private List<String> partner_ids;
+	private List<Integer> partner_ids;
 
 	/**
 	 * 
 	 */
 	@ManyToMany(targetEntity = Partner.class)
-	@JoinTable(name = "res_partner", joinColumns = {
-			@JoinColumn(name = "category_id"),
-			@JoinColumn(name = "partner_id")
-	})
+	@JoinTable(joinColumns = {@JoinColumn(name = "category_id")}, inverseJoinColumns = {@JoinColumn(name = "partner_id")})
 	@Relationship(type = "PARTNERS")
 	private List<Partner> partners;
 
@@ -144,19 +140,19 @@ public class Category {
 		this.color = color;
 	}
 
-	public String getParent_id() {
+	public Integer getParent_id() {
 		return parent_id;
 	}
 
-	public void setParent_id(String parent_id) {
+	public void setParent_id(Integer parent_id) {
 		this.parent_id = parent_id;
 	}
 
-	public List<String> getChild_ids() {
+	public List<Integer> getChild_ids() {
 		return child_ids;
 	}
 
-	public void setChild_ids(List<String> child_ids) {
+	public void setChild_ids(List<Integer> child_ids) {
 		this.child_ids = child_ids;
 	}
 
@@ -176,11 +172,11 @@ public class Category {
 		this.parent_path = parent_path;
 	}
 
-	public List<String> getPartner_ids() {
+	public List<Integer> getPartner_ids() {
 		return partner_ids;
 	}
 
-	public void setPartner_ids(List<String> partner_ids) {
+	public void setPartner_ids(List<Integer> partner_ids) {
 		this.partner_ids = partner_ids;
 	}
 

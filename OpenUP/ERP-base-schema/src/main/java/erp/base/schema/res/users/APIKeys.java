@@ -46,7 +46,7 @@ public class APIKeys {
 	@Column(nullable = false, updatable = false)
 	@NotNull
 	@Transient
-	private String user_id;
+	private Integer user_id;
 	
 	/**
 	 * 
@@ -81,11 +81,11 @@ public class APIKeys {
 		this.name = name;
 	}
 
-	public String getUser_id() {
+	public Integer getUser_id() {
 		return user_id;
 	}
 
-	public void setUser_id(String user_id) {
+	public void setUser_id(Integer user_id) {
 		this.user_id = user_id;
 	}
 

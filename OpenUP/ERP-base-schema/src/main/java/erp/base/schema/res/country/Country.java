@@ -90,7 +90,7 @@ public class Country {
 	@Column
 	@Description("Input View")
 	@Transient
-	private String address_view_id;
+	private Integer address_view_id;
 
 	/**
 	 * 
@@ -106,7 +106,7 @@ public class Country {
 	@Column
 	@Description("Currency")
 	@Transient
-	private String currency_id;
+	private Integer currency_id;
 	
 	/**
 	 * 
@@ -135,34 +135,31 @@ public class Country {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Group.class)
-	@CollectionTable(name = "res_country_res_country_group_rel", joinColumns = {
-			@JoinColumn(name = "res_country_group_id", referencedColumnName = "res_country_id")
-	})
+	@ElementCollection
+	@CollectionTable(name = "res_country_res_country_group_rel", joinColumns = {@JoinColumn(name = "res_country_id")})
+	@Column(name = "res_country_group_id")
 	@Description("Country Groups")
 	@Transient
-	private List<String> country_group_ids;
+	private List<Integer> country_group_ids;
 	
 	/**
 	 * 
 	 */
 	@ManyToMany(targetEntity = Group.class)
-	@JoinTable(name = "res_country_res_country_group_rel", joinColumns = {
-			@JoinColumn(name = "res_country_group_id", referencedColumnName = "res_country_id")
-	})
+	@JoinTable(name = "res_country_res_country_group_rel", joinColumns = {@JoinColumn(name = "res_country_id")}, inverseJoinColumns = {@JoinColumn(name = "res_country_group_id")})
 	@Relationship(type = "COUNTRY_GROUPS")
 	private List<Group> country_groups;
 	
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = State.class)
+	@ElementCollection
 	@CollectionTable(name = "res_country_state", joinColumns = {
 			@JoinColumn(name = "country_id")
 	})
 	@Description("States")
 	@Transient
-	private List<String> state_ids;
+	private List<Integer> state_ids;
 
 	/**
 	 * 
@@ -229,19 +226,19 @@ public class Country {
 		this.address_format = address_format;
 	}
 
-	public String getAddress_view_id() {
+	public Integer getAddress_view_id() {
 		return address_view_id;
 	}
 
-	public void setAddress_view_id(String address_view_id) {
+	public void setAddress_view_id(Integer address_view_id) {
 		this.address_view_id = address_view_id;
 	}
 
-	public String getCurrency_id() {
+	public Integer getCurrency_id() {
 		return currency_id;
 	}
 
-	public void setCurrency_id(String currency_id) {
+	public void setCurrency_id(Integer currency_id) {
 		this.currency_id = currency_id;
 	}
 
@@ -261,19 +258,19 @@ public class Country {
 		this.phone_code = phone_code;
 	}
 
-	public List<String> getCountry_group_ids() {
+	public List<Integer> getCountry_group_ids() {
 		return country_group_ids;
 	}
 
-	public void setCountry_group_ids(List<String> country_group_ids) {
+	public void setCountry_group_ids(List<Integer> country_group_ids) {
 		this.country_group_ids = country_group_ids;
 	}
 
-	public List<String> getState_ids() {
+	public List<Integer> getState_ids() {
 		return state_ids;
 	}
 
-	public void setState_ids(List<String> state_ids) {
+	public void setState_ids(List<Integer> state_ids) {
 		this.state_ids = state_ids;
 	}
 

@@ -131,7 +131,7 @@ public class Company {
 	 */
 	@Column
 	@Transient
-	private String parent_id;
+	private Integer parent_id;
 	
 	/**
 	 * 
@@ -144,13 +144,13 @@ public class Company {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Company.class)
+	@ElementCollection
 	@CollectionTable(name = "res_company", joinColumns = {
 			@JoinColumn(name = "parent_id")
 	})
 	@Description("Branches")
 	@Transient
-	private List<String> child_ids;
+	private List<Integer> child_ids;
 
 	/**
 	 * 
@@ -162,10 +162,10 @@ public class Company {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Company.class)
+	@ElementCollection
 	@CollectionTable(name = "res_company")
 	@Transient
-	private List<String> all_child_ids;
+	private List<Integer> all_child_ids;
 
 	/**
 	 * 
@@ -183,10 +183,10 @@ public class Company {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Company.class)
+	@ElementCollection
 	@CollectionTable(name = "res_company")
 	@Transient
-	private List<String> parent_ids;
+	private List<Integer> parent_ids;
 	
 	/**
 	 * 
@@ -200,7 +200,7 @@ public class Company {
 	 */
 	@Column
 	@Transient
-	private String root_id;
+	private Integer root_id;
 	
 	/**
 	 * 
@@ -217,7 +217,7 @@ public class Company {
 	@NotNull
 	@Description("Partner")
 	@Transient
-	private String partner_id;
+	private Integer partner_id;
 	
 	/**
 	 * 
@@ -287,7 +287,7 @@ public class Company {
 	@Column(nullable = false)
 	@NotNull
 	@Transient
-	private String currency_id;
+	private Integer currency_id;
 	
 	/**
 	 * 
@@ -301,21 +301,18 @@ public class Company {
 	/**
 	 * 
 	 */
-	@ElementCollection(targetClass = Users.class)
-	@CollectionTable(name = "res_company_users_rel", joinColumns = {
-			@JoinColumn(name = "cid", referencedColumnName = "user_id")
-	})
+	@ElementCollection
+	@CollectionTable(name = "res_company_users_rel", joinColumns = {@JoinColumn(name = "cid")})
+	@Column(name = "user_id")
 	@Description("Accepted Users")
 	@Transient
-	private List<String> user_ids;
+	private List<Integer> user_ids;
 
 	/**
 	 * 
 	 */
 	@ManyToMany(targetEntity = Users.class)
-	@JoinTable(name = "res_company_users_rel", joinColumns = {
-			@JoinColumn(name = "cid", referencedColumnName = "user_id")
-	})
+	@JoinTable(name = "res_company_users_rel", joinColumns = {@JoinColumn(name = "cid")}, inverseJoinColumns = {@JoinColumn(name = "user_id")})
 	@Relationship(type = "ACCEPTED_USERS")
 	private List<Users> users;
 	
@@ -346,7 +343,7 @@ public class Company {
 	@Column
 	@Description("Fed. State")
 	@Transient
-	private String state_id;
+	private Integer state_id;
 	
 	/**
 	 * 
@@ -361,7 +358,7 @@ public class Company {
 	 */
 	@Column
 	@Transient
-	private List<String> bank_ids;
+	private List<Integer> bank_ids;
 	
 	/**
 	 * 
@@ -375,7 +372,7 @@ public class Company {
 	 */
 	@Column
 	@Transient
-	private String country_id;
+	private Integer country_id;
 	
 	/**
 	 * 
@@ -435,7 +432,7 @@ public class Company {
 	@Column
 	@Description("Paper format")
 	@Transient
-	private String paperformat_id;
+	private Integer paperformat_id;
 
 	/**
 	 * 
@@ -451,7 +448,7 @@ public class Company {
 	@Column
 	@Description("Document Template")
 	@Transient
-	private String external_report_layout_id;
+	private Integer external_report_layout_id;
 
 	/**
 	 * 
@@ -533,27 +530,27 @@ public class Company {
 		this.sequence = sequence;
 	}
 
-	public String getParent_id() {
+	public Integer getParent_id() {
 		return parent_id;
 	}
 
-	public void setParent_id(String parent_id) {
+	public void setParent_id(Integer parent_id) {
 		this.parent_id = parent_id;
 	}
 
-	public List<String> getChild_ids() {
+	public List<Integer> getChild_ids() {
 		return child_ids;
 	}
 
-	public void setChild_ids(List<String> child_ids) {
+	public void setChild_ids(List<Integer> child_ids) {
 		this.child_ids = child_ids;
 	}
 
-	public List<String> getAll_child_ids() {
+	public List<Integer> getAll_child_ids() {
 		return all_child_ids;
 	}
 
-	public void setAll_child_ids(List<String> all_child_ids) {
+	public void setAll_child_ids(List<Integer> all_child_ids) {
 		this.all_child_ids = all_child_ids;
 	}
 
@@ -565,27 +562,27 @@ public class Company {
 		this.parent_path = parent_path;
 	}
 
-	public List<String> getParent_ids() {
+	public List<Integer> getParent_ids() {
 		return parent_ids;
 	}
 
-	public void setParent_ids(List<String> parent_ids) {
+	public void setParent_ids(List<Integer> parent_ids) {
 		this.parent_ids = parent_ids;
 	}
 
-	public String getRoot_id() {
+	public Integer getRoot_id() {
 		return root_id;
 	}
 
-	public void setRoot_id(String root_id) {
+	public void setRoot_id(Integer root_id) {
 		this.root_id = root_id;
 	}
 
-	public String getPartner_id() {
+	public Integer getPartner_id() {
 		return partner_id;
 	}
 
-	public void setPartner_id(String partner_id) {
+	public void setPartner_id(Integer partner_id) {
 		this.partner_id = partner_id;
 	}
 
@@ -645,19 +642,19 @@ public class Company {
 		this.uses_default_logo = uses_default_logo;
 	}
 
-	public String getCurrency_id() {
+	public Integer getCurrency_id() {
 		return currency_id;
 	}
 
-	public void setCurrency_id(String currency_id) {
+	public void setCurrency_id(Integer currency_id) {
 		this.currency_id = currency_id;
 	}
 
-	public List<String> getUser_ids() {
+	public List<Integer> getUser_ids() {
 		return user_ids;
 	}
 
-	public void setUser_ids(List<String> user_ids) {
+	public void setUser_ids(List<Integer> user_ids) {
 		this.user_ids = user_ids;
 	}
 
@@ -685,27 +682,27 @@ public class Company {
 		this.zip = zip;
 	}
 
-	public String getState_id() {
+	public Integer getState_id() {
 		return state_id;
 	}
 
-	public void setState_id(String state_id) {
+	public void setState_id(Integer state_id) {
 		this.state_id = state_id;
 	}
 
-	public List<String> getBank_ids() {
+	public List<Integer> getBank_ids() {
 		return bank_ids;
 	}
 
-	public void setBank_ids(List<String> bank_ids) {
+	public void setBank_ids(List<Integer> bank_ids) {
 		this.bank_ids = bank_ids;
 	}
 
-	public String getCountry_id() {
+	public Integer getCountry_id() {
 		return country_id;
 	}
 
-	public void setCountry_id(String country_id) {
+	public void setCountry_id(Integer country_id) {
 		this.country_id = country_id;
 	}
 
@@ -757,19 +754,19 @@ public class Company {
 		this.company_registry = company_registry;
 	}
 
-	public String getPaperformat_id() {
+	public Integer getPaperformat_id() {
 		return paperformat_id;
 	}
 
-	public void setPaperformat_id(String paperformat_id) {
+	public void setPaperformat_id(Integer paperformat_id) {
 		this.paperformat_id = paperformat_id;
 	}
 
-	public String getExternal_report_layout_id() {
+	public Integer getExternal_report_layout_id() {
 		return external_report_layout_id;
 	}
 
-	public void setExternal_report_layout_id(String external_report_layout_id) {
+	public void setExternal_report_layout_id(Integer external_report_layout_id) {
 		this.external_report_layout_id = external_report_layout_id;
 	}
 
