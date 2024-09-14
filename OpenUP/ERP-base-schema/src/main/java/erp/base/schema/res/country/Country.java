@@ -18,6 +18,7 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -95,7 +96,7 @@ public class Country {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = View.class)
+	@ManyToOne(targetEntity = View.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "address_view_id")
 	@Relationship(type = "INPUT_VIEW")
 	private View address_view;
@@ -111,7 +112,7 @@ public class Country {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Currency.class)
+	@ManyToOne(targetEntity = Currency.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "currency_id")
 	@Relationship(type = "CURRENCY")
 	private Currency currency;

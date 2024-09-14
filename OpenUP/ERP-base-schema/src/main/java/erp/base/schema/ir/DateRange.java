@@ -10,6 +10,7 @@ import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -60,7 +61,7 @@ public class DateRange {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Sequence.class)
+	@ManyToOne(targetEntity = Sequence.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "sequence_id", nullable = false)
 	@NotNull
 	@Relationship(type = "MAIN_SEQUENCE")

@@ -12,6 +12,7 @@ import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -97,7 +98,7 @@ public class Exclusion {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Module.class)
+	@ManyToOne(targetEntity = Module.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "module_id")
 	@Relationship(type = "MODULE")
 	private Module module;
@@ -113,7 +114,7 @@ public class Exclusion {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Module.class)
+	@ManyToOne(targetEntity = Module.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "exclusion_id")
 	@Relationship(type = "EXCLUSION_MODULE")
 	private Module exclusion;

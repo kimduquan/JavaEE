@@ -11,6 +11,7 @@ import erp.base.schema.res.Company;
 import erp.base.schema.res.currency.Currency;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -85,7 +86,7 @@ public class Bank {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Partner.class)
+	@ManyToOne(targetEntity = Partner.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "partner_id", nullable = false)
 	@NotNull
 	@Relationship(type = "ACCOUNT_HOLDER")
@@ -111,7 +112,7 @@ public class Bank {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Bank.class)
+	@ManyToOne(targetEntity = Bank.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "bank_id")
 	@Relationship(type = "BANK")
 	private String bank;
@@ -148,7 +149,7 @@ public class Bank {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Currency.class)
+	@ManyToOne(targetEntity = Currency.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "currency_id")
 	@Relationship(type = "CURRENCY")
 	private Currency currency;
@@ -163,7 +164,7 @@ public class Bank {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Company.class)
+	@ManyToOne(targetEntity = Company.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "company_id", updatable = false)
 	@Relationship(type = "COMPANY")
 	private Company company;

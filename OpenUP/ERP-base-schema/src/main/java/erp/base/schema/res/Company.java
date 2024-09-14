@@ -24,6 +24,7 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -136,7 +137,7 @@ public class Company {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Company.class)
+	@ManyToOne(targetEntity = Company.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "parent_id")
 	@Relationship(type = "PARENT")
 	private Company parent;
@@ -205,7 +206,7 @@ public class Company {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Company.class)
+	@ManyToOne(targetEntity = Company.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "root_id")
 	@Relationship(type = "ROOT")
 	private Company root;
@@ -222,7 +223,7 @@ public class Company {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Partner.class)
+	@ManyToOne(targetEntity = Partner.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "partner_id", nullable = false)
 	@NotNull
 	@Relationship(type = "PARTNER")
@@ -292,7 +293,7 @@ public class Company {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Currency.class)
+	@ManyToOne(targetEntity = Currency.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "currency_id", nullable = false)
 	@NotNull
 	@Relationship(type = "CURRENCY")
@@ -348,7 +349,7 @@ public class Company {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = State.class)
+	@ManyToOne(targetEntity = State.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "state_id")
 	@Relationship(type = "FED_STATE")
 	private State state;
@@ -377,7 +378,7 @@ public class Company {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Country.class)
+	@ManyToOne(targetEntity = Country.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "country_id")
 	@Relationship(type = "COUNTRY")
 	private Country country;
@@ -437,7 +438,7 @@ public class Company {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = PaperFormat.class)
+	@ManyToOne(targetEntity = PaperFormat.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "paperformat_id")
 	@Relationship(type = "PAPER_FORMAT")
 	private PaperFormat paperformat;
@@ -453,7 +454,7 @@ public class Company {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = View.class)
+	@ManyToOne(targetEntity = View.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "external_report_layout_id")
 	@Relationship(type = "DOCUMENT_TEMPLATE")
 	private View external_report_layout;

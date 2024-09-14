@@ -11,6 +11,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -84,7 +85,7 @@ public class ActWindowView {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = View.class)
+	@ManyToOne(targetEntity = View.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "view_id")
 	@Relationship(type = "VIEW")
 	private View view;
@@ -110,7 +111,7 @@ public class ActWindowView {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = ActWindow.class)
+	@ManyToOne(targetEntity = ActWindow.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "act_window_id")
 	@Relationship(type = "ACTION")
 	private ActWindow act_window;

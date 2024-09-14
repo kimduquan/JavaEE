@@ -19,6 +19,7 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -196,7 +197,7 @@ public class Server extends Actions {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Model.class)
+	@ManyToOne(targetEntity = Model.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "model_id", nullable = false)
 	@NotNull
 	@Relationship(type = "MODEL")
@@ -264,7 +265,7 @@ public class Server extends Actions {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Model.class)
+	@ManyToOne(targetEntity = Model.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "crud_model_id")
 	@Relationship(type = "CRUD_MODEL")
 	private Model crud_model;
@@ -288,7 +289,7 @@ public class Server extends Actions {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Fields.class)
+	@ManyToOne(targetEntity = Fields.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "link_field_id")
 	@Relationship(type = "LINK_FIELD")
 	private String link_field;
@@ -322,7 +323,7 @@ public class Server extends Actions {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Fields.class)
+	@ManyToOne(targetEntity = Fields.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "update_field_id")
 	@Relationship(type = "UPDATE_FIELD")
 	private Fields update_field;
@@ -345,7 +346,7 @@ public class Server extends Actions {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Model.class)
+	@ManyToOne(targetEntity = Model.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "update_related_model_id")
 	@Relationship(type = "UPDATE_RELATED_MODEL")
 	private Model update_related_model;
@@ -404,7 +405,7 @@ public class Server extends Actions {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Selection.class)
+	@ManyToOne(targetEntity = Selection.class, fetch = FetchType.LAZY)
 	@Description("Custom Value")
 	@Relationship(type = "CUSTOM_VALUE")
 	private Selection selection_value;

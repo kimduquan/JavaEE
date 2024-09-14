@@ -10,6 +10,7 @@ import org.neo4j.ogm.annotation.Transient;
 import erp.base.schema.res.groups.Groups;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -59,7 +60,7 @@ public class Access {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Model.class)
+	@ManyToOne(targetEntity = Model.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "model_id", nullable = false)
 	@NotNull
 	@Relationship(type = "MODEL")
@@ -76,7 +77,7 @@ public class Access {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Groups.class)
+	@ManyToOne(targetEntity = Groups.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "group_id")
 	@Relationship(type = "GROUP")
 	private Groups group;

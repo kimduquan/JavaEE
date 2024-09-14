@@ -14,6 +14,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
@@ -98,7 +99,7 @@ public class Actions {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Model.class)
+	@ManyToOne(targetEntity = Model.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "binding_model_id")
 	@Relationship(type = "BINDING_MODEL")
 	private Model binding_model;

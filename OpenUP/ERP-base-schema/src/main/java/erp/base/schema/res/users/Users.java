@@ -17,6 +17,7 @@ import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -53,7 +54,7 @@ public class Users {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Partner.class)
+	@ManyToOne(targetEntity = Partner.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "partner_id", nullable = false)
 	@NotNull
 	@Relationship(type = "RELATED_PARTNER")
@@ -119,7 +120,7 @@ public class Users {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Actions.class)
+	@ManyToOne(targetEntity = Actions.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "action_id")
 	@Relationship(type = "HOME_ACTION")
 	private Actions action;
@@ -220,7 +221,7 @@ public class Users {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Settings.class)
+	@ManyToOne(targetEntity = Settings.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "res_users_settings_id")
 	@Relationship(type = "SETTINGS")
 	private Settings res_users_setting;
@@ -237,7 +238,7 @@ public class Users {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Company.class)
+	@ManyToOne(targetEntity = Company.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "company_id", nullable = false)
 	@NotNull
 	@Relationship(type = "COMPANY")

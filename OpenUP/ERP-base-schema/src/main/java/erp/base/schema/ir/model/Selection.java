@@ -11,6 +11,7 @@ import org.neo4j.ogm.annotation.typeconversion.Convert;
 import erp.schema.util.NameAttributeConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -43,7 +44,7 @@ public class Selection {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Fields.class)
+	@ManyToOne(targetEntity = Fields.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "field_id", nullable = false)
 	@NotNull
 	@Relationship(type = "FIELD")

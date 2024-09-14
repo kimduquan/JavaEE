@@ -18,6 +18,7 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -134,7 +135,7 @@ public class Menu {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Menu.class)
+	@ManyToOne(targetEntity = Menu.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "parent_id")
 	@Relationship(type = "PARENT_MENU")
 	private Menu parent;

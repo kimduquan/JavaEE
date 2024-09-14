@@ -17,6 +17,7 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -198,7 +199,7 @@ public class View {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = View.class)
+	@ManyToOne(targetEntity = View.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "inherit_id")
 	@Relationship(type = "INHERITED_VIEW")
 	private View inherit;
@@ -231,7 +232,7 @@ public class View {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Data.class)
+	@ManyToOne(targetEntity = Data.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "model_data_id")
 	@Relationship(type = "MODEL_DATA")
 	private Data model_data;
@@ -292,7 +293,7 @@ public class View {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Model.class)
+	@ManyToOne(targetEntity = Model.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "model_id")
 	@Relationship(type = "MODEL_OF_THE_VIEW")
 	private String _model;

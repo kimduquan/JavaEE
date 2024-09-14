@@ -14,6 +14,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -73,7 +74,7 @@ public class Cron {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Server.class)
+	@ManyToOne(targetEntity = Server.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "ir_actions_server_id", nullable = false)
 	@NotNull
 	@Relationship(type = "SERVER_ACTION")
@@ -99,7 +100,7 @@ public class Cron {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Users.class)
+	@ManyToOne(targetEntity = Users.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false)
 	@NotNull
 	@Relationship(type = "SCHEDULER_USER")

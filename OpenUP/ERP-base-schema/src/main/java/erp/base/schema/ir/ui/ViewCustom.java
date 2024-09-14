@@ -9,6 +9,7 @@ import org.neo4j.ogm.annotation.Transient;
 import erp.base.schema.res.users.Users;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -42,7 +43,7 @@ public class ViewCustom {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = View.class)
+	@ManyToOne(targetEntity = View.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "ref_id", nullable = false)
 	@NotNull
 	@Relationship(type = "ORIGINAL_VIEW")
@@ -60,7 +61,7 @@ public class ViewCustom {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Users.class)
+	@ManyToOne(targetEntity = Users.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false)
 	@NotNull
 	@Relationship(type = "USER")

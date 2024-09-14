@@ -8,6 +8,7 @@ import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -47,7 +48,7 @@ public class ExportsLine {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Exports.class)
+	@ManyToOne(targetEntity = Exports.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "export_id")
 	@Relationship(type = "EXPORT")
 	private Exports export;

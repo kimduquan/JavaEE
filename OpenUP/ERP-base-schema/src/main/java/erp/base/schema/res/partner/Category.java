@@ -14,6 +14,7 @@ import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -67,7 +68,7 @@ public class Category {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Category.class)
+	@ManyToOne(targetEntity = Category.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "parent_id")
 	@Relationship("PARENT_CATEGORY")
 	private Category parent;

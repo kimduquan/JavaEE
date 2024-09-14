@@ -11,6 +11,7 @@ import erp.base.schema.res.Company;
 import erp.base.schema.res.users.Users;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -44,7 +45,7 @@ public class Default {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Fields.class)
+	@ManyToOne(targetEntity = Fields.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "field_id", nullable = false)
 	@NotNull
 	@Relationship(type = "FIELD")
@@ -61,7 +62,7 @@ public class Default {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Users.class)
+	@ManyToOne(targetEntity = Users.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	@Relationship(type = "USER")
 	private Users user;
@@ -77,7 +78,7 @@ public class Default {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Company.class)
+	@ManyToOne(targetEntity = Company.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "company_id")
 	@Relationship(type = "COMPANY")
 	private Company company;

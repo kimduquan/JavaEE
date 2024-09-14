@@ -13,6 +13,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -100,7 +101,7 @@ public class Attachment {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Model.class)
+	@ManyToOne(targetEntity = Model.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "res_id", updatable = false)
 	@Relationship(type = "RESOURCE")
 	private Model resource;
@@ -116,7 +117,7 @@ public class Attachment {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Company.class)
+	@ManyToOne(targetEntity = Company.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "company_id")
 	@Relationship(type = "COMPANY")
 	private Company company;

@@ -8,6 +8,7 @@ import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -41,7 +42,7 @@ public class State {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Country.class)
+	@ManyToOne(targetEntity = Country.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "country_id", nullable = false)
 	@NotNull
 	@Relationship(type = "COUNTRY")

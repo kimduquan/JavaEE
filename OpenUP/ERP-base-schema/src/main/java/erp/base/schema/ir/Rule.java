@@ -12,6 +12,7 @@ import erp.base.schema.ir.model.Model;
 import erp.base.schema.res.groups.Groups;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -62,7 +63,7 @@ public class Rule {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Model.class)
+	@ManyToOne(targetEntity = Model.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "model_id", nullable = false)
 	@NotNull
 	@Relationship(type = "MODEL")

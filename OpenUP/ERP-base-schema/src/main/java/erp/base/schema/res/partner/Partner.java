@@ -18,6 +18,7 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -101,7 +102,7 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Title.class)
+	@ManyToOne(targetEntity = Title.class, fetch = FetchType.LAZY)
 	@Relationship(type = "TTILE")
 	private Title title;
 	
@@ -116,7 +117,7 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Partner.class)
+	@ManyToOne(targetEntity = Partner.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "parent_id")
 	@Relationship(type = "RELATED_COMPANY")
 	private Partner parent;
@@ -194,7 +195,7 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Partner.class)
+	@ManyToOne(targetEntity = Partner.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	@Relationship(type = "SALESPERSON")
 	private Partner user;
@@ -218,7 +219,7 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Partner.class)
+	@ManyToOne(targetEntity = Partner.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "same_vat_partner_id")
 	@Relationship(type = "PARTNER_WITH_SAME_TAX_ID")
 	private Partner same_vat_partner;
@@ -234,7 +235,7 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Partner.class)
+	@ManyToOne(targetEntity = Partner.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "same_company_registry_partner_id")
 	@Relationship(type = "PARTER_WITH_SAME_COMPANY_REGISTRY")
 	private Partner same_company_registry_partner;
@@ -372,7 +373,7 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = State.class)
+	@ManyToOne(targetEntity = State.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "state_id")
 	@Relationship(type = "STATE")
 	private State state;
@@ -388,7 +389,7 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Country.class)
+	@ManyToOne(targetEntity = Country.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "country_id")
 	@Relationship(type = "COUNTRY")
 	private Country country;
@@ -472,7 +473,7 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Industry.class)
+	@ManyToOne(targetEntity = Industry.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "industry_id")
 	@Relationship(type = "INDUSTRY")
 	private Industry industry;
@@ -497,7 +498,7 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Company.class)
+	@ManyToOne(targetEntity = Company.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "company_id")
 	@Relationship(type = "COMPANY")
 	private Company company;
@@ -556,7 +557,7 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Partner.class)
+	@ManyToOne(targetEntity = Partner.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "commercial_partner_id")
 	@Relationship(type = "COMMERCIAL_ENTITY")
 	private Partner commercial_partner;

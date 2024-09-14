@@ -7,6 +7,7 @@ import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -39,7 +40,7 @@ public class Inherit {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Model.class)
+	@ManyToOne(targetEntity = Model.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "model_id", nullable = false)
 	@NotNull
 	@Relationship(type = "MODEL")
@@ -56,7 +57,7 @@ public class Inherit {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Model.class)
+	@ManyToOne(targetEntity = Model.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "parent_id", nullable = false)
 	@NotNull
 	@Relationship(type = "PARENT")
@@ -72,7 +73,7 @@ public class Inherit {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Fields.class)
+	@ManyToOne(targetEntity = Fields.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "parent_field_id")
 	@Relationship(type = "PARENT_FIELD")
 	private Fields parent_field;

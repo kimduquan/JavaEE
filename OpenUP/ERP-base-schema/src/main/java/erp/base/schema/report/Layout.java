@@ -10,6 +10,7 @@ import org.neo4j.ogm.annotation.Transient;
 import erp.base.schema.ir.ui.View;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -43,7 +44,7 @@ public class Layout {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = View.class)
+	@ManyToOne(targetEntity = View.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "view_id", nullable = false)
 	@NotNull
 	@Relationship(type = "DOCUMENT_TEMPLATE")

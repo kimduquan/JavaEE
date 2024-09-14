@@ -11,6 +11,7 @@ import erp.base.schema.ir.actions.Actions;
 import erp.base.schema.res.users.Users;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -52,7 +53,7 @@ public class Filters {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Users.class)
+	@ManyToOne(targetEntity = Users.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	@Relationship(type = "USER")
 	private Users user;
@@ -112,7 +113,7 @@ public class Filters {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Actions.class)
+	@ManyToOne(targetEntity = Actions.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "action_id")
 	@Relationship(type = "ACTION")
 	private Actions action;

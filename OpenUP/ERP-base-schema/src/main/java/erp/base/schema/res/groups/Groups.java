@@ -17,6 +17,7 @@ import erp.base.schema.res.users.Users;
 import erp.schema.util.NameAttributeConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -111,7 +112,7 @@ public class Groups {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Category.class)
+	@ManyToOne(targetEntity = Category.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "category_id")
 	@Relationship(type = "APPLICATION")
 	private Category category;

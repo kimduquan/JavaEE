@@ -10,6 +10,7 @@ import org.neo4j.ogm.annotation.Transient;
 import erp.base.schema.res.Company;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -76,7 +77,7 @@ public class Rate {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Currency.class)
+	@ManyToOne(targetEntity = Currency.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "currency_id", nullable = false, updatable = false)
 	@NotNull
 	@Relationship(type = "CURRENCY")
@@ -93,7 +94,7 @@ public class Rate {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Company.class)
+	@ManyToOne(targetEntity = Company.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "company_id")
 	@Relationship(type = "COMPANY")
 	private Company company;

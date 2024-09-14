@@ -15,6 +15,7 @@ import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -124,7 +125,7 @@ public class Property {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Company.class)
+	@ManyToOne(targetEntity = Company.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "company_id")
 	@Relationship(type = "COMPANY")
 	private Company company;
@@ -141,7 +142,7 @@ public class Property {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Fields.class)
+	@ManyToOne(targetEntity = Fields.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "fields_id")
 	@NotNull
 	@Relationship(type = "FIELD")
