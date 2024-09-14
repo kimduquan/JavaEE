@@ -36,11 +36,17 @@
 		    <artifactId>microprofile-graphql-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.neo4j/neo4j-ogm-core -->
+		<dependency>
+		    <groupId>org.neo4j</groupId>
+		    <artifactId>neo4j-ogm-core</artifactId>
+		    <scope>provided</scope>
+		</dependency>
 		
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>ERP-base-schema</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

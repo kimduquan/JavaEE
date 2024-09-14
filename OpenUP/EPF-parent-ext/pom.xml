@@ -13,7 +13,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-    <quarkus.platform.version>3.14.1</quarkus.platform.version>
+    <quarkus.platform.version>3.14.3</quarkus.platform.version>
     <skipITs>true</skipITs>
     <surefire-plugin.version>3.5.0</surefire-plugin.version>
   </properties>
@@ -26,17 +26,35 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
-      	<!-- https://mvnrepository.com/artifact/org.neo4j/neo4j-ogm-core -->
+		<!-- https://mvnrepository.com/artifact/org.neo4j/neo4j-ogm-core -->
 		<dependency>
-		    <groupId>org.neo4j</groupId>
-		    <artifactId>neo4j-ogm-core</artifactId>
-		    <version>4.0.11</version>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j-ogm-core</artifactId>
+			<version>4.0.11</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.neo4j/neo4j-ogm-bolt-driver -->
 		<dependency>
-		    <groupId>org.neo4j</groupId>
-		    <artifactId>neo4j-ogm-bolt-driver</artifactId>
-		    <version>4.0.11</version>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j-ogm-bolt-driver</artifactId>
+			<version>4.0.11</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.neo4j.driver/neo4j-java-driver -->
+		<dependency>
+			<groupId>org.neo4j.driver</groupId>
+			<artifactId>neo4j-java-driver</artifactId>
+			<version>5.23.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/dev.langchain4j/langchain4j-neo4j -->
+		<dependency>
+			<groupId>dev.langchain4j</groupId>
+			<artifactId>langchain4j-neo4j</artifactId>
+			<version>0.33.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/dev.langchain4j/langchain4j -->
+		<dependency>
+			<groupId>dev.langchain4j</groupId>
+			<artifactId>langchain4j</artifactId>
+			<version>0.33.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.jboss.narayana.rts/lra-coordinator-jar -->
 		<dependency>
