@@ -78,23 +78,23 @@ public class Currency {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Current Rate")
-	@Property
+	@Transient
 	private Float rate;
 	
 	/**
 	 * 
 	 */
-	@Column(updatable = false)
-	@Property
+	@jakarta.persistence.Transient
+	@Transient
 	private Float inverse_rate;
 	
 	/**
 	 * 
 	 */
-	@Column
-	@Property
+	@jakarta.persistence.Transient
+	@Transient
 	private String rate_string;
 	
 	/**
@@ -102,7 +102,7 @@ public class Currency {
 	 */
 	@ElementCollection
 	@CollectionTable(name = "res_currency_rate", joinColumns = {
-			@JoinColumn(name = "currency_id")
+			@JoinColumn(name = "currency_id", referencedColumnName = "id")
 	})
 	@Description("Rates")
 	@Transient
@@ -152,8 +152,8 @@ public class Currency {
 	/**
 	 * 
 	 */
-	@Column
-	@Property
+	@jakarta.persistence.Transient
+	@Transient
 	private Date date;
 	
 	/**
@@ -175,8 +175,8 @@ public class Currency {
 	/**
 	 * 
 	 */
-	@Column
-	@Property
+	@jakarta.persistence.Transient
+	@Transient
 	private Boolean is_current_company_currency;
 
 	public String getName() {

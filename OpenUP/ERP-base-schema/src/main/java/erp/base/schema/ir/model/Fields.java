@@ -117,18 +117,10 @@ public class Fields {
 	/**
 	 * 
 	 */
-	@Column(insertable = false, updatable = false)
+	@jakarta.persistence.Transient
 	@Description("Relation field")
 	@Transient
 	private Integer relation_field_id;
-
-	/**
-	 * 
-	 */
-	@ManyToOne(targetEntity = Fields.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "relation_field_id")
-	@Relationship(type = "RELATION_FIELD")
-	private Fields _relation_field;
 	
 	/**
 	 * 
@@ -178,9 +170,9 @@ public class Fields {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Selection Options (Deprecated)")
-	@Property
+	@Transient
 	private String selection;
 	
 	/**
@@ -188,7 +180,7 @@ public class Fields {
 	 */
 	@ElementCollection
 	@CollectionTable(name = "ir_model_fields_selection", joinColumns = {
-			@JoinColumn(name = "field_id")
+			@JoinColumn(name = "field_id", referencedColumnName = "id")
 	})
 	@Description("Selection Options")
 	@Transient
@@ -197,7 +189,10 @@ public class Fields {
 	/**
 	 * 
 	 */
-	@OneToMany(targetEntity = Selection.class, mappedBy = "field_id")
+	@OneToMany(targetEntity = Selection.class)
+	@JoinTable(name = "ir_model_fields_selection", joinColumns = {
+			@JoinColumn(name = "field_id", referencedColumnName = "id")
+	})
 	@Relationship(type = "SELECTION_OPTIONS")
 	private List<Selection> selections;
 	
@@ -327,9 +322,9 @@ public class Fields {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("In Apps")
-	@Property
+	@Transient
 	private String modules;
 	
 	/**
@@ -802,14 +797,6 @@ public class Fields {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public Fields get_relation_field() {
-		return _relation_field;
-	}
-
-	public void set_relation_field(Fields _relation_field) {
-		this._relation_field = _relation_field;
 	}
 
 	public Model get_model() {

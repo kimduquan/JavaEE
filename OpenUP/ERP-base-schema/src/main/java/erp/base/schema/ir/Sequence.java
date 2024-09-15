@@ -116,9 +116,9 @@ public class Sequence {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Actual Next Number")
-	@Property
+	@Transient
 	private Integer number_next_actual;
 	
 	/**
@@ -170,7 +170,7 @@ public class Sequence {
 	 */
 	@ElementCollection
 	@CollectionTable(name = "ir_sequence_date_range", joinColumns = {
-			@JoinColumn(name = "sequence_id")
+			@JoinColumn(name = "sequence_id", referencedColumnName = "id")
 	})
 	@Description("Subsequences")
 	@Transient

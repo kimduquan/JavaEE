@@ -75,9 +75,9 @@ public class Actions {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("External ID")
-	@Property
+	@Transient
 	private String xml_id;
 	
 	/**

@@ -120,9 +120,9 @@ public class Country {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Flag")
-	@Property
+	@Transient
 	private String image_url;
 	
 	/**
@@ -156,7 +156,7 @@ public class Country {
 	 */
 	@ElementCollection
 	@CollectionTable(name = "res_country_state", joinColumns = {
-			@JoinColumn(name = "country_id")
+			@JoinColumn(name = "country_id", referencedColumnName = "id")
 	})
 	@Description("States")
 	@Transient

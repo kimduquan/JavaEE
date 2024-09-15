@@ -103,6 +103,7 @@ public class Partner {
 	 * 
 	 */
 	@ManyToOne(targetEntity = Title.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "title")
 	@Relationship(type = "TTILE")
 	private Title title;
 	
@@ -125,15 +126,18 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@Column(updatable = false)
+	@jakarta.persistence.Transient
 	@Description("Parent name")
-	@Property
+	@Transient
 	private String parent_name;
 	
 	/**
 	 * 
 	 */
-	@Column
+	@ElementCollection
+	@CollectionTable(name = "res_partner", joinColumns = {
+			@JoinColumn(name = "parent_id", referencedColumnName = "id")
+	})
 	@Description("Contact")
 	@Transient
 	private List<Integer> child_ids;
@@ -164,8 +168,8 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@Column
-	@Property
+	@jakarta.persistence.Transient
+	@Transient
 	private Integer active_lang_count;
 	
 	/**
@@ -179,9 +183,9 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Timezone offset")
-	@Property
+	@Transient
 	private String tz_offset;
 	
 	/**
@@ -211,34 +215,18 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@Column(insertable = false, updatable = false)
+	@jakarta.persistence.Transient
 	@Description("Partner with same Tax ID")
 	@Transient
 	private Integer same_vat_partner_id;
-
-	/**
-	 * 
-	 */
-	@ManyToOne(targetEntity = Partner.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "same_vat_partner_id")
-	@Relationship(type = "PARTNER_WITH_SAME_TAX_ID")
-	private Partner same_vat_partner;
 	
 	/**
 	 * 
 	 */
-	@Column(insertable = false, updatable = false)
+	@jakarta.persistence.Transient
 	@Description("Partner with same Company Registry")
 	@Transient
 	private Integer same_company_registry_partner_id;
-
-	/**
-	 * 
-	 */
-	@ManyToOne(targetEntity = Partner.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "same_company_registry_partner_id")
-	@Relationship(type = "PARTER_WITH_SAME_COMPANY_REGISTRY")
-	private Partner same_company_registry_partner;
 	
 	/**
 	 * 
@@ -296,7 +284,7 @@ public class Partner {
 	 * 
 	 */
 	@ManyToMany(targetEntity = Category.class)
-	@JoinTable(joinColumns = {@JoinColumn(name = "partner_id")}, inverseJoinColumns = {@JoinColumn(name = "category_id")})
+	@JoinTable(name = "res_partner_category", joinColumns = {@JoinColumn(name = "partner_id")}, inverseJoinColumns = {@JoinColumn(name = "category_id")})
 	@Relationship(type = "TAGS")
 	private List<Category> category;
 	
@@ -397,9 +385,9 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Country Code")
-	@Property
+	@Transient
 	private String country_code;
 	
 	/**
@@ -428,9 +416,9 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Formatted Email")
-	@Property
+	@Transient
 	private String email_formatted;
 	
 	/**
@@ -458,8 +446,8 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@Column
-	@Property
+	@jakarta.persistence.Transient
+	@Transient
 	private Boolean is_public;
 	
 	/**
@@ -481,10 +469,9 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@Column
-	@Enumerated(EnumType.STRING)
+	@jakarta.persistence.Transient
 	@Description("Company Type")
-	@Property
+	@Transient
 	private CompanyType company_type;
 	
 	/**
@@ -541,9 +528,9 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Complete Address")
-	@Property
+	@Transient
 	private String contact_address;
 	
 	/**
@@ -581,10 +568,17 @@ public class Partner {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Use a barcode to identify this contact.")
-	@Property
+	@Transient
 	private String barcode;
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Transient
+	@Transient
+	private Integer self;
 
 	public String getName() {
 		return name;
@@ -1026,22 +1020,6 @@ public class Partner {
 		this.user = user;
 	}
 
-	public Partner getSame_vat_partner() {
-		return same_vat_partner;
-	}
-
-	public void setSame_vat_partner(Partner same_vat_partner) {
-		this.same_vat_partner = same_vat_partner;
-	}
-
-	public Partner getSame_company_registry_partner() {
-		return same_company_registry_partner;
-	}
-
-	public void setSame_company_registry_partner(Partner same_company_registry_partner) {
-		this.same_company_registry_partner = same_company_registry_partner;
-	}
-
 	public List<Bank> getBanks() {
 		return banks;
 	}
@@ -1104,5 +1082,13 @@ public class Partner {
 
 	public void setCommercial_partner(Partner commercial_partner) {
 		this.commercial_partner = commercial_partner;
+	}
+
+	public Integer getSelf() {
+		return self;
+	}
+
+	public void setSelf(Integer self) {
+		this.self = self;
 	}
 }

@@ -69,9 +69,9 @@ public class Attachment {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Resource Name")
-	@Property
+	@Transient
 	private String res_name;
 	
 	/**
@@ -160,17 +160,17 @@ public class Attachment {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("File Content (raw)")
-	@Property
+	@Transient
 	private byte[] raw;
 	
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("File Content (base64)")
-	@Property
+	@Transient
 	private byte[] datas;
 	
 	/**

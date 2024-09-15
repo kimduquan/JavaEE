@@ -311,8 +311,8 @@ public class PaperFormat {
 	 * 
 	 */
 	@ElementCollection
-	@CollectionTable(name = "ir_actions_report", joinColumns = {
-			@JoinColumn(name = "paperformat_id")
+	@CollectionTable(name = "ir_act_report_xml", joinColumns = {
+			@JoinColumn(name = "paperformat_id", referencedColumnName = "id")
 	})
 	@Description("Associated reports")
 	@Transient
@@ -322,8 +322,8 @@ public class PaperFormat {
 	 * 
 	 */
 	@OneToMany(targetEntity = Report.class)
-	@JoinTable(name = "ir_actions_report", joinColumns = {
-			@JoinColumn(name = "paperformat_id")
+	@JoinTable(name = "ir_act_report_xml", joinColumns = {
+			@JoinColumn(name = "paperformat_id", referencedColumnName = "id")
 	})
 	@Relationship(type = "ASSOCIATED_REPORTS")
 	private List<Report> reports;
@@ -331,17 +331,17 @@ public class PaperFormat {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Print page width (mm)")
-	@Property
+	@Transient
 	private Float print_page_width;
 	
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Print page height (mm)")
-	@Property
+	@Transient
 	private Float print_page_height;
 
 	public String getName() {

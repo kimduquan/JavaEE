@@ -179,9 +179,9 @@ public class Module {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Description HTML")
-	@Property
+	@Transient
 	private String description_html;
 	
 	/**
@@ -219,9 +219,9 @@ public class Module {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Latest Version")
-	@Property
+	@Transient
 	private String installed_version;
 	
 	/**
@@ -373,17 +373,17 @@ public class Module {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Icon")
-	@Property
+	@Transient
 	private byte[] icon_image;
 	
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Flag")
-	@Property
+	@Transient
 	private String icon_flag;
 	
 	/**
@@ -398,8 +398,8 @@ public class Module {
 	/**
 	 * 
 	 */
-	@Column
-	@Property
+	@jakarta.persistence.Transient
+	@Transient
 	private Boolean has_iap;
 
 	public String getName() {

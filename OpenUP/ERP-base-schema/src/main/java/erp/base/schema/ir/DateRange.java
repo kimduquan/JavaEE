@@ -79,9 +79,9 @@ public class DateRange {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Actual Next Number")
-	@Property
+	@Transient
 	private Integer number_next_actual;
 
 	public Date getDate_from() {

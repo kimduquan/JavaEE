@@ -6,6 +6,7 @@ import org.eclipse.microprofile.graphql.Description;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Transient;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -117,17 +118,17 @@ public class Profile {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Speedscope")
-	@Property
+	@Transient
 	private byte[] speedscope;
 	
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Open")
-	@Property
+	@Transient
 	private String speedscope_url;
 
 	public Date getCreate_date() {

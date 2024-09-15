@@ -8,10 +8,7 @@ import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
 import erp.schema.util.EnumAttributeConverter;
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -106,27 +103,17 @@ public class Exclusion {
 	/**
 	 * 
 	 */
-	@Column(insertable = false, updatable = false)
+	@jakarta.persistence.Transient
 	@Description("Exclusion Module")
 	@Transient
 	private Integer exclusion_id;
-
-	/**
-	 * 
-	 */
-	@ManyToOne(targetEntity = Module.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "exclusion_id")
-	@Relationship(type = "EXCLUSION_MODULE")
-	private Module exclusion;
 	
 	/**
 	 * 
 	 */
-	@Column
-	@Enumerated(EnumType.STRING)
-	@Convert(converter = StatusAttributeConverter.class)
+	@jakarta.persistence.Transient
 	@Description("Status")
-	@Property
+	@Transient
 	private Status state;
 
 	public String getName() {
@@ -175,13 +162,5 @@ public class Exclusion {
 
 	public void setModule(Module module) {
 		this.module = module;
-	}
-
-	public Module getExclusion() {
-		return exclusion;
-	}
-
-	public void setExclusion(Module exclusion) {
-		this.exclusion = exclusion;
 	}
 }

@@ -12,8 +12,6 @@ import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.ogm.annotation.typeconversion.Convert;
 import erp.base.schema.ir.ui.View;
 import erp.base.schema.report.PaperFormat;
-import erp.base.schema.res.country.Country;
-import erp.base.schema.res.country.State;
 import erp.base.schema.res.currency.Currency;
 import erp.base.schema.res.partner.Partner;
 import erp.base.schema.res.users.Users;
@@ -138,7 +136,7 @@ public class Company {
 	 * 
 	 */
 	@ManyToOne(targetEntity = Company.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "parent_id")
+	@JoinColumn(name = "parent_id", referencedColumnName = "id")
 	@Relationship(type = "PARENT")
 	private Company parent;
 	
@@ -147,7 +145,7 @@ public class Company {
 	 */
 	@ElementCollection
 	@CollectionTable(name = "res_company", joinColumns = {
-			@JoinColumn(name = "parent_id")
+			@JoinColumn(name = "parent_id", referencedColumnName = "id")
 	})
 	@Description("Branches")
 	@Transient
@@ -164,7 +162,9 @@ public class Company {
 	 * 
 	 */
 	@ElementCollection
-	@CollectionTable(name = "res_company")
+	@CollectionTable(name = "res_company", joinColumns = {
+			@JoinColumn(name = "parent_id", referencedColumnName = "id")
+	})
 	@Transient
 	private List<Integer> all_child_ids;
 
@@ -184,32 +184,16 @@ public class Company {
 	/**
 	 * 
 	 */
-	@ElementCollection
-	@CollectionTable(name = "res_company")
+	@jakarta.persistence.Transient
 	@Transient
 	private List<Integer> parent_ids;
 	
 	/**
 	 * 
 	 */
-	@OneToMany(targetEntity =  Company.class)
-	@Relationship(type = "PARENTS")
-	private List<Company> parents;
-	
-	/**
-	 * 
-	 */
-	@Column(insertable = false, updatable = false)
+	@jakarta.persistence.Transient
 	@Transient
 	private Integer root_id;
-	
-	/**
-	 * 
-	 */
-	@ManyToOne(targetEntity = Company.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "root_id")
-	@Relationship(type = "ROOT")
-	private Company root;
 	
 	/**
 	 * 
@@ -256,16 +240,16 @@ public class Company {
 	/**
 	 * 
 	 */
-	@Column
-	@Property
+	@jakarta.persistence.Transient
+	@Transient
 	private Boolean is_company_details_empty;
 	
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Company Logo")
-	@Property
+	@Transient
 	private byte[] logo;
 	
 	/**
@@ -320,28 +304,35 @@ public class Company {
 	/**
 	 * 
 	 */
-	@Column
-	@Property
+	@jakarta.persistence.Transient
+	@Transient
 	private String street;
 	
 	/**
 	 * 
 	 */
-	@Column
-	@Property
+	@jakarta.persistence.Transient
+	@Transient
 	private String street2;
 	
 	/**
 	 * 
 	 */
-	@Column
-	@Property
+	@jakarta.persistence.Transient
+	@Transient
 	private String zip;
 	
 	/**
 	 * 
 	 */
-	@Column(insertable = false, updatable = false)
+	@jakarta.persistence.Transient
+	@Transient
+	private String city;
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Transient
 	@Description("Fed. State")
 	@Transient
 	private Integer state_id;
@@ -349,39 +340,16 @@ public class Company {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = State.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "state_id")
-	@Relationship(type = "FED_STATE")
-	private State state;
-	
-	/**
-	 * 
-	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Transient
 	private List<Integer> bank_ids;
 	
 	/**
 	 * 
 	 */
-	@OneToMany(targetEntity = Bank.class)
-	@Relationship(type = "BANKS")
-	private List<Bank> banks;
-	
-	/**
-	 * 
-	 */
-	@Column(insertable = false, updatable = false)
+	@jakarta.persistence.Transient
 	@Transient
 	private Integer country_id;
-	
-	/**
-	 * 
-	 */
-	@ManyToOne(targetEntity = Country.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "country_id")
-	@Relationship(type = "COUNTRY")
-	private Country country;
 	
 	/**
 	 * 
@@ -407,24 +375,24 @@ public class Company {
 	/**
 	 * 
 	 */
-	@Column
-	@Property
+	@jakarta.persistence.Transient
+	@Transient
 	private String website;
 	
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Tax ID")
-	@Property
+	@Transient
 	private String vat;
 	
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Company ID")
-	@Property
+	@Transient
 	private String company_registry;
 	
 	/**
@@ -485,8 +453,8 @@ public class Company {
 	/**
 	 * 
 	 */
-	@Column
-	@Property
+	@jakarta.persistence.Transient
+	@Transient
 	private Integer color;
 	
 	/**
@@ -502,9 +470,9 @@ public class Company {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Background Image")
-	@Property
+	@Transient
 	private byte[] layout_background_image;
 
 	public String getName() {
@@ -851,22 +819,6 @@ public class Company {
 		this.all_childs = all_childs;
 	}
 
-	public List<Company> getParents() {
-		return parents;
-	}
-
-	public void setParents(List<Company> parents) {
-		this.parents = parents;
-	}
-
-	public Company getRoot() {
-		return root;
-	}
-
-	public void setRoot(Company root) {
-		this.root = root;
-	}
-
 	public Partner getPartner() {
 		return partner;
 	}
@@ -891,30 +843,6 @@ public class Company {
 		this.users = users;
 	}
 
-	public State getState() {
-		return state;
-	}
-
-	public void setState(State state) {
-		this.state = state;
-	}
-
-	public List<Bank> getBanks() {
-		return banks;
-	}
-
-	public void setBanks(List<Bank> banks) {
-		this.banks = banks;
-	}
-
-	public Country getCountry() {
-		return country;
-	}
-
-	public void setCountry(Country country) {
-		this.country = country;
-	}
-
 	public PaperFormat getPaperformat() {
 		return paperformat;
 	}
@@ -929,5 +857,13 @@ public class Company {
 
 	public void setExternal_report_layout(View external_report_layout) {
 		this.external_report_layout = external_report_layout;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
 	}
 }

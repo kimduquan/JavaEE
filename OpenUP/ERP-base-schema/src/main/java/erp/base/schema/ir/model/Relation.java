@@ -43,8 +43,8 @@ public class Relation {
 	/**
 	 * 
 	 */
-	@JoinColumn(nullable = false)
 	@ManyToOne(targetEntity = Model.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "model", nullable = false)
 	@NotNull
 	@Relationship(type = "MODEL")
 	private Model model;
@@ -52,8 +52,8 @@ public class Relation {
 	/**
 	 * 
 	 */
-	@JoinColumn(nullable = false)
 	@ManyToOne(targetEntity = Module.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "module", nullable = false)
 	@NotNull
 	@Relationship(type = "MODULE")
 	private Module module;

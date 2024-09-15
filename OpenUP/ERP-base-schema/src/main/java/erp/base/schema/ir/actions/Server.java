@@ -206,19 +206,10 @@ public class Server extends Actions {
 	/**
 	 * 
 	 */
-	@ElementCollection
-	@CollectionTable(name = "ir_model")
+	@jakarta.persistence.Transient
 	@Description("Available Models")
 	@Transient
 	private List<Integer> available_model_ids;
-
-	/**
-	 * 
-	 */
-	@ManyToMany(targetEntity = Model.class)
-	@JoinTable(name = "ir_model")
-	@Relationship(type = "AVAILABLE_MODELS")
-	private List<Model> available_models;
 	
 	/**
 	 * 
@@ -273,9 +264,9 @@ public class Server extends Actions {
 	/**
 	 * 
 	 */
-	@Column(updatable = false)
+	@jakarta.persistence.Transient
 	@Description("Target Model Name")
-	@Property
+	@Transient
 	private String crud_model_name;
 	
 	/**
@@ -354,8 +345,8 @@ public class Server extends Actions {
 	/**
 	 * 
 	 */
-	@Column(updatable = false)
-	@Property
+	@jakarta.persistence.Transient
+	@Transient
 	private String update_field_type;
 	
 	/**
@@ -406,6 +397,7 @@ public class Server extends Actions {
 	 * 
 	 */
 	@ManyToOne(targetEntity = Selection.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "selection_value")
 	@Description("Custom Value")
 	@Relationship(type = "CUSTOM_VALUE")
 	private Selection selection_value;
@@ -413,9 +405,8 @@ public class Server extends Actions {
 	/**
 	 * 
 	 */
-	@Column
-	@Enumerated(EnumType.STRING)
-	@Property
+	@jakarta.persistence.Transient
+	@Transient
 	private ValueFieldToShow value_field_to_show;
 	
 	/**
@@ -447,9 +438,9 @@ public class Server extends Actions {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Sample Payload")
-	@Property
+	@Transient
 	private String webhook_sample_payload;
 
 	public String getName() {
@@ -682,14 +673,6 @@ public class Server extends Actions {
 
 	public void setModel(Model model) {
 		this.model = model;
-	}
-
-	public List<Model> getAvailable_models() {
-		return available_models;
-	}
-
-	public void setAvailable_models(List<Model> available_models) {
-		this.available_models = available_models;
 	}
 
 	public List<Server> getChilds() {

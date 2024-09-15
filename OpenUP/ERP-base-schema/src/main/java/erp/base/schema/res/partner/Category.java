@@ -78,7 +78,7 @@ public class Category {
 	 */
 	@ElementCollection
 	@CollectionTable(name = "res_partner_category", joinColumns = {
-			@JoinColumn(name = "parent_id")
+			@JoinColumn(name = "parent_id", referencedColumnName = "id")
 	})
 	@Description("Child Tags")
 	@Transient
@@ -111,7 +111,7 @@ public class Category {
 	 * 
 	 */
 	@ElementCollection
-	@CollectionTable(joinColumns = {@JoinColumn(name = "category_id")})
+	@CollectionTable(name = "res_partner_res_partner_category_rel", joinColumns = {@JoinColumn(name = "category_id")})
 	@Column(name = "partner_id")
 	@Description("Partners")
 	@Transient
@@ -121,7 +121,7 @@ public class Category {
 	 * 
 	 */
 	@ManyToMany(targetEntity = Partner.class)
-	@JoinTable(joinColumns = {@JoinColumn(name = "category_id")}, inverseJoinColumns = {@JoinColumn(name = "partner_id")})
+	@JoinTable(name = "res_partner_res_partner_category_rel", joinColumns = {@JoinColumn(name = "category_id")}, inverseJoinColumns = {@JoinColumn(name = "partner_id")})
 	@Relationship(type = "PARTNERS")
 	private List<Partner> partners;
 

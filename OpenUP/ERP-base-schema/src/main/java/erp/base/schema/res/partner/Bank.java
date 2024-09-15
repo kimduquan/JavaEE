@@ -44,9 +44,9 @@ public class Bank {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Type")
-	@Property
+	@Transient
 	private String acc_type;
 	
 	/**
@@ -61,17 +61,17 @@ public class Bank {
 	/**
 	 * 
 	 */
-	@Column(updatable = false)
+	@jakarta.persistence.Transient
 	@Description("Sanitized Account Number")
-	@Property
+	@Transient
 	private String sanitized_acc_number;
 	
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Account Holder Name")
-	@Property
+	@Transient
 	private String acc_holder_name;
 	
 	/**
@@ -115,20 +115,20 @@ public class Bank {
 	@ManyToOne(targetEntity = Bank.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "bank_id")
 	@Relationship(type = "BANK")
-	private String bank;
+	private Bank bank;
 	
 	/**
 	 * 
 	 */
-	@Column
-	@Property
+	@jakarta.persistence.Transient
+	@Transient
 	private String bank_name;
 	
 	/**
 	 * 
 	 */
-	@Column
-	@Property
+	@jakarta.persistence.Transient
+	@Transient
 	private String bank_bic;
 	
 	/**
@@ -289,11 +289,11 @@ public class Bank {
 		this.partner = partner;
 	}
 
-	public String getBank() {
+	public Bank getBank() {
 		return bank;
 	}
 
-	public void setBank(String bank) {
+	public void setBank(Bank bank) {
 		this.bank = bank;
 	}
 

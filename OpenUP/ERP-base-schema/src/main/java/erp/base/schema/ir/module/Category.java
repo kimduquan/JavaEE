@@ -68,7 +68,7 @@ public class Category {
 	 */
 	@ElementCollection
 	@CollectionTable(name = "ir_module_category", joinColumns = {
-			@JoinColumn(name = "parent_id")
+			@JoinColumn(name = "parent_id", referencedColumnName = "id")
 	})
 	@Description("Child Applications")
 	@Transient
@@ -135,9 +135,9 @@ public class Category {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("External ID")
-	@Property
+	@Transient
 	private String xml_id;
 
 	public String getName() {

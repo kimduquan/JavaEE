@@ -128,9 +128,9 @@ public class Groups {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Group Name")
-	@Property
+	@Transient
 	private String full_name;
 	
 	/**

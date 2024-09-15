@@ -10,7 +10,6 @@ import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.ogm.annotation.typeconversion.Convert;
 import erp.base.schema.ir.Rule;
-import erp.base.schema.ir.ui.View;
 import erp.schema.util.NameAttributeConverter;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -18,7 +17,6 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.JoinColumn;
@@ -114,18 +112,10 @@ public class Model {
 	/**
 	 * 
 	 */
-	@ElementCollection
-	@CollectionTable(name = "ir_model")
+	@jakarta.persistence.Transient
 	@Description("Inherited models")
 	@Transient
 	private List<Integer> inherited_model_ids;
-
-	/**
-	 * 
-	 */
-	@ManyToMany(targetEntity = Model.class)
-	@Relationship(type = "INHERITED_MODELS")
-	private List<Model> inherited_models;
 	
 	/**
 	 * 
@@ -141,7 +131,7 @@ public class Model {
 	 * 
 	 */
 	@ElementCollection
-	@CollectionTable(name = "ir_model_access", joinColumns = {@JoinColumn(name = "model_id")})
+	@CollectionTable(name = "ir_model_access", joinColumns = {@JoinColumn(name = "model_id", referencedColumnName = "id")})
 	@Description("Access")
 	@Transient
 	private List<Integer> access_ids;
@@ -180,16 +170,15 @@ public class Model {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("In Apps")
-	@Property
+	@Transient
 	private String modules;
 	
 	/**
 	 * 
 	 */
-	@ElementCollection
-	@CollectionTable(name = "ir_ui_view")
+	@jakarta.persistence.Transient
 	@Description("Views")
 	@Transient
 	private List<Integer> view_ids;
@@ -197,16 +186,9 @@ public class Model {
 	/**
 	 * 
 	 */
-	@OneToMany(targetEntity = View.class)
-	@Relationship(type = "VIEWS")
-	private List<View> views;
-	
-	/**
-	 * 
-	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Count (Incl. Archived)")
-	@Property
+	@Transient
 	private Integer count;
 
 	public String getName() {
@@ -329,14 +311,6 @@ public class Model {
 		this.fields = fields;
 	}
 
-	public List<Model> getInherited_models() {
-		return inherited_models;
-	}
-
-	public void setInherited_models(List<Model> inherited_models) {
-		this.inherited_models = inherited_models;
-	}
-
 	public List<Access> getAccesses() {
 		return accesses;
 	}
@@ -351,13 +325,5 @@ public class Model {
 
 	public void setRules(List<Rule> rules) {
 		this.rules = rules;
-	}
-
-	public List<View> getViews() {
-		return views;
-	}
-
-	public void setViews(List<View> views) {
-		this.views = views;
 	}
 }

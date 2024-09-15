@@ -72,17 +72,17 @@ public class Users {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Keep empty if you don't want the user to be able to connect on the system.")
-	@Property
+	@Transient
 	private String password;
 	
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Set Password")
-	@Property
+	@Transient
 	private String new_password;
 	
 	/**
@@ -104,9 +104,9 @@ public class Users {
 	/**
 	 * 
 	 */
-	@Column(updatable = false)
+	@jakarta.persistence.Transient
 	@Description("Partner is Active")
-	@Property
+	@Transient
 	private Boolean active_partner;
 	
 	/**
@@ -148,7 +148,7 @@ public class Users {
 	 */
 	@ElementCollection
 	@CollectionTable(name = "res_users_log", joinColumns = {
-			@JoinColumn(name = "create_uid")
+			@JoinColumn(name = "create_uid", referencedColumnName = "id")
 	})
 	@Description("User log entries")
 	@Transient
@@ -164,9 +164,9 @@ public class Users {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Latest authentication")
-	@Property
+	@Transient
 	private Date login_date;
 	
 	/**
@@ -180,17 +180,17 @@ public class Users {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Number of Companies")
-	@Property
+	@Transient
 	private Integer companies_count;
 	
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Timezone offset")
-	@Property
+	@Transient
 	private String tz_offset;
 	
 	/**
@@ -213,18 +213,10 @@ public class Users {
 	/**
 	 * 
 	 */
-	@Column(insertable = false, updatable = false)
+	@jakarta.persistence.Transient
 	@Description("Settings")
 	@Transient
 	private Integer res_users_settings_id;
-	
-	/**
-	 * 
-	 */
-	@ManyToOne(targetEntity = Settings.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "res_users_settings_id")
-	@Relationship(type = "SETTINGS")
-	private Settings res_users_setting;
 	
 	/**
 	 * 
@@ -265,39 +257,39 @@ public class Users {
 	/**
 	 * 
 	 */
-	@Column
-	@Property
+	@jakarta.persistence.Transient
+	@Transient
 	private String name;
 	
 	/**
 	 * 
 	 */
-	@Column
-	@Property
+	@jakarta.persistence.Transient
+	@Transient
 	private String email;
 	
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("# Access Rights")
-	@Property
+	@Transient
 	private Integer accesses_count;
 	
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("# Record Rules")
-	@Property
+	@Transient
 	private Integer rules_count;
 	
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("# Groups")
-	@Property
+	@Transient
 	private Integer groups_count;
 
 	public Integer getPartner_id() {
@@ -530,14 +522,6 @@ public class Users {
 
 	public void setRes_users_settings(List<Settings> res_users_settings) {
 		this.res_users_settings = res_users_settings;
-	}
-
-	public Settings getRes_users_setting() {
-		return res_users_setting;
-	}
-
-	public void setRes_users_setting(Settings res_users_setting) {
-		this.res_users_setting = res_users_setting;
 	}
 
 	public Company getCompany() {

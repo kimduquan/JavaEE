@@ -194,13 +194,13 @@ public class ActWindow extends Actions {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description(
 			"This function field computes the ordered list of views that should be enabled " +
             "when displaying the result of an action, federating view mode, views and " +
             "reference view. The result is returned as an ordered list of pairs (view_id,view_mode)."
             )
-	@Property
+	@Transient
 	private byte[] views;
 	
 	/**

@@ -59,7 +59,7 @@ public class Constraint {
 	/**
 	 * 
 	 */
-	@JoinColumn(nullable = false)
+	@JoinColumn(name = "model", nullable = false)
 	@ManyToOne(targetEntity = Model.class, fetch = FetchType.LAZY)
 	@NotNull
 	@Relationship(type = "MODEL")
@@ -68,7 +68,7 @@ public class Constraint {
 	/**
 	 * 
 	 */
-	@JoinColumn(nullable = false)
+	@JoinColumn(name = "module", nullable = false)
 	@ManyToOne(targetEntity = Module.class, fetch = FetchType.LAZY)
 	@NotNull
 	@Relationship(type = "MODULE")

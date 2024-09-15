@@ -112,7 +112,7 @@ public class Menu {
 	 */
 	@ElementCollection
 	@CollectionTable(name = "ir_ui_menu", joinColumns = {
-			@JoinColumn(name = "parent_id")
+			@JoinColumn(name = "parent_id", referencedColumnName = "id")
 	})
 	@Description("Child IDs")
 	@Transient
@@ -168,9 +168,9 @@ public class Menu {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Full Path")
-	@Property
+	@Transient
 	private String complete_name;
 	
 	/**
@@ -193,9 +193,9 @@ public class Menu {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Web Icon Image")
-	@Property
+	@Transient
 	private byte[] web_icon_data;
 
 	public String getName() {

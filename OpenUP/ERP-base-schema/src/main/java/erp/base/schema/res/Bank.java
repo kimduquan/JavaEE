@@ -13,6 +13,7 @@ import erp.schema.util.NameAttributeConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -74,6 +75,7 @@ public class Bank {
 	 * 
 	 */
 	@ManyToOne(targetEntity = State.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "state")
 	@Description("Fed. State")
 	@Relationship(type = "STATE")
 	private State state;
@@ -82,6 +84,7 @@ public class Bank {
 	 * 
 	 */
 	@ManyToOne(targetEntity = Country.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "country")
 	@Relationship(type = "COUNTRY")
 	private Country country;
 	

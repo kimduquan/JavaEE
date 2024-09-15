@@ -4,6 +4,7 @@ import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Transient;
 import erp.schema.util.EnumAttributeConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -105,9 +106,9 @@ public class ActClient extends Actions {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Supplementary arguments")
-	@Property
+	@Transient
 	private byte[] params;
 	
 	/**

@@ -9,10 +9,7 @@ import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
 import erp.schema.util.EnumAttributeConverter;
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -107,7 +104,7 @@ public class Dependency {
 	/**
 	 * 
 	 */
-	@Column(insertable = false, updatable = false)
+	@jakarta.persistence.Transient
 	@Description("Dependency")
 	@Transient
 	private Integer depend_id;
@@ -115,19 +112,9 @@ public class Dependency {
 	/**
 	 * 
 	 */
-	@ManyToOne(targetEntity = Module.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "depend_id")
-	@Relationship(type = "DEPENDENCY")
-	private Module depend;
-	
-	/**
-	 * 
-	 */
-	@Column
-	@Enumerated(EnumType.STRING)
-	@Convert(converter = StatusAttributeConverter.class)
+	@jakarta.persistence.Transient
 	@Description("Status")
-	@Property
+	@Transient
 	private Status state;
 	
 	/**
@@ -192,13 +179,5 @@ public class Dependency {
 
 	public void setModule(Module module) {
 		this.module = module;
-	}
-
-	public Module getDepend() {
-		return depend;
-	}
-
-	public void setDepend(Module depend) {
-		this.depend = depend;
 	}
 }

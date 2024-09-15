@@ -52,17 +52,17 @@ public class Rate {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("The currency of rate 1 to the rate of the currency.")
-	@Property
+	@Transient
 	private Float company_rate;
 	
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("The rate of the currency to the currency of rate 1 ")
-	@Property
+	@Transient
 	private Float inverse_company_rate;
 	
 	/**

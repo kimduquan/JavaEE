@@ -6,7 +6,6 @@ import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
-import erp.base.schema.ir.model.Model;
 import erp.base.schema.report.PaperFormat;
 import erp.base.schema.res.groups.Groups;
 import erp.schema.util.EnumAttributeConverter;
@@ -90,18 +89,10 @@ public class Report extends Actions {
 	/**
 	 * 
 	 */
-	@Column(insertable = false, updatable = false)
+	@jakarta.persistence.Transient
 	@Description("Model")
 	@Transient
 	private Integer model_id;
-
-	/**
-	 * 
-	 */
-	@ManyToOne(targetEntity = Model.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "model_id")
-	@Relationship(type = "MODEL")
-	private Model _model;
 	
 	/**
 	 * 
@@ -176,7 +167,7 @@ public class Report extends Actions {
 	/**
 	 * 
 	 */
-	@Column
+	@Column(columnDefinition = "jsonb")
 	@Description("Printed Report Name")
 	@Property
 	private String print_report_name;
@@ -291,14 +282,6 @@ public class Report extends Actions {
 
 	public void setAttachment(String attachment) {
 		this.attachment = attachment;
-	}
-
-	public Model get_model() {
-		return _model;
-	}
-
-	public void set_model(Model _model) {
-		this._model = _model;
 	}
 
 	public List<Groups> getGroups() {

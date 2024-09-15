@@ -41,18 +41,10 @@ public class GroupsImplied extends Groups {
 	/**
 	 * 
 	 */
-	@ElementCollection
-	@CollectionTable(name = "res_groups")
+	@jakarta.persistence.Transient
 	@Description("Transitively inherits")
 	@Transient
 	private List<Integer> trans_implied_ids;
-	
-	/**
-	 * 
-	 */
-	@ManyToMany(targetEntity = Groups.class)
-	@Relationship(type = "TRANSITIVELY_INHERITS")
-	private List<Groups> trans_implieds;
 
 	public List<Integer> getImplied_ids() {
 		return implied_ids;
@@ -76,13 +68,5 @@ public class GroupsImplied extends Groups {
 
 	public void setImplieds(List<Groups> implieds) {
 		this.implieds = implieds;
-	}
-
-	public List<Groups> getTrans_implieds() {
-		return trans_implieds;
-	}
-
-	public void setTrans_implieds(List<Groups> trans_implieds) {
-		this.trans_implieds = trans_implieds;
 	}
 }

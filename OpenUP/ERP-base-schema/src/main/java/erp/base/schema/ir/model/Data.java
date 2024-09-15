@@ -5,6 +5,7 @@ import org.eclipse.microprofile.graphql.Description;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Transient;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -38,9 +39,9 @@ public class Data {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Complete ID")
-	@Property
+	@Transient
 	private String complete_name;
 	
 	/**
@@ -81,9 +82,9 @@ public class Data {
 	/**
 	 * 
 	 */
-	@Column(updatable = false)
+	@jakarta.persistence.Transient
 	@Description("Reference")
-	@Property
+	@Transient
 	private String reference;
 
 	public String getName() {

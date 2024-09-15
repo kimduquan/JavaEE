@@ -8,9 +8,7 @@ import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
-import erp.base.schema.ir.model.Model;
 import erp.base.schema.res.groups.Groups;
-import erp.base.schema.ir.model.Data;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -143,17 +141,17 @@ public class View {
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("View Architecture")
-	@Property
+	@Transient
 	private String arch;
 	
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("Base View Architecture")
-	@Property
+	@Transient
 	private String arch_base;
 	
 	/**
@@ -200,7 +198,7 @@ public class View {
 	 * 
 	 */
 	@ManyToOne(targetEntity = View.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "inherit_id")
+	@JoinColumn(name = "inherit_id", referencedColumnName = "id")
 	@Relationship(type = "INHERITED_VIEW")
 	private View inherit;
 	
@@ -208,7 +206,9 @@ public class View {
 	 * 
 	 */
 	@ElementCollection
-	@CollectionTable(name = "ir_ui_view")
+	@CollectionTable(name = "ir_ui_view", joinColumns = {
+			@JoinColumn(name = "inherit_id", referencedColumnName = "id")
+	})
 	@Description("Views which inherit from this one")
 	@Transient
 	private List<Integer> inherit_children_ids;
@@ -217,32 +217,24 @@ public class View {
 	 * 
 	 */
 	@OneToMany(targetEntity = View.class)
-	@JoinColumn(name = "inherit_id")
+	@JoinColumn(name = "inherit_id", referencedColumnName = "id")
 	@Relationship(type = "INHERITED_CHILDRENS")
 	private List<View> inherit_childrens;
 	
 	/**
 	 * 
 	 */
-	@Column(insertable = false, updatable = false)
+	@jakarta.persistence.Transient
 	@Description("Model Data")
 	@Transient
 	private Integer model_data_id;
-
-	/**
-	 * 
-	 */
-	@ManyToOne(targetEntity = Data.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "model_data_id")
-	@Relationship(type = "MODEL_DATA")
-	private Data model_data;
 	
 	/**
 	 * 
 	 */
-	@Column
+	@jakarta.persistence.Transient
 	@Description("External ID")
-	@Property
+	@Transient
 	private String xml_id;
 	
 	/**
@@ -285,18 +277,10 @@ public class View {
 	/**
 	 * 
 	 */
-	@Column(insertable = false, updatable = false)
+	@jakarta.persistence.Transient
 	@Description("Model of the view")
 	@Transient
 	private Integer model_id;
-
-	/**
-	 * 
-	 */
-	@ManyToOne(targetEntity = Model.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "model_id")
-	@Relationship(type = "MODEL_OF_THE_VIEW")
-	private String _model;
 
 	public String getName() {
 		return name;
@@ -474,27 +458,11 @@ public class View {
 		this.inherit_childrens = inherit_childrens;
 	}
 
-	public Data getModel_data() {
-		return model_data;
-	}
-
-	public void setModel_data(Data model_data) {
-		this.model_data = model_data;
-	}
-
 	public List<Groups> getGroups() {
 		return groups;
 	}
 
 	public void setGroups(List<Groups> groups) {
 		this.groups = groups;
-	}
-
-	public String get_model() {
-		return _model;
-	}
-
-	public void set_model(String _model) {
-		this._model = _model;
 	}
 }

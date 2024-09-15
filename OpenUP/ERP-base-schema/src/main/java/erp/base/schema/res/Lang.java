@@ -5,6 +5,7 @@ import org.eclipse.microprofile.graphql.Description;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Transient;
 import erp.schema.util.EnumAttributeConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -202,6 +203,13 @@ public class Lang {
 	@Description("Thousands Separator")
 	@Property
 	private String thousands_sep = ",";
+	
+	/**
+	 * 
+	 */
+	@jakarta.persistence.Transient
+	@Transient
+	private String flag_image_url;
 
 	public String getName() {
 		return name;
@@ -305,5 +313,13 @@ public class Lang {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public String getFlag_image_url() {
+		return flag_image_url;
+	}
+
+	public void setFlag_image_url(String flag_image_url) {
+		this.flag_image_url = flag_image_url;
 	}
 }
