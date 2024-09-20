@@ -8,6 +8,7 @@ import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.Transient;
 import org.neo4j.ogm.annotation.typeconversion.Convert;
+import erp.schema.util.EnumAttributeConverter;
 import erp.schema.util.NameAttributeConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,6 +41,18 @@ public class Todo {
 		 * 
 		 */
 		done
+	}
+	
+	/**
+	 * 
+	 */
+	public class StatusAttributeConverter extends EnumAttributeConverter<Status> {
+		/**
+		 * 
+		 */
+		public StatusAttributeConverter() {
+			super(Status.class, null, null, null);
+		}
 	}
 	
 	/**
@@ -80,6 +93,7 @@ public class Todo {
 	 */
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
+	@jakarta.persistence.Convert(converter = StatusAttributeConverter.class)
 	@NotNull
 	@Description("Status")
 	@DefaultValue("open")
