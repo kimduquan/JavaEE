@@ -12,11 +12,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 
 /**
  * 
  */
 @Entity
+@PrimaryKeyJoinColumn(name = "gid")
 @NodeEntity
 public class GroupsImplied extends Groups {
 

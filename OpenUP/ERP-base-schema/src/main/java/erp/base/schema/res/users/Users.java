@@ -23,6 +23,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
@@ -30,10 +31,11 @@ import jakarta.validation.constraints.NotNull;
  * 
  */
 @Entity
+@PrimaryKeyJoinColumn(name = "partner_id")
 @Table(name = "res_users")
 @Description("User")
 @NodeEntity("User")
-public class Users {
+public class Users extends Partner {
 	
 	/**
 	 * 
@@ -55,7 +57,7 @@ public class Users {
 	 * 
 	 */
 	@ManyToOne(targetEntity = Partner.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "partner_id", nullable = false)
+	@JoinColumn(name = "partner_id", nullable = false, insertable = false, updatable = false)
 	@NotNull
 	@Relationship(type = "RELATED_PARTNER")
 	private Partner partner;
@@ -148,7 +150,7 @@ public class Users {
 	 */
 	@ElementCollection
 	@CollectionTable(name = "res_users_log", joinColumns = {
-			@JoinColumn(name = "create_uid", referencedColumnName = "id")
+			@JoinColumn(name = "create_uid")
 	})
 	@Description("User log entries")
 	@Transient

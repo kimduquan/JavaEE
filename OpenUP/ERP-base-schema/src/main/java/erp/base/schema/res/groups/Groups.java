@@ -18,6 +18,8 @@ import erp.schema.util.NameAttributeConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -30,6 +32,7 @@ import jakarta.validation.constraints.NotNull;
  * 
  */
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "res_groups")
 @Description("Access Groups")
 @NodeEntity("Access Groups")

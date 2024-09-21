@@ -23,7 +23,7 @@ public class APIKeysUser extends Users {
 	 */
 	@ElementCollection
 	@CollectionTable(name = "res_users_apikeys", joinColumns = {
-			@JoinColumn(name = "user_id", referencedColumnName = "id")
+			@JoinColumn(name = "user_id")
 	})
 	@Description("API Keys")
 	@Transient
