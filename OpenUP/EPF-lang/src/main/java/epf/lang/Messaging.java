@@ -47,7 +47,13 @@ public class Messaging implements HealthCheck {
 	/**
 	 * 
 	 */
-	private static final String DEFAULT_PROMPT_TEMPLATE = "%s\n\nAnswer using the following information:\n%s";
+	private static final String DEFAULT_PROMPT_TEMPLATE = """
+            Based on the Neo4j graph schema below, write a Cypher query that would answer the user's question:
+            %s
+
+            Question: %s
+            Cypher query:
+            """;
 	
 	private final Map<String, String> promptTemplates = Map.of(
 			//"llama3:instruct", "<|start_header_id|>user<|end_header_id|>\n\n%s<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n%s<|eot_id|>",

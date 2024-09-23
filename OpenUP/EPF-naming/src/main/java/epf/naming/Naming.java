@@ -402,6 +402,48 @@ public interface Naming {
 			 * 
 			 */
 			String PERSISTENCE_PATH = "epf.lang.persistence.path";
+			
+			/**
+			 * 
+			 */
+			interface Graph {
+				
+				/**
+				 * 
+				 */
+				String GRAPH_URL = "epf.lang.graph.url";
+				
+				/**
+				 * 
+				 */
+				String GRAPH_DATABASE = "epf.lang.graph.database";
+				
+				/**
+				 * 
+				 */
+				String GRAPH_USERNAME = "epf.lang.graph.username";
+				
+				/**
+				 * 
+				 */
+				String GRAPH_PASSWORD = "epf.lang.graph.password";
+				
+				/**
+				 * 
+				 */
+				interface Property {
+					
+					/**
+					 * 
+					 */
+					String TEXT = "epf.lang.graph.property.text";
+					
+					/**
+					 * 
+					 */
+					String ID = "epf.lang.graph.property.id";
+				}
+			}
 		}
 	}
 	
