@@ -48,19 +48,31 @@
 		<dependency>
 			<groupId>dev.langchain4j</groupId>
 			<artifactId>langchain4j-neo4j</artifactId>
-			<version>0.33.0</version>
+			<version>0.34.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/dev.langchain4j/langchain4j -->
 		<dependency>
 			<groupId>dev.langchain4j</groupId>
 			<artifactId>langchain4j</artifactId>
-			<version>0.33.0</version>
+			<version>0.34.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.jboss.narayana.rts/lra-coordinator-jar -->
 		<dependency>
 			<groupId>org.jboss.narayana.rts</groupId>
 			<artifactId>lra-coordinator-jar</artifactId>
 			<version>7.0.2.Final</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.graphql-java/graphql-java -->
+		<dependency>
+		    <groupId>com.graphql-java</groupId>
+		    <artifactId>graphql-java</artifactId>
+		    <version>22.3</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.graphql-java/graphql-java-extended-scalars -->
+		<dependency>
+		    <groupId>com.graphql-java</groupId>
+		    <artifactId>graphql-java-extended-scalars</artifactId>
+		    <version>22.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.quarkiverse.jnosql/quarkus-jnosql-document-mongodb -->
 		<dependency>
