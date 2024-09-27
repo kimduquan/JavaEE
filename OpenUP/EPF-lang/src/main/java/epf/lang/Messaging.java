@@ -48,11 +48,11 @@ public class Messaging implements HealthCheck {
 	 * 
 	 */
 	private static final String DEFAULT_PROMPT_TEMPLATE = """
-            Based on the Neo4j graph schema below, write a Cypher query that would answer the user's question:
+            Based on the GraphQL schema below, write a GraphQL query that would answer the user's question:
             %s
 
             Question: %s
-            Cypher query:
+            GraphQL query:
             """;
 	
 	private final Map<String, String> promptTemplates = Map.of(
