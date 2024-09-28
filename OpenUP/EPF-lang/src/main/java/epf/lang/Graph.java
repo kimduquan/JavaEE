@@ -94,6 +94,115 @@ public class Graph implements HealthCheck {
     	return _transient != null;
     }
     
+    private FieldDefinition.Builder buildPrimitiveField(final Class<?> attributeType, final FieldDefinition.Builder newField) {
+    	if(attributeType.equals(Integer.class) || attributeType.equals(int.class)) {
+			newField.type(TypeName.newTypeName("Int").build());
+		}
+		else if(attributeType.equals(Float.class) || attributeType.equals(float.class)) {
+			newField.type(TypeName.newTypeName("Float").build());
+		}
+		else if(attributeType.equals(String.class) || attributeType.equals(Date.class)) {
+			newField.type(TypeName.newTypeName("String").build());
+		}
+		else if(attributeType.equals(Boolean.class) || attributeType.equals(boolean.class)) {
+			newField.type(TypeName.newTypeName("Boolean").build());
+		}
+		else if(attributeType.equals(Long.class) || attributeType.equals(long.class) || attributeType.equals(Timestamp.class)){
+			newField.type(TypeName.newTypeName("Long").build());
+		}
+		return newField;
+    }
+    
+    private FieldDefinition.Builder buildEnumField(final TypeDefinitionRegistry registry, final Class<?> attributeType, final FieldDefinition.Builder newField){
+    	final EnumTypeDefinition.Builder newEnum = EnumTypeDefinition.newEnumTypeDefinition();
+		newEnum.name(attributeType.getSimpleName());
+		for(Object enumConstant : attributeType.getEnumConstants()) {
+			newEnum.enumValueDefinition(EnumValueDefinition.newEnumValueDefinition().name(enumConstant.toString()).build());
+		}
+		registry.add(newEnum.build());
+		newField.type(TypeName.newTypeName(attributeType.getSimpleName()).build());
+		return newField;
+    }
+    
+    private FieldDefinition.Builder buildElementCollection(final TypeDefinitionRegistry registry, final Map<String, EntityType<?>> entityTypes, final Attribute<?, ?> attribute, final FieldDefinition.Builder newField){
+    	final PluralAttribute<?, ?, ?> pluralAttribute = (PluralAttribute<?, ?, ?>) attribute;
+		final Class<?> fieldClass = pluralAttribute.getBindableJavaType();
+		switch(pluralAttribute.getBindableType()) {
+			case ENTITY_TYPE:
+				final String entityName = entityTypes.get(fieldClass.getName()).getName();
+				newField.type(ListType.newListType(TypeName.newTypeName(entityName).build()).build());
+				break;
+			case PLURAL_ATTRIBUTE:
+				if(fieldClass.equals(Integer.class) || fieldClass.equals(int.class)) {
+					newField.type(ListType.newListType(TypeName.newTypeName("Int").build()).build());
+				}
+				else if(fieldClass.equals(Float.class) || fieldClass.equals(float.class)) {
+					newField.type(ListType.newListType(TypeName.newTypeName("Float").build()).build());
+				}
+				else if(fieldClass.equals(String.class) || fieldClass.equals(Date.class)) {
+					newField.type(ListType.newListType(TypeName.newTypeName("String").build()).build());
+				}
+				else if(fieldClass.equals(Boolean.class) || fieldClass.equals(boolean.class)) {
+					newField.type(ListType.newListType(TypeName.newTypeName("Boolean").build()).build());
+				}
+				else if(fieldClass.equals(Long.class) || fieldClass.equals(long.class) || fieldClass.equals(Timestamp.class)) {
+					newField.type(ListType.newListType(TypeName.newTypeName("Long").build()).build());
+				}
+				else if(fieldClass.isEnum()) {
+					final EnumTypeDefinition.Builder newEnum = EnumTypeDefinition.newEnumTypeDefinition();
+					newEnum.name(fieldClass.getSimpleName());
+					for(Object enumConstant : fieldClass.getEnumConstants()) {
+						newEnum.enumValueDefinition(EnumValueDefinition.newEnumValueDefinition().name(enumConstant.toString()).build());
+					}
+					registry.add(newEnum.build());
+					newField.type(ListType.newListType(TypeName.newTypeName(fieldClass.getSimpleName()).build()).build());
+				}
+				break;
+			case SINGULAR_ATTRIBUTE:
+				if(fieldClass.equals(Integer.class) || fieldClass.equals(int.class)) {
+					newField.type(TypeName.newTypeName("Int").build());
+				}
+				else if(fieldClass.equals(Float.class) || fieldClass.equals(float.class)) {
+					newField.type(TypeName.newTypeName("Float").build());
+				}
+				else if(fieldClass.equals(String.class) || fieldClass.equals(Date.class)) {
+					newField.type(TypeName.newTypeName("String").build());
+				}
+				else if(fieldClass.equals(Boolean.class) || fieldClass.equals(boolean.class)) {
+					newField.type(TypeName.newTypeName("Boolean").build());
+				}
+				else if(fieldClass.equals(Long.class) || fieldClass.equals(long.class) || fieldClass.equals(Timestamp.class)) {
+					newField.type(TypeName.newTypeName("Long").build());
+				}
+				else if(fieldClass.isEnum()) {
+					final EnumTypeDefinition.Builder newEnum = EnumTypeDefinition.newEnumTypeDefinition();
+					newEnum.name(fieldClass.getSimpleName());
+					for(Object enumConstant : fieldClass.getEnumConstants()) {
+						newEnum.enumValueDefinition(EnumValueDefinition.newEnumValueDefinition().name(enumConstant.toString()).build());
+					}
+					registry.add(newEnum.build());
+					newField.type(TypeName.newTypeName(fieldClass.getSimpleName()).build());
+				}
+				break;
+			default:
+				break;
+		}
+		return newField;
+    }
+    
+    private FieldDefinition.Builder buildManyToMany(final Map<String, EntityType<?>> entityTypes, final Attribute<?, ?> attribute, final FieldDefinition.Builder newField) {
+    	final PluralAttribute<?, ?, ?> manyToManyAttribute = (PluralAttribute<?, ?, ?>) attribute;
+		final String entityName = entityTypes.get(manyToManyAttribute.getElementType().getJavaType().getName()).getName();
+		newField.type(ListType.newListType(TypeName.newTypeName(entityName).build()).build());
+		return newField;
+    }
+    
+    private FieldDefinition.Builder buildOneToMany(final Map<String, EntityType<?>> entityTypes, final Attribute<?, ?> attribute, final FieldDefinition.Builder newField) {
+    	final PluralAttribute<?, ?, ?> oneToManyAttribute = (PluralAttribute<?, ?, ?>) attribute;
+		newField.type(ListType.newListType(TypeName.newTypeName(entityTypes.get(oneToManyAttribute.getElementType().getJavaType().getName()).getName()).build()).build());
+		return newField;
+    }
+    
     private FieldDefinition buildFieldDefinition(final TypeDefinitionRegistry registry, final Map<String, EntityType<?>> entityTypes, final Attribute<?, ?> attribute) {
 		final FieldDefinition.Builder newField = FieldDefinition.newFieldDefinition();
 		newField.name(attribute.getName());
@@ -101,108 +210,26 @@ public class Graph implements HealthCheck {
 		final Class<?> attributeType = attribute.getJavaType();
 		switch(attribute.getPersistentAttributeType()) {
 			case BASIC:
-				if(attributeType.equals(Integer.class) || attributeType.equals(int.class)) {
-					newField.type(TypeName.newTypeName("Int").build());
+				if(attributeType.isEnum()) {
+					buildEnumField(registry, attributeType, newField);
 				}
-				else if(attributeType.equals(Float.class) || attributeType.equals(float.class)) {
-					newField.type(TypeName.newTypeName("Float").build());
-				}
-				else if(attributeType.equals(String.class) || attributeType.equals(Date.class)) {
-					newField.type(TypeName.newTypeName("String").build());
-				}
-				else if(attributeType.equals(Boolean.class) || attributeType.equals(boolean.class)) {
-					newField.type(TypeName.newTypeName("Boolean").build());
-				}
-				else if(attributeType.equals(Long.class) || attributeType.equals(long.class) || attributeType.equals(Timestamp.class)){
-					newField.type(TypeName.newTypeName("Long").build());
-				}
-				else if(attributeType.isEnum()) {
-					final EnumTypeDefinition.Builder newEnum = EnumTypeDefinition.newEnumTypeDefinition();
-					newEnum.name(attributeType.getSimpleName());
-					for(Object enumConstant : attributeType.getEnumConstants()) {
-						newEnum.enumValueDefinition(EnumValueDefinition.newEnumValueDefinition().name(enumConstant.toString()).build());
-					}
-					registry.add(newEnum.build());
-					newField.type(TypeName.newTypeName(attributeType.getSimpleName()).build());
-				}
+		    	else {
+		    		buildPrimitiveField(attributeType, newField);
+		    	}
 				break;
 			case ELEMENT_COLLECTION:
-				final PluralAttribute<?, ?, ?> pluralAttribute = (PluralAttribute<?, ?, ?>) attribute;
-				final Class<?> fieldClass = pluralAttribute.getBindableJavaType();
-				switch(pluralAttribute.getBindableType()) {
-					case ENTITY_TYPE:
-						final String entityName = entityTypes.get(fieldClass.getName()).getName();
-						newField.type(ListType.newListType(TypeName.newTypeName(entityName).build()).build());
-						break;
-					case PLURAL_ATTRIBUTE:
-						if(fieldClass.equals(Integer.class) || fieldClass.equals(int.class)) {
-							newField.type(ListType.newListType(TypeName.newTypeName("Int").build()).build());
-						}
-						else if(fieldClass.equals(Float.class) || fieldClass.equals(float.class)) {
-							newField.type(ListType.newListType(TypeName.newTypeName("Float").build()).build());
-						}
-						else if(fieldClass.equals(String.class) || fieldClass.equals(Date.class)) {
-							newField.type(ListType.newListType(TypeName.newTypeName("String").build()).build());
-						}
-						else if(fieldClass.equals(Boolean.class) || fieldClass.equals(boolean.class)) {
-							newField.type(ListType.newListType(TypeName.newTypeName("Boolean").build()).build());
-						}
-						else if(fieldClass.equals(Long.class) || fieldClass.equals(long.class) || fieldClass.equals(Timestamp.class)) {
-							newField.type(ListType.newListType(TypeName.newTypeName("Long").build()).build());
-						}
-						else if(fieldClass.isEnum()) {
-							final EnumTypeDefinition.Builder newEnum = EnumTypeDefinition.newEnumTypeDefinition();
-							newEnum.name(fieldClass.getSimpleName());
-							for(Object enumConstant : fieldClass.getEnumConstants()) {
-								newEnum.enumValueDefinition(EnumValueDefinition.newEnumValueDefinition().name(enumConstant.toString()).build());
-							}
-							registry.add(newEnum.build());
-							newField.type(ListType.newListType(TypeName.newTypeName(fieldClass.getSimpleName()).build()).build());
-						}
-						break;
-					case SINGULAR_ATTRIBUTE:
-						if(fieldClass.equals(Integer.class) || fieldClass.equals(int.class)) {
-							newField.type(TypeName.newTypeName("Int").build());
-						}
-						else if(fieldClass.equals(Float.class) || fieldClass.equals(float.class)) {
-							newField.type(TypeName.newTypeName("Float").build());
-						}
-						else if(fieldClass.equals(String.class) || fieldClass.equals(Date.class)) {
-							newField.type(TypeName.newTypeName("String").build());
-						}
-						else if(fieldClass.equals(Boolean.class) || fieldClass.equals(boolean.class)) {
-							newField.type(TypeName.newTypeName("Boolean").build());
-						}
-						else if(fieldClass.equals(Long.class) || fieldClass.equals(long.class) || fieldClass.equals(Timestamp.class)) {
-							newField.type(TypeName.newTypeName("Long").build());
-						}
-						else if(fieldClass.isEnum()) {
-							final EnumTypeDefinition.Builder newEnum = EnumTypeDefinition.newEnumTypeDefinition();
-							newEnum.name(fieldClass.getSimpleName());
-							for(Object enumConstant : fieldClass.getEnumConstants()) {
-								newEnum.enumValueDefinition(EnumValueDefinition.newEnumValueDefinition().name(enumConstant.toString()).build());
-							}
-							registry.add(newEnum.build());
-							newField.type(TypeName.newTypeName(fieldClass.getSimpleName()).build());
-						}
-						break;
-					default:
-						break;
-				}
+				buildElementCollection(registry, entityTypes, attribute, newField);
 				break;
 			case EMBEDDED:
 				break;
 			case MANY_TO_MANY:
-				final PluralAttribute<?, ?, ?> manyToManyAttribute = (PluralAttribute<?, ?, ?>) attribute;
-				final String entityName = entityTypes.get(manyToManyAttribute.getElementType().getJavaType().getName()).getName();
-				newField.type(ListType.newListType(TypeName.newTypeName(entityName).build()).build());
+				buildManyToMany(entityTypes, attribute, newField);
 				break;
 			case MANY_TO_ONE:
 				newField.type(TypeName.newTypeName(entityTypes.get(attributeType.getName()).getName()).build());
 				break;
 			case ONE_TO_MANY:
-				final PluralAttribute<?, ?, ?> oneToManyAttribute = (PluralAttribute<?, ?, ?>) attribute;
-				newField.type(ListType.newListType(TypeName.newTypeName(entityTypes.get(oneToManyAttribute.getElementType().getJavaType().getName()).getName()).build()).build());
+				buildOneToMany(entityTypes, attribute, newField);
 				break;
 			case ONE_TO_ONE:
 				newField.type(TypeName.newTypeName(entityTypes.get(attributeType.getName()).getName()).build());
