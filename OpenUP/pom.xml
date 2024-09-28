@@ -215,8 +215,8 @@
 			<dependency>
 			    <groupId>org.eclipse.microprofile.graphql</groupId>
 			    <artifactId>microprofile-graphql-api</artifactId>
-			    <version>1.0</version>
-				<!--<scope>provided</scope>-->
+			    <version>2.0</version>
+			    <!--<scope>provided</scope>-->
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.config/microprofile-config-api -->
 			<dependency>
