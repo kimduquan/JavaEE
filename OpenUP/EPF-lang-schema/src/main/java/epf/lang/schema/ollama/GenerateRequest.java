@@ -10,8 +10,9 @@ public class GenerateRequest {
 	private String suffix;
 	private String[] images;
 	private int[] context;
-	private boolean stream;
-	private boolean raw;
+	private boolean stream = true;
+	private boolean raw = false;
+	private String keep_alive = "5m";
 	
 	public String getModel() {
 		return model;
@@ -54,5 +55,11 @@ public class GenerateRequest {
 	}
 	public void setStream(boolean stream) {
 		this.stream = stream;
+	}
+	public String getKeep_alive() {
+		return keep_alive;
+	}
+	public void setKeep_alive(String keep_alive) {
+		this.keep_alive = keep_alive;
 	}
 }

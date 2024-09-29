@@ -2,23 +2,29 @@ package epf.lang;
 
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
-
+import java.util.stream.Collectors;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
-
 import epf.lang.ollama.Ollama;
 import epf.lang.schema.ollama.GenerateRequest;
 import epf.lang.schema.ollama.GenerateResponse;
+import epf.lang.schema.ollama.Parameter;
+import epf.lang.schema.ollama.Parameters;
+import epf.lang.schema.ollama.Tool;
+import epf.lang.schema.ollama.Function;
 import epf.naming.Naming;
+import epf.util.json.ext.JsonUtil;
 import epf.util.logging.LogManager;
 import erp.base.schema.ir.model.Model;
 import graphql.GraphQL;
@@ -70,6 +76,19 @@ public class Graph implements HealthCheck {
 
             Question: %s
             GraphQL query:
+            """;
+	
+	/**
+	 * 
+	 */
+	private static final String DEFAULT_RAW_PROMPT_TEMPLATE = """
+			[AVAILABLE_TOOLS]%s[/AVAILABLE_TOOLS]
+			[INST]Based on the GraphQL schema below, write a GraphQL query that would answer the user's question:
+            %s
+
+            Question: %s
+            GraphQL query:
+            [/INST]
             """;
 	
 	/**
@@ -333,18 +352,48 @@ public class Graph implements HealthCheck {
 		return printer.print(graph.getGraphQLSchema());
 	}
 	
+	private Optional<List<Tool>> getTools(){
+		final List<Tool> tools = new ArrayList<>();
+		final Parameter query = new Parameter();
+		query.setType("string");
+		query.setDescription("a GraphQL query");
+		final Map<String, Parameter> properties = Map.of("query", query);
+		final List<String> requireld = properties.keySet().stream().collect(Collectors.toList());
+		final Parameters parameters = new Parameters();
+		parameters.setProperties(properties);
+		parameters.setRequired(requireld);
+		parameters.setType("object");
+		final Function graphQLFunction = new Function();
+		graphQLFunction.setDescription("execute a GraphQL query");
+		graphQLFunction.setName("execute_graphql_query");
+		graphQLFunction.setParameters(parameters);
+		final Tool graphQLTool = new Tool();
+		graphQLTool.setType("function");
+		graphQLTool.setFunction(graphQLFunction);
+		tools.add(graphQLTool);
+		return Optional.of(tools);
+	}
+	
 	/**
 	 * @param query
 	 * @return
+	 * @throws Exception
 	 */
-	public String generateQuery(final String query) {
+	public String generateQuery(final String query) throws Exception {
 		final String schema = printSchema();
-		final String prompt = String.format(DEFAULT_PROMPT_TEMPLATE, schema, query);
+		final Optional<List<Tool>> tools = getTools();
 		final GenerateRequest request = new GenerateRequest();
+		if(tools.isPresent()) {
+			request.setPrompt(String.format(DEFAULT_RAW_PROMPT_TEMPLATE, JsonUtil.toString(tools), schema, query));
+			request.setRaw(true);
+		}
+		else {
+			request.setPrompt(String.format(DEFAULT_PROMPT_TEMPLATE, schema, query));
+			request.setRaw(false);
+		}
 		request.setModel(modelName);
-		request.setPrompt(prompt);
 		request.setStream(false);
-		request.setRaw(false);
+		request.setKeep_alive("120m");
 		final GenerateResponse response = ollama.generate(request);
 		return response.getResponse();
 	}

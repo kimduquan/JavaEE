@@ -59,6 +59,7 @@ public class Lang {
 	/**
 	 * @param query
 	 * @return
+	 * @throws Exception 
 	 */
 	@Path(Naming.Lang.Internal.GRAPH)
 	@GET
@@ -66,7 +67,7 @@ public class Lang {
 	@RunOnVirtualThread
 	public String generateQuery(
 			@QueryParam("query") 
-			final String query) {
+			final String query) throws Exception {
 		return graph.generateQuery(query);
 	}
 	
