@@ -8,9 +8,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
+
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
+
+import epf.lang.ollama.Ollama;
+import epf.lang.schema.ollama.GenerateRequest;
+import epf.lang.schema.ollama.GenerateResponse;
+import epf.naming.Naming;
 import epf.util.logging.LogManager;
 import erp.base.schema.ir.model.Model;
 import graphql.GraphQL;
@@ -56,6 +64,17 @@ public class Graph implements HealthCheck {
 	/**
 	 * 
 	 */
+	private static final String DEFAULT_PROMPT_TEMPLATE = """
+            Based on the GraphQL schema below, write a GraphQL query that would answer the user's question:
+            %s
+
+            Question: %s
+            GraphQL query:
+            """;
+	
+	/**
+	 * 
+	 */
 	private GraphQL graph;
 	
 	/**
@@ -63,6 +82,19 @@ public class Graph implements HealthCheck {
      */
     @Inject
     EntityManager manager;
+    
+    /**
+	 * 
+	 */
+	@Inject
+	@ConfigProperty(name = Naming.Lang.Internal.LANGUAGE_MODEL)
+	String modelName;
+	
+	/**
+	 * 
+	 */
+	@RestClient
+	Ollama ollama;
     
     @PostConstruct
 	void postConstruct() {
@@ -295,10 +327,26 @@ public class Graph implements HealthCheck {
 		return graph;
 	}
 	
-	public String printSchema() {
+	private String printSchema() {
 		final Options options = Options.defaultOptions().includeDirectiveDefinitions(false);
 		final SchemaPrinter printer = new SchemaPrinter(options);
 		return printer.print(graph.getGraphQLSchema());
+	}
+	
+	/**
+	 * @param query
+	 * @return
+	 */
+	public String generateQuery(final String query) {
+		final String schema = printSchema();
+		final String prompt = String.format(DEFAULT_PROMPT_TEMPLATE, schema, query);
+		final GenerateRequest request = new GenerateRequest();
+		request.setModel(modelName);
+		request.setPrompt(prompt);
+		request.setStream(false);
+		request.setRaw(false);
+		final GenerateResponse response = ollama.generate(request);
+		return response.getResponse();
 	}
 	
 	@Override

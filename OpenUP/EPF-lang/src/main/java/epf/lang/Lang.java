@@ -1,9 +1,7 @@
 package epf.lang;
 
 import java.io.InputStream;
-import java.util.List;
 import org.eclipse.microprofile.health.Readiness;
-import dev.langchain4j.data.segment.TextSegment;
 import epf.lang.schema.ollama.ChatRequest;
 import epf.naming.Naming;
 import io.smallrye.common.annotation.RunOnVirtualThread;
@@ -52,6 +50,39 @@ public class Lang {
 	Cache cache;
 	
 	/**
+	 * 
+	 */
+	@Inject
+	@Readiness
+	Graph graph;
+	
+	/**
+	 * @param query
+	 * @return
+	 */
+	@Path(Naming.Lang.Internal.GRAPH)
+	@GET
+	@Produces(MediaType.TEXT_PLAIN)
+	@RunOnVirtualThread
+	public String generateQuery(
+			@QueryParam("query") 
+			final String query) {
+		return graph.generateQuery(query);
+	}
+	
+	/**
+	 * @param query
+	 * @return
+	 */
+	@Path(Naming.Lang.Internal.GRAPH)
+	@POST
+	@Consumes(MediaType.TEXT_PLAIN)
+	@RunOnVirtualThread
+	public Response executeQuery(final String query) {
+		return Response.ok().build();
+	}
+	
+	/**
 	 * @param input
 	 */
 	@Path(Naming.PERSISTENCE)
@@ -61,21 +92,6 @@ public class Lang {
 	public Response persist(final InputStream input) {
 		persistence.persist(input);
 		return Response.ok().build();
-	}
-
-	/**
-	 * @param query
-	 * @return
-	 */
-	@Path(Naming.PERSISTENCE)
-	@GET
-	@Produces(MediaType.TEXT_PLAIN)
-    @RunOnVirtualThread
-	public String executeQuery(
-			@QueryParam("query") 
-			final String query) {
-		final List<TextSegment> segments = persistence.executeQuery(query);
-		return messaging.injectPrompt(query, segments);
 	}
 	
 	/**
@@ -124,10 +140,8 @@ public class Lang {
 			@HeaderParam("id")
 			final String id, 
 			final String text) {
-		final Link executeQueryLink = Link.fromUriBuilder(UriBuilder.fromPath(Naming.PERSISTENCE).queryParam("query", text)).rel(Naming.LANG).type(HttpMethod.GET).title("#1").build();
-		final Link putLink = Link.fromUriBuilder(UriBuilder.fromPath(Naming.CACHE).queryParam("id", id)).rel(Naming.LANG).type(HttpMethod.PUT).title("#2").build();
-		final Link ollamaLink = Link.fromPath("api/chat").rel(Naming.Lang.Internal.OLLAMA).type(HttpMethod.POST).param("volatile", id).title("#3").build();
-		final Link streamLink = Link.fromPath("messaging/lang").rel(Naming.GATEWAY).type("ws").param("volatile", id).title("#4").build();
-		return Response.ok().links(executeQueryLink, putLink, ollamaLink, streamLink).build();
+		final Link generateQueryLink = Link.fromUriBuilder(UriBuilder.fromPath(Naming.Lang.Internal.GRAPH).queryParam("query", text)).rel(Naming.LANG).type(HttpMethod.GET).title("#1").build();
+		final Link executeQueryLink = Link.fromUriBuilder(UriBuilder.fromPath(Naming.Lang.Internal.GRAPH)).rel(Naming.LANG).type(HttpMethod.POST).title("#2").build();
+		return Response.ok().links(generateQueryLink, executeQueryLink).build();
 	}
 }

@@ -11,6 +11,7 @@ import epf.lang.schema.ollama.ChatRequest;
 import epf.lang.schema.ollama.EmbeddingsRequest;
 import epf.lang.schema.ollama.EmbeddingsResponse;
 import epf.lang.schema.ollama.GenerateRequest;
+import epf.lang.schema.ollama.GenerateResponse;
 import epf.naming.Naming;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
@@ -35,7 +36,7 @@ public interface Ollama {
 	 */
 	@Path("generate")
 	@POST
-	CompletionStage<InputStream> generate(final GenerateRequest request);
+	GenerateResponse generate(final GenerateRequest request);
 	
 	/**
 	 * @param request

@@ -376,6 +376,11 @@ public interface Naming {
 			/**
 			 * 
 			 */
+			String GRAPH = "graph";
+			
+			/**
+			 * 
+			 */
 			String OLLAMA = "ollama";
 			
 			/**

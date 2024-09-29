@@ -10,6 +10,7 @@ public class GenerateRequest {
 	private String suffix;
 	private String[] images;
 	private int[] context;
+	private boolean stream;
 	private boolean raw;
 	
 	public String getModel() {
@@ -47,5 +48,11 @@ public class GenerateRequest {
 	}
 	public void setSuffix(String suffix) {
 		this.suffix = suffix;
+	}
+	public boolean isStream() {
+		return stream;
+	}
+	public void setStream(boolean stream) {
+		this.stream = stream;
 	}
 }
