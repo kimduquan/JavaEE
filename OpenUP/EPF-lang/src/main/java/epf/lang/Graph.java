@@ -82,13 +82,12 @@ public class Graph implements HealthCheck {
 	 * 
 	 */
 	private static final String DEFAULT_RAW_PROMPT_TEMPLATE = """
-			[AVAILABLE_TOOLS]%s[/AVAILABLE_TOOLS]
-			[INST]Based on the GraphQL schema below, write a GraphQL query that would answer the user's question:
+			[AVAILABLE_TOOLS] %s [/AVAILABLE_TOOLS]
+			[INST] Based on the GraphQL schema below, write a GraphQL query that would answer the user's question:
             %s
 
             Question: %s
-            GraphQL query:
-            [/INST]
+            GraphQL query: [/INST]
             """;
 	
 	/**
@@ -325,7 +324,7 @@ public class Graph implements HealthCheck {
     }
     
     private RuntimeWiring buildRuntime(final TypeDefinitionRegistry registry) {
-		registry.add(ObjectTypeDefinition.newObjectTypeDefinition().name("Query").fieldDefinition(FieldDefinition.newFieldDefinition().name("models").type(ListType.newListType(TypeName.newTypeName("Model").build()).build()).build()).build());
+		registry.add(ObjectTypeDefinition.newObjectTypeDefinition().name("Query").fieldDefinition(FieldDefinition.newFieldDefinition().name("models").description(new Description("list of model object", null, false)).type(ListType.newListType(TypeName.newTypeName("Model").build()).build()).build()).build());
     	final CriteriaBuilder queryBuilder = manager.getCriteriaBuilder();
 		final CriteriaQuery<Model> query = queryBuilder.createQuery(Model.class);
 		final Root<Model> root = query.from(Model.class);
@@ -347,7 +346,7 @@ public class Graph implements HealthCheck {
 	}
 	
 	private String printSchema() {
-		final Options options = Options.defaultOptions().includeDirectiveDefinitions(false);
+		final Options options = Options.defaultOptions().includeDirectiveDefinitions(false).descriptionsAsHashComments(true);
 		final SchemaPrinter printer = new SchemaPrinter(options);
 		return printer.print(graph.getGraphQLSchema());
 	}
