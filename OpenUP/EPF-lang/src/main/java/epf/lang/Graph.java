@@ -363,7 +363,7 @@ public class Graph implements HealthCheck {
 		parameters.setRequired(requireld);
 		parameters.setType("object");
 		final Function graphQLFunction = new Function();
-		graphQLFunction.setDescription("execute a GraphQL query");
+		graphQLFunction.setDescription("execute given GraphQL query");
 		graphQLFunction.setName("execute_graphql_query");
 		graphQLFunction.setParameters(parameters);
 		final Tool graphQLTool = new Tool();
