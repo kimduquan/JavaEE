@@ -1,0 +1,9 @@
+Given below data schema: 
+type Industry { String name; int id }; 
+type Company { String name; Industry industry; }
+and a list of companies
+Please do below things step by step:
+1. Write a JSONPath query to answer the user's question
+2. Assume that the actual result of the generated query is store in a JSON object
+3. Generate a Markdown template for the result object to answer user's question
+The user's question: give me ids of construction companies
