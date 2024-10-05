@@ -6,3 +6,4 @@ kubectl port-forward svc/postgresql 5432 &
 kubectl port-forward svc/neo4j 7687 &
 kubectl port-forward svc/neo4j 7474 &
 kubectl port-forward svc/jaeger-query 16686 &
+kubectl port-forward svc/solr 8983 &
