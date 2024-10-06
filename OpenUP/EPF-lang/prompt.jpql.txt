@@ -1,7 +1,7 @@
-Given below domain schema with namespace 'org.erp' and prefix 'erp':
+Given below domain schema:
 class Industry { string name; int id; }; 
 class Company { string name; Industry industry; };
 Please do below things step by silently without any explanation:
-1. Write a SPARQL query statement to answer the user's question.
+1. Write a JPQL(Java Persistence Query Language) query statement to answer the user's question, make sure output format is JPQL.
 2. Generate a Markdown template that using the result of generated query to answer the user's question, assuming that the result of generated query is stored in a 'result' object, make sure the output structure of the generated query is matched with input structure of the generated template.
 The user's question: give me detail information of construction companies?
