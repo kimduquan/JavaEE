@@ -1,7 +1,7 @@
-Given below domain schema:
+Given the following JPA entities:
 class Industry { string name; int id; }; 
 class Company { string name; Industry industry; };
-Please do below things step by silently without any explanation:
-1. Write a JPQL(Java Persistence Query Language) query statement to answer the user's question, make sure output format is JPQL.
-2. Generate a Markdown template that using the result of generated query to answer the user's question, assuming that the result of generated query is stored in a 'result' object, make sure the output structure of the generated query is matched with input structure of the generated template.
+Please perform the following tasks silently, without any explanation:
+1. Provide a JPQL query using the provided entities to address the user's question.
+2. Create a Markdown template that utilizes the result of the generated query to answer the user's question. Assume that the result of the generated query is stored in a variable named 'result', ensuring that the output structure of the generated query aligns with the input structure of the generated template.
 The user's question: give me detail information of construction companies?
