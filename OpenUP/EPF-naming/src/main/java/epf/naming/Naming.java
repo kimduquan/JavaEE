@@ -449,6 +449,16 @@ public interface Naming {
 					String ID = "epf.lang.graph.property.id";
 				}
 			}
+			
+			/**
+			 * 
+			 */
+			interface RDF {
+				/**
+				 * 
+				 */
+				String SERVER = "epf.lang.rdf.server";
+			}
 		}
 	}
 	

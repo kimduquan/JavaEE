@@ -124,6 +124,18 @@
 		    <groupId>com.graphql-java</groupId>
 		    <artifactId>graphql-java-extended-scalars</artifactId>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.rdf4j/rdf4j-sail-solr -->
+		<dependency>
+		    <groupId>org.eclipse.rdf4j</groupId>
+		    <artifactId>rdf4j-sail-solr</artifactId>
+		    <version>5.0.2</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.hubspot.jinjava/jinjava -->
+		<dependency>
+		    <groupId>com.hubspot.jinjava</groupId>
+		    <artifactId>jinjava</artifactId>
+		    <version>2.7.3</version>
+		</dependency>
         
         <dependency>
 	        <groupId>openup</groupId>

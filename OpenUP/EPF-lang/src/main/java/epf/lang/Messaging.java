@@ -13,6 +13,7 @@ import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
+import com.hubspot.jinjava.Jinjava;
 import dev.langchain4j.data.segment.TextSegment;
 import epf.lang.ollama.Ollama;
 import epf.lang.schema.ollama.ChatRequest;
@@ -192,6 +193,11 @@ public class Messaging implements HealthCheck {
     		contents.append("\n\n");
     	});
     	return String.format(promptTemplates.getOrDefault(modelName, DEFAULT_PROMPT_TEMPLATE), query, contents.toString());
+	}
+	
+	public String format(final String template, final Map<String, ?> bindings) {
+		final Jinjava jinjava = new Jinjava();
+		return jinjava.render(template, bindings);
 	}
     
     /**
