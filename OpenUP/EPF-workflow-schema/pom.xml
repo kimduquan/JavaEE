@@ -28,6 +28,12 @@
 		    <artifactId>jakarta.json.bind-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.graphql/microprofile-graphql-api -->
+		<dependency>
+		    <groupId>org.eclipse.microprofile.graphql</groupId>
+		    <artifactId>microprofile-graphql-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/jakarta.nosql/nosql-core -->
 		<dependency>
