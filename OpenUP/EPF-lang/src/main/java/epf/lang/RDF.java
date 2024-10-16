@@ -149,6 +149,7 @@ public class RDF implements HealthCheck {
 	
 	private JsonValue transform(final Statement statement) {
 		final JsonObjectBuilder subject = Json.createObjectBuilder();
+		return null;
 	}
 	
 	private JsonValue transform(final TupleQuery query) {
