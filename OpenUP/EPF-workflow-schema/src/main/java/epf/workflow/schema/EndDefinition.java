@@ -8,11 +8,9 @@ import jakarta.nosql.Column;
 import java.io.Serializable;
 import java.util.List;
 import org.eclipse.jnosql.mapping.Embeddable;
+import org.eclipse.microprofile.graphql.DefaultValue;
+import org.eclipse.microprofile.graphql.Description;
 
-/**
- * @author PC
- *
- */
 @Embeddable
 public class EndDefinition implements Serializable {
 
@@ -21,25 +19,21 @@ public class EndDefinition implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("If true. terminates workflow instance execution")
 	private Boolean terminate;
-	/**
-	 * 
-	 */
+	
 	@Column
+	@Description("Array of producedEvent definitions. Defines events that should be produced.")
 	private List<ProducedEventDefinition> produceEvents;
-	/**
-	 * 
-	 */
+	
 	@Column
+	@Description("If set to true, triggers workflow compensation before workflow execution completes.")
+	@DefaultValue("false")
 	private Boolean compensate = false;
-	/**
-	 * 
-	 */
+	
 	@Column
+	@Description("Defines that current workflow execution should stop, and execution should continue as a new workflow instance of the provided name")
 	@JsonbTypeAdapter(value = StringOrContinueAsAdapter.class)
 	private StringOrObject<ContinueAs> continueAs;
 	

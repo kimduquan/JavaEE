@@ -6,11 +6,9 @@ import jakarta.nosql.Column;
 import java.io.Serializable;
 import java.util.List;
 import org.eclipse.jnosql.mapping.Embeddable;
+import org.eclipse.microprofile.graphql.DefaultValue;
+import org.eclipse.microprofile.graphql.Description;
 
-/**
- * @author PC
- *
- */
 @Embeddable
 public class TransitionDefinition implements Serializable {
 
@@ -19,21 +17,18 @@ public class TransitionDefinition implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	/**
-	 * 
-	 */
 	@NotNull
 	@Column
+	@Description("Name of the state to transition to next")
 	private String nextState;
-	/**
-	 * 
-	 */
+	
 	@Column
+	@Description("If set to true, triggers workflow compensation before this transition is taken.")
+	@DefaultValue("false")
 	private Boolean compensate = false;
-	/**
-	 * 
-	 */
+	
 	@Column
+	@Description("Array of producedEvent definitions. Events to be produced before the transition takes place")
 	private List<ProducedEventDefinition> produceEvents;
 	
 	public String getNextState() {

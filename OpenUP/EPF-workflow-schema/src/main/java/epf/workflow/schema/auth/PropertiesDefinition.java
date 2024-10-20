@@ -4,11 +4,8 @@ import jakarta.nosql.Column;
 import java.io.Serializable;
 import java.util.Map;
 import org.eclipse.jnosql.mapping.MappedSuperclass;
+import org.eclipse.microprofile.graphql.Description;
 
-/**
- * @author PC
- *
- */
 @MappedSuperclass
 public class PropertiesDefinition implements Serializable {
 
@@ -17,10 +14,8 @@ public class PropertiesDefinition implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Metadata information")
 	private Map<String, String> metadata;
 
 	public Map<String, String> getMetadata() {

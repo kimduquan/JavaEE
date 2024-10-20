@@ -3,11 +3,8 @@ package epf.workflow.schema.auth;
 import jakarta.validation.constraints.NotNull;
 import jakarta.nosql.Column;
 import org.eclipse.jnosql.mapping.Embeddable;
+import org.eclipse.microprofile.graphql.Description;
 
-/**
- * @author PC
- *
- */
 @Embeddable
 public class BasicPropertiesDefinition extends PropertiesDefinition {
 
@@ -16,17 +13,14 @@ public class BasicPropertiesDefinition extends PropertiesDefinition {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	/**
-	 * 
-	 */
-	@Column
 	@NotNull
+	@Column
+	@Description("String or a workflow expression. Contains the user name")
 	private String username;
-	/**
-	 * 
-	 */
-	@Column
+	
 	@NotNull
+	@Column
+	@Description("String or a workflow expression. Contains the user password	")
 	private String password;
 	
 	public String getUsername() {

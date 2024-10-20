@@ -81,7 +81,7 @@ public class WorkflowTimeouts {
 				final OperationState operationState = (OperationState) state;
 				workflowTimeoutDefinition = getTimeouts(workflowTimeoutDefinition, operationState.getTimeouts());
 				break;
-			case Switch:
+			case switch_:
 				final SwitchState switchState = (SwitchState) state;
 				workflowTimeoutDefinition = getTimeouts(workflowTimeoutDefinition, switchState.getTimeouts());
 				break;

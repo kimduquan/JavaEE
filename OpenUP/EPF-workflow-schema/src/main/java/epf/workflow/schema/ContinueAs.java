@@ -1,17 +1,14 @@
 package epf.workflow.schema;
 
-import jakarta.json.JsonValue;
-import jakarta.json.bind.annotation.JsonbTypeAdapter;
-import epf.nosql.schema.StringOrObject;
-import epf.workflow.schema.adapter.StringOrWorkflowExecTimeoutDefinitionAdapter;
-import jakarta.nosql.Column;
 import java.io.Serializable;
 import org.eclipse.jnosql.mapping.Embeddable;
+import org.eclipse.microprofile.graphql.Description;
+import epf.nosql.schema.StringOrObject;
+import epf.workflow.schema.adapter.StringOrWorkflowTimeoutDefinitionAdapter;
+import jakarta.json.bind.annotation.JsonbTypeAdapter;
+import jakarta.nosql.Column;
+import jakarta.validation.constraints.NotNull;
 
-/**
- * @author PC
- *
- */
 @Embeddable
 public class ContinueAs implements Serializable {
 
@@ -19,31 +16,24 @@ public class ContinueAs implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * 
-	 */
+	
+	@NotNull
 	@Column
+	@Description("Unique name of the workflow to continue execution as.")
 	private String workflowId;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Version of the workflow to continue execution as.")
 	private String version;
 	
-	/**
-	 * 
-	 */
 	@Column
-	private StringOrObject<JsonValue> data;
+	@Description("If string type, a workflow expression which selects parts of the states data output to become the workflow data input of continued execution. If object type, a custom object to become the workflow data input of the continued execution.")
+	private StringOrObject<Object> data;
 	
-	/**
-	 * 
-	 */
 	@Column
-	@JsonbTypeAdapter(value = StringOrWorkflowExecTimeoutDefinitionAdapter.class)
-	private StringOrObject<WorkflowExecTimeoutDefinition> workflowExecTimeout;
+	@Description("Workflow execution timeout to be used by the workflow continuing execution. Overwrites any specific settings set by that workflow.")
+	@JsonbTypeAdapter(value = StringOrWorkflowTimeoutDefinitionAdapter.class)
+	private StringOrObject<WorkflowTimeoutDefinition> workflowExecTimeout;
 
 	public String getWorkflowId() {
 		return workflowId;
@@ -61,19 +51,19 @@ public class ContinueAs implements Serializable {
 		this.version = version;
 	}
 
-	public StringOrObject<JsonValue> getData() {
+	public StringOrObject<Object> getData() {
 		return data;
 	}
 
-	public void setData(StringOrObject<JsonValue> data) {
+	public void setData(StringOrObject<Object> data) {
 		this.data = data;
 	}
 
-	public StringOrObject<WorkflowExecTimeoutDefinition> getWorkflowExecTimeout() {
+	public StringOrObject<WorkflowTimeoutDefinition> getWorkflowExecTimeout() {
 		return workflowExecTimeout;
 	}
 
-	public void setWorkflowExecTimeout(StringOrObject<WorkflowExecTimeoutDefinition> workflowExecTimeout) {
+	public void setWorkflowExecTimeout(StringOrObject<WorkflowTimeoutDefinition> workflowExecTimeout) {
 		this.workflowExecTimeout = workflowExecTimeout;
 	}
 }

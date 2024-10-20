@@ -33,7 +33,7 @@ public class StateDataFilters {
 	public StateDataFilter getStateDataFilter(final State state) {
 		StateDataFilter stateDataFilter = null;
 		switch(state.getType_()) {
-			case Switch:
+			case switch_:
 				final SwitchState switchState = (SwitchState) state;
 				stateDataFilter = switchState.getStateDataFilter();
 				break;

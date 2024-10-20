@@ -375,7 +375,7 @@ public class WorkflowRuntime implements Workflow, Internal {
 				workflowData.setOutput(workflowData.getInput());
 				transitionOperationState(response, workflowDefinition, operationState, instance, workflowData);
 				break;
-			case Switch:
+			case switch_:
 				final SwitchState switchState = (SwitchState) state;
 				workflowData.setInput(stateDataFilters.filterStateDataInput(switchState.getStateDataFilter(), workflowData.getInput()));
 				workflowData.setOutput(workflowData.getInput());

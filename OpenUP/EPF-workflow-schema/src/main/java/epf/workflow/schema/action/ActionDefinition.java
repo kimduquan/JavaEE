@@ -7,9 +7,9 @@ import epf.workflow.schema.function.adapter.StringOrFunctionRefDefinitionAdapter
 import epf.nosql.schema.StringOrArray;
 import epf.nosql.schema.StringOrObject;
 import epf.workflow.schema.SubFlowRefDefinition;
-import epf.workflow.schema.adapter.StringOrArrayErrorHandlerReferenceAdapter;
 import epf.workflow.schema.adapter.StringOrSubFlowRefDefinitionAdapter;
 import epf.workflow.schema.error.ErrorHandlerReference;
+import epf.workflow.schema.error.adapter.StringOrArrayErrorHandlerReferenceAdapter;
 import jakarta.nosql.Column;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;

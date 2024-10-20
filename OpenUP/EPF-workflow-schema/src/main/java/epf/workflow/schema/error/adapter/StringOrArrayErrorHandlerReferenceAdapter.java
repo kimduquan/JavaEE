@@ -1,4 +1,4 @@
-package epf.workflow.schema.adapter;
+package epf.workflow.schema.error.adapter;
 
 import epf.workflow.schema.error.ErrorHandlerReference;
 import epf.workflow.schema.util.StringOrArrayJsonAdapter;

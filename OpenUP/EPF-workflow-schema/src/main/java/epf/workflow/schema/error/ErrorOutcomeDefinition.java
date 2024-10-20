@@ -8,8 +8,8 @@ import epf.nosql.schema.StringOrObject;
 import epf.workflow.schema.EndDefinition;
 import epf.workflow.schema.TransitionDefinition;
 import epf.workflow.schema.adapter.BooleanOrEndDefinitionAdapter;
-import epf.workflow.schema.adapter.BooleanOrErrorThrowDefinitionAdapter;
 import epf.workflow.schema.adapter.StringOrTransitionDefinitionAdapter;
+import epf.workflow.schema.error.adapter.BooleanOrErrorThrowDefinitionAdapter;
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import jakarta.nosql.Column;
 

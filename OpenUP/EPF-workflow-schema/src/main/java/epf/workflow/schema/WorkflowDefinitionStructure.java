@@ -10,12 +10,12 @@ import epf.nosql.schema.StringOrObject;
 import epf.workflow.schema.adapter.StringOrArrayExtensionAdapter;
 import epf.workflow.schema.adapter.StringOrArrayRetryDefinitionAdapter;
 import epf.workflow.schema.adapter.StringOrDataSchemaAdapter;
-import epf.workflow.schema.adapter.StringOrErrorHandlingConfigurationAdapter;
 import epf.workflow.schema.adapter.StringOrStartDefinitionAdapter;
 import epf.workflow.schema.adapter.StringOrWorkflowTimeoutDefinitionAdapter;
 import epf.workflow.schema.auth.AuthDefinition;
 import epf.workflow.schema.auth.adapter.StringOrArrayAuthDefinitionAdapter;
 import epf.workflow.schema.error.ErrorHandlingConfiguration;
+import epf.workflow.schema.error.adapter.StringOrErrorHandlingConfigurationAdapter;
 import epf.workflow.schema.event.EventDefinition;
 import epf.workflow.schema.event.adapter.StringOrArrayEventDefinitionAdapter;
 import epf.workflow.schema.function.FunctionDefinition;
@@ -27,10 +27,6 @@ import jakarta.nosql.Entity;
 import jakarta.nosql.Id;
 import jakarta.validation.constraints.NotNull;
 
-/**
- * @author PC
- *
- */
 @Entity
 public class WorkflowDefinitionStructure implements Serializable {
 

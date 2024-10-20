@@ -6,10 +6,6 @@ import jakarta.nosql.Column;
 import java.io.Serializable;
 import org.eclipse.jnosql.mapping.Embeddable;
 
-/**
- * @author PC
- *
- */
 @Embeddable
 public class DataSchema implements Serializable {
 

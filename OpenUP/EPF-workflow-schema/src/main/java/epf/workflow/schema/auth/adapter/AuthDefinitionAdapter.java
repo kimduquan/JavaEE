@@ -9,10 +9,6 @@ import epf.workflow.schema.auth.BearerPropertiesDefinition;
 import epf.workflow.schema.auth.OAuth2PropertiesDefinition;
 import epf.workflow.schema.auth.Scheme;
 
-/**
- * @author PC
- *
- */
 public class AuthDefinitionAdapter implements JsonbAdapter<AuthDefinition, Map<?, ?>> {
 
 	@Override

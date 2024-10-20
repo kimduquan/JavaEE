@@ -6,10 +6,6 @@ import org.eclipse.microprofile.graphql.Description;
 import jakarta.nosql.Column;
 import jakarta.validation.constraints.NotNull;
 
-/**
- * @author PC
- *
- */
 @Embeddable
 public class ErrorDefinition implements Serializable {
 

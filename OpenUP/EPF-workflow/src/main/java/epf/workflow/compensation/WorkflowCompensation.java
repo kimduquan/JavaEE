@@ -37,7 +37,7 @@ public class WorkflowCompensation {
 				final OperationState operationState = (OperationState) state;
 				compensatedBy = operationState.getCompensatedBy();
 				break;
-			case Switch:
+			case switch_:
 				final SwitchState switchState = (SwitchState) state;
 				compensatedBy = switchState.getCompensatedBy();
 				break;

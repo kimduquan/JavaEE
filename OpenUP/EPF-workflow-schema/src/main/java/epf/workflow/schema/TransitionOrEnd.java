@@ -6,9 +6,6 @@ import epf.nosql.schema.EitherOrEither;
 import epf.nosql.schema.StringOrObject;
 import jakarta.json.bind.annotation.JsonbTypeSerializer;
 
-/**
- * 
- */
 @JsonbTypeSerializer(value = EitherJsonSerializer.class)
 public class TransitionOrEnd extends EitherOrEither<StringOrObject<TransitionDefinition>, BooleanOrObject<EndDefinition>> {
 
@@ -17,13 +14,7 @@ public class TransitionOrEnd extends EitherOrEither<StringOrObject<TransitionDef
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	/**
-	 * 
-	 */
 	public static final String TRANSITION = "transition";
 	
-	/**
-	 * 
-	 */
 	public static final String END = "end";
 }

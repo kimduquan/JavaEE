@@ -4,10 +4,6 @@ import jakarta.nosql.Column;
 import java.io.Serializable;
 import org.eclipse.jnosql.mapping.Embeddable;
 
-/**
- * @author PC
- *
- */
 @Embeddable
 public class Sleep implements Serializable {
 
@@ -16,14 +12,9 @@ public class Sleep implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private String before;
-	/**
-	 * 
-	 */
+	
 	@Column
 	private String after;
 	

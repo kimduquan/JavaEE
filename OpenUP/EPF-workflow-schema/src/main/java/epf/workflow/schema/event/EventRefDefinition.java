@@ -8,10 +8,6 @@ import org.eclipse.jnosql.mapping.Embeddable;
 import epf.nosql.schema.StringOrObject;
 import epf.workflow.schema.function.Invoke;
 
-/**
- * @author PC
- *
- */
 @Embeddable
 public class EventRefDefinition implements Serializable {
 
@@ -20,41 +16,23 @@ public class EventRefDefinition implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 */
 	@NotNull
 	@Column
 	private String produceEventRef;
 	
-	/**
-	 * 
-	 */
 	@Column
 	@NotNull
 	private String consumeEventRef;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private String consumeEventTimeout;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private StringOrObject<Object> data;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private Map<String, Object> contextAttributes;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private Invoke invoke = Invoke.sync;
 
