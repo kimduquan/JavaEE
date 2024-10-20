@@ -3,209 +3,143 @@ package epf.workflow.schema;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-import jakarta.json.bind.annotation.JsonbTypeAdapter;
-import jakarta.validation.constraints.NotNull;
-import epf.workflow.schema.event.EventDefinition;
-import epf.workflow.schema.event.adapter.StringOrArrayEventDefinitionAdapter;
+import org.eclipse.microprofile.graphql.DefaultValue;
+import org.eclipse.microprofile.graphql.Description;
 import epf.nosql.schema.StringOrArray;
 import epf.nosql.schema.StringOrObject;
 import epf.workflow.schema.adapter.StringOrArrayExtensionAdapter;
 import epf.workflow.schema.adapter.StringOrArrayRetryDefinitionAdapter;
-import epf.workflow.schema.adapter.StringOrArrayWorkflowErrorAdapter;
 import epf.workflow.schema.adapter.StringOrDataSchemaAdapter;
+import epf.workflow.schema.adapter.StringOrErrorHandlingConfigurationAdapter;
 import epf.workflow.schema.adapter.StringOrStartDefinitionAdapter;
 import epf.workflow.schema.adapter.StringOrWorkflowTimeoutDefinitionAdapter;
 import epf.workflow.schema.auth.AuthDefinition;
 import epf.workflow.schema.auth.adapter.StringOrArrayAuthDefinitionAdapter;
+import epf.workflow.schema.event.EventDefinition;
+import epf.workflow.schema.event.adapter.StringOrArrayEventDefinitionAdapter;
 import epf.workflow.schema.function.FunctionDefinition;
 import epf.workflow.schema.function.adapter.StringOrArrayFunctionDefinitionAdapter;
 import epf.workflow.schema.state.State;
+import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import jakarta.nosql.Column;
 import jakarta.nosql.Entity;
 import jakarta.nosql.Id;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author PC
  *
  */
 @Entity
-public class WorkflowDefinition implements Serializable {
+public class WorkflowDefinitionStructure implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * 
-	 */
+	
+	@NotNull
 	@Id
-	private String id;
-	
-	/**
-	 * 
-	 */
-	@Column
-	private String key;
-	
-	/**
-	 * 
-	 */
-	@Column
+	@Description("The name that identifies the workflow definition, and which, when combined with its version, forms a unique identifier.")
 	private String name;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Workflow version. MUST respect the semantic versioning format. If not provided, latest is assumed")
+	@DefaultValue("latest")
+	private String version = "latest";
+	
+	@Column
+	@Description("Workflow description")
 	private String description;
 	
-	/**
-	 * 
-	 */
 	@Column
-	private String version;
+	@Description("Optional expression that will be used to generate a domain-specific workflow instance identifier")
+	private String key;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("List of helpful terms describing the workflows intended purpose, subject areas, or other important qualities")
 	private List<String> annotations;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Used to validate the workflow data input against a defined JSON Schema")
 	@JsonbTypeAdapter(value = StringOrDataSchemaAdapter.class)
 	private StringOrObject<DataSchema> dataInputSchema;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Used to validate the workflow data output against a defined JSON Schema")
 	@JsonbTypeAdapter(value = StringOrDataSchemaAdapter.class)
 	private StringOrObject<DataSchema> dataOutputSchema;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Workflow constants")
 	private StringOrObject<Object> constants;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Workflow secrets")
 	private StringOrArray<String> secrets;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Workflow start definition")
 	@JsonbTypeAdapter(value = StringOrStartDefinitionAdapter.class)
 	private StringOrObject<StartDefinition> start;
 	
-	/**
-	 * 
-	 */
 	@NotNull
 	@Column
+	@Description("Serverless Workflow specification release version")
 	private String specVersion;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Identifies the expression language used for workflow expressions.")
+	@DefaultValue("jq")
 	private String expressionLang = "jq";
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Defines the workflow default timeout settings")
 	@JsonbTypeAdapter(value = StringOrWorkflowTimeoutDefinitionAdapter.class)
 	private StringOrObject<WorkflowTimeoutDefinition> timeouts;
 	
-	/**
-	 * 
-	 */
 	@Column
-	@JsonbTypeAdapter(value = StringOrArrayWorkflowErrorAdapter.class)
-	private StringOrArray<WorkflowError> errors;
+	@Description("Defines the workflow's error handling configuration, including error definitions, error handlers, and error policies")
+	@JsonbTypeAdapter(value = StringOrErrorHandlingConfigurationAdapter.class)
+	private StringOrObject<ErrorHandlingConfiguration> errors;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("If true, workflow instances is not terminated when there are no active execution paths. Instance can be terminated with \"terminate end definition\" or reaching defined \"workflowExecTimeout\"")
 	private Boolean keepActive;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Workflow authentication definitions")
 	@JsonbTypeAdapter(value = StringOrArrayAuthDefinitionAdapter.class)
 	private StringOrArray<AuthDefinition> auth;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Workflow event definitions.")
 	@JsonbTypeAdapter(value = StringOrArrayEventDefinitionAdapter.class)
 	private StringOrArray<EventDefinition> events;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Workflow function definitions. Can be either inline function definitions (if array) or URI pointing to a resource containing json/yaml function definitions (if string)")
 	@JsonbTypeAdapter(value = StringOrArrayFunctionDefinitionAdapter.class)
 	private StringOrArray<FunctionDefinition> functions;
 	
-	/**
-	 * 
-	 */
 	@Column
-	private Boolean autoRetries = false;
-	
-	/**
-	 * 
-	 */
-	@Column
+	@Description("Workflow retries definitions. Can be either inline retries definitions (if array) or URI pointing to a resource containing json/yaml retry definitions (if string)")
 	@JsonbTypeAdapter(value = StringOrArrayRetryDefinitionAdapter.class)
 	private StringOrArray<RetryDefinition> retries;
 	
-	/**
-	 * 
-	 */
+	@NotNull
 	@Column
+	@Description("Workflow states")
 	private List<State> states;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Workflow extensions definitions")
 	@JsonbTypeAdapter(value = StringOrArrayExtensionAdapter.class)
 	private StringOrArray<Extension> extensions;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Metadata information")
 	private Map<String, String> metadata;
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getKey() {
-		return key;
-	}
-
-	public void setKey(String key) {
-		this.key = key;
-	}
 
 	public String getName() {
 		return name;
@@ -213,6 +147,14 @@ public class WorkflowDefinition implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
 	}
 
 	public String getDescription() {
@@ -223,12 +165,12 @@ public class WorkflowDefinition implements Serializable {
 		this.description = description;
 	}
 
-	public String getVersion() {
-		return version;
+	public String getKey() {
+		return key;
 	}
 
-	public void setVersion(String version) {
-		this.version = version;
+	public void setKey(String key) {
+		this.key = key;
 	}
 
 	public List<String> getAnnotations() {
@@ -303,11 +245,11 @@ public class WorkflowDefinition implements Serializable {
 		this.timeouts = timeouts;
 	}
 
-	public StringOrArray<WorkflowError> getErrors() {
+	public StringOrObject<ErrorHandlingConfiguration> getErrors() {
 		return errors;
 	}
 
-	public void setErrors(StringOrArray<WorkflowError> errors) {
+	public void setErrors(StringOrObject<ErrorHandlingConfiguration> errors) {
 		this.errors = errors;
 	}
 
@@ -343,14 +285,6 @@ public class WorkflowDefinition implements Serializable {
 		this.functions = functions;
 	}
 
-	public Boolean getAutoRetries() {
-		return autoRetries;
-	}
-
-	public void setAutoRetries(Boolean autoRetries) {
-		this.autoRetries = autoRetries;
-	}
-
 	public StringOrArray<RetryDefinition> getRetries() {
 		return retries;
 	}
@@ -381,5 +315,9 @@ public class WorkflowDefinition implements Serializable {
 
 	public void setMetadata(Map<String, String> metadata) {
 		this.metadata = metadata;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 }

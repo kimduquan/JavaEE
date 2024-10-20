@@ -1,8 +1,11 @@
 package epf.workflow.schema.state;
 
-import jakarta.json.bind.annotation.JsonbTypeAdapter;
-import jakarta.validation.constraints.NotNull;
-import epf.workflow.schema.event.OnEventsDefinition;
+import java.util.List;
+import java.util.Map;
+import org.eclipse.jnosql.mapping.DiscriminatorValue;
+import org.eclipse.jnosql.mapping.Embeddable;
+import org.eclipse.microprofile.graphql.DefaultValue;
+import org.eclipse.microprofile.graphql.Description;
 import epf.nosql.schema.BooleanOrObject;
 import epf.nosql.schema.StringOrObject;
 import epf.workflow.schema.EndDefinition;
@@ -11,16 +14,11 @@ import epf.workflow.schema.TransitionDefinition;
 import epf.workflow.schema.WorkflowTimeoutDefinition;
 import epf.workflow.schema.adapter.BooleanOrEndDefinitionAdapter;
 import epf.workflow.schema.adapter.StringOrTransitionDefinitionAdapter;
+import epf.workflow.schema.event.OnEventsDefinition;
+import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import jakarta.nosql.Column;
-import java.util.List;
-import java.util.Map;
-import org.eclipse.jnosql.mapping.DiscriminatorValue;
-import org.eclipse.jnosql.mapping.Embeddable;
+import jakarta.validation.constraints.NotNull;
 
-/**
- * @author PC
- *
- */
 @Embeddable
 @DiscriminatorValue(Type.EVENT)
 public class EventState extends State {
@@ -29,72 +27,74 @@ public class EventState extends State {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * 
-	 */
-	@Column
-	private Boolean exclusive = true;
 	
-	/**
-	 * 
-	 */
 	@NotNull
 	@Column
+	@Description("Unique State name")
+	private String name;
+	
+	@NotNull
+	@Column
+	@Description("State type")
+	private String type;
+	
+	@Column
+	@Description("If true, consuming one of the defined events causes its associated actions to be performed. If false, all of the defined events must be consumed in order for actions to be performed.")
+	@DefaultValue("true")
+	private Boolean exclusive = true;
+	
+	@NotNull
+	@Column
+	@Description("Define the events to be consumed and optional actions to be performed")
 	private List<OnEventsDefinition> onEvents;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("State specific timeout settings")
 	private WorkflowTimeoutDefinition timeouts;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("State data filter")
 	private StateDataFilter stateDataFilter;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Next transition of the workflow after all the actions have been performed")
 	@JsonbTypeAdapter(value = StringOrTransitionDefinitionAdapter.class)
 	private StringOrObject<TransitionDefinition> transition;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("States error handling definitions")
 	private List<ErrorDefinition> onErrors;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Is this state an end state")
 	@JsonbTypeAdapter(value = BooleanOrEndDefinitionAdapter.class)
 	private BooleanOrObject<EndDefinition> end;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Unique name of a workflow state which is responsible for compensation of this state")
 	private String compensatedBy;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Metadata information")
 	private Map<String, String> metadata;
-	
-	/**
-	 * 
-	 */
-	public EventState() {
-		setType_(Type.event);
+
+	public String getName() {
+		return name;
 	}
 
-	public Boolean isExclusive() {
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public Boolean getExclusive() {
 		return exclusive;
 	}
 

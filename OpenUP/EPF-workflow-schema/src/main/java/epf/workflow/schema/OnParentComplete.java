@@ -8,9 +8,9 @@ public enum OnParentComplete {
 	/**
 	 * 
 	 */
-	Terminate,
+	terminate,
 	/**
 	 * 
 	 */
-	Continue,
+	continue_,
 }

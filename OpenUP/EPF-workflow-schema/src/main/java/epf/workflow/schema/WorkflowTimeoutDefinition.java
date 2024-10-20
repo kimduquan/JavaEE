@@ -6,11 +6,8 @@ import epf.workflow.schema.adapter.StringOrWorkflowExecTimeoutDefinitionAdapter;
 import jakarta.nosql.Column;
 import java.io.Serializable;
 import org.eclipse.jnosql.mapping.Embeddable;
+import org.eclipse.microprofile.graphql.Description;
 
-/**
- * @author PC
- *
- */
 @Embeddable
 public class WorkflowTimeoutDefinition implements Serializable {
 
@@ -19,35 +16,25 @@ public class WorkflowTimeoutDefinition implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Workflow execution timeout (literal ISO 8601 duration format or expression which evaluation results in an ISO 8601 duration)")
 	@JsonbTypeAdapter(value = StringOrWorkflowExecTimeoutDefinitionAdapter.class)
 	private StringOrObject<WorkflowExecTimeoutDefinition> workflowExecTimeout;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Workflow state execution timeout (literal ISO 8601 duration format or expression which evaluation results in an ISO 8601 duration)")
 	private String stateExecTimeout;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Actions execution timeout (literal ISO 8601 duration format or expression which evaluation results in an ISO 8601 duration)")
 	private String actionExecTimeout;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Branch execution timeout (literal ISO 8601 duration format or expression which evaluation results in an ISO 8601 duration)")
 	private String branchExecTimeout;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Default timeout for consuming defined events (literal ISO 8601 duration format or expression which evaluation results in an ISO 8601 duration)")
 	private String eventTimeout;
 
 	public StringOrObject<WorkflowExecTimeoutDefinition> getWorkflowExecTimeout() {

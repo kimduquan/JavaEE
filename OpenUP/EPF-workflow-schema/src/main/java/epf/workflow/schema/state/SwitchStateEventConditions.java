@@ -4,11 +4,8 @@ import jakarta.validation.constraints.NotNull;
 import epf.workflow.schema.event.EventDataFilter;
 import jakarta.nosql.Column;
 import org.eclipse.jnosql.mapping.Embeddable;
+import org.eclipse.microprofile.graphql.Description;
 
-/**
- * @author PC
- *
- */
 @Embeddable
 public class SwitchStateEventConditions extends SwitchStateConditions {
 
@@ -17,16 +14,13 @@ public class SwitchStateEventConditions extends SwitchStateConditions {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	/**
-	 * 
-	 */
 	@NotNull
 	@Column
+	@Description("References an unique event name in the defined workflow events")
 	private String eventRef;
-	/**
-	 * 
-	 */
+	
 	@Column
+	@Description("Event data filter definition")
 	private EventDataFilter eventDataFilter;
 	
 	public String getEventRef() {

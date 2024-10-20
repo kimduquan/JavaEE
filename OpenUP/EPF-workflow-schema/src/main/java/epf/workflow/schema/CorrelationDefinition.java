@@ -4,11 +4,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.nosql.Column;
 import java.io.Serializable;
 import org.eclipse.jnosql.mapping.Embeddable;
+import org.eclipse.microprofile.graphql.Description;
 
-/**
- * @author PC
- *
- */
 @Embeddable
 public class CorrelationDefinition implements Serializable {
 
@@ -17,16 +14,13 @@ public class CorrelationDefinition implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	/**
-	 * 
-	 */
 	@NotNull
 	@Column
+	@Description("CloudEvent Extension Context Attribute name")
 	private String contextAttributeName;
-	/**
-	 * 
-	 */
+	
 	@Column
+	@Description("CloudEvent Extension Context Attribute value")
 	private String contextAttributeValue;
 	
 	public String getContextAttributeName() {

@@ -5,15 +5,11 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.nosql.Column;
 import java.io.Serializable;
 import org.eclipse.jnosql.mapping.Embeddable;
-
+import org.eclipse.microprofile.graphql.Description;
 import epf.nosql.schema.StringOrObject;
 import epf.workflow.schema.schedule.ScheduleDefinition;
 import epf.workflow.schema.schedule.adapter.StringOrScheduleDefinitionAdapter;
 
-/**
- * @author PC
- *
- */
 @Embeddable
 public class StartDefinition implements Serializable {
 
@@ -22,17 +18,13 @@ public class StartDefinition implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Name of the starting workflow state. Must follow the Serverless Workflow Naming Convention")
 	private String stateName;
 	
-	/**
-	 * 
-	 */
 	@NotNull
 	@Column
+	@Description("Define the recurring time intervals or cron expressions at which workflow instances should be automatically started.")
 	@JsonbTypeAdapter(value = StringOrScheduleDefinitionAdapter.class)
 	private StringOrObject<ScheduleDefinition> schedule;
 

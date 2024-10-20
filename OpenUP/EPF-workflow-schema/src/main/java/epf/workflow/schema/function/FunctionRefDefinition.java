@@ -4,11 +4,9 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.nosql.Column;
 import java.io.Serializable;
 import org.eclipse.jnosql.mapping.Embeddable;
+import org.eclipse.microprofile.graphql.DefaultValue;
+import org.eclipse.microprofile.graphql.Description;
 
-/**
- * @author PC
- *
- */
 @Embeddable
 public class FunctionRefDefinition implements Serializable {
 
@@ -17,29 +15,22 @@ public class FunctionRefDefinition implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 */
 	@NotNull
 	@Column
+	@Description("Name of the referenced function. Must follow the Serverless Workflow Naming Convention")
 	private String refName;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Arguments (inputs) to be passed to the referenced function")
 	private Object arguments;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Used if function type is graphql. String containing a valid GraphQL selection set")
 	private String selectionSet;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Specifies if the function should be invoked sync or async.")
+	@DefaultValue("sync")
 	private Invoke invoke = Invoke.sync;
 
 	public String getRefName() {

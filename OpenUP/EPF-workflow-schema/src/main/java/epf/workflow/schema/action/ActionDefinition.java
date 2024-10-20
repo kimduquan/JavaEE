@@ -4,19 +4,18 @@ import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import epf.workflow.schema.event.EventRefDefinition;
 import epf.workflow.schema.function.FunctionRefDefinition;
 import epf.workflow.schema.function.adapter.StringOrFunctionRefDefinitionAdapter;
+import epf.nosql.schema.StringOrArray;
 import epf.nosql.schema.StringOrObject;
+import epf.workflow.schema.ErrorHandlerReference;
 import epf.workflow.schema.SubFlowRefDefinition;
-import epf.workflow.schema.WorkflowError;
+import epf.workflow.schema.adapter.StringOrArrayErrorHandlerReferenceAdapter;
 import epf.workflow.schema.adapter.StringOrSubFlowRefDefinitionAdapter;
 import jakarta.nosql.Column;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.List;
 import org.eclipse.jnosql.mapping.Embeddable;
+import org.eclipse.microprofile.graphql.Description;
 
-/**
- * @author PC
- *
- */
 @Embeddable
 public class ActionDefinition implements Serializable {
 
@@ -25,66 +24,40 @@ public class ActionDefinition implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 */
+	@NotNull
 	@Column
+	@Description("Unique Action name. Must follow the Serverless Workflow Naming Convention")
 	private String name;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("References a reusable function definition")
 	@JsonbTypeAdapter(value = StringOrFunctionRefDefinitionAdapter.class)
 	private StringOrObject<FunctionRefDefinition> functionRef;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("References a produce and consume reusable event definitions")
 	private EventRefDefinition eventRef;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("References a workflow to be invoked")
 	@JsonbTypeAdapter(value = StringOrSubFlowRefDefinitionAdapter.class)
 	private StringOrObject<SubFlowRefDefinition> subFlowRef;
 	
-	/**
-	 * 
-	 */
 	@Column
-	private String retryRef;
+	@Description("Defines the error handling policy to use")
+	@JsonbTypeAdapter(value = StringOrArrayErrorHandlerReferenceAdapter.class)
+	private StringOrArray<ErrorHandlerReference> onErrors;
 	
-	/**
-	 * 
-	 */
 	@Column
-	private List<WorkflowError> nonRetryableErrors;
-	
-	/**
-	 * 
-	 */
-	@Column
-	private List<WorkflowError> retryableErrors;
-	
-	/**
-	 * 
-	 */
-	@Column
+	@Description("Action data filter definition")
 	private ActionDataFilter actionDataFilter;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Defines time periods workflow execution should sleep before / after function execution")
 	private Sleep sleep;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Expression, if defined, must evaluate to true for this action to be performed. If false, action is disregarded")
 	private String condition;
 
 	public String getName() {
@@ -119,28 +92,12 @@ public class ActionDefinition implements Serializable {
 		this.subFlowRef = subFlowRef;
 	}
 
-	public String getRetryRef() {
-		return retryRef;
+	public StringOrArray<ErrorHandlerReference> getOnErrors() {
+		return onErrors;
 	}
 
-	public void setRetryRef(String retryRef) {
-		this.retryRef = retryRef;
-	}
-
-	public List<WorkflowError> getNonRetryableErrors() {
-		return nonRetryableErrors;
-	}
-
-	public void setNonRetryableErrors(List<WorkflowError> nonRetryableErrors) {
-		this.nonRetryableErrors = nonRetryableErrors;
-	}
-
-	public List<WorkflowError> getRetryableErrors() {
-		return retryableErrors;
-	}
-
-	public void setRetryableErrors(List<WorkflowError> retryableErrors) {
-		this.retryableErrors = retryableErrors;
+	public void setOnErrors(StringOrArray<ErrorHandlerReference> onErrors) {
+		this.onErrors = onErrors;
 	}
 
 	public ActionDataFilter getActionDataFilter() {

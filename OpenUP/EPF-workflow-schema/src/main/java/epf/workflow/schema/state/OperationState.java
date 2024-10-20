@@ -1,7 +1,11 @@
 package epf.workflow.schema.state;
 
-import jakarta.json.bind.annotation.JsonbTypeAdapter;
-import jakarta.validation.constraints.NotNull;
+import java.util.List;
+import java.util.Map;
+import org.eclipse.jnosql.mapping.DiscriminatorValue;
+import org.eclipse.jnosql.mapping.Embeddable;
+import org.eclipse.microprofile.graphql.DefaultValue;
+import org.eclipse.microprofile.graphql.Description;
 import epf.nosql.schema.BooleanOrObject;
 import epf.nosql.schema.StringOrObject;
 import epf.workflow.schema.EndDefinition;
@@ -12,16 +16,10 @@ import epf.workflow.schema.action.ActionDefinition;
 import epf.workflow.schema.action.Mode;
 import epf.workflow.schema.adapter.BooleanOrEndDefinitionAdapter;
 import epf.workflow.schema.adapter.StringOrTransitionDefinitionAdapter;
+import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import jakarta.nosql.Column;
-import java.util.List;
-import java.util.Map;
-import org.eclipse.jnosql.mapping.DiscriminatorValue;
-import org.eclipse.jnosql.mapping.Embeddable;
+import jakarta.validation.constraints.NotNull;
 
-/**
- * @author PC
- *
- */
 @Embeddable
 @DiscriminatorValue(Type.OPERATION)
 public class OperationState extends State {
@@ -30,75 +28,76 @@ public class OperationState extends State {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * 
-	 */
-	@Column
-	private Mode actionMode = Mode.sequential;
 	
-	/**
-	 * 
-	 */
 	@NotNull
 	@Column
+	@Description("Unique State name. Must follow the Serverless Workflow Naming Convention")
+	private String name;
+	
+	@NotNull
+	@Column
+	@Description("State type")
+	private String type;
+	
+	@Column
+	@Description("Should actions be performed sequentially or in parallel.")
+	@DefaultValue("sequential")
+	private Mode actionMode = Mode.sequential;
+	
+	@NotNull
+	@Column
+	@Description("Actions to be performed")
 	private List<ActionDefinition> actions;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("State specific timeout settings")
 	private WorkflowTimeoutDefinition timeouts;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("State data filter")
 	private StateDataFilter stateDataFilter;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("States error handling and retries definitions")
 	private List<ErrorDefinition> onErrors;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Next transition of the workflow after all the actions have been performed")
 	@JsonbTypeAdapter(value = StringOrTransitionDefinitionAdapter.class)
 	private StringOrObject<TransitionDefinition> transition;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Unique name of a workflow state which is responsible for compensation of this state")
 	private String compensatedBy;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("If true, this state is used to compensate another state.")
+	@DefaultValue("false")
 	private Boolean usedForCompensation = false;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Metadata information")
 	private Map<String, String> metadata;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Is this state an end state")
 	@JsonbTypeAdapter(value = BooleanOrEndDefinitionAdapter.class)
 	private BooleanOrObject<EndDefinition> end;
-	
-	/**
-	 * 
-	 */
-	public OperationState() {
-		setType_(Type.operation);
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public Mode getActionMode() {
@@ -157,7 +156,7 @@ public class OperationState extends State {
 		this.compensatedBy = compensatedBy;
 	}
 
-	public Boolean isUsedForCompensation() {
+	public Boolean getUsedForCompensation() {
 		return usedForCompensation;
 	}
 
