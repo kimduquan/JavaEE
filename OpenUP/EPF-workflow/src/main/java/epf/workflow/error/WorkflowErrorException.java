@@ -3,10 +3,10 @@ package epf.workflow.error;
 import java.net.URI;
 
 import epf.workflow.model.WorkflowData;
-import epf.workflow.schema.ErrorDefinition;
 import epf.workflow.schema.WorkflowDefinition;
 import epf.workflow.schema.WorkflowError;
 import epf.workflow.schema.action.ActionDefinition;
+import epf.workflow.schema.error.ErrorDefinition;
 import epf.workflow.schema.state.State;
 
 /**

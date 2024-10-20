@@ -1,10 +1,12 @@
-package epf.workflow.schema;
+package epf.workflow.schema.error;
 
 import java.io.Serializable;
 import org.eclipse.jnosql.mapping.Embeddable;
 import org.eclipse.microprofile.graphql.Description;
 import epf.nosql.schema.BooleanOrObject;
 import epf.nosql.schema.StringOrObject;
+import epf.workflow.schema.EndDefinition;
+import epf.workflow.schema.TransitionDefinition;
 import epf.workflow.schema.adapter.BooleanOrEndDefinitionAdapter;
 import epf.workflow.schema.adapter.BooleanOrErrorThrowDefinitionAdapter;
 import epf.workflow.schema.adapter.StringOrTransitionDefinitionAdapter;

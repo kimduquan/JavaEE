@@ -1,6 +1,6 @@
 package epf.workflow.schema.adapter;
 
-import epf.workflow.schema.ErrorHandlingConfiguration;
+import epf.workflow.schema.error.ErrorHandlingConfiguration;
 import epf.workflow.schema.util.StringOrObjectJsonAdapter;
 
 /**

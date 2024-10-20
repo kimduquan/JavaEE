@@ -15,6 +15,7 @@ import epf.workflow.schema.adapter.StringOrStartDefinitionAdapter;
 import epf.workflow.schema.adapter.StringOrWorkflowTimeoutDefinitionAdapter;
 import epf.workflow.schema.auth.AuthDefinition;
 import epf.workflow.schema.auth.adapter.StringOrArrayAuthDefinitionAdapter;
+import epf.workflow.schema.error.ErrorHandlingConfiguration;
 import epf.workflow.schema.event.EventDefinition;
 import epf.workflow.schema.event.adapter.StringOrArrayEventDefinitionAdapter;
 import epf.workflow.schema.function.FunctionDefinition;

@@ -1,27 +1,26 @@
-package epf.workflow.schema;
+package epf.workflow.schema.error;
 
 import java.io.Serializable;
 import java.util.List;
 import org.eclipse.jnosql.mapping.Embeddable;
 import org.eclipse.microprofile.graphql.Description;
 import epf.nosql.schema.StringOrObject;
+import epf.workflow.schema.RetryDefinition;
 import epf.workflow.schema.adapter.StringOrRetryDefinitionAdapter;
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import jakarta.nosql.Column;
-import jakarta.validation.constraints.NotNull;
 
 @Embeddable
-public class ErrorHandlerDefinition implements Serializable {
+public class ErrorHandlerReference implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	@NotNull
 	@Column
-	@Description("The unique name which is used to reference the defined handler.")
-	private String name;
+	@Description("The name of the error handler definition to reference. If set, all other properties are ignored.")
+	private String refName;
 
 	@Column
 	@Description("References the errors to handle. If null or empty, and if exceptWhen is null or empty, all errors are caught.")
@@ -40,12 +39,12 @@ public class ErrorHandlerDefinition implements Serializable {
 	@Description("Defines the outcome, if any, when handling errors")
 	private ErrorOutcomeDefinition then;
 
-	public String getName() {
-		return name;
+	public String getRefName() {
+		return refName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setRefName(String refName) {
+		this.refName = refName;
 	}
 
 	public List<ErrorReference> getWhen() {
