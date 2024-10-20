@@ -5,6 +5,7 @@ import org.eclipse.jnosql.mapping.Embeddable;
 import org.eclipse.microprofile.graphql.Description;
 import epf.nosql.schema.StringOrObject;
 import epf.workflow.schema.adapter.StringOrWorkflowTimeoutDefinitionAdapter;
+import jakarta.json.JsonValue;
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import jakarta.nosql.Column;
 import jakarta.validation.constraints.NotNull;
@@ -28,7 +29,7 @@ public class ContinueAs implements Serializable {
 	
 	@Column
 	@Description("If string type, a workflow expression which selects parts of the states data output to become the workflow data input of continued execution. If object type, a custom object to become the workflow data input of the continued execution.")
-	private StringOrObject<Object> data;
+	private StringOrObject<JsonValue> data;
 	
 	@Column
 	@Description("Workflow execution timeout to be used by the workflow continuing execution. Overwrites any specific settings set by that workflow.")
@@ -51,11 +52,11 @@ public class ContinueAs implements Serializable {
 		this.version = version;
 	}
 
-	public StringOrObject<Object> getData() {
+	public StringOrObject<JsonValue> getData() {
 		return data;
 	}
 
-	public void setData(StringOrObject<Object> data) {
+	public void setData(StringOrObject<JsonValue> data) {
 		this.data = data;
 	}
 

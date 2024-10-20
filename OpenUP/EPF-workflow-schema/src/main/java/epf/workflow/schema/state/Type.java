@@ -4,7 +4,6 @@ public enum Type {
 	event,
 	operation,
 	switch_,
-	sleep,
 	parallel,
 	inject,
 	foreach,
@@ -13,7 +12,6 @@ public enum Type {
 	public static final String EVENT = "event";
 	public static final String OPERATION = "operation";
 	public static final String SWITCH = "switch";
-	public static final String SLEEP = "sleep";
 	public static final String PARALLEL = "parallel";
 	public static final String INJECT = "inject";
 	public static final String FOREACH = "foreach";

@@ -31,15 +31,9 @@ import jakarta.ws.rs.client.Invocation.Builder;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 
-/**
- * 
- */
 @ApplicationScoped
 public class OpenAPIFunctions {
 	
-	/**
-	 * 
-	 */
 	private transient final Map<String, OpenAPI> openAPIs = new ConcurrentHashMap<>();
 	
 	private static OpenAPI read(final URL url) throws Exception {

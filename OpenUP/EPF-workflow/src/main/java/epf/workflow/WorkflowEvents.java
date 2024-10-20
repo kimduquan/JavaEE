@@ -41,9 +41,6 @@ import jakarta.inject.Inject;
 import jakarta.json.JsonValue;
 import jakarta.ws.rs.core.Link;
 
-/**
- * 
- */
 @ApplicationScoped
 public class WorkflowEvents {
 	
@@ -52,34 +49,19 @@ public class WorkflowEvents {
 	 */
 	private transient static final Logger LOGGER = LogManager.getLogger(WorkflowEvents.class.getName());
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient WorkflowExpressions workflowExpressions;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient WorkflowStates workflowStates;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient Concurrent concurrent;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	@ConfigProperty(name = Naming.Concurrent.CONCURRENT_URL)
 	transient URI concurrentUrl;
 	
-	/**
-	 * 
-	 */
 	@PostConstruct
 	protected void postConstruct() {
 		try {
@@ -135,7 +117,7 @@ public class WorkflowEvents {
 		final List<Map<String, Object>> eventDatas = new ArrayList<>();
 		final List<Link> eventLinks = new ArrayList<>();
 		final Link producesLink = epf.event.client.Event.producesLink();
-		final Link consumeLink = Internal.observesLink(workflowDefinition.getId(), state, Optional.ofNullable(workflowDefinition.getVersion()));
+		final Link consumeLink = Internal.observesLink(workflowDefinition.getName(), state, Optional.ofNullable(workflowDefinition.getVersion()));
 		final LinkBuilder builder = new LinkBuilder();
 		
 		final EventDefinition produceEventDefinition = getEventDefinition(workflowDefinition, actionDefinition.getEventRef().getProduceEventRef());
@@ -267,7 +249,7 @@ public class WorkflowEvents {
 				all = false;
 			}
 		}
-		final boolean exclusive = !Boolean.FALSE.equals(eventState.isExclusive());
+		final boolean exclusive = !Boolean.FALSE.equals(eventState.getExclusive());
 		return exclusive ? any : all;
 	}
 	

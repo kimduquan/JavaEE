@@ -2,29 +2,14 @@ package epf.workflow.model;
 
 import java.io.Serializable;
 
-/**
- * 
- */
 public class WorkflowState implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
-	/**
-	 * 
-	 */
 	private String name;
 	
-	/**
-	 * 
-	 */
 	private WorkflowState previousState;
 	
-	/**
-	 * 
-	 */
 	private WorkflowData workflowData;
 
 	public WorkflowState getPreviousState() {

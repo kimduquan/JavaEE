@@ -13,17 +13,9 @@ import epf.workflow.schema.state.State;
 import epf.workflow.schema.state.SwitchState;
 import jakarta.enterprise.context.ApplicationScoped;
 
-/**
- * 
- */
 @ApplicationScoped
 public class WorkflowTimeouts {
 	
-	/**
-	 * @param workflowTimeoutDefinition
-	 * @param timeouts
-	 * @return
-	 */
 	public WorkflowTimeoutDefinition getTimeouts(WorkflowTimeoutDefinition workflowTimeoutDefinition, final Object timeouts) {
 		if(timeouts instanceof WorkflowTimeoutDefinition) {
 			if(workflowTimeoutDefinition == null) {
@@ -51,11 +43,6 @@ public class WorkflowTimeouts {
 		return workflowTimeoutDefinition;
 	}
 	
-	/**
-	 * @param WorkflowDefinition
-	 * @param state
-	 * @return
-	 */
 	public Optional<Duration> getActionExecTimeout(final WorkflowDefinition WorkflowDefinition, final State state) {
 		Optional<Duration> actionExecTimeout = Optional.empty();
 		WorkflowTimeoutDefinition workflowTimeoutDefinition = getTimeouts(WorkflowDefinition, state);
@@ -65,11 +52,6 @@ public class WorkflowTimeouts {
 		return actionExecTimeout;
 	}
 	
-	/**
-	 * @param workflowDefinition
-	 * @param state
-	 * @return
-	 */
 	public WorkflowTimeoutDefinition getTimeouts(final WorkflowDefinition workflowDefinition, final State state) {
 		WorkflowTimeoutDefinition workflowTimeoutDefinition = getTimeouts(null, workflowDefinition.getTimeouts());
 		switch(state.getType_()) {
@@ -84,8 +66,6 @@ public class WorkflowTimeouts {
 			case switch_:
 				final SwitchState switchState = (SwitchState) state;
 				workflowTimeoutDefinition = getTimeouts(workflowTimeoutDefinition, switchState.getTimeouts());
-				break;
-			case sleep:
 				break;
 			case parallel:
 				final ParallelState parallelState = (ParallelState) state;

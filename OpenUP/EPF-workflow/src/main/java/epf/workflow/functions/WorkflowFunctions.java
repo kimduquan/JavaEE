@@ -18,21 +18,12 @@ import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 
-/**
- * 
- */
 @ApplicationScoped
 public class WorkflowFunctions {
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient OpenAPIFunctions openAPIFunctions;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient WorkflowErrorHandling workflowErrorHandling;
 	

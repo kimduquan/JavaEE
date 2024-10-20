@@ -28,7 +28,7 @@ import jakarta.nosql.Id;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-public class WorkflowDefinitionStructure implements Serializable {
+public class WorkflowDefinition implements Serializable {
 
 	/**
 	 * 
