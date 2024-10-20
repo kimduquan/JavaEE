@@ -8,7 +8,6 @@ import org.eclipse.rdf4j.model.BNode;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.Triple;
 import org.eclipse.rdf4j.query.Binding;
 import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.BooleanQuery;
@@ -129,11 +128,7 @@ public class RDF implements HealthCheck {
 	}
 	
 	private void bind(final Binding binding, final JsonObjectBuilder parent) {
-		if(binding.getValue().isTriple()) {
-			final Triple triple = (Triple) binding.getValue();
-			
-		}
-		else if(binding.getValue().isBNode()) {
+		if(binding.getValue().isBNode()) {
 			final BNode node = (BNode) binding.getValue();
 			parent.add(binding.getName(), node.getID());
 		}
@@ -149,7 +144,7 @@ public class RDF implements HealthCheck {
 	
 	private JsonValue transform(final Statement statement) {
 		final JsonObjectBuilder subject = Json.createObjectBuilder();
-		return null;
+		return subject.build();
 	}
 	
 	private JsonValue transform(final TupleQuery query) {
