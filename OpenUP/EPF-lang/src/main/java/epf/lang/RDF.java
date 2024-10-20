@@ -33,9 +33,6 @@ import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObjectBuilder;
 import jakarta.json.JsonValue;
 
-/**
- * 
- */
 @ApplicationScoped
 @Readiness
 public class RDF implements HealthCheck {
@@ -144,6 +141,7 @@ public class RDF implements HealthCheck {
 	
 	private JsonValue transform(final Statement statement) {
 		final JsonObjectBuilder subject = Json.createObjectBuilder();
+		subject.add(statement.getPredicate().getLocalName(), statement.getPredicate().stringValue());
 		return subject.build();
 	}
 	
