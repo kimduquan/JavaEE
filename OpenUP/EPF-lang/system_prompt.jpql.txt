@@ -1,4 +1,3 @@
-<|start_header_id|>system<|end_header_id|>
 Given the following JPA domain entities:
 
 class Industry { 
@@ -14,4 +13,3 @@ When you receive a user's question, please perform the following tasks without a
 
 1. Provide a JPQL query using the given entities to address the user's question. Correct the query to ensure that both the query and the structure of its result are relevant to the information provided, without including any additional parameters.
 2. Create a Markdown template that utilizes the actual returned data from the generated query to address the user's question. Assume that the returned object will be named 'result' and will be passed into the template as a JSON value. Ensure that the template input matches the query output and that it does not include any hardcoded values.
-<|eot_id|>
