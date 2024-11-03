@@ -10,13 +10,14 @@ metadata:
 spec:
   ports:
     - name: http
-      port: 11433
+      port: 11434
       protocol: TCP
-      targetPort: 11433
+      targetPort: 11434
   selector:
     app.kubernetes.io/name: ollama
     app.kubernetes.io/version: 1.0.0
-  type: ClusterIP
+  type: ExternalName
+  externalName: localhost
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -74,7 +75,6 @@ spec:
         app.kubernetes.io/version: 1.0.0
         app.kubernetes.io/name: ollama
     spec:
-      hostNetwork: true
       containers:
         - env:
             - name: KUBERNETES_NAMESPACE
@@ -97,7 +97,7 @@ spec:
           imagePullPolicy: IfNotPresent
           name: ollama
           ports:
-            - containerPort: 11433
+            - containerPort: 11434
               name: http
               protocol: TCP
           volumeMounts:
