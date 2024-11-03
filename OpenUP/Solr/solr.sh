@@ -1,1 +1,0 @@
-helm install solr oci://registry-1.docker.io/bitnamicharts/solr

@@ -10,9 +10,9 @@ metadata:
 spec:
   ports:
     - name: http
-      port: 11434
+      port: 11433
       protocol: TCP
-      targetPort: 11434
+      targetPort: 11433
   selector:
     app.kubernetes.io/name: ollama
     app.kubernetes.io/version: 1.0.0
@@ -97,7 +97,7 @@ spec:
           imagePullPolicy: IfNotPresent
           name: ollama
           ports:
-            - containerPort: 11434
+            - containerPort: 11433
               name: http
               protocol: TCP
           volumeMounts:
