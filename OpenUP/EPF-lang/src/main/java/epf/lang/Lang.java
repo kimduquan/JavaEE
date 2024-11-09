@@ -8,14 +8,12 @@ import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.HttpMethod;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -48,28 +46,6 @@ public class Lang {
 	@Inject
 	@Readiness
 	Cache cache;
-	
-	/**
-	 * 
-	 */
-	@Inject
-	@Readiness
-	Graph graph;
-	
-	/**
-	 * @param query
-	 * @return
-	 * @throws Exception 
-	 */
-	@Path(Naming.Lang.Internal.GRAPH)
-	@GET
-	@Produces(MediaType.TEXT_PLAIN)
-	@RunOnVirtualThread
-	public String generateQuery(
-			@QueryParam("query") 
-			final String query) throws Exception {
-		return graph.generateQuery(query);
-	}
 	
 	/**
 	 * @param query
