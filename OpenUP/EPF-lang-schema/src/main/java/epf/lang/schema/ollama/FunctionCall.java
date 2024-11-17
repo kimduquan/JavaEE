@@ -1,12 +1,18 @@
 package epf.lang.schema.ollama;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
  * 
  */
-public class FunctionCall {
+public class FunctionCall implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * 
 	 */

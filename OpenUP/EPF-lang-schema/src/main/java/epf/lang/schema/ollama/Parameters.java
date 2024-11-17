@@ -1,12 +1,18 @@
 package epf.lang.schema.ollama;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 /**
  * 
  */
-public class Parameters {
+public class Parameters implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	
 	/**
 	 * 

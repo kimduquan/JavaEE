@@ -45,20 +45,6 @@ public class Persistence implements HealthCheck {
 	 * 
 	 */
 	@Inject
-	@ConfigProperty(name = Naming.Lang.Internal.Graph.Property.TEXT)
-	String textProperty;
-	
-	/**
-	 * 
-	 */
-	@Inject
-	@ConfigProperty(name = Naming.Lang.Internal.Graph.Property.ID)
-	String idProperty;
-	
-	/**
-	 * 
-	 */
-	@Inject
 	@ConfigProperty(name = "quarkus.hibernate-orm.packages")
 	String packages;
 	

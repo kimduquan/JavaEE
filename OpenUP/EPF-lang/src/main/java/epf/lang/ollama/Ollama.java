@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import epf.lang.schema.ollama.ChatRequest;
+import epf.lang.schema.ollama.ChatResponse;
 import epf.lang.schema.ollama.EmbeddingsRequest;
 import epf.lang.schema.ollama.EmbeddingsResponse;
 import epf.lang.schema.ollama.GenerateRequest;
@@ -44,7 +45,7 @@ public interface Ollama {
 	 */
 	@Path("chat")
 	@POST
-	CompletionStage<InputStream> chat(final ChatRequest request);
+	ChatResponse chat(final ChatRequest request);
 	
 	/**
 	 * @param request
