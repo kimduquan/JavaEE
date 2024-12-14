@@ -13,9 +13,9 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-    <quarkus.platform.version>3.15.1</quarkus.platform.version>
+    <quarkus.platform.version>3.17.4</quarkus.platform.version>
     <skipITs>true</skipITs>
-    <surefire-plugin.version>3.5.0</surefire-plugin.version>
+    <surefire-plugin.version>3.5.2</surefire-plugin.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -30,43 +30,43 @@
 		<dependency>
 			<groupId>org.neo4j</groupId>
 			<artifactId>neo4j-ogm-core</artifactId>
-			<version>4.0.11</version>
+			<version>4.0.13</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.neo4j/neo4j-ogm-bolt-driver -->
 		<dependency>
 			<groupId>org.neo4j</groupId>
 			<artifactId>neo4j-ogm-bolt-driver</artifactId>
-			<version>4.0.11</version>
+			<version>4.0.13</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.neo4j.driver/neo4j-java-driver -->
 		<dependency>
 			<groupId>org.neo4j.driver</groupId>
 			<artifactId>neo4j-java-driver</artifactId>
-			<version>5.23.0</version>
+			<version>5.27.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/dev.langchain4j/langchain4j-neo4j -->
 		<dependency>
 			<groupId>dev.langchain4j</groupId>
 			<artifactId>langchain4j-neo4j</artifactId>
-			<version>0.35.0</version>
+			<version>0.36.2</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/dev.langchain4j/langchain4j -->
 		<dependency>
 			<groupId>dev.langchain4j</groupId>
 			<artifactId>langchain4j</artifactId>
-			<version>0.35.0</version>
+			<version>0.36.2</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/dev.langchain4j/langchain4j-ollama -->
 		<dependency>
 		    <groupId>dev.langchain4j</groupId>
 		    <artifactId>langchain4j-ollama</artifactId>
-		    <version>0.35.0</version>
+		    <version>0.36.2</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.jboss.narayana.rts/lra-coordinator-jar -->
 		<dependency>
 			<groupId>org.jboss.narayana.rts</groupId>
 			<artifactId>lra-coordinator-jar</artifactId>
-			<version>7.0.2.Final</version>
+			<version>7.1.0.Final</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.graphql-java/graphql-java -->
 		<dependency>
@@ -84,19 +84,19 @@
 		<dependency>
 		    <groupId>io.quarkiverse.jnosql</groupId>
 		    <artifactId>quarkus-jnosql-document-mongodb</artifactId>
-		    <version>3.2.2.1</version>
+		    <version>3.3.2</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.quarkiverse.jnosql/quarkus-jnosql-column-cassandra -->
 		<dependency>
 		    <groupId>io.quarkiverse.jnosql</groupId>
 		    <artifactId>quarkus-jnosql-column-cassandra</artifactId>
-		    <version>3.2.2.1</version>
+		    <version>3.3.2</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.quarkiverse.jnosql/quarkus-jnosql-keyvalue-hazelcast -->
 		<dependency>
 		    <groupId>io.quarkiverse.jnosql</groupId>
 		    <artifactId>quarkus-jnosql-keyvalue-hazelcast</artifactId>
-		    <version>3.2.2.1</version>
+		    <version>3.3.2</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.quarkiverse.opentracing/quarkus-smallrye-opentracing -->
 		<dependency>
@@ -143,7 +143,7 @@
 		<plugin>
 		    <groupId>org.apache.maven.plugins</groupId>
 		    <artifactId>maven-pmd-plugin</artifactId>
-		    <version>3.25.0</version>
+		    <version>3.26.0</version>
 		</plugin>
 		<plugin>
 			<groupId>org.apache.maven.plugins</groupId>
@@ -175,7 +175,7 @@
 		<plugin>
 			<groupId>org.codehaus.izpack</groupId>
 			<artifactId>izpack-maven-plugin</artifactId>
-			<version>5.2.2</version>
+			<version>5.2.3</version>
 		</plugin>
 	  </plugins>
     </pluginManagement>

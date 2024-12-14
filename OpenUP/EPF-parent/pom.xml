@@ -15,7 +15,7 @@
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
     <quarkus.platform.version>2.16.12.Final</quarkus.platform.version>
     <skipITs>true</skipITs>
-    <surefire-plugin.version>3.5.0</surefire-plugin.version>
+    <surefire-plugin.version>3.5.2</surefire-plugin.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -30,7 +30,7 @@
 		<dependency>
 			<groupId>org.jboss.narayana.rts</groupId>
 			<artifactId>lra-coordinator-jar</artifactId>
-			<version>7.0.2.Final</version>
+			<version>7.1.0.Final</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.hazelcast/quarkus-hazelcast-client -->
 		<dependency>
@@ -54,7 +54,7 @@
 		<dependency>
 		    <groupId>net.bytebuddy</groupId>
 		    <artifactId>byte-buddy</artifactId>
-		    <version>1.15.1</version>
+		    <version>1.15.10</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast -->
 		<dependency>
@@ -83,7 +83,7 @@
 		<plugin>
 		    <groupId>org.apache.maven.plugins</groupId>
 		    <artifactId>maven-pmd-plugin</artifactId>
-		    <version>3.25.0</version>
+		    <version>3.26.0</version>
 		</plugin>
 		<plugin>
 			<groupId>org.apache.maven.plugins</groupId>
@@ -115,7 +115,7 @@
 		<plugin>
 			<groupId>org.codehaus.izpack</groupId>
 			<artifactId>izpack-maven-plugin</artifactId>
-			<version>5.2.2</version>
+			<version>5.2.3</version>
 		</plugin>
 	  </plugins>
     </pluginManagement>
