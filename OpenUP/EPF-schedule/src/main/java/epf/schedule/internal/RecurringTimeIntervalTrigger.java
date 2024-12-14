@@ -32,8 +32,7 @@ public class RecurringTimeIntervalTrigger implements Trigger {
 	public Date getNextRunTime(final LastExecution lastExecutionInfo, final Date taskScheduledTime) {
 		Date nextRunTime = Date.from(Instant.now());
 		if(recurringTimeInterval.getTimeInterval() != null && recurringTimeInterval.getTimeInterval().getDuration() != null) {
-			final Instant now = Instant.now();
-			recurringTimeInterval.getTimeInterval().getDuration().addTo(now);
+			final Instant now = (Instant) recurringTimeInterval.getTimeInterval().getDuration().addTo(Instant.now());
 			nextRunTime = Date.from(now);
 		}
 		numberOfRepetitions.incrementAndGet();
