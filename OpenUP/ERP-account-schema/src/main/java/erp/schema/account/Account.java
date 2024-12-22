@@ -3,9 +3,9 @@ package erp.schema.account;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
-
 import erp.base.schema.res.Company;
 import erp.base.schema.res.Currency;
+import erp.schema.account.account.Tag;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -173,7 +173,7 @@ public class Account {
 	@ManyToMany(targetEntity = Tag.class, fetch = FetchType.LAZY)
 	@JoinTable(name = "account_account_account_tag")
 	@Description("Tags")
-	private List<String> tags;
+	private List<Tag> tags;
 	
 	@Transient
 	private Integer group_id;
