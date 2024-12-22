@@ -1,4 +1,4 @@
-package erp.schema.analytic;
+package erp.schema.account;
 
 import jakarta.persistence.Entity;
 
@@ -6,6 +6,6 @@ import jakarta.persistence.Entity;
  * 
  */
 @Entity
-public class AnalyticLine {
+public class Payment {
 
 }

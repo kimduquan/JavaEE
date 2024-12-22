@@ -1,4 +1,4 @@
-package erp.account.schema;
+package erp.schema.account;
 
 import jakarta.persistence.Entity;
 
@@ -6,6 +6,6 @@ import jakarta.persistence.Entity;
  * 
  */
 @Entity
-public class Payment {
+public class Currency {
 
 }
