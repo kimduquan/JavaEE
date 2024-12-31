@@ -6,6 +6,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "ir_profile")
@@ -59,11 +60,11 @@ public class Profile {
 	@Description("Entry count")
 	private Integer entry_count;
 	
-	@Column
+	@Transient
 	@Description("Speedscope")
 	private byte[] speedscope;
 	
-	@Column
+	@Transient
 	@Description("Open")
 	private String speedscope_url;
 }

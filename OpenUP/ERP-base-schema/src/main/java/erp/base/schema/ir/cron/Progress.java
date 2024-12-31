@@ -8,10 +8,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
+@Table(name = "ir_cron_progress")
 @Description("Progress of Scheduled Actions")
 public class Progress {
 

@@ -20,13 +20,18 @@ import jakarta.validation.constraints.NotNull;
 public class View {
 	
 	public enum ViewType {
-		tree,
+		@Description("List")
+		list,
+		@Description("Form")
 	    form,
+	    @Description("Graph")
 	    graph,
+	    @Description("Pivot")
 	    pivot,
+	    @Description("Calendar")
 	    calendar,
-	    gantt,
-	    kanban
+	    @Description("Kanban")
+	    kanban,
 	}
 	
 	@Id

@@ -46,6 +46,7 @@ public class Date_Range {
 	@DefaultValue("1")
 	private Integer number_next = 1;
 	
+	@Transient
 	@Description("Actual Next Number")
 	private Integer number_next_actual;
 }

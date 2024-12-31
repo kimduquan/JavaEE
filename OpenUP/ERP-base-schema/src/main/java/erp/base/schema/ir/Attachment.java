@@ -2,7 +2,6 @@ package erp.base.schema.ir;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
-
 import erp.base.schema.res.Company;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -81,17 +80,17 @@ public class Attachment {
 	
 	@Column(name = "public")
 	@Description("Is public document")
-	private Boolean _public;
+	private Boolean public_;
 	
 	@Column
 	@Description("Access Token")
 	private String access_token;
 	
-	@Column
+	@Transient
 	@Description("File Content (raw)")
 	private byte[] raw;
 	
-	@Column
+	@Transient
 	@Description("File Content (base64)")
 	private byte[] datas;
 	

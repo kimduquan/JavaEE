@@ -3,7 +3,6 @@ package erp.base.schema.ir.actions;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
-
 import erp.base.schema.ir.Model;
 import erp.base.schema.ir.model.Fields;
 import erp.base.schema.ir.model.Selection;

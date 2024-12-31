@@ -88,13 +88,13 @@ public class Model {
 	@Description("Record Rules")
 	private List<Rule> rules;
 	
-	@Column(name = "abstract")
+	@Transient
 	@Description("Abstract Model")
 	private Boolean abstract_;
 	
 	@Column(name = "transient")
 	@Description("Transient Model")
-	private Boolean _transient;
+	private Boolean transient_;
 	
 	@Transient
 	@Description("In Apps")
@@ -103,7 +103,7 @@ public class Model {
 	@Transient
 	private List<Integer> view_ids;
 	
-	@OneToMany(targetEntity = View.class, fetch = FetchType.LAZY)
+	@Transient
 	@Description("Views")
 	private List<View> views;
 	

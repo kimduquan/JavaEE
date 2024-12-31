@@ -6,6 +6,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
@@ -21,7 +22,7 @@ public class Data {
 	@Description("External Identifier")
 	private String name;
 	
-	@Column
+	@Transient
 	@Description("Complete ID")
 	private String complete_name;
 	
@@ -44,7 +45,7 @@ public class Data {
 	@Description("Non Updatable")
 	private Boolean noupdate = false;
 	
-	@Column
+	@Transient
 	@Description("Reference")
 	private String reference;
 }

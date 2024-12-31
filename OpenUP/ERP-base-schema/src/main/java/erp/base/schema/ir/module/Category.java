@@ -66,6 +66,7 @@ public class Category {
 	@Description("Exclusive")
 	private Boolean exclusive;
 	
+	@Transient
 	@Description("External ID")
 	private String xml_id;
 }

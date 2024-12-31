@@ -1,7 +1,8 @@
-package erp.base.schema.ir.module;
+package erp.base.schema.ir.module.module;
 
-import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import erp.base.schema.ir.module.Module;
+import erp.base.schema.ir.module.State;
 import erp.schema.util.EnumAttributeConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,9 +14,9 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
 @Entity
-@Table(name = "ir_module_module_dependency")
-@Description("Module dependency")
-public class Dependency {
+@Table(name = "ir_module_module_exclusion")
+@Description("Module exclusion")
+public class Exclusion {
 	
 	public class StatusAttributeConverter extends EnumAttributeConverter<State> {
 		public StatusAttributeConverter() {
@@ -38,18 +39,9 @@ public class Dependency {
 	private Module module;
 	
 	@Transient
-	private Integer depend_id;
+	@Description("Exclusion Module")
+	private Integer exclusion_id;
 	
-	@ManyToOne(targetEntity = Module.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "depend_id")
-	@Description("Dependency")
-	private Module depend;
-	
-	@Column
 	@Description("Status")
 	private Dep_State state;
-	
-	@Column
-	@DefaultValue("true")
-	private Boolean auto_install_required = true;
 }

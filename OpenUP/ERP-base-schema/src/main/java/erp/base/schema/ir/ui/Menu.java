@@ -3,7 +3,6 @@ package erp.base.schema.ir.ui;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
-
 import erp.base.schema.res.Groups;
 import erp.schema.util.EnumAttributeConverter;
 import jakarta.persistence.Column;
@@ -87,6 +86,7 @@ public class Menu {
 	@Description("Groups")
 	private List<Groups> groups;
 	
+	@Transient
 	@Description("Full Path")
 	private String complete_name;
 	
@@ -98,6 +98,7 @@ public class Menu {
 	@Enumerated(EnumType.STRING)
 	private Action action;
 	
+	@Transient
 	@Description("Web Icon Image")
 	private byte[] web_icon_data;
 }

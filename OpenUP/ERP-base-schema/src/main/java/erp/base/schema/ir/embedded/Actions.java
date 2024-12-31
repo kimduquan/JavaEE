@@ -11,13 +11,16 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
+@Table(name = "ir_embedded_actions")
 @Description("Embedded Actions")
 public class Actions {
 
@@ -64,7 +67,7 @@ public class Actions {
 	@Description("User")
 	private Users user;
 	
-	@Column
+	@Transient
 	private boolean is_deletable;
 	
 	@Column
@@ -78,7 +81,7 @@ public class Actions {
 	@JoinColumn(name = "embedded_action_id")
 	private List<Filters> filters;
 	
-	@Column
+	@Transient
 	@Description("Embedded visibility")
 	private boolean is_visible;
 	
@@ -94,5 +97,8 @@ public class Actions {
 	private List<Integer> groups_ids;
 	
 	@ManyToMany(targetEntity = Groups.class, fetch = FetchType.LAZY)
+	@JoinTable(name = "ir_embedded_actions_res_groups_rel", joinColumns = {
+			@JoinColumn(name = "res_groups_id", referencedColumnName = "ir_embedded_actions_id")
+	})
 	private List<Groups> groups;
 }

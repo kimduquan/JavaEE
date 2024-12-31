@@ -8,6 +8,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
@@ -65,7 +66,7 @@ public class Mail_Server {
 	@Description("Authenticate with")
 	private AuthenticateWith smtp_authentication = AuthenticateWith.login;
 	
-	@Column
+	@Transient
 	@Description("Authentication Info")
 	private String smtp_authentication_info;
 	

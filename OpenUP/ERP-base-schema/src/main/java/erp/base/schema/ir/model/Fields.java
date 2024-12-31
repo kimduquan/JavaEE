@@ -70,6 +70,7 @@ public class Fields {
 	private Integer relation_field_id;
 	
 	@ManyToOne(targetEntity = Fields.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "relation_field_id")
 	@Description("Relation field")
 	private Fields relation_field_;
 	
@@ -97,6 +98,7 @@ public class Fields {
 	@Description("Field Type")
 	private String ttype;
 	
+	@Transient
 	@Description("Selection Options (Deprecated)")
 	private String selection;
 	

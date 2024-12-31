@@ -3,7 +3,8 @@ package erp.base.schema.ir.module;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
-
+import erp.base.schema.ir.module.module.Dependency;
+import erp.base.schema.ir.module.module.Exclusion;
 import erp.base.schema.res.Country;
 import erp.schema.util.EnumAttributeConverter;
 import jakarta.persistence.Column;
@@ -83,7 +84,7 @@ public class Module {
 	@Description("Description")
 	private String description;
 	
-	@Column
+	@Transient
 	@Description("Description HTML")
 	private String description_html;
 	
@@ -103,7 +104,7 @@ public class Module {
 	@Description("Website")
 	private String website;
 	
-	@Column
+	@Transient
 	@Description("Latest Version")
 	private String installed_version;
 	
@@ -186,11 +187,11 @@ public class Module {
 	@Description("Icon URL")
 	private String icon;
 	
-	@Column
+	@Transient
 	@Description("Icon")
 	private byte[] icon_image;
 	
-	@Column
+	@Transient
 	@Description("Flag")
 	private String icon_flag;
 	
@@ -199,6 +200,6 @@ public class Module {
 	@Description("Odoo Enterprise Module")
 	private Boolean to_buy = false;
 	
-	@Column
+	@Transient
 	private Boolean has_iap;
 }

@@ -1,4 +1,4 @@
-package erp.base.schema.ir.module;
+package erp.base.schema.ir.module.module;
 
 import org.eclipse.microprofile.graphql.Description;
 

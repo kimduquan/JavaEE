@@ -2,7 +2,6 @@ package erp.base.schema.ir.actions;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
-
 import erp.base.schema.ir.Model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,7 +18,7 @@ import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Table(name = "ir_actions")
 @Description("Actions")
 public class Actions {
@@ -49,11 +48,12 @@ public class Actions {
 	private String xml_id;
 	
 	@Column
+	private String path;
+	
+	@Column
 	@Description("Action Description")
 	private String help;
 	
-	@Column(insertable = false, updatable = false)
-	@Description("Setting a value makes this action available in the sidebar for the given model.")
 	@Transient
 	private Integer binding_model_id;
 	

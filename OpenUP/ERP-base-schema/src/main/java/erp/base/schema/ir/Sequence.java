@@ -3,7 +3,6 @@ package erp.base.schema.ir;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
-
 import erp.base.schema.ir.sequence.Date_Range;
 import erp.base.schema.res.Company;
 import jakarta.persistence.Column;
@@ -67,7 +66,7 @@ public class Sequence {
 	@Description("Next Number")
 	private Integer number_next = 1;
 	
-	@Column
+	@Transient
 	@Description("Actual Next Number")
 	private Integer number_next_actual;
 	
