@@ -1,7 +1,7 @@
 set USER_DIR=C:\Users\PC
 set SOURCE_DIR=C:\GIT\JavaEE\OpenUP
-set JAVA8_HOME=C:\jdk8u422-b05
-set JAVA21_HOME=C:\jdk-21.0.4+7
+set JAVA8_HOME=C:\jdk8u432-b06
+set JAVA21_HOME=C:\jdk-21.0.5+11
 set JAVA_HOME=%JAVA21_HOME%
 set PLUTO_HOME="C:\pluto-3.1.1"
 set KAFKA_DIR=C:\kafka_2.13-3.5.1
