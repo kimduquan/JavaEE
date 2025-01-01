@@ -73,7 +73,7 @@ public class Groups {
 	@Description("Color Index")
 	private Integer color;
 	
-	@Column
+	@Transient
 	@Description("Group Name")
 	private String full_name;
 	

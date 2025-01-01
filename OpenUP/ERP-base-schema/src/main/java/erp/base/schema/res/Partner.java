@@ -69,7 +69,7 @@ public class Partner {
 	@Description("Related Company")
 	private Partner parent;
 	
-	@Column
+	@Transient
 	@Description("Parent name")
 	private String parent_name;
 	
@@ -88,13 +88,14 @@ public class Partner {
 	@Description("Language")
 	private String lang;
 	
-	@Column
+	@Transient
 	private Integer active_lang_count;
 	
 	@Column
 	@Description("Timezone")
 	private String tz;
 	
+	@Transient
 	@Description("Timezone offset")
 	private String tz_offset;
 	
@@ -111,20 +112,12 @@ public class Partner {
 	private String vat;
 	
 	@Transient
+	@Description("Partner with same Tax ID")
 	private Integer same_vat_partner_id;
 	
-	@ManyToOne(targetEntity = Partner.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "same_vat_partner_id")
-	@Description("Partner with same Tax ID")
-	private Partner same_vat_partner;
-	
 	@Transient
-	private Integer same_company_registry_partner_id;
-	
-	@ManyToOne(targetEntity = Partner.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "same_company_registry_partner_id")
 	@Description("Partner with same Company Registry")
-	private Partner same_company_registry_partner;
+	private Integer same_company_registry_partner_id;
 	
 	@Column
 	@Description("Company ID")
@@ -199,6 +192,7 @@ public class Partner {
 	@Description("Country")
 	private Country country;
 	
+	@Transient
 	@Description("Country Code")
 	private String country_code;
 	
@@ -213,6 +207,7 @@ public class Partner {
 	@Column
 	private String email;
 	
+	@Transient
 	@Description("Formatted Email")
 	private String email_formatted;
 	
@@ -237,6 +232,7 @@ public class Partner {
 	@Description("Industry")
 	private Industry industry;
 	
+	@Transient
 	@Description("Company Type")
 	private CompanyType company_type;
 	
@@ -264,6 +260,7 @@ public class Partner {
 	@Description("Share Partner")
 	private Boolean partner_share;
 	
+	@Transient
 	@Description("Complete Address")
 	private String contact_address;
 	

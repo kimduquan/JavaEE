@@ -49,7 +49,7 @@ public class Users extends Partner {
 	@Description("Keep empty if you don't want the user to be able to connect on the system.")
 	private String password;
 	
-	@Column
+	@Transient
 	@Description("Set Password")
 	private String new_password;
 	
@@ -69,6 +69,7 @@ public class Users extends Partner {
 	@DefaultValue("true")
 	private Boolean active = true;
 	
+	@Transient
 	@Description("Partner is Active")
 	private Boolean active_partner;
 	
@@ -103,7 +104,7 @@ public class Users extends Partner {
 	@Description("User devices")
 	private List<Device> devices;
 	
-	@Column
+	@Transient
 	@Description("Latest authentication")
 	private Date login_date;
 	
@@ -111,11 +112,11 @@ public class Users extends Partner {
 	@Description("Share User")
 	private Boolean share;
 	
-	@Column
+	@Transient
 	@Description("Number of Companies")
 	private Integer companies_count;
 	
-	@Column
+	@Transient
 	@Description("Timezone offset")
 	private String tz_offset;
 	
@@ -149,21 +150,21 @@ public class Users extends Partner {
 	@Description("Companies")
 	private List<Company> companies;
 	
-	@Column
+	@Transient
 	private String name;
 	
-	@Column
+	@Transient
 	private String email;
 	
-	@Column
+	@Transient
 	@Description("# Access Rights")
 	private Integer accesses_count;
 	
-	@Column
+	@Transient
 	@Description("# Record Rules")
 	private Integer rules_count;
 	
-	@Column
+	@Transient
 	@Description("# Groups")
 	private Integer groups_count;
 }

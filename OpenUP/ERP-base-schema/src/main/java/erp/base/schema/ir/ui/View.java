@@ -3,8 +3,6 @@ package erp.base.schema.ir.ui;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
-import erp.base.schema.ir.Model;
-import erp.base.schema.ir.model.Data;
 import erp.base.schema.res.Groups;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -77,9 +75,11 @@ public class View {
 	@Description("View Type")
 	private ViewType type;
 	
+	@Transient
 	@Description("View Architecture")
 	private String arch;
 	
+	@Transient
 	@Description("Base View Architecture")
 	private String arch_base;
 	
@@ -116,13 +116,10 @@ public class View {
 	private List<View> inherit_childrens;
 	
 	@Transient
+	@Description("Model Data")
 	private Integer model_data_id;
 	
-	@ManyToOne(targetEntity = Data.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "model_data_id")
-	@Description("Model Data")
-	private Data model_data;
-	
+	@Transient
 	@Description("External ID")
 	private String xml_id;
 	
@@ -146,10 +143,6 @@ public class View {
 	private Boolean active = true;
 	
 	@Transient
-	private Integer model_id;
-	
-	@ManyToOne(targetEntity = Model.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "model_id")
 	@Description("Model of the view")
-	private Model model_;
+	private Integer model_id;
 }

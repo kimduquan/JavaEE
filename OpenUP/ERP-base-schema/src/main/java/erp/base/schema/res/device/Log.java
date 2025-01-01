@@ -2,7 +2,6 @@ package erp.base.schema.res.device;
 
 import java.util.Date;
 import org.eclipse.microprofile.graphql.Description;
-
 import erp.base.schema.res.Users;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,10 +10,12 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
+@Table(name = "res_device_log")
 @Description("Device Log")
 public class Log {
 	
@@ -74,11 +75,11 @@ public class Log {
 	@Description("Revoked")
 	private Boolean revoked;
 	
-	@Column
+	@Transient
 	@Description("Current Device")
 	private Boolean is_current;
 	
-	@Column
+	@Transient
 	@Description("Linked IP address")
 	private Boolean linked_ip_addresses;
 }

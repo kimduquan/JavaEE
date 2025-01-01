@@ -1,7 +1,6 @@
 package erp.base.schema.res.users;
 
 import org.eclipse.microprofile.graphql.Description;
-
 import erp.base.schema.res.Users;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

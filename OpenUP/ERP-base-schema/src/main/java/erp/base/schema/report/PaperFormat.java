@@ -176,11 +176,11 @@ public class PaperFormat {
 	@Description("Associated reports")
 	private List<Report> reports;
 	
-	@Column
+	@Transient
 	@Description("Print page width (mm)")
 	private Float print_page_width;
 	
-	@Column
+	@Transient
 	@Description("Print page height (mm)")
 	private Float print_page_height;
 	

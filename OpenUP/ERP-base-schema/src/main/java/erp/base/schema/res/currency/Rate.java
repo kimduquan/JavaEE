@@ -31,10 +31,11 @@ public class Rate {
 	@Description("Technical Rate")
 	private Float rate;
 	
-	@Column
+	@Transient
 	@Description("The currency of rate 1 to the rate of the currency.")
 	private Float company_rate;
 	
+	@Transient
 	@Description("The rate of the currency to the currency of rate 1 ")
 	private Float inverse_company_rate;
 	

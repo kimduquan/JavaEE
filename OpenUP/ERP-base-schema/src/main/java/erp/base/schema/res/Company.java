@@ -5,7 +5,6 @@ import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
 import erp.base.schema.ir.ui.View;
 import erp.base.schema.report.PaperFormat;
-import erp.base.schema.res.country.State;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -104,9 +103,6 @@ public class Company {
 	@Transient
 	private Integer root_id;
 	
-	@ManyToOne(targetEntity = Company.class, fetch = FetchType.LAZY)
-	private Company root;
-	
 	@Transient
 	private Integer partner_id;
 	
@@ -128,9 +124,10 @@ public class Company {
 	@Description("Company Details")
 	private String company_details;
 	
-	@Column
+	@Transient
 	private Boolean is_company_details_empty;
 	
+	@Transient
 	@Description("Company Logo")
 	private byte[] logo;
 	
@@ -157,38 +154,30 @@ public class Company {
 	@Description("Accepted Users")
 	private List<Users> users;
 	
-	@Column
+	@Transient
 	private String street;
 	
-	@Column
+	@Transient
 	private String street2;
 	
-	@Column
+	@Transient
 	private String zip;
 	
-	@Column
+	@Transient
 	private String city;
 	
 	@Transient
-	private Integer state_id;
-	
-	@ManyToOne(targetEntity = State.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "state_id")
 	@Description("Fed. State")
-	private State state;
+	private Integer state_id;
 	
 	@Transient
 	private List<Integer> bank_ids;
 	
 	@Transient
+	@Description("Country")
 	private Integer country_id;
 	
-	@ManyToOne(targetEntity = Country.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "country_id")
-	@Description("Country")
-	private Country country;
-	
-	@Column
+	@Transient
 	private String country_code;
 	
 	@Column
@@ -200,13 +189,14 @@ public class Company {
 	@Column
 	private String mobile;
 	
-	@Column
+	@Transient
 	private String website;
 	
-	@Column
+	@Transient
 	@Description("Tax ID")
 	private String vat;
 	
+	@Transient
 	@Description("Company ID")
 	private String company_registry;
 	
@@ -237,7 +227,7 @@ public class Company {
 	@Column
 	private String secondary_color;
 	
-	@Column
+	@Transient
 	private Integer color;
 	
 	@Column(nullable = false)
@@ -246,12 +236,10 @@ public class Company {
 	@DefaultValue("Blank")
 	private LayoutBackground layout_background = LayoutBackground.Blank;
 	
+	@Transient
 	@Description("Background Image")
 	private byte[] layout_background_image;
 	
 	@Transient
 	private List<Integer> uninstalled_l10n_module_ids;
-	
-	@ManyToMany(targetEntity = erp.base.schema.ir.module.Module.class, fetch = FetchType.LAZY)
-	private List<erp.base.schema.ir.module.Module> uninstalled_l10n_modules;
 }

@@ -67,7 +67,7 @@ public class Country {
 	@Description("Currency")
 	private Currency currency;
 	
-	@Column
+	@Transient
 	@Description("Flag")
 	private String image_url;
 	

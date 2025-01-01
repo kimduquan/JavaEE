@@ -2,7 +2,6 @@ package erp.base.schema.res.users;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
-
 import erp.base.schema.res.Users;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

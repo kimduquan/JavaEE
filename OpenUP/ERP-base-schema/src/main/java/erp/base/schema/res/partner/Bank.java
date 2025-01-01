@@ -15,7 +15,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 
-@Entity(name = "PartnerBank")
+@Entity
 @Table(name = "res_partner_bank")
 @Description("Bank Accounts")
 public class Bank {
@@ -27,6 +27,7 @@ public class Bank {
 	@DefaultValue("true")
 	private Boolean active = true;
 	
+	@Transient
 	@Description("Type")
 	private String acc_type;
 	
@@ -63,10 +64,10 @@ public class Bank {
 	@Description("Bank")
 	private Bank bank;
 	
-	@Column
+	@Transient
 	private String bank_name;
 	
-	@Column
+	@Transient
 	private String bank_bic;
 	
 	@Column
@@ -88,7 +89,7 @@ public class Bank {
 	@Description("Company")
 	private Company company;
 	
-	@Column
+	@Transient
 	@Description("Country Code")
 	private String country_code;
 }

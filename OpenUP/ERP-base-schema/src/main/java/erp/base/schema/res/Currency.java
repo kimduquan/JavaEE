@@ -48,14 +48,14 @@ public class Currency {
 	@NotNull
 	private String symbol;
 	
-	@Column
+	@Transient
 	@Description("Current Rate")
 	private Float rate;
 	
-	@Column(updatable = false)
+	@Transient
 	private Float inverse_rate;
 	
-	@Column
+	@Transient
 	private String rate_string;
 	
 	@Transient
@@ -83,7 +83,7 @@ public class Currency {
 	@Description("Symbol Position")
 	private SymbolPosition position = SymbolPosition.after;
 	
-	@Column
+	@Transient
 	private Date date;
 	
 	@Column
@@ -94,6 +94,6 @@ public class Currency {
 	@Description("Currency Subunit")
 	private String currency_subunit_label;
 	
-	@Column
+	@Transient
 	private Boolean is_current_company_currency;
 }
