@@ -21,6 +21,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
+import erp.schema.account.journal.Group;
 
 @Entity
 @Description("Journal")
@@ -226,9 +227,9 @@ public class Journal {
 	@Transient
 	private List<Integer> journal_group_ids;
 	
-	@ManyToMany(targetEntity = erp.schema.account.journal.Group.class, fetch = FetchType.LAZY)
+	@ManyToMany(targetEntity = Group.class, fetch = FetchType.LAZY)
 	@Description("Ledger Group")
-	private List<erp.schema.account.journal.Group> journal_groups;
+	private List<Group> journal_groups;
 	
 	@Transient
 	private List<Integer> available_payment_method_ids;
