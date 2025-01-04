@@ -4,7 +4,6 @@ import epf.lang.ollama.Ollama;
 import epf.naming.Naming;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.context.ManagedExecutor;
@@ -53,12 +52,6 @@ public class Persistence implements HealthCheck {
      */
     @Inject
     ManagedExecutor executor;
-    
-    /**
-     * 
-     */
-    @Inject
-    EntityManager manager;
 	
 	/**
 	 * 
