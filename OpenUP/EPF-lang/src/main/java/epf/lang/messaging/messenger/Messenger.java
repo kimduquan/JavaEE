@@ -17,6 +17,7 @@ import epf.lang.ollama.Ollama;
 import epf.lang.schema.ollama.ChatRequest;
 import epf.lang.schema.ollama.ChatResponse;
 import epf.lang.schema.ollama.Role;
+import epf.naming.Naming;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -41,7 +42,7 @@ public class Messenger {
 	String token;
 	
 	@Inject
-	@ConfigProperty(name = "epf.lang.model")
+	@ConfigProperty(name = Naming.Lang.Internal.LANGUAGE_MODEL)
 	String model;
 	
 	@RestClient
