@@ -86,7 +86,8 @@ public class Country {
 	@Transient
 	private List<Integer> state_ids;
 
-	@OneToMany(targetEntity = State.class, fetch = FetchType.LAZY, mappedBy = "country_id")
+	@OneToMany(targetEntity = State.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "country_id")
 	@Description("States")
 	private List<State> states;
 	

@@ -208,7 +208,7 @@ public class Server extends Actions {
 	@Description("Custom Value")
 	private Selection selection_value;
 	
-	@Column
+	@Transient
 	@Enumerated(EnumType.STRING)
 	private ValueFieldToShow value_field_to_show;
 	
@@ -224,6 +224,7 @@ public class Server extends Actions {
 	@Description("Webhook Fields")
 	private List<Fields> webhook_fields;
 	
+	@Transient
 	@Description("Sample Payload")
 	private String webhook_sample_payload;
 }

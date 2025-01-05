@@ -80,14 +80,16 @@ public class Company {
 	@Transient
 	private List<Integer> child_ids;
 
-	@OneToMany(targetEntity =  Company.class, fetch = FetchType.LAZY, mappedBy = "parent_id")
+	@OneToMany(targetEntity =  Company.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "parent_id")
 	@Description("Branches")
 	private List<Company> childs;
 	
 	@Transient
 	private List<Integer> all_child_ids;
 
-	@OneToMany(targetEntity =  Company.class, fetch = FetchType.LAZY, mappedBy = "parent_id")
+	@OneToMany(targetEntity =  Company.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "parent_id")
 	private List<Company> all_childs;
 	
 	@Column
@@ -95,10 +97,6 @@ public class Company {
 	
 	@Transient
 	private List<Integer> parent_ids;
-	
-	@ManyToMany(targetEntity = Company.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "parent_id")
-	private List<Company> parents;
 	
 	@Transient
 	private Integer root_id;

@@ -10,6 +10,7 @@ import erp.base.schema.res.Users;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -19,11 +20,14 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 
-@Entity
+@Entity(name = "EmbeddedActions")
 @Table(name = "ir_embedded_actions")
 @Description("Embedded Actions")
 public class Actions {
 
+	@Id
+	private int id;
+	
 	@Column
 	private String name;
 	
@@ -98,7 +102,9 @@ public class Actions {
 	
 	@ManyToMany(targetEntity = Groups.class, fetch = FetchType.LAZY)
 	@JoinTable(name = "ir_embedded_actions_res_groups_rel", joinColumns = {
-			@JoinColumn(name = "res_groups_id", referencedColumnName = "ir_embedded_actions_id")
+			@JoinColumn(name = "ir_embedded_actions_id")
+	}, inverseJoinColumns = {
+			@JoinColumn(name = "res_groups_id")
 	})
 	private List<Groups> groups;
 }

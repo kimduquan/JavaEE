@@ -43,7 +43,7 @@ public class Dependency {
 	@Description("Dependency")
 	private Integer depend_id;
 	
-	@Column
+	@Transient
 	@Description("Status")
 	private Dep_State state;
 	

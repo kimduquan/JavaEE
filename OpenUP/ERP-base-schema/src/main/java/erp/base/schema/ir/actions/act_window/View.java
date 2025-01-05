@@ -14,7 +14,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 
-@Entity
+@Entity(name = "WindowView")
 @Table(name = "ir_act_window_view")
 @Description("Action Window View")
 public class View {

@@ -45,7 +45,8 @@ public class Category {
 	@Transient
 	private List<Integer> child_ids;
 
-	@OneToMany(targetEntity = Category.class, fetch = FetchType.LAZY, mappedBy = "parent_id")
+	@OneToMany(targetEntity = Category.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "parent_id")
 	@Description("Child Tags")
 	private List<Category> childs;
 	
@@ -60,8 +61,8 @@ public class Category {
 	@Transient
 	private List<Integer> partner_ids;
 
-	@ManyToMany(targetEntity = Partner.class)
-	@JoinTable(name = "res_partner_res_partner_category_rel", joinColumns = {@JoinColumn(name = "category_id")}, inverseJoinColumns = {@JoinColumn(name = "partner_id")})
+	@ManyToMany(targetEntity = Partner.class, fetch = FetchType.LAZY)
+	@JoinTable(name = "res_partner_res_partner_category_rel", joinColumns = {@JoinColumn(name = "partner_id")}, inverseJoinColumns = {@JoinColumn(name = "category_id")})
 	@Description("Partners")
 	private List<Partner> partners;
 }

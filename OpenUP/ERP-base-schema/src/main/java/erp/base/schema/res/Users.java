@@ -92,7 +92,8 @@ public class Users extends Partner {
 	@Transient
 	private List<Integer> log_ids;
 	
-	@OneToMany(targetEntity = Log.class, fetch = FetchType.LAZY, mappedBy = "create_uid")
+	@OneToMany(targetEntity = Log.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "create_uid")
 	@Description("User log entries")
 	private List<Log> logs;
 	
@@ -123,15 +124,13 @@ public class Users extends Partner {
 	@Transient
 	private List<Integer> res_users_settings_ids;
 	
-	@OneToMany(targetEntity = Settings.class, fetch = FetchType.LAZY, mappedBy = "user_id")
+	@OneToMany(targetEntity = Settings.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id")
 	private List<Settings> res_users_settings;
 	
 	@Transient
-	private Integer res_users_settings_id;
-	
-	@ManyToOne(targetEntity = Settings.class, fetch = FetchType.LAZY)
 	@Description("Settings")
-	private Settings res_users_settings_;
+	private Integer res_users_settings_id;
 	
 	@Transient
 	private Integer company_id;

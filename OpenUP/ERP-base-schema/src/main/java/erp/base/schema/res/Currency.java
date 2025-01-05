@@ -11,6 +11,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
@@ -61,7 +62,8 @@ public class Currency {
 	@Transient
 	private List<Integer> rate_ids;
 	
-	@OneToMany(targetEntity = Rate.class, fetch = FetchType.LAZY, mappedBy = "currency_id")
+	@OneToMany(targetEntity = Rate.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "currency_id")
 	@Description("Rates")
 	private List<Rate> rates;
 	

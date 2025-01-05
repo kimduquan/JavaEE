@@ -7,6 +7,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -25,7 +26,8 @@ public class Exports {
 	@Column
 	private String resource;
 	
-	@OneToMany(targetEntity = Line.class, fetch = FetchType.LAZY, mappedBy = "export_id")
+	@OneToMany(targetEntity = Line.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "export_id")
 	@Description("Export")
 	private List<Line> export_fields;
 }

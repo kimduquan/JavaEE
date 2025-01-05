@@ -38,14 +38,16 @@ public class Category {
 	@Transient
 	private List<Integer> child_ids;
 
-	@OneToMany(targetEntity = Category.class, fetch = FetchType.LAZY, mappedBy = "parent_id")
+	@OneToMany(targetEntity = Category.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "parent_id")
 	@Description("Child Applications")
 	private List<Category> childs;
 	
 	@Transient
 	private List<Integer> module_ids;
 	
-	@OneToMany(targetEntity = Module.class, fetch = FetchType.LAZY, mappedBy = "category_id")
+	@OneToMany(targetEntity = Module.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "category_id")
 	@Description("Modules")
 	private List<Module> modules;
 	

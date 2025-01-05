@@ -39,7 +39,8 @@ public class Groups {
 	@JoinTable(name = "res_groups_users_rel", joinColumns = {@JoinColumn(name = "gid")}, inverseJoinColumns = {@JoinColumn(name = "uid")})
 	private List<Users> users;
 	
-	@OneToMany(targetEntity = Access.class, fetch = FetchType.LAZY, mappedBy = "group_id")
+	@OneToMany(targetEntity = Access.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "group_id")
 	@Description("Access Controls")
 	private List<Access> model_access;
 	

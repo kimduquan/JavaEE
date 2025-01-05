@@ -42,6 +42,7 @@ public class Exclusion {
 	@Description("Exclusion Module")
 	private Integer exclusion_id;
 	
+	@Transient
 	@Description("Status")
 	private Dep_State state;
 }

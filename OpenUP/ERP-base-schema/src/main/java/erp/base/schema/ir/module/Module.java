@@ -15,6 +15,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -128,7 +129,8 @@ public class Module {
 	@Transient
 	private List<Integer> dependencies_id;
 
-	@OneToMany(targetEntity = Dependency.class, fetch = FetchType.LAZY, mappedBy = "module_id")
+	@OneToMany(targetEntity = Dependency.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "module_id")
 	@Description("Dependencies")
 	private List<Dependency> dependencies;
 	
@@ -136,13 +138,14 @@ public class Module {
 	private List<Integer> country_ids;
 	
 	@ManyToMany(targetEntity = Country.class, fetch = FetchType.LAZY)
-	@JoinColumn(table = "module_country", name = "module_id", referencedColumnName = "country_id")
+	@JoinTable(name = "module_country", joinColumns = {@JoinColumn(name = "module_id")}, inverseJoinColumns = {@JoinColumn(name = "country_id")})
 	private List<Country> countries;
 	
 	@Transient
 	private List<Integer> exclusion_ids;
 
-	@OneToMany(targetEntity = Exclusion.class, mappedBy = "module_id")
+	@OneToMany(targetEntity = Exclusion.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "module_id")
 	@Description("Exclusions")
 	private List<Exclusion> exclusions;
 	

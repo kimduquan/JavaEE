@@ -106,9 +106,7 @@ public class Fields {
 	private List<Integer> selection_ids;
 
 	@OneToMany(targetEntity = Selection.class, fetch = FetchType.LAZY)
-	@JoinTable(name = "ir_model_fields_selection", joinColumns = {
-			@JoinColumn(name = "field_id", referencedColumnName = "id")
-	})
+	@JoinColumn(name = "field_id")
 	@Description("Selection Options")
 	private List<Selection> selections;
 	
@@ -166,7 +164,7 @@ public class Fields {
 	@DefaultValue("[]")
 	private String domain = "[]";
 	
-	@ManyToMany(targetEntity = Groups.class)
+	@ManyToMany(targetEntity = Groups.class, fetch = FetchType.LAZY)
 	@JoinTable(name = "ir_model_fields_group_rel", joinColumns = {@JoinColumn(name = "field_id")}, inverseJoinColumns = {@JoinColumn(name = "group_id")})
 	private List<Groups> groups;
 	

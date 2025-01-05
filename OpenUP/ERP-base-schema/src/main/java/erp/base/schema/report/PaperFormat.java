@@ -14,7 +14,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
@@ -170,9 +169,7 @@ public class PaperFormat {
 	private List<Integer> report_ids;
 	
 	@OneToMany(targetEntity = Report.class, fetch = FetchType.LAZY)
-	@JoinTable(name = "ir_act_report_xml", joinColumns = {
-			@JoinColumn(name = "paperformat_id", referencedColumnName = "id")
-	})
+	@JoinColumn(name = "paperformat_id")
 	@Description("Associated reports")
 	private List<Report> reports;
 	

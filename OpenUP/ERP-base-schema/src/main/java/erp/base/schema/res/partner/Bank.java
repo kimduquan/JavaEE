@@ -15,7 +15,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 
-@Entity
+@Entity(name = "PartnerBank")
 @Table(name = "res_partner_bank")
 @Description("Bank Accounts")
 public class Bank {

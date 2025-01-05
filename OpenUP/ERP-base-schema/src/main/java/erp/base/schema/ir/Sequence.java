@@ -97,7 +97,8 @@ public class Sequence {
 	@Transient
 	private List<Integer> date_range_ids;
 
-	@OneToMany(targetEntity = Date_Range.class, mappedBy = "sequence_id")
+	@OneToMany(targetEntity = Date_Range.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "sequence_id")
 	@Description("Subsequences")
 	private List<Date_Range> date_ranges;
 }

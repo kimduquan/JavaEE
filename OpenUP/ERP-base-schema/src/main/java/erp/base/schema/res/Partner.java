@@ -76,7 +76,8 @@ public class Partner {
 	@Transient
 	private List<Integer> child_ids;
 
-	@OneToMany(targetEntity = Partner.class, mappedBy = "parent_id")
+	@OneToMany(targetEntity = Partner.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "parent_id")
 	@Description("Contact")
 	private List<Partner> childs;
 	
@@ -126,7 +127,8 @@ public class Partner {
 	@Transient
 	private List<Integer> bank_ids;
 
-	@OneToMany(targetEntity = Bank.class, fetch = FetchType.LAZY, mappedBy = "partner_id")
+	@OneToMany(targetEntity = Bank.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "partner_id")
 	@Description("Banks")
 	private List<Bank> banks;
 	
@@ -142,7 +144,7 @@ public class Partner {
 	private List<Integer> category_id;
 	
 	@ManyToMany(targetEntity = Category.class, fetch = FetchType.LAZY)
-	@JoinTable(name = "res_partner_category", joinColumns = {@JoinColumn(name = "partner_id")}, inverseJoinColumns = {@JoinColumn(name = "category_id")})
+	@JoinTable(name = "res_partner_res_partner_category_rel", joinColumns = {@JoinColumn(name = "category_id")}, inverseJoinColumns = {@JoinColumn(name = "partner_id")})
 	@Description("Tags")
 	private List<Category> category;
 	
@@ -221,7 +223,7 @@ public class Partner {
 	@Description("Is a Company")
 	private Boolean is_company = false;
 	
-	@Column
+	@Transient
 	private Boolean is_public;
 	
 	@Transient
@@ -252,7 +254,8 @@ public class Partner {
 	@Transient
 	private List<Integer> user_ids;
 	
-	@OneToMany(targetEntity = Users.class, fetch = FetchType.LAZY, mappedBy = "partner_id")
+	@OneToMany(targetEntity = Users.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "partner_id")
 	@Description("Users")
 	private List<Users> users;
 	

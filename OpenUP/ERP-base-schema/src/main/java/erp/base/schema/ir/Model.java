@@ -5,16 +5,15 @@ import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
 import erp.base.schema.ir.model.Access;
 import erp.base.schema.ir.model.Fields;
-import erp.base.schema.ir.ui.View;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
-import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
@@ -55,17 +54,15 @@ public class Model {
 	@Transient
 	private List<Integer> field_id;
 	
-	@OneToMany(targetEntity = Fields.class, mappedBy = "model_id")
+	@OneToMany(targetEntity = Fields.class)
+	@JoinColumn(name = "model_id")
 	@NotNull
 	@Description("Fields")
 	private List<Fields> fields;
 	
 	@Transient
-	private List<Integer> inherited_model_ids;
-	
-	@ManyToMany
 	@Description("Inherited models")
-	private List<Model> inherited_models;
+	private List<Integer> inherited_model_ids;
 	
 	@Column(updatable = false)
 	@Enumerated(EnumType.STRING)
@@ -76,14 +73,16 @@ public class Model {
 	@Transient
 	private List<Integer> access_ids;
 	
-	@OneToMany(targetEntity = Access.class, mappedBy = "model_id")
+	@OneToMany(targetEntity = Access.class)
+	@JoinColumn(name = "model_id")
 	@Description("Access")
 	private List<Access> accesses;
 	
 	@Transient
 	private List<Integer> rule_ids;
 	
-	@OneToMany(targetEntity = Rule.class, mappedBy = "model_id")
+	@OneToMany(targetEntity = Rule.class)
+	@JoinColumn(name = "model_id")
 	@Description("Record Rules")
 	private List<Rule> rules;
 	
@@ -100,11 +99,8 @@ public class Model {
 	private String modules;
 	
 	@Transient
-	private List<Integer> view_ids;
-	
-	@Transient
 	@Description("Views")
-	private List<View> views;
+	private List<Integer> view_ids;
 	
 	@Transient
 	@Description("Count (Incl. Archived)")

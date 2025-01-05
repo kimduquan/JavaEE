@@ -18,8 +18,10 @@ import epf.lang.schema.ollama.ChatRequest;
 import epf.lang.schema.ollama.ChatResponse;
 import epf.lang.schema.ollama.Role;
 import epf.naming.Naming;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.GET;
@@ -57,6 +59,27 @@ public class Messenger {
 	@Inject
 	@Readiness
 	transient Cache cache;
+	
+	@Inject
+	transient EntityManager manager;
+	
+	@PostConstruct
+	void postConstruct() {
+		final StringBuilder prompt = new StringBuilder();
+		manager.getMetamodel().getEntities().forEach(entityType -> {
+			prompt.append("class ");
+			prompt.append(entityType.getName());
+			prompt.append(" {\n");
+			entityType.getAttributes().forEach(attr -> {
+				prompt.append(attr.getJavaType().getCanonicalName());
+				prompt.append(' ');
+				prompt.append(attr.getName());
+				prompt.append(";\n");
+			});
+			prompt.append("};\n");
+		});
+		LOGGER.info("prompt:" + prompt.toString());
+	}
 	
 	@GET
 	public Response verify(

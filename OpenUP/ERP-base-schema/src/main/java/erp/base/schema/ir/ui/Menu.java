@@ -63,7 +63,8 @@ public class Menu {
 	@Transient
 	private List<Integer> child_id;
 
-	@OneToMany(targetEntity = Menu.class, fetch = FetchType.LAZY, mappedBy = "parent_id")
+	@OneToMany(targetEntity = Menu.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "parent_id")
 	@Description("Child IDs")
 	private List<Menu> childs;
 	

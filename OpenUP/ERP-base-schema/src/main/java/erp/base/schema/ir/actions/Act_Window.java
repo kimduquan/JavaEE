@@ -98,18 +98,12 @@ public class Act_Window extends Actions {
 	@Transient
 	private List<Integer> view_ids;
 
-	@OneToMany(targetEntity = View.class)
-	@JoinTable(name = "ir_act_window_view", joinColumns = {
-			@JoinColumn(name = "act_window_id")
-	})
+	@OneToMany(targetEntity = View.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "act_window_id")
 	@Description("No of Views")
 	private List<View> views_;
 	
-	@Description(
-			"This function field computes the ordered list of views that should be enabled " +
-            "when displaying the result of an action, federating view mode, views and " +
-            "reference view. The result is returned as an ordered list of pairs (view_id,view_mode)."
-            )
+	@Transient
 	private byte[] views;
 	
 	@Column

@@ -6,7 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-@Entity
+@Entity(name = "UsersLog")
 @Table(name = "res_users_log")
 @Description("Users Log")
 public class Log {
