@@ -88,7 +88,6 @@ public class Act_Window extends Actions {
 	
 	@Column
 	@DefaultValue("kanban")
-	@Description("First view mode in mobile and small screen environments (default='kanban'). If it can't be found among available view modes, the same mode as for wider screens is used)")
 	private String mobile_view_mode = "kanban";
 	
 	@Column
@@ -114,7 +113,7 @@ public class Act_Window extends Actions {
 	@Transient
 	private List<Integer> groups_id;
 
-	@ManyToMany(targetEntity = Groups.class)
+	@ManyToMany(targetEntity = Groups.class, fetch = FetchType.LAZY)
 	@JoinTable(name = "ir_act_window_group_rel", joinColumns = {@JoinColumn(name = "act_id")}, inverseJoinColumns = {@JoinColumn(name = "gid")})
 	@Description("Groups")
 	private List<Groups> groups;
