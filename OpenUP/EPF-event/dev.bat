@@ -1,5 +1,5 @@
 setlocal
 call ../env.bat
 call mvn clean install -U
-call mvn quarkus:dev -Ddebug=5193
+call mvn quarkus:dev -Ddebug=5192
 endlocal

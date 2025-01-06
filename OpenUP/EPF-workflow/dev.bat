@@ -8,5 +8,5 @@ start %JAVA_HOME%/bin/java.exe -Dquarkus.http.port=8081 -jar target/quarkus-app/
 cd ../EPF-workflow
 set quarkus.devservices.enabled=false
 call mvn clean install -U
-call mvn quarkus:dev -Ddebug=5007
+call mvn quarkus:dev -Ddebug=5189
 endlocal
