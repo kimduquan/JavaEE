@@ -43,4 +43,52 @@ public class Custom {
 	@NotNull
 	@Description("View Architecture")
 	private String arch;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Integer getRef_id() {
+		return ref_id;
+	}
+
+	public void setRef_id(Integer ref_id) {
+		this.ref_id = ref_id;
+	}
+
+	public View getRef() {
+		return ref;
+	}
+
+	public void setRef(View ref) {
+		this.ref = ref;
+	}
+
+	public Integer getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(Integer user_id) {
+		this.user_id = user_id;
+	}
+
+	public Users getUser() {
+		return user;
+	}
+
+	public void setUser(Users user) {
+		this.user = user;
+	}
+
+	public String getArch() {
+		return arch;
+	}
+
+	public void setArch(String arch) {
+		this.arch = arch;
+	}
 }

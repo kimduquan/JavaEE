@@ -89,4 +89,124 @@ public class Log {
 	@Transient
 	@Description("Linked IP address")
 	private Boolean linked_ip_addresses;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getSession_identifier() {
+		return session_identifier;
+	}
+
+	public void setSession_identifier(String session_identifier) {
+		this.session_identifier = session_identifier;
+	}
+
+	public String getPlatform() {
+		return platform;
+	}
+
+	public void setPlatform(String platform) {
+		this.platform = platform;
+	}
+
+	public String getBrowser() {
+		return browser;
+	}
+
+	public void setBrowser(String browser) {
+		this.browser = browser;
+	}
+
+	public String getIp_address() {
+		return ip_address;
+	}
+
+	public void setIp_address(String ip_address) {
+		this.ip_address = ip_address;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public DeviceType getDevice_type() {
+		return device_type;
+	}
+
+	public void setDevice_type(DeviceType device_type) {
+		this.device_type = device_type;
+	}
+
+	public Integer getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(Integer user_id) {
+		this.user_id = user_id;
+	}
+
+	public Users getUser() {
+		return user;
+	}
+
+	public void setUser(Users user) {
+		this.user = user;
+	}
+
+	public Date getFirst_activity() {
+		return first_activity;
+	}
+
+	public void setFirst_activity(Date first_activity) {
+		this.first_activity = first_activity;
+	}
+
+	public Date getLast_activity() {
+		return last_activity;
+	}
+
+	public void setLast_activity(Date last_activity) {
+		this.last_activity = last_activity;
+	}
+
+	public Boolean getRevoked() {
+		return revoked;
+	}
+
+	public void setRevoked(Boolean revoked) {
+		this.revoked = revoked;
+	}
+
+	public Boolean getIs_current() {
+		return is_current;
+	}
+
+	public void setIs_current(Boolean is_current) {
+		this.is_current = is_current;
+	}
+
+	public Boolean getLinked_ip_addresses() {
+		return linked_ip_addresses;
+	}
+
+	public void setLinked_ip_addresses(Boolean linked_ip_addresses) {
+		this.linked_ip_addresses = linked_ip_addresses;
+	}
 }

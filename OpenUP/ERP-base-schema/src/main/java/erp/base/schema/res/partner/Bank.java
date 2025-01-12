@@ -92,4 +92,156 @@ public class Bank {
 	@Transient
 	@Description("Country Code")
 	private String country_code;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
+	public String getAcc_type() {
+		return acc_type;
+	}
+
+	public void setAcc_type(String acc_type) {
+		this.acc_type = acc_type;
+	}
+
+	public String getAcc_number() {
+		return acc_number;
+	}
+
+	public void setAcc_number(String acc_number) {
+		this.acc_number = acc_number;
+	}
+
+	public String getSanitized_acc_number() {
+		return sanitized_acc_number;
+	}
+
+	public void setSanitized_acc_number(String sanitized_acc_number) {
+		this.sanitized_acc_number = sanitized_acc_number;
+	}
+
+	public String getAcc_holder_name() {
+		return acc_holder_name;
+	}
+
+	public void setAcc_holder_name(String acc_holder_name) {
+		this.acc_holder_name = acc_holder_name;
+	}
+
+	public Integer getPartner_id() {
+		return partner_id;
+	}
+
+	public void setPartner_id(Integer partner_id) {
+		this.partner_id = partner_id;
+	}
+
+	public Partner getPartner() {
+		return partner;
+	}
+
+	public void setPartner(Partner partner) {
+		this.partner = partner;
+	}
+
+	public Boolean getAllow_out_payment() {
+		return allow_out_payment;
+	}
+
+	public void setAllow_out_payment(Boolean allow_out_payment) {
+		this.allow_out_payment = allow_out_payment;
+	}
+
+	public Integer getBank_id() {
+		return bank_id;
+	}
+
+	public void setBank_id(Integer bank_id) {
+		this.bank_id = bank_id;
+	}
+
+	public Bank getBank() {
+		return bank;
+	}
+
+	public void setBank(Bank bank) {
+		this.bank = bank;
+	}
+
+	public String getBank_name() {
+		return bank_name;
+	}
+
+	public void setBank_name(String bank_name) {
+		this.bank_name = bank_name;
+	}
+
+	public String getBank_bic() {
+		return bank_bic;
+	}
+
+	public void setBank_bic(String bank_bic) {
+		this.bank_bic = bank_bic;
+	}
+
+	public Integer getSequence() {
+		return sequence;
+	}
+
+	public void setSequence(Integer sequence) {
+		this.sequence = sequence;
+	}
+
+	public Integer getCurrency_id() {
+		return currency_id;
+	}
+
+	public void setCurrency_id(Integer currency_id) {
+		this.currency_id = currency_id;
+	}
+
+	public Currency getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(Currency currency) {
+		this.currency = currency;
+	}
+
+	public Integer getCompany_id() {
+		return company_id;
+	}
+
+	public void setCompany_id(Integer company_id) {
+		this.company_id = company_id;
+	}
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
+	}
+
+	public String getCountry_code() {
+		return country_code;
+	}
+
+	public void setCountry_code(String country_code) {
+		this.country_code = country_code;
+	}
 }

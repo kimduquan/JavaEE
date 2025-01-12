@@ -12,4 +12,12 @@ public class Act_Window_Close extends Actions {
 	@Column
 	@DefaultValue("ir.actions.act_window_close")
 	private String type = "ir.actions.act_window_close";
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
 }

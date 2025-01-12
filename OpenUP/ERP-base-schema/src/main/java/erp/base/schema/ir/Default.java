@@ -55,4 +55,76 @@ public class Default {
 	@NotNull
 	@Description("Default Value (JSON format)")
 	private String json_value;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Integer getField_id() {
+		return field_id;
+	}
+
+	public void setField_id(Integer field_id) {
+		this.field_id = field_id;
+	}
+
+	public Fields getField() {
+		return field;
+	}
+
+	public void setField(Fields field) {
+		this.field = field;
+	}
+
+	public Integer getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(Integer user_id) {
+		this.user_id = user_id;
+	}
+
+	public Users getUser() {
+		return user;
+	}
+
+	public void setUser(Users user) {
+		this.user = user;
+	}
+
+	public Integer getCompany_id() {
+		return company_id;
+	}
+
+	public void setCompany_id(Integer company_id) {
+		this.company_id = company_id;
+	}
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
+	}
+
+	public String getCondition() {
+		return condition;
+	}
+
+	public void setCondition(String condition) {
+		this.condition = condition;
+	}
+
+	public String getJson_value() {
+		return json_value;
+	}
+
+	public void setJson_value(String json_value) {
+		this.json_value = json_value;
+	}
 }

@@ -145,4 +145,188 @@ public class View {
 	@Transient
 	@Description("Model of the view")
 	private Integer model_id;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getModel() {
+		return model;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
+	}
+
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
+	}
+
+	public Integer getPriority() {
+		return priority;
+	}
+
+	public void setPriority(Integer priority) {
+		this.priority = priority;
+	}
+
+	public ViewType getType() {
+		return type;
+	}
+
+	public void setType(ViewType type) {
+		this.type = type;
+	}
+
+	public String getArch() {
+		return arch;
+	}
+
+	public void setArch(String arch) {
+		this.arch = arch;
+	}
+
+	public String getArch_base() {
+		return arch_base;
+	}
+
+	public void setArch_base(String arch_base) {
+		this.arch_base = arch_base;
+	}
+
+	public String getArch_db() {
+		return arch_db;
+	}
+
+	public void setArch_db(String arch_db) {
+		this.arch_db = arch_db;
+	}
+
+	public String getArch_fs() {
+		return arch_fs;
+	}
+
+	public void setArch_fs(String arch_fs) {
+		this.arch_fs = arch_fs;
+	}
+
+	public Boolean getArch_updated() {
+		return arch_updated;
+	}
+
+	public void setArch_updated(Boolean arch_updated) {
+		this.arch_updated = arch_updated;
+	}
+
+	public String getArch_prev() {
+		return arch_prev;
+	}
+
+	public void setArch_prev(String arch_prev) {
+		this.arch_prev = arch_prev;
+	}
+
+	public Integer getInherit_id() {
+		return inherit_id;
+	}
+
+	public void setInherit_id(Integer inherit_id) {
+		this.inherit_id = inherit_id;
+	}
+
+	public View getInherit() {
+		return inherit;
+	}
+
+	public void setInherit(View inherit) {
+		this.inherit = inherit;
+	}
+
+	public List<Integer> getInherit_children_ids() {
+		return inherit_children_ids;
+	}
+
+	public void setInherit_children_ids(List<Integer> inherit_children_ids) {
+		this.inherit_children_ids = inherit_children_ids;
+	}
+
+	public List<View> getInherit_childrens() {
+		return inherit_childrens;
+	}
+
+	public void setInherit_childrens(List<View> inherit_childrens) {
+		this.inherit_childrens = inherit_childrens;
+	}
+
+	public Integer getModel_data_id() {
+		return model_data_id;
+	}
+
+	public void setModel_data_id(Integer model_data_id) {
+		this.model_data_id = model_data_id;
+	}
+
+	public String getXml_id() {
+		return xml_id;
+	}
+
+	public void setXml_id(String xml_id) {
+		this.xml_id = xml_id;
+	}
+
+	public List<Integer> getGroups_id() {
+		return groups_id;
+	}
+
+	public void setGroups_id(List<Integer> groups_id) {
+		this.groups_id = groups_id;
+	}
+
+	public List<Groups> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(List<Groups> groups) {
+		this.groups = groups;
+	}
+
+	public ViewInheritanceMode getMode() {
+		return mode;
+	}
+
+	public void setMode(ViewInheritanceMode mode) {
+		this.mode = mode;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
+	public Integer getModel_id() {
+		return model_id;
+	}
+
+	public void setModel_id(Integer model_id) {
+		this.model_id = model_id;
+	}
 }

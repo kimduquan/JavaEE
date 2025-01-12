@@ -60,4 +60,52 @@ public class Todo {
 	
 	@Column
 	private String name;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Integer getAction_id() {
+		return action_id;
+	}
+
+	public void setAction_id(Integer action_id) {
+		this.action_id = action_id;
+	}
+
+	public Actions getAction() {
+		return action;
+	}
+
+	public void setAction(Actions action) {
+		this.action = action;
+	}
+
+	public Integer getSequence() {
+		return sequence;
+	}
+
+	public void setSequence(Integer sequence) {
+		this.sequence = sequence;
+	}
+
+	public Status getState() {
+		return state;
+	}
+
+	public void setState(Status state) {
+		this.state = state;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 }

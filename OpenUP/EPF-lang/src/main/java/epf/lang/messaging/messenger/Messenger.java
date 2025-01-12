@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,12 +16,11 @@ import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
-import epf.json.schema.JsonObject;
-import epf.json.schema.JsonString;
 import epf.lang.Cache;
 import epf.lang.messaging.messenger.client.schema.Message;
 import epf.lang.messaging.messenger.client.schema.MessageRef;
 import epf.lang.messaging.messenger.client.schema.ResponseMessage;
+import epf.lang.messaging.messenger.shema.ObjectRef;
 import epf.lang.messaging.messenger.shema.Pages;
 import epf.lang.ollama.Ollama;
 import epf.lang.schema.ollama.ChatRequest;
@@ -34,6 +34,7 @@ import epf.lang.schema.ollama.Role;
 import epf.lang.schema.ollama.Tool;
 import epf.lang.schema.ollama.ToolCall;
 import epf.naming.Naming;
+import epf.util.json.ext.JsonUtil;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
 import jakarta.annotation.PostConstruct;
@@ -43,6 +44,7 @@ import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Id;
+import jakarta.persistence.NonUniqueResultException;
 import jakarta.persistence.Query;
 import jakarta.persistence.Transient;
 import jakarta.persistence.metamodel.Bindable;
@@ -51,6 +53,9 @@ import jakarta.persistence.metamodel.ListAttribute;
 import jakarta.persistence.metamodel.MapAttribute;
 import jakarta.persistence.metamodel.SetAttribute;
 import jakarta.persistence.metamodel.SingularAttribute;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Valid;
+import jakarta.validation.Validator;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.GET;
@@ -93,6 +98,9 @@ public class Messenger {
 	
 	@Inject
 	transient EntityManager manager;
+	
+	@Inject
+	transient Validator validator;
 	
 	private String systemMessage;
 	
@@ -210,9 +218,10 @@ public class Messenger {
 		});
 		prompt.append('\n');
 		prompt.append("""
-When you receive a user's question, please perform the following tasks, think through each step carefully and repsonse in JSON format with the specified fields:
-1. "query": Provide a JPQL query using the given domain classes to address the user's question.
-2. "template": Create a Markdown template (Handlebars) that utilizes the actual returned data from the generated query to address the user's question. Assume that the returned object will be named 'result'.
+When you receive a user's question, please perform the following tasks, thinking through each step carefully. Respond in JSON format with the specified fields:
+1. "query": Provide a JPQL query using the given domain classes to address the user's question. Ensure the query is accurate and aligned with the provided domain model.
+2. "parameters": Include a map where each key represents a parameter name, and the corresponding value represents the parameter's value. Only Java primitive types or their corresponding wrapper classes are allowed as parameter values. These parameters are used in the generated JPQL query to ensure it addresses the user's question effectively.
+3. "template": Create a Markdown template (using Handlebars syntax) that utilizes the actual returned data from the generated query to address the user's question. Assume that the returned object is named "result".
 				""");
 		systemMessage = prompt.toString();
 		LOGGER.info("prompt:" + systemMessage);
@@ -232,7 +241,7 @@ When you receive a user's question, please perform the following tasks, think th
 		throw new ForbiddenException();
 	}
 	
-	private GeneratedResponse generate(final Pages pages) throws Exception {
+	private GenerateRequest getRequest(final Pages pages) {
 		GenerateRequest request = generates.get(pages.getEntry().getFirst().getMessaging().getFirst().getSender().getId());
 		if(request == null) {
 			LOGGER.info("generate is empty.");
@@ -241,60 +250,100 @@ When you receive a user's question, please perform the following tasks, think th
 			request.setSystem(systemMessage);
 			request.setStream(false);
 			request.setKeep_alive("24h");
-			final JsonObject jsonSchema = new JsonObject();
-			jsonSchema.setProperties(new HashMap<>());
-			jsonSchema.getProperties().put("query", new JsonString());
-			jsonSchema.getProperties().put("template", new JsonString());
-			jsonSchema.setRequired(new String[] {"query", "template"});
 			request.setFormat("json");
-			//request.setFormat(jsonSchema);
-			final Map<String, Object> schema = new HashMap<>();
-			schema.put("type", "object");
-			final Map<String, Object> properties = new HashMap<>();
-			final Map<String, Object> stringType = new HashMap<>();
-			stringType.put("type", "string");
-			properties.put("query", stringType);
-			properties.put("template", stringType);
-			schema.put("properties", properties);
-			schema.put("required", Arrays.asList("query", "template"));
-			//request.setFormat(schema);
-		}
-		request.setPrompt(pages.getEntry().getFirst().getMessaging().getFirst().getMessage().getText());
-		final GenerateResponse response = ollama.generate(request);
-		request.setContext(response.getContext());
-		generates.put(pages.getEntry().getFirst().getMessaging().getFirst().getSender().getId(), request);
-		GeneratedResponse generated = null;
-		try(Jsonb jsonb = JsonbBuilder.create()){
-			generated = jsonb.fromJson(response.getResponse(), GeneratedResponse.class);
-		}
-		if(generated != null && generated.getQuery() != null && generated.getTemplate() != null) {
-			return generated;
+			request.setOptions(new HashMap<>());
+			request.getOptions().put("temperature", Float.valueOf("0.1"));
 		}
 		else {
-			response(pages, response.getResponse());
-			return null;
+			request.setSystem(null);
 		}
+		return request;
 	}
 	
-	private Object query(final GeneratedResponse generated) throws Exception {
+	private void putRequest(final Pages pages, final GenerateResponse response, final GenerateRequest request) {
+		request.setContext(response.getContext());
+		generates.put(pages.getEntry().getFirst().getMessaging().getFirst().getSender().getId(), request);
+	}
+	
+	private GeneratedQuery getQuery(final GenerateResponse response) throws Exception {
+		GeneratedQuery query = null;
+		try(Jsonb jsonb = JsonbBuilder.create()){
+			query = jsonb.fromJson(response.getResponse(), GeneratedQuery.class);
+		}
+		return query;
+	}
+	
+	private GeneratedQuery generate(final Pages pages, final GenerateRequest request) throws Exception {
+		request.setPrompt(pages.getEntry().getFirst().getMessaging().getFirst().getMessage().getText());
+		final GenerateResponse response = ollama.generate(request);
+		LOGGER.info(response.getResponse());
+		request.setContext(response.getContext());
+		final GeneratedQuery query = getQuery(response);
+		if(query == null) {
+			response(pages.getEntry().getFirst().getId(), pages.getEntry().getFirst().getMessaging().getFirst().getSender(), response.getResponse());
+			putRequest(pages, response, request);
+		}
+		return query;
+	}
+	
+	private Object getResult(final GeneratedQuery generated) throws Exception {
 		final Query query = manager.createQuery(generated.getQuery());
+		if(generated.getParameters() != null) {
+			generated.getParameters().forEach((name, value) -> {
+				query.setParameter(name, value);
+			});
+		}
 		Object result = null;
 		try {
 			result = query.getSingleResult();
 		}
-		catch(Exception ex) {
+		catch(NonUniqueResultException ex) {
 			result = query.getResultList();
 		}
+		LOGGER.info("result:" + JsonUtil.toString(result));
 		return result;
 	}
 	
-	private void response(final Pages pages, final String text) throws Exception {
+	private StringBuilder buildSystemErrorMessage(final Set<ConstraintViolation<GeneratedQuery>> violations) {
+		final StringBuilder message = new StringBuilder();
+		message.append("There are some valiation error:");
+		violations.forEach(violation -> {
+			message.append("\n    - ");
+			message.append(violation.getMessage());
+		});
+		message.append("\nPlease correct them then re-answer the user's question.");
+		return message;
+	}
+	
+	private StringBuilder buildSystemErrorMessage(final String name, final Exception ex) {
+		final StringBuilder message = new StringBuilder();
+		message.append("A error occur related to \"");
+		message.append(name);
+		message.append("\":");
+		message.append(ex.getMessage());
+		message.append("\nPlease correct it then re-answer the user's question");
+		return message;
+	}
+	
+	private String getText(final GeneratedQuery query, final Object result) throws Exception {
+		final Handlebars handlebars = new Handlebars();
+		final Template template = handlebars.compileInline(query.getTemplate());
+		final Map<String, Object> context = new HashMap<>();
+		if(query.getParameters() != null) {
+			context.putAll(query.getParameters());
+		}
+		context.put("result", result);
+		final String text = template.apply(context);
+		return text;
+	}
+	
+	private void response(final String id, final ObjectRef recipient, final String text) throws Exception {
 		final ResponseMessage responseMessage = new ResponseMessage();
-		responseMessage.setRecipient(pages.getEntry().getFirst().getMessaging().getFirst().getSender());
+		responseMessage.setRecipient(recipient);
 		final Message message = new Message();
 		message.setText(text);
 		responseMessage.setMessage(message);
-		final MessageRef msgRef = client.send(pages.getEntry().getFirst().getId(), token, responseMessage);
+		final MessageRef msgRef = client.send(id, token, responseMessage);
 		LOGGER.info(String.format("response[%s]:%s", msgRef.getRecipient_id(), msgRef.getMessage_id()));
 	}
 	
@@ -328,10 +377,6 @@ The user's query in natural language.
 			function.getParameters().setRequired(Arrays.asList("user_question "));
 			request.getTools().add(tool);
 		}
-		final epf.lang.schema.ollama.Message systemMsg = new epf.lang.schema.ollama.Message();
-		systemMsg.setRole(Role.system);
-		systemMsg.setContent(systemMessage);
-		request.getMessages().add(systemMsg);
 		
 		final epf.lang.schema.ollama.Message userMsg = new epf.lang.schema.ollama.Message();
 		userMsg.setRole(Role.user);
@@ -355,15 +400,53 @@ The user's query in natural language.
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response subscribe(final Pages data) throws Exception {
-		final GeneratedResponse generated = generate(data);
-		if(generated != null) {
-			final Object result = query(generated);
-			final Handlebars handlebars = new Handlebars();
-			final Template template = handlebars.compileInline(generated.getTemplate());
-			final String text = template.apply(Map.of("result", result));
-			response(data, text);
+	public Response subscribe(final Pages pages) throws Exception {
+		final GenerateRequest request = getRequest(pages);
+		int retry = 3;
+		int failed = 0;
+		do {
+			final GeneratedQuery query = generate(pages, request);
+			if(query != null) {
+				final Set<ConstraintViolation<GeneratedQuery>> violations = validator.validate(query);
+				if(violations.isEmpty()) {
+					try {
+						final Object result = getResult(query);
+						String text = null;
+						try {
+							text = getText(query, result);
+						}
+						catch(Exception ex) {
+							LOGGER.warning(ex.getMessage());
+							failed++;
+							final StringBuilder systemErrorMessage = buildSystemErrorMessage("template", ex);
+							request.setPrompt(systemErrorMessage.toString());
+							continue;
+						}
+						if(text != null) {
+							response(pages.getEntry().getFirst().getId(), pages.getEntry().getFirst().getMessaging().getFirst().getSender(), text);
+						}
+					}
+					catch(Exception ex) {
+						LOGGER.warning(ex.getMessage());
+						failed++;
+						final StringBuilder systemErrorMessage = buildSystemErrorMessage("query", ex);
+						request.setPrompt(systemErrorMessage.toString());
+						continue;
+					}
+				}
+				else {
+					violations.forEach(violation -> LOGGER.warning(violation.getMessage()));
+					failed++;
+					final StringBuilder systemErrorMessage = buildSystemErrorMessage(violations);
+					request.setPrompt(systemErrorMessage.toString());
+					continue;
+				}
+			}
+			else {
+				break;
+			}
 		}
+		while(failed < retry);
 		return Response.ok().build();
 	}
 
@@ -372,5 +455,15 @@ The user's query in natural language.
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getSchema() {
 		return systemMessage;
+	}
+	
+	@Path("query")
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
+	public String executeQuery(@Valid final GeneratedQuery query) throws Exception {
+		final Object result = getResult(query);
+		final String text = getText(query, result);
+		return text;
 	}
 }

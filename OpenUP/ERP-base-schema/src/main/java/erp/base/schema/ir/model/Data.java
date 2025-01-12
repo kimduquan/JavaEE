@@ -48,4 +48,68 @@ public class Data {
 	@Transient
 	@Description("Reference")
 	private String reference;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getComplete_name() {
+		return complete_name;
+	}
+
+	public void setComplete_name(String complete_name) {
+		this.complete_name = complete_name;
+	}
+
+	public String getModel() {
+		return model;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
+	}
+
+	public String getModule() {
+		return module;
+	}
+
+	public void setModule(String module) {
+		this.module = module;
+	}
+
+	public Integer getRes_id() {
+		return res_id;
+	}
+
+	public void setRes_id(Integer res_id) {
+		this.res_id = res_id;
+	}
+
+	public Boolean getNoupdate() {
+		return noupdate;
+	}
+
+	public void setNoupdate(Boolean noupdate) {
+		this.noupdate = noupdate;
+	}
+
+	public String getReference() {
+		return reference;
+	}
+
+	public void setReference(String reference) {
+		this.reference = reference;
+	}
 }

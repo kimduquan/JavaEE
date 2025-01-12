@@ -50,4 +50,44 @@ public class Deletion {
 	@DefaultValue("todo")
 	@Description("State")
 	private State state = State.todo;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Integer getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(Integer user_id) {
+		this.user_id = user_id;
+	}
+
+	public Users getUser() {
+		return user;
+	}
+
+	public void setUser(Users user) {
+		this.user = user;
+	}
+
+	public Integer getUser_id_int() {
+		return user_id_int;
+	}
+
+	public void setUser_id_int(Integer user_id_int) {
+		this.user_id_int = user_id_int;
+	}
+
+	public State getState() {
+		return state;
+	}
+
+	public void setState(State state) {
+		this.state = state;
+	}
 }

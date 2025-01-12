@@ -16,4 +16,20 @@ public class Log {
 	
 	@Column
 	private Integer create_uid;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Integer getCreate_uid() {
+		return create_uid;
+	}
+
+	public void setCreate_uid(Integer create_uid) {
+		this.create_uid = create_uid;
+	}
 }

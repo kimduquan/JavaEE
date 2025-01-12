@@ -30,4 +30,36 @@ public class Exports {
 	@JoinColumn(name = "export_id")
 	@Description("Export")
 	private List<Line> export_fields;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getResource() {
+		return resource;
+	}
+
+	public void setResource(String resource) {
+		this.resource = resource;
+	}
+
+	public List<Line> getExport_fields() {
+		return export_fields;
+	}
+
+	public void setExport_fields(List<Line> export_fields) {
+		this.export_fields = export_fields;
+	}
 }

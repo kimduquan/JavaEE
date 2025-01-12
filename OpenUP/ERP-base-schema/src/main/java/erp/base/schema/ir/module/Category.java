@@ -71,4 +71,108 @@ public class Category {
 	@Transient
 	@Description("External ID")
 	private String xml_id;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Integer getParent_id() {
+		return parent_id;
+	}
+
+	public void setParent_id(Integer parent_id) {
+		this.parent_id = parent_id;
+	}
+
+	public Category getParent() {
+		return parent;
+	}
+
+	public void setParent(Category parent) {
+		this.parent = parent;
+	}
+
+	public List<Integer> getChild_ids() {
+		return child_ids;
+	}
+
+	public void setChild_ids(List<Integer> child_ids) {
+		this.child_ids = child_ids;
+	}
+
+	public List<Category> getChilds() {
+		return childs;
+	}
+
+	public void setChilds(List<Category> childs) {
+		this.childs = childs;
+	}
+
+	public List<Integer> getModule_ids() {
+		return module_ids;
+	}
+
+	public void setModule_ids(List<Integer> module_ids) {
+		this.module_ids = module_ids;
+	}
+
+	public List<Module> getModules() {
+		return modules;
+	}
+
+	public void setModules(List<Module> modules) {
+		this.modules = modules;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Integer getSequence() {
+		return sequence;
+	}
+
+	public void setSequence(Integer sequence) {
+		this.sequence = sequence;
+	}
+
+	public Boolean getVisible() {
+		return visible;
+	}
+
+	public void setVisible(Boolean visible) {
+		this.visible = visible;
+	}
+
+	public Boolean getExclusive() {
+		return exclusive;
+	}
+
+	public void setExclusive(Boolean exclusive) {
+		this.exclusive = exclusive;
+	}
+
+	public String getXml_id() {
+		return xml_id;
+	}
+
+	public void setXml_id(String xml_id) {
+		this.xml_id = xml_id;
+	}
 }

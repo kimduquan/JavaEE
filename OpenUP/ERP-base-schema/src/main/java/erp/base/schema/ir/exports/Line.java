@@ -30,4 +30,36 @@ public class Line {
 	@JoinColumn(name = "export_id")
 	@Description("Export")
 	private Exports export;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Integer getExport_id() {
+		return export_id;
+	}
+
+	public void setExport_id(Integer export_id) {
+		this.export_id = export_id;
+	}
+
+	public Exports getExport() {
+		return export;
+	}
+
+	public void setExport(Exports export) {
+		this.export = export;
+	}
 }

@@ -39,4 +39,52 @@ public class Selection {
 	@Column
 	@DefaultValue("1000")
 	private Integer sequence = 1000;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Integer getField_id() {
+		return field_id;
+	}
+
+	public void setField_id(Integer field_id) {
+		this.field_id = field_id;
+	}
+
+	public Fields getField() {
+		return field;
+	}
+
+	public void setField(Fields field) {
+		this.field = field;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Integer getSequence() {
+		return sequence;
+	}
+
+	public void setSequence(Integer sequence) {
+		this.sequence = sequence;
+	}
 }

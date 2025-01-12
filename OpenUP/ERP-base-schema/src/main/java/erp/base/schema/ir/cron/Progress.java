@@ -43,4 +43,60 @@ public class Progress {
 	@Column
 	@DefaultValue("0")
 	private Integer timed_out_counter = 0;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Integer getCron_id() {
+		return cron_id;
+	}
+
+	public void setCron_id(Integer cron_id) {
+		this.cron_id = cron_id;
+	}
+
+	public Cron getCron() {
+		return cron;
+	}
+
+	public void setCron(Cron cron) {
+		this.cron = cron;
+	}
+
+	public Integer getRemaining() {
+		return remaining;
+	}
+
+	public void setRemaining(Integer remaining) {
+		this.remaining = remaining;
+	}
+
+	public Integer getDone() {
+		return done;
+	}
+
+	public void setDone(Integer done) {
+		this.done = done;
+	}
+
+	public boolean isDeactivate() {
+		return deactivate;
+	}
+
+	public void setDeactivate(boolean deactivate) {
+		this.deactivate = deactivate;
+	}
+
+	public Integer getTimed_out_counter() {
+		return timed_out_counter;
+	}
+
+	public void setTimed_out_counter(Integer timed_out_counter) {
+		this.timed_out_counter = timed_out_counter;
+	}
 }

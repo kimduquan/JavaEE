@@ -1,12 +1,15 @@
 package epf.lang.schema.ollama;
 
+import java.util.Map;
+
 public class GenerateRequest {
 
 	private String model;
 	private String prompt;
 	private String suffix;
 	private String[] images;
-	private Object format = "json";
+	private String format = "json";
+	private Map<String, Object> options;
 	private String system;
 	private int[] context;
 	private boolean stream = true;
@@ -61,10 +64,10 @@ public class GenerateRequest {
 	public void setKeep_alive(String keep_alive) {
 		this.keep_alive = keep_alive;
 	}
-	public Object getFormat() {
+	public String getFormat() {
 		return format;
 	}
-	public void setFormat(Object format) {
+	public void setFormat(String format) {
 		this.format = format;
 	}
 	public String getSystem() {
@@ -72,5 +75,11 @@ public class GenerateRequest {
 	}
 	public void setSystem(String system) {
 		this.system = system;
+	}
+	public Map<String, Object> getOptions() {
+		return options;
+	}
+	public void setOptions(Map<String, Object> options) {
+		this.options = options;
 	}
 }

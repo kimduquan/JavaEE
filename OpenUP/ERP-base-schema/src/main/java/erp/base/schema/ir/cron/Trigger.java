@@ -29,4 +29,36 @@ public class Trigger {
 	
 	@Column
 	private Date call_at;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Integer getCron_id() {
+		return cron_id;
+	}
+
+	public void setCron_id(Integer cron_id) {
+		this.cron_id = cron_id;
+	}
+
+	public Cron getCron() {
+		return cron;
+	}
+
+	public void setCron(Cron cron) {
+		this.cron = cron;
+	}
+
+	public Date getCall_at() {
+		return call_at;
+	}
+
+	public void setCall_at(Date call_at) {
+		this.call_at = call_at;
+	}
 }

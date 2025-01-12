@@ -45,4 +45,52 @@ public class Exclusion {
 	@Transient
 	@Description("Status")
 	private Dep_State state;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Integer getModule_id() {
+		return module_id;
+	}
+
+	public void setModule_id(Integer module_id) {
+		this.module_id = module_id;
+	}
+
+	public Module getModule() {
+		return module;
+	}
+
+	public void setModule(Module module) {
+		this.module = module;
+	}
+
+	public Integer getExclusion_id() {
+		return exclusion_id;
+	}
+
+	public void setExclusion_id(Integer exclusion_id) {
+		this.exclusion_id = exclusion_id;
+	}
+
+	public Dep_State getState() {
+		return state;
+	}
+
+	public void setState(Dep_State state) {
+		this.state = state;
+	}
 }

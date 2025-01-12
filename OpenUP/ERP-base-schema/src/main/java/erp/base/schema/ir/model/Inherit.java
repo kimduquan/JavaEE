@@ -41,4 +41,60 @@ public class Inherit {
 	@ManyToOne(targetEntity = Fields.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "parent_field_id")
 	private Fields parent_field;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Integer getModel_id() {
+		return model_id;
+	}
+
+	public void setModel_id(Integer model_id) {
+		this.model_id = model_id;
+	}
+
+	public Model getModel() {
+		return model;
+	}
+
+	public void setModel(Model model) {
+		this.model = model;
+	}
+
+	public Integer getParent_id() {
+		return parent_id;
+	}
+
+	public void setParent_id(Integer parent_id) {
+		this.parent_id = parent_id;
+	}
+
+	public Model getParent() {
+		return parent;
+	}
+
+	public void setParent(Model parent) {
+		this.parent = parent;
+	}
+
+	public Integer getParent_field_id() {
+		return parent_field_id;
+	}
+
+	public void setParent_field_id(Integer parent_field_id) {
+		this.parent_field_id = parent_field_id;
+	}
+
+	public Fields getParent_field() {
+		return parent_field;
+	}
+
+	public void setParent_field(Fields parent_field) {
+		this.parent_field = parent_field;
+	}
 }

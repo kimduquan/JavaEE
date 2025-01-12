@@ -50,4 +50,36 @@ public class Description {
 	@Column
 	@org.eclipse.microprofile.graphql.Description("Expiration Date")
 	private Date expiration_date;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Duration getDuration() {
+		return duration;
+	}
+
+	public void setDuration(Duration duration) {
+		this.duration = duration;
+	}
+
+	public Date getExpiration_date() {
+		return expiration_date;
+	}
+
+	public void setExpiration_date(Date expiration_date) {
+		this.expiration_date = expiration_date;
+	}
 }

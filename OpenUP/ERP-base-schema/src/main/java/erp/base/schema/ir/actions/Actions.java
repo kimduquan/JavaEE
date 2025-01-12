@@ -70,4 +70,84 @@ public class Actions {
 	@Column
 	@DefaultValue("list,form")
 	private String binding_view_types = "list,form";
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getXml_id() {
+		return xml_id;
+	}
+
+	public void setXml_id(String xml_id) {
+		this.xml_id = xml_id;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public String getHelp() {
+		return help;
+	}
+
+	public void setHelp(String help) {
+		this.help = help;
+	}
+
+	public Integer getBinding_model_id() {
+		return binding_model_id;
+	}
+
+	public void setBinding_model_id(Integer binding_model_id) {
+		this.binding_model_id = binding_model_id;
+	}
+
+	public Model getBinding_model() {
+		return binding_model;
+	}
+
+	public void setBinding_model(Model binding_model) {
+		this.binding_model = binding_model;
+	}
+
+	public BindingType getBinding_type() {
+		return binding_type;
+	}
+
+	public void setBinding_type(BindingType binding_type) {
+		this.binding_type = binding_type;
+	}
+
+	public String getBinding_view_types() {
+		return binding_view_types;
+	}
+
+	public void setBinding_view_types(String binding_view_types) {
+		this.binding_view_types = binding_view_types;
+	}
 }

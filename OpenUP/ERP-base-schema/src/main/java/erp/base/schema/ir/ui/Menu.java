@@ -102,4 +102,124 @@ public class Menu {
 	@Transient
 	@Description("Web Icon Image")
 	private byte[] web_icon_data;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
+	public Integer getSequence() {
+		return sequence;
+	}
+
+	public void setSequence(Integer sequence) {
+		this.sequence = sequence;
+	}
+
+	public List<Integer> getChild_id() {
+		return child_id;
+	}
+
+	public void setChild_id(List<Integer> child_id) {
+		this.child_id = child_id;
+	}
+
+	public List<Menu> getChilds() {
+		return childs;
+	}
+
+	public void setChilds(List<Menu> childs) {
+		this.childs = childs;
+	}
+
+	public Integer getParent_id() {
+		return parent_id;
+	}
+
+	public void setParent_id(Integer parent_id) {
+		this.parent_id = parent_id;
+	}
+
+	public Menu getParent() {
+		return parent;
+	}
+
+	public void setParent(Menu parent) {
+		this.parent = parent;
+	}
+
+	public String getParent_path() {
+		return parent_path;
+	}
+
+	public void setParent_path(String parent_path) {
+		this.parent_path = parent_path;
+	}
+
+	public List<Integer> getGroups_id() {
+		return groups_id;
+	}
+
+	public void setGroups_id(List<Integer> groups_id) {
+		this.groups_id = groups_id;
+	}
+
+	public List<Groups> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(List<Groups> groups) {
+		this.groups = groups;
+	}
+
+	public String getComplete_name() {
+		return complete_name;
+	}
+
+	public void setComplete_name(String complete_name) {
+		this.complete_name = complete_name;
+	}
+
+	public String getWeb_icon() {
+		return web_icon;
+	}
+
+	public void setWeb_icon(String web_icon) {
+		this.web_icon = web_icon;
+	}
+
+	public Action getAction() {
+		return action;
+	}
+
+	public void setAction(Action action) {
+		this.action = action;
+	}
+
+	public byte[] getWeb_icon_data() {
+		return web_icon_data;
+	}
+
+	public void setWeb_icon_data(byte[] web_icon_data) {
+		this.web_icon_data = web_icon_data;
+	}
 }

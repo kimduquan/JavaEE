@@ -50,4 +50,60 @@ public class Dependency {
 	@Column
 	@DefaultValue("true")
 	private Boolean auto_install_required = true;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Integer getModule_id() {
+		return module_id;
+	}
+
+	public void setModule_id(Integer module_id) {
+		this.module_id = module_id;
+	}
+
+	public Module getModule() {
+		return module;
+	}
+
+	public void setModule(Module module) {
+		this.module = module;
+	}
+
+	public Integer getDepend_id() {
+		return depend_id;
+	}
+
+	public void setDepend_id(Integer depend_id) {
+		this.depend_id = depend_id;
+	}
+
+	public Dep_State getState() {
+		return state;
+	}
+
+	public void setState(Dep_State state) {
+		this.state = state;
+	}
+
+	public Boolean getAuto_install_required() {
+		return auto_install_required;
+	}
+
+	public void setAuto_install_required(Boolean auto_install_required) {
+		this.auto_install_required = auto_install_required;
+	}
 }

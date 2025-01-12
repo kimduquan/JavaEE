@@ -97,4 +97,116 @@ public class Cron {
 	@Column
 	@Description("First Failure Date")
 	private Date first_failure_date;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Integer getIr_actions_server_id() {
+		return ir_actions_server_id;
+	}
+
+	public void setIr_actions_server_id(Integer ir_actions_server_id) {
+		this.ir_actions_server_id = ir_actions_server_id;
+	}
+
+	public Server getIr_actions_server() {
+		return ir_actions_server;
+	}
+
+	public void setIr_actions_server(Server ir_actions_server) {
+		this.ir_actions_server = ir_actions_server;
+	}
+
+	public String getCron_name() {
+		return cron_name;
+	}
+
+	public void setCron_name(String cron_name) {
+		this.cron_name = cron_name;
+	}
+
+	public Integer getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(Integer user_id) {
+		this.user_id = user_id;
+	}
+
+	public Users getUser() {
+		return user;
+	}
+
+	public void setUser(Users user) {
+		this.user = user;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
+	public Integer getInterval_number() {
+		return interval_number;
+	}
+
+	public void setInterval_number(Integer interval_number) {
+		this.interval_number = interval_number;
+	}
+
+	public IntervalUnit getInterval_type() {
+		return interval_type;
+	}
+
+	public void setInterval_type(IntervalUnit interval_type) {
+		this.interval_type = interval_type;
+	}
+
+	public Date getNextcall() {
+		return nextcall;
+	}
+
+	public void setNextcall(Date nextcall) {
+		this.nextcall = nextcall;
+	}
+
+	public Date getLastcall() {
+		return lastcall;
+	}
+
+	public void setLastcall(Date lastcall) {
+		this.lastcall = lastcall;
+	}
+
+	public Integer getPriority() {
+		return priority;
+	}
+
+	public void setPriority(Integer priority) {
+		this.priority = priority;
+	}
+
+	public Integer getFailure_count() {
+		return failure_count;
+	}
+
+	public void setFailure_count(Integer failure_count) {
+		this.failure_count = failure_count;
+	}
+
+	public Date getFirst_failure_date() {
+		return first_failure_date;
+	}
+
+	public void setFirst_failure_date(Date first_failure_date) {
+		this.first_failure_date = first_failure_date;
+	}
 }

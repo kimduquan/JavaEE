@@ -107,4 +107,172 @@ public class Actions {
 			@JoinColumn(name = "res_groups_id")
 	})
 	private List<Groups> groups;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Integer getSequence() {
+		return sequence;
+	}
+
+	public void setSequence(Integer sequence) {
+		this.sequence = sequence;
+	}
+
+	public Integer getParent_action_id() {
+		return parent_action_id;
+	}
+
+	public void setParent_action_id(Integer parent_action_id) {
+		this.parent_action_id = parent_action_id;
+	}
+
+	public Act_Window getParent_action() {
+		return parent_action;
+	}
+
+	public void setParent_action(Act_Window parent_action) {
+		this.parent_action = parent_action;
+	}
+
+	public Integer getParent_res_id() {
+		return parent_res_id;
+	}
+
+	public void setParent_res_id(Integer parent_res_id) {
+		this.parent_res_id = parent_res_id;
+	}
+
+	public String getParent_res_model() {
+		return parent_res_model;
+	}
+
+	public void setParent_res_model(String parent_res_model) {
+		this.parent_res_model = parent_res_model;
+	}
+
+	public String getAction_id() {
+		return action_id;
+	}
+
+	public void setAction_id(String action_id) {
+		this.action_id = action_id;
+	}
+
+	public Actions getAction() {
+		return action;
+	}
+
+	public void setAction(Actions action) {
+		this.action = action;
+	}
+
+	public String getPython_method() {
+		return python_method;
+	}
+
+	public void setPython_method(String python_method) {
+		this.python_method = python_method;
+	}
+
+	public String getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(String user_id) {
+		this.user_id = user_id;
+	}
+
+	public Users getUser() {
+		return user;
+	}
+
+	public void setUser(Users user) {
+		this.user = user;
+	}
+
+	public boolean isIs_deletable() {
+		return is_deletable;
+	}
+
+	public void setIs_deletable(boolean is_deletable) {
+		this.is_deletable = is_deletable;
+	}
+
+	public String getDefault_view_mode() {
+		return default_view_mode;
+	}
+
+	public void setDefault_view_mode(String default_view_mode) {
+		this.default_view_mode = default_view_mode;
+	}
+
+	public List<Integer> getFilter_ids() {
+		return filter_ids;
+	}
+
+	public void setFilter_ids(List<Integer> filter_ids) {
+		this.filter_ids = filter_ids;
+	}
+
+	public List<Filters> getFilters() {
+		return filters;
+	}
+
+	public void setFilters(List<Filters> filters) {
+		this.filters = filters;
+	}
+
+	public boolean isIs_visible() {
+		return is_visible;
+	}
+
+	public void setIs_visible(boolean is_visible) {
+		this.is_visible = is_visible;
+	}
+
+	public String getDomain() {
+		return domain;
+	}
+
+	public void setDomain(String domain) {
+		this.domain = domain;
+	}
+
+	public String getContext() {
+		return context;
+	}
+
+	public void setContext(String context) {
+		this.context = context;
+	}
+
+	public List<Integer> getGroups_ids() {
+		return groups_ids;
+	}
+
+	public void setGroups_ids(List<Integer> groups_ids) {
+		this.groups_ids = groups_ids;
+	}
+
+	public List<Groups> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(List<Groups> groups) {
+		this.groups = groups;
+	}
 }

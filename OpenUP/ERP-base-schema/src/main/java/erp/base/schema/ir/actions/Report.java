@@ -104,4 +104,124 @@ public class Report extends Actions {
 	@Column
 	@Description("Save as Attachment Prefix")
 	private String attachment;
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getModel() {
+		return model;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
+	}
+
+	public Integer getModel_id() {
+		return model_id;
+	}
+
+	public void setModel_id(Integer model_id) {
+		this.model_id = model_id;
+	}
+
+	public Model getModel_() {
+		return model_;
+	}
+
+	public void setModel_(Model model_) {
+		this.model_ = model_;
+	}
+
+	public ReportType getReport_type() {
+		return report_type;
+	}
+
+	public void setReport_type(ReportType report_type) {
+		this.report_type = report_type;
+	}
+
+	public String getReport_name() {
+		return report_name;
+	}
+
+	public void setReport_name(String report_name) {
+		this.report_name = report_name;
+	}
+
+	public String getReport_file() {
+		return report_file;
+	}
+
+	public void setReport_file(String report_file) {
+		this.report_file = report_file;
+	}
+
+	public List<Integer> getGroups_id() {
+		return groups_id;
+	}
+
+	public void setGroups_id(List<Integer> groups_id) {
+		this.groups_id = groups_id;
+	}
+
+	public List<Groups> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(List<Groups> groups) {
+		this.groups = groups;
+	}
+
+	public Boolean getMulti() {
+		return multi;
+	}
+
+	public void setMulti(Boolean multi) {
+		this.multi = multi;
+	}
+
+	public Integer getPaperformat_id() {
+		return paperformat_id;
+	}
+
+	public void setPaperformat_id(Integer paperformat_id) {
+		this.paperformat_id = paperformat_id;
+	}
+
+	public PaperFormat getPaperformat() {
+		return paperformat;
+	}
+
+	public void setPaperformat(PaperFormat paperformat) {
+		this.paperformat = paperformat;
+	}
+
+	public String getPrint_report_name() {
+		return print_report_name;
+	}
+
+	public void setPrint_report_name(String print_report_name) {
+		this.print_report_name = print_report_name;
+	}
+
+	public Boolean getAttachment_use() {
+		return attachment_use;
+	}
+
+	public void setAttachment_use(Boolean attachment_use) {
+		this.attachment_use = attachment_use;
+	}
+
+	public String getAttachment() {
+		return attachment;
+	}
+
+	public void setAttachment(String attachment) {
+		this.attachment = attachment;
+	}
 }

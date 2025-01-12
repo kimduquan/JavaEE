@@ -55,4 +55,76 @@ public class Rate {
 	@JoinColumn(name = "company_id")
 	@Description("Company")
 	private Company company;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Date getName() {
+		return name;
+	}
+
+	public void setName(Date name) {
+		this.name = name;
+	}
+
+	public Float getRate() {
+		return rate;
+	}
+
+	public void setRate(Float rate) {
+		this.rate = rate;
+	}
+
+	public Float getCompany_rate() {
+		return company_rate;
+	}
+
+	public void setCompany_rate(Float company_rate) {
+		this.company_rate = company_rate;
+	}
+
+	public Float getInverse_company_rate() {
+		return inverse_company_rate;
+	}
+
+	public void setInverse_company_rate(Float inverse_company_rate) {
+		this.inverse_company_rate = inverse_company_rate;
+	}
+
+	public Integer getCurrency_id() {
+		return currency_id;
+	}
+
+	public void setCurrency_id(Integer currency_id) {
+		this.currency_id = currency_id;
+	}
+
+	public Currency getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(Currency currency) {
+		this.currency = currency;
+	}
+
+	public Integer getCompany_id() {
+		return company_id;
+	}
+
+	public void setCompany_id(Integer company_id) {
+		this.company_id = company_id;
+	}
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
+	}
 }
