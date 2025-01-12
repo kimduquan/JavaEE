@@ -1,47 +1,21 @@
 package epf.json.schema;
 
-/**
- * @author PC
- *
- */
 public class JsonArray extends TypeValue {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	/**
-	 * 
-	 */
+	
 	private Value items;
-	/**
-	 * 
-	 */
 	private Value[] prefixItems;
-	/**
-	 * 
-	 */
 	private Value contains;
-	/**
-	 * 
-	 */
-	private int minContains;
-	/**
-	 * 
-	 */
-	private int maxContains;
-	/**
-	 * 
-	 */
-	private int minItems;
-	/**
-	 * 
-	 */
-	private int maxItems;
-	/**
-	 * 
-	 */
-	private boolean uniqueItems;
+	private Integer minContains;
+	private Integer maxContains;
+	private Integer minItems;
+	private Integer maxItems;
+	private Boolean uniqueItems;
+	
+	public JsonArray() {
+		setType(Type.array);
+	}
 
 	public Value getItems() {
 		return items;
@@ -71,39 +45,39 @@ public class JsonArray extends TypeValue {
 		return minContains;
 	}
 
-	public void setMinContains(int minContains) {
+	public void setMinContains(Integer minContains) {
 		this.minContains = minContains;
 	}
 
-	public int getMaxContains() {
+	public Integer getMaxContains() {
 		return maxContains;
 	}
 
-	public void setMaxContains(int maxContains) {
+	public void setMaxContains(Integer maxContains) {
 		this.maxContains = maxContains;
 	}
 
-	public int getMinItems() {
+	public Integer getMinItems() {
 		return minItems;
 	}
 
-	public void setMinItems(int minItems) {
+	public void setMinItems(Integer minItems) {
 		this.minItems = minItems;
 	}
 
-	public int getMaxItems() {
+	public Integer getMaxItems() {
 		return maxItems;
 	}
 
-	public void setMaxItems(int maxItems) {
+	public void setMaxItems(Integer maxItems) {
 		this.maxItems = maxItems;
 	}
 
-	public boolean isUniqueItems() {
+	public Boolean isUniqueItems() {
 		return uniqueItems;
 	}
 
-	public void setUniqueItems(boolean uniqueItems) {
+	public void setUniqueItems(Boolean uniqueItems) {
 		this.uniqueItems = uniqueItems;
 	}
 }

@@ -104,11 +104,11 @@
 		    <groupId>com.graphql-java</groupId>
 		    <artifactId>graphql-java-extended-scalars</artifactId>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.hubspot.jinjava/jinjava -->
+		<!-- https://mvnrepository.com/artifact/com.github.jknack/handlebars -->
 		<dependency>
-		    <groupId>com.hubspot.jinjava</groupId>
-		    <artifactId>jinjava</artifactId>
-		    <version>2.7.3</version>
+		    <groupId>com.github.jknack</groupId>
+		    <artifactId>handlebars</artifactId>
+		    <version>4.4.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.eclipse.lsp4j/org.eclipse.lsp4j.websocket.jakarta -->
 		<dependency>
@@ -136,6 +136,11 @@
 		<dependency>
 	        <groupId>openup</groupId>
 	        <artifactId>ERP-schema-utility</artifactId>
+	        <version>${project.version}</version>
+	    </dependency>
+	    <dependency>
+	        <groupId>openup</groupId>
+	        <artifactId>EPF-json-schema</artifactId>
 	        <version>${project.version}</version>
 	    </dependency>
         <dependency>

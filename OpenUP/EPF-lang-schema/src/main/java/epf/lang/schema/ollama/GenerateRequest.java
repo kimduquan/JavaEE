@@ -1,14 +1,13 @@
 package epf.lang.schema.ollama;
 
-/**
- * 
- */
 public class GenerateRequest {
 
 	private String model;
 	private String prompt;
 	private String suffix;
 	private String[] images;
+	private Object format = "json";
+	private String system;
 	private int[] context;
 	private boolean stream = true;
 	private boolean raw = false;
@@ -61,5 +60,17 @@ public class GenerateRequest {
 	}
 	public void setKeep_alive(String keep_alive) {
 		this.keep_alive = keep_alive;
+	}
+	public Object getFormat() {
+		return format;
+	}
+	public void setFormat(Object format) {
+		this.format = format;
+	}
+	public String getSystem() {
+		return system;
+	}
+	public void setSystem(String system) {
+		this.system = system;
 	}
 }
