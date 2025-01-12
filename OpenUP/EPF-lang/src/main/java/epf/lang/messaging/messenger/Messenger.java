@@ -34,7 +34,6 @@ import epf.lang.schema.ollama.Role;
 import epf.lang.schema.ollama.Tool;
 import epf.lang.schema.ollama.ToolCall;
 import epf.naming.Naming;
-import epf.util.json.ext.JsonUtil;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
 import jakarta.annotation.PostConstruct;
@@ -44,6 +43,7 @@ import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Id;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.NonUniqueResultException;
 import jakarta.persistence.Query;
 import jakarta.persistence.Transient;
@@ -219,8 +219,8 @@ public class Messenger {
 		prompt.append('\n');
 		prompt.append("""
 When you receive a user's question, please perform the following tasks, thinking through each step carefully. Respond in JSON format with the specified fields:
-1. "query": Provide a JPQL query using the given domain classes to address the user's question. Ensure the query is accurate and aligned with the provided domain model.
-2. "parameters": Include a map where each key represents a parameter name, and the corresponding value represents the parameter's value. Only Java primitive types or their corresponding wrapper classes are allowed as parameter values. These parameters are used in the generated JPQL query to ensure it addresses the user's question effectively.
+1. "query": Provide a JPQL (Java Persistence Query Language) query using the given domain classes to address the user's question. Ensure the query is accurate and aligned with the provided domain model.
+2. "parameters": Include a map of query parameters where each key represents a parameter name, and the corresponding value represents the parameter's value. These parameters are used in the generated JPQL query to ensure it addresses the user's question effectively.
 3. "template": Create a Markdown template (using Handlebars syntax) that utilizes the actual returned data from the generated query to address the user's question. Assume that the returned object is named "result".
 				""");
 		systemMessage = prompt.toString();
@@ -260,8 +260,7 @@ When you receive a user's question, please perform the following tasks, thinking
 		return request;
 	}
 	
-	private void putRequest(final Pages pages, final GenerateResponse response, final GenerateRequest request) {
-		request.setContext(response.getContext());
+	private void putRequest(final Pages pages, final GenerateRequest request) {
 		generates.put(pages.getEntry().getFirst().getMessaging().getFirst().getSender().getId(), request);
 	}
 	
@@ -274,14 +273,13 @@ When you receive a user's question, please perform the following tasks, thinking
 	}
 	
 	private GeneratedQuery generate(final Pages pages, final GenerateRequest request) throws Exception {
-		request.setPrompt(pages.getEntry().getFirst().getMessaging().getFirst().getMessage().getText());
 		final GenerateResponse response = ollama.generate(request);
 		LOGGER.info(response.getResponse());
 		request.setContext(response.getContext());
 		final GeneratedQuery query = getQuery(response);
 		if(query == null) {
 			response(pages.getEntry().getFirst().getId(), pages.getEntry().getFirst().getMessaging().getFirst().getSender(), response.getResponse());
-			putRequest(pages, response, request);
+			putRequest(pages, request);
 		}
 		return query;
 	}
@@ -290,17 +288,21 @@ When you receive a user's question, please perform the following tasks, thinking
 		final Query query = manager.createQuery(generated.getQuery());
 		if(generated.getParameters() != null) {
 			generated.getParameters().forEach((name, value) -> {
-				query.setParameter(name, value);
+				try {
+					query.setParameter(name, value);
+				}
+				catch(Exception ex) {
+					LOGGER.warning(ex.getMessage());
+				}
 			});
 		}
 		Object result = null;
 		try {
 			result = query.getSingleResult();
 		}
-		catch(NonUniqueResultException ex) {
+		catch(NonUniqueResultException | NoResultException ex) {
 			result = query.getResultList();
 		}
-		LOGGER.info("result:" + JsonUtil.toString(result));
 		return result;
 	}
 	
@@ -402,6 +404,7 @@ The user's query in natural language.
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response subscribe(final Pages pages) throws Exception {
 		final GenerateRequest request = getRequest(pages);
+		request.setPrompt(pages.getEntry().getFirst().getMessaging().getFirst().getMessage().getText());
 		int retry = 3;
 		int failed = 0;
 		do {
@@ -423,7 +426,9 @@ The user's query in natural language.
 							continue;
 						}
 						if(text != null) {
+							putRequest(pages, request);
 							response(pages.getEntry().getFirst().getId(), pages.getEntry().getFirst().getMessaging().getFirst().getSender(), text);
+							break;
 						}
 					}
 					catch(Exception ex) {
