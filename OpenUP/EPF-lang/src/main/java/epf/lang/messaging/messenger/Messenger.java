@@ -1,5 +1,6 @@
 package epf.lang.messaging.messenger;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -16,6 +17,8 @@ import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Helper;
+import com.github.jknack.handlebars.Options;
 import com.github.jknack.handlebars.Template;
 import epf.lang.Cache;
 import epf.lang.messaging.messenger.client.schema.Message;
@@ -363,7 +366,11 @@ When you receive a user's question, please perform the following tasks, thinking
 	}
 	
 	private String getText(final GeneratedQuery query, final Object result) throws Exception {
-		final Handlebars handlebars = new Handlebars().prettyPrint(true);
+		final Handlebars handlebars = new Handlebars().prettyPrint(true).registerHelperMissing(new Helper<String>() {
+			@Override
+			public Object apply(final String context, final Options options) throws IOException {
+				throw new TemplateException(context);
+			}});
 		final Template template = handlebars.compileInline(query.getTemplate());
 		final Map<String, Object> context = new HashMap<>();
 		if(query.getParameters() != null) {
@@ -467,9 +474,13 @@ The user's query in natural language.
 						}
 					}
 					catch(Exception ex) {
-						LOGGER.warning(ex.getCause().getMessage());
+						Throwable cause = ex;
+						if(ex.getCause() != null) {
+							cause = ex.getCause();
+						}
+						LOGGER.warning(cause.getMessage());
 						failed++;
-						final StringBuilder systemErrorMessage = buildSystemErrorMessage("query", ex.getCause());
+						final StringBuilder systemErrorMessage = buildSystemErrorMessage("query", cause);
 						request.setPrompt(systemErrorMessage.toString());
 						continue;
 					}
