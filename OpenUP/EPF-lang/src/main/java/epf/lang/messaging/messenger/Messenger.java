@@ -243,7 +243,7 @@ When you receive a user's question, please perform the following tasks, thinking
 			context.putAll(query.getParameters());
 		}
 		context.put("result", result);
-		final String text = template.apply(context);handlebars.helpers();
+		final String text = template.apply(context);
 		return text;
 	}
 	
