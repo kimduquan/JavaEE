@@ -1,6 +1,5 @@
 package epf.lang.messaging.messenger;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -15,8 +14,6 @@ import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.Helper;
-import com.github.jknack.handlebars.Options;
 import com.github.jknack.handlebars.Template;
 import epf.lang.Cache;
 import epf.lang.messaging.messenger.client.schema.Message;
@@ -232,11 +229,11 @@ When you receive a user's question, please perform the following tasks, thinking
 	}
 	
 	private String getText(final GeneratedQuery query, final Object result) throws Exception {
-		final Handlebars handlebars = new Handlebars().prettyPrint(true).registerHelperMissing(new Helper<Object>() {
+		final Handlebars handlebars = new Handlebars().prettyPrint(true)/*.registerHelperMissing(new Helper<Object>() {
 			@Override
 			public Object apply(final Object context, final Options options) throws IOException {
 				throw new TemplateException(context);
-			}});
+			}}*/;
 		final Template template = handlebars.compileInline(query.getTemplate());
 		final Map<String, Object> context = new HashMap<>();
 		if(query.getParameters() != null) {
