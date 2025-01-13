@@ -232,9 +232,9 @@ When you receive a user's question, please perform the following tasks, thinking
 	}
 	
 	private String getText(final GeneratedQuery query, final Object result) throws Exception {
-		final Handlebars handlebars = new Handlebars().prettyPrint(true).registerHelperMissing(new Helper<String>() {
+		final Handlebars handlebars = new Handlebars().prettyPrint(true).registerHelperMissing(new Helper<Object>() {
 			@Override
-			public Object apply(final String context, final Options options) throws IOException {
+			public Object apply(final Object context, final Options options) throws IOException {
 				throw new TemplateException(context);
 			}});
 		final Template template = handlebars.compileInline(query.getTemplate());
