@@ -121,7 +121,7 @@ public class Messenger {
 When you receive a user's question, please perform the following tasks, thinking through each step carefully. Respond in JSON format with the specified fields:
 1. "query": Provide a JPQL query using the given domain classes to address the user's question. Ensure the query is accurate and aligned with the provided domain model.
 2. "parameters": Include a map of parameters where each key represents a parameter name, and the corresponding value represents the parameter's value. These parameters are used in the generated JPQL query to ensure it addresses the user's question effectively.
-3. "template": Create a Markdown template (using Handlebars syntax) that utilizes the actual returned data from the generated query to address the user's question. Assume that the returned object is named "result".
+3. "template": Create a chat message template (using Handlebars syntax) that utilizes the actual returned data from the generated query to address the user's question. Assume that the returned object is named "result".
 				""");
 		systemMessage = prompt.toString();
 		LOGGER.info("\nprompt:\"\"\"\n" + systemMessage + "\n\"\"\"");
@@ -204,47 +204,6 @@ When you receive a user's question, please perform the following tasks, thinking
 			result = query.getResultList();
 		}
 		return result;
-	}
-	
-	private StringBuilder buildSystemErrorMessage(final Set<ConstraintViolation<GeneratedQuery>> violations) {
-		final StringBuilder message = new StringBuilder();
-		message.append("There are some valiation error:");
-		violations.forEach(violation -> {
-			message.append("\n    - ");
-			message.append(violation.getMessage());
-		});
-		message.append("\nPlease correct them then re-answer.");
-		return message;
-	}
-	
-	private StringBuilder buildSystemErrorMessage(final String name, final Throwable ex) {
-		final StringBuilder builder = new StringBuilder();
-		String message = ex.getMessage();
-		for(Map.Entry<String, EntityType<?>> entry : entitiesByJavaType.entrySet()) {
-			message = message.replace(entry.getKey(), entry.getValue().getName());
-		}
-		builder.append("A error occur related to \"");
-		builder.append(name);
-		builder.append("\":");
-		builder.append(message);
-		builder.append("\nPlease correct it then re-answer.");
-		return builder;
-	}
-	
-	private StringBuilder buildMissingAttributesSystemMessage(final Map<String, List<String>> missingAttributes) {
-		final StringBuilder builder = new StringBuilder();
-		builder.append("Could not resolve below attribute(s) in \"template\":");
-		missingAttributes.forEach((entityType, attributes) -> {
-			builder.append("\n - '");
-			builder.append(String.join("', '", attributes));
-			builder.append("'");
-			if(!entityType.isEmpty()) {
-				builder.append(" of ");
-				builder.append(entityType);
-			}
-		});
-		builder.append("\nPlease correct them then re-answer.");
-		return builder;
 	}
 	
 	private Template compileTemplate(final GeneratedQuery query, final Map<String, List<String>> missingAttributes) throws Exception {
@@ -336,6 +295,7 @@ The user's query in natural language.
 		request.setPrompt(pages.getEntry().getFirst().getMessaging().getFirst().getMessage().getText());
 		int retry = 5;
 		int failed = 0;
+		final ErrorMessageBuilder errorBuilder = new ErrorMessageBuilder();
 		do {
 			final GeneratedQuery query = generate(pages, request);
 			if(query != null) {
@@ -353,12 +313,13 @@ The user's query in natural language.
 							catch(Exception ex) {
 								LOGGER.warning(ex.getMessage());
 								failed++;
-								final StringBuilder systemErrorMessage = buildSystemErrorMessage("template", ex);
+								final StringBuilder systemErrorMessage = errorBuilder.buildSystemErrorMessage("template", ex, entitiesByJavaType);
 								request.setPrompt(systemErrorMessage.toString());
 								continue;
 							}
 							if(text != null) {
 								putRequest(pages, request);
+								text = text.replace("<br>", "\n");
 								response(pages.getEntry().getFirst().getId(), pages.getEntry().getFirst().getMessaging().getFirst().getSender(), text);
 								break;
 							}
@@ -370,7 +331,7 @@ The user's query in natural language.
 							}
 							LOGGER.warning(cause.getMessage());
 							failed++;
-							final StringBuilder systemErrorMessage = buildSystemErrorMessage("query", cause);
+							final StringBuilder systemErrorMessage = errorBuilder.buildSystemErrorMessage("query", cause, entitiesByJavaType);
 							request.setPrompt(systemErrorMessage.toString());
 							continue;
 						}
@@ -380,7 +341,7 @@ The user's query in natural language.
 							LOGGER.warning(String.format("Could not resolve %s attribute(s) of entity type '%s'", String.join(",", attributes), entityType));
 						});
 						failed++;
-						final StringBuilder missingAttributesSystemMessage = buildMissingAttributesSystemMessage(missingAttributes);
+						final StringBuilder missingAttributesSystemMessage = errorBuilder.buildMissingAttributesSystemMessage(missingAttributes);
 						request.setPrompt(missingAttributesSystemMessage.toString());
 						continue;
 					}
@@ -388,7 +349,7 @@ The user's query in natural language.
 				else {
 					violations.forEach(violation -> LOGGER.warning(violation.getMessage()));
 					failed++;
-					final StringBuilder systemErrorMessage = buildSystemErrorMessage(violations);
+					final StringBuilder systemErrorMessage = errorBuilder.buildSystemErrorMessage(violations);
 					request.setPrompt(systemErrorMessage.toString());
 					continue;
 				}
