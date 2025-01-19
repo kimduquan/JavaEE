@@ -25,6 +25,14 @@ public class EntityTypeComparator implements Comparator<EntityType<?>> {
 		if(superClass2 != null && superClass2.getName().equals(entityType1.getJavaType().getName())) {
 			return -1;
 		}
+		final int deepLevel1 = entityType1.getClass().getName().split("\\.").length;
+		final int deepLevel2 = entityType2.getClass().getName().split("\\.").length;
+		if(deepLevel1 > deepLevel2) {
+			return 1;
+		}
+		if(deepLevel2 > deepLevel1) {
+			return -1;
+		}
 		int res1 = 0;
 		int count1 = 0;
 		for(Attribute<?, ?> attr : entityType1.getAttributes()) {

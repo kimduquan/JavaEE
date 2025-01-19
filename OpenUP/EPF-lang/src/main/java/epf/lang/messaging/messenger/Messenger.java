@@ -1,5 +1,6 @@
 package epf.lang.messaging.messenger;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -14,6 +15,8 @@ import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Helper;
+import com.github.jknack.handlebars.Options;
 import com.github.jknack.handlebars.Template;
 import epf.lang.Cache;
 import epf.lang.messaging.messenger.client.schema.Message;
@@ -210,7 +213,7 @@ When you receive a user's question, please perform the following tasks, thinking
 			message.append("\n    - ");
 			message.append(violation.getMessage());
 		});
-		message.append("\nPlease correct them then re-answer the user's question.");
+		message.append("\nPlease correct them then re-answer.");
 		return message;
 	}
 	
@@ -224,17 +227,38 @@ When you receive a user's question, please perform the following tasks, thinking
 		builder.append(name);
 		builder.append("\":");
 		builder.append(message);
-		builder.append("\nPlease correct it then re-answer the user's question");
+		builder.append("\nPlease correct it then re-answer.");
 		return builder;
 	}
 	
-	private String getText(final GeneratedQuery query, final Object result) throws Exception {
-		final Handlebars handlebars = new Handlebars().prettyPrint(true)/*.registerHelperMissing(new Helper<Object>() {
+	private StringBuilder buildMissingAttributesSystemMessage(final Map<String, List<String>> missingAttributes) {
+		final StringBuilder builder = new StringBuilder();
+		builder.append("Could not resolve below attribute(s) in \"template\":");
+		missingAttributes.forEach((entityType, attributes) -> {
+			builder.append("\n - '");
+			builder.append(String.join("', '", attributes));
+			builder.append("'");
+			if(!entityType.isEmpty()) {
+				builder.append(" of ");
+				builder.append(entityType);
+			}
+		});
+		builder.append("\nPlease correct them then re-answer.");
+		return builder;
+	}
+	
+	private Template compileTemplate(final GeneratedQuery query, final Map<String, List<String>> missingAttributes) throws Exception {
+		final EntityAttributeGetter getter = new EntityAttributeGetter();
+		final Handlebars handlebars = new Handlebars().prettyPrint(true).registerHelperMissing(new Helper<Object>() {
 			@Override
 			public Object apply(final Object context, final Options options) throws IOException {
-				throw new TemplateException(context);
-			}}*/;
+				return getter.get(context, options.helperName, entitiesByJavaType, missingAttributes);
+			}});
 		final Template template = handlebars.compileInline(query.getTemplate());
+		return template;
+	}
+	
+	private String getText(final GeneratedQuery query, final Template template, final Object result) throws Exception {
 		final Map<String, Object> context = new HashMap<>();
 		if(query.getParameters() != null) {
 			context.putAll(query.getParameters());
@@ -310,41 +334,54 @@ The user's query in natural language.
 	public Response subscribe(final Pages pages) throws Exception {
 		final GenerateRequest request = getRequest(pages);
 		request.setPrompt(pages.getEntry().getFirst().getMessaging().getFirst().getMessage().getText());
-		int retry = 3;
+		int retry = 5;
 		int failed = 0;
 		do {
 			final GeneratedQuery query = generate(pages, request);
 			if(query != null) {
 				final Set<ConstraintViolation<GeneratedQuery>> violations = validator.validate(query);
 				if(violations.isEmpty()) {
-					try {
-						final Object result = getResult(query);
-						String text = null;
+					final Map<String, List<String>> missingAttributes = new LinkedHashMap<>();
+					final Template template = compileTemplate(query, missingAttributes);
+					if(missingAttributes.isEmpty()) {
 						try {
-							text = getText(query, result);
+							final Object result = getResult(query);
+							String text = null;
+							try {
+								text = getText(query, template, result);
+							}
+							catch(Exception ex) {
+								LOGGER.warning(ex.getMessage());
+								failed++;
+								final StringBuilder systemErrorMessage = buildSystemErrorMessage("template", ex);
+								request.setPrompt(systemErrorMessage.toString());
+								continue;
+							}
+							if(text != null) {
+								putRequest(pages, request);
+								response(pages.getEntry().getFirst().getId(), pages.getEntry().getFirst().getMessaging().getFirst().getSender(), text);
+								break;
+							}
 						}
 						catch(Exception ex) {
-							LOGGER.warning(ex.getMessage());
+							Throwable cause = ex;
+							if(ex.getCause() != null) {
+								cause = ex.getCause();
+							}
+							LOGGER.warning(cause.getMessage());
 							failed++;
-							final StringBuilder systemErrorMessage = buildSystemErrorMessage("template", ex);
+							final StringBuilder systemErrorMessage = buildSystemErrorMessage("query", cause);
 							request.setPrompt(systemErrorMessage.toString());
 							continue;
 						}
-						if(text != null) {
-							putRequest(pages, request);
-							response(pages.getEntry().getFirst().getId(), pages.getEntry().getFirst().getMessaging().getFirst().getSender(), text);
-							break;
-						}
 					}
-					catch(Exception ex) {
-						Throwable cause = ex;
-						if(ex.getCause() != null) {
-							cause = ex.getCause();
-						}
-						LOGGER.warning(cause.getMessage());
+					else {
+						missingAttributes.forEach((entityType, attributes) -> {
+							LOGGER.warning(String.format("Could not resolve %s attribute(s) of entity type '%s'", String.join(",", attributes), entityType));
+						});
 						failed++;
-						final StringBuilder systemErrorMessage = buildSystemErrorMessage("query", cause);
-						request.setPrompt(systemErrorMessage.toString());
+						final StringBuilder missingAttributesSystemMessage = buildMissingAttributesSystemMessage(missingAttributes);
+						request.setPrompt(missingAttributesSystemMessage.toString());
 						continue;
 					}
 				}
@@ -377,7 +414,9 @@ The user's query in natural language.
 	@Produces(MediaType.TEXT_PLAIN)
 	public String executeQuery(@Valid final GeneratedQuery query) throws Exception {
 		final Object result = getResult(query);
-		final String text = getText(query, result);
+		final Map<String, List<String>> missingAttributes = new LinkedHashMap<>();
+		final Template template = compileTemplate(query, missingAttributes);
+		final String text = getText(query, template, result);
 		return text;
 	}
 }
