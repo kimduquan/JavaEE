@@ -316,9 +316,13 @@ When you receive a user's question, please perform the following tasks, thinking
 			LOGGER.info("chat is empty.");
 			request = new ChatRequest();
 			request.setModel(model);
-			request.setStream(false);
 			request.setMessages(new ArrayList<>());
 			request.setTools(new ArrayList<>());
+			request.setStream(false);
+			request.setKeep_alive("24h");
+			request.setFormat("json");
+			request.setOptions(new HashMap<>());
+			request.getOptions().put("temperature", Float.valueOf("0.1"));
 			
 			final epf.lang.schema.ollama.Message systemMessage = new epf.lang.schema.ollama.Message();
 			systemMessage.setRole(Role.system);
