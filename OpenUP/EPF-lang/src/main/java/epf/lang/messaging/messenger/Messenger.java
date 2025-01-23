@@ -1,6 +1,7 @@
 package epf.lang.messaging.messenger;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -41,6 +42,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
+import jakarta.json.bind.JsonbException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.NonUniqueResultException;
@@ -141,7 +143,7 @@ When you receive a user's question, please perform the following tasks, thinking
 		throw new ForbiddenException();
 	}
 	
-	private GenerateRequest getRequest(final Pages pages) {
+	private GenerateRequest getGenerateRequest(final Pages pages) {
 		GenerateRequest request = generates.get(pages.getEntry().getFirst().getMessaging().getFirst().getSender().getId());
 		if(request == null) {
 			LOGGER.info("generate is empty.");
@@ -179,6 +181,31 @@ When you receive a user's question, please perform the following tasks, thinking
 		final GeneratedQuery query = getQuery(response);
 		if(query == null) {
 			response(pages.getEntry().getFirst().getId(), pages.getEntry().getFirst().getMessaging().getFirst().getSender(), response.getResponse());
+			putRequest(pages, request);
+		}
+		return query;
+	}
+	
+	private GeneratedQuery getQuery(final ChatResponse response) throws Exception {
+		try(Jsonb jsonb = JsonbBuilder.create()){
+			return jsonb.fromJson(response.getMessage().getContent(), GeneratedQuery.class);
+		}
+		catch(JsonbException ex) {
+			return null;
+		}
+	}
+	
+	private void putRequest(final Pages pages, final ChatRequest request) {
+		chats.put(pages.getEntry().getFirst().getMessaging().getFirst().getSender().getId(), request);
+	}
+	
+	private GeneratedQuery chat(final Pages pages, final ChatRequest request) throws Exception {
+		final ChatResponse response = ollama.chat(request);
+		LOGGER.info(response.getMessage().getContent());
+		request.getMessages().add(response.getMessage());
+		final GeneratedQuery query = getQuery(response);
+		if(query == null) {
+			response(pages.getEntry().getFirst().getId(), pages.getEntry().getFirst().getMessaging().getFirst().getSender(), response.getMessage().getContent());
 			putRequest(pages, request);
 		}
 		return query;
@@ -227,6 +254,31 @@ When you receive a user's question, please perform the following tasks, thinking
 		return text;
 	}
 	
+	private Tool getTool() {
+		final Tool tool = new Tool();
+		tool.setType("function");
+		final Function function = new Function();
+		function.setName("get_erp_data");
+		function.setDescription("This function is designed to handle user queries related to Enterprise Resource Planning (ERP) systems.");
+		function.setParameters(new Parameters());
+		function.getParameters().setType("object");
+		function.getParameters().setProperties(new LinkedHashMap<>());
+		final Parameter queryParam = new Parameter();
+		queryParam.setType("string");
+		queryParam.setDescription("Provide a JPQL query using the given domain classes to address the user's question. Ensure the query is accurate and aligned with the provided domain model.");
+		function.getParameters().getProperties().put("query", queryParam);
+		final Parameter paramsParam = new Parameter();
+		paramsParam.setType("object");
+		paramsParam.setDescription("Include a map of parameters where each key represents a parameter name, and the corresponding value represents the parameter's value. These parameters are used in the generated JPQL query to ensure it addresses the user's question effectively.");
+		function.getParameters().getProperties().put("parameters", paramsParam);
+		final Parameter templateParam = new Parameter();
+		templateParam.setType("string");
+		templateParam.setDescription("Create a chat message template (using Handlebars syntax) that utilizes the actual returned data from the generated query to address the user's question. Assume that the returned object is named \"result\".");
+		function.getParameters().getProperties().put("template", templateParam);
+		function.getParameters().setRequired(Arrays.asList("query", "parameters", "template"));
+		return tool;
+	}
+	
 	private void response(final String id, final ObjectRef recipient, final String text) throws Exception {
 		final ResponseMessage responseMessage = new ResponseMessage();
 		responseMessage.setRecipient(recipient);
@@ -237,37 +289,7 @@ When you receive a user's question, please perform the following tasks, thinking
 		LOGGER.info(String.format("response[%s]:%s", msgRef.getRecipient_id(), msgRef.getMessage_id()));
 	}
 	
-	public ChatResponse chat(final Pages data) throws Exception {
-		ChatRequest request = chats.get(data.getEntry().getFirst().getMessaging().getFirst().getSender().getId());
-		if(request == null) {
-			LOGGER.info("chat is empty.");
-			request = new ChatRequest();
-			request.setModel(model);
-			request.setStream(false);
-			request.setMessages(new LinkedList<>());
-			request.setTools(new LinkedList<>());
-			
-			final Tool tool = new Tool();
-			tool.setType("function");
-			final Function function = new Function();
-			function.setName("get_erp_data");
-			function.setDescription("""
-This function is designed to handle user queries related to Enterprise Resource Planning (ERP) systems. 
-It exclusively accepts questions in natural language through its \"user_question\" parameter, interprets the intent, retrieves relevant data from the ERP system, and generates clear, conversational answers in natural language.
-			""");
-			function.setParameters(new Parameters());
-			function.getParameters().setType("object");
-			function.getParameters().setProperties(new LinkedHashMap<>());
-			final Parameter queryParam = new Parameter();
-			queryParam.setType("string");
-			queryParam.setDescription("""
-The user's query in natural language.
-					""");
-			function.getParameters().getProperties().put("user_question ", queryParam);
-			function.getParameters().setRequired(Arrays.asList("user_question "));
-			request.getTools().add(tool);
-		}
-		
+	public ChatResponse handleResponse(final Pages data, final ChatRequest request) {
 		final epf.lang.schema.ollama.Message userMsg = new epf.lang.schema.ollama.Message();
 		userMsg.setRole(Role.user);
 		userMsg.setContent(data.getEntry().getFirst().getMessaging().getFirst().getMessage().getText());
@@ -288,10 +310,121 @@ The user's query in natural language.
 		return response;
 	}
 	
+	private ChatRequest getChatRequest(final Pages pages) throws Exception {
+		ChatRequest request = chats.get(pages.getEntry().getFirst().getMessaging().getFirst().getSender().getId());
+		if(request == null) {
+			LOGGER.info("chat is empty.");
+			request = new ChatRequest();
+			request.setModel(model);
+			request.setStream(false);
+			request.setMessages(new ArrayList<>());
+			request.setTools(new ArrayList<>());
+			
+			final epf.lang.schema.ollama.Message systemMessage = new epf.lang.schema.ollama.Message();
+			systemMessage.setRole(Role.system);
+			systemMessage.setContent(this.systemMessage);
+			request.getMessages().add(systemMessage);
+			
+			final Tool tool = getTool();
+			
+			request.getTools().add(tool);
+			
+			ollama.chat(request);
+		}
+		final epf.lang.schema.ollama.Message message = new epf.lang.schema.ollama.Message();
+		message.setRole(Role.user);
+		message.setContent(pages.getEntry().getFirst().getMessaging().getFirst().getMessage().getText());
+		request.getMessages().add(message);
+		return request;
+	}
+	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
+	public Response subscribeV2(final Pages pages) throws Exception {
+		final ChatRequest request = getChatRequest(pages);
+		int retry = 5;
+		int failed = 0;
+		final ErrorMessageBuilder errorBuilder = new ErrorMessageBuilder();
+		do {
+			final GeneratedQuery query = chat(pages, request);
+			if(query != null) {
+				final Set<ConstraintViolation<GeneratedQuery>> violations = validator.validate(query);
+				if(violations.isEmpty()) {
+					final Map<String, List<String>> missingAttributes = new LinkedHashMap<>();
+					final Template template = compileTemplate(query, missingAttributes);
+					if(missingAttributes.isEmpty()) {
+						try {
+							final Object result = getResult(query);
+							String text = null;
+							try {
+								text = getText(query, template, result);
+							}
+							catch(Exception ex) {
+								LOGGER.warning(ex.getMessage());
+								failed++;
+								final StringBuilder systemErrorMessage = errorBuilder.buildSystemErrorMessage("template", ex, entitiesByJavaType);
+								final epf.lang.schema.ollama.Message message = new epf.lang.schema.ollama.Message();
+								message.setRole(Role.user);
+								message.setContent(systemErrorMessage.toString());
+								request.getMessages().add(message);
+								continue;
+							}
+							if(text != null) {
+								putRequest(pages, request);
+								text = text.replace("<br>", "\n");
+								response(pages.getEntry().getFirst().getId(), pages.getEntry().getFirst().getMessaging().getFirst().getSender(), text);
+								break;
+							}
+						}
+						catch(Exception ex) {
+							Throwable cause = ex;
+							if(ex.getCause() != null) {
+								cause = ex.getCause();
+							}
+							LOGGER.warning(cause.getMessage());
+							failed++;
+							final StringBuilder systemErrorMessage = errorBuilder.buildSystemErrorMessage("query", cause, entitiesByJavaType);
+							final epf.lang.schema.ollama.Message message = new epf.lang.schema.ollama.Message();
+							message.setRole(Role.user);
+							message.setContent(systemErrorMessage.toString());
+							request.getMessages().add(message);
+							continue;
+						}
+					}
+					else {
+						missingAttributes.forEach((entityType, attributes) -> {
+							LOGGER.warning(String.format("Could not resolve %s attribute(s) of entity type '%s'", String.join(",", attributes), entityType));
+						});
+						failed++;
+						final StringBuilder missingAttributesSystemMessage = errorBuilder.buildMissingAttributesSystemMessage(missingAttributes);
+						final epf.lang.schema.ollama.Message message = new epf.lang.schema.ollama.Message();
+						message.setRole(Role.user);
+						message.setContent(missingAttributesSystemMessage.toString());
+						request.getMessages().add(message);
+						continue;
+					}
+				}
+				else {
+					violations.forEach(violation -> LOGGER.warning(violation.getMessage()));
+					failed++;
+					final StringBuilder systemErrorMessage = errorBuilder.buildSystemErrorMessage(violations);
+					final epf.lang.schema.ollama.Message message = new epf.lang.schema.ollama.Message();
+					message.setRole(Role.user);
+					message.setContent(systemErrorMessage.toString());
+					request.getMessages().add(message);
+					continue;
+				}
+			}
+			else {
+				break;
+			}
+		}
+		while(failed < retry);
+		return Response.ok().build();
+	}
+	
 	public Response subscribe(final Pages pages) throws Exception {
-		final GenerateRequest request = getRequest(pages);
+		final GenerateRequest request = getGenerateRequest(pages);
 		request.setPrompt(pages.getEntry().getFirst().getMessaging().getFirst().getMessage().getText());
 		int retry = 5;
 		int failed = 0;
