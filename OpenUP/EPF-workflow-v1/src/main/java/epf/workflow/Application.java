@@ -6,10 +6,6 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
-/**
- * @author PC
- *
- */
 @ApplicationScoped
 @ApplicationPath("/")
 @Consumes(MediaType.APPLICATION_JSON)

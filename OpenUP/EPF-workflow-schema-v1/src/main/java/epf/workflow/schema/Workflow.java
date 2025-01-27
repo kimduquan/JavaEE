@@ -1,5 +1,6 @@
 package epf.workflow.schema;
 
+import java.util.List;
 import java.util.Map;
 import org.eclipse.microprofile.graphql.Description;
 import epf.workflow.schema.util.Either;
@@ -20,7 +21,7 @@ public class Workflow {
 	
 	@NotNull
 	@Description("The task(s) that must be performed by the workflow.")
-	private Map<String, Task> do_;
+	private List<Map<String, Task>> do_;
 	
 	@Description("The configuration, if any, of the workflow's timeout. If a string, must be the name of a timeout defined in the workflow's reusable components.")
 	private Either<String, Timeout> timeout;
@@ -58,11 +59,11 @@ public class Workflow {
 		this.use = use;
 	}
 
-	public Map<String, Task> getDo_() {
+	public List<Map<String, Task>> getDo_() {
 		return do_;
 	}
 
-	public void setDo_(Map<String, Task> do_) {
+	public void setDo_(List<Map<String, Task>> do_) {
 		this.do_ = do_;
 	}
 

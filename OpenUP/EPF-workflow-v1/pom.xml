@@ -7,11 +7,22 @@
 	<version>1.0.0</version>
 	<relativePath>../EPF-parent-ext/pom.xml</relativePath>
   </parent>
-  <artifactId>EPF-workflow</artifactId>
+  <artifactId>EPF-workflow-v1</artifactId>
   <name>Eclipse Process Framework Workflow</name>
   <properties>
     <maven.compiler.release>21</maven.compiler.release>
   </properties>
+  <dependencyManagement>
+	    <dependencies>
+	        <dependency>
+	            <groupId>${quarkus.platform.group-id}</groupId>
+	            <artifactId>quarkus-camel-bom</artifactId>
+	            <version>${quarkus.platform.version}</version>
+	            <type>pom</type>
+	            <scope>import</scope>
+	        </dependency>
+	    </dependencies>
+	</dependencyManagement>
   <dependencies>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -65,6 +76,22 @@
 		<groupId>io.quarkus</groupId>
 		<artifactId>quarkus-container-image-jib</artifactId>
 	</dependency>
+	<dependency>
+        <groupId>org.apache.camel.quarkus</groupId>
+        <artifactId>camel-quarkus-grpc</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.camel.quarkus</groupId>
+        <artifactId>camel-quarkus-rest-openapi</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.camel.quarkus</groupId>
+        <artifactId>camel-quarkus-http</artifactId>
+    </dependency>
+    <dependency>
+	    <groupId>org.apache.camel.quarkus</groupId>
+	    <artifactId>camel-quarkus-file</artifactId>
+	</dependency>
 	
 	<dependency>
 		<groupId>com.hazelcast</groupId>
@@ -77,29 +104,14 @@
         <artifactId>EPF-nosql-schema</artifactId>
         <version>${project.version}</version>
     </dependency>
-    <dependency>
-        <groupId>openup</groupId>
-        <artifactId>EPF-workflow-schema-utility</artifactId>
-        <version>${project.version}</version>
-    </dependency>
 	<dependency>
         <groupId>openup</groupId>
-        <artifactId>EPF-workflow-schema</artifactId>
+        <artifactId>EPF-workflow-schema-v1</artifactId>
         <version>${project.version}</version>
     </dependency>
     <dependency>
         <groupId>openup</groupId>
         <artifactId>EPF-event-schema</artifactId>
-        <version>${project.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>openup</groupId>
-        <artifactId>EPF-workflow-client</artifactId>
-        <version>${project.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>openup</groupId>
-        <artifactId>EPF-workflow-utility</artifactId>
         <version>${project.version}</version>
     </dependency>
     <dependency>
