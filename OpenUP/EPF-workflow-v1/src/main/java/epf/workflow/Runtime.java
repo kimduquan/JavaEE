@@ -3,8 +3,6 @@ package epf.workflow;
 import java.net.URI;
 import java.util.Map;
 import java.util.Optional;
-import org.apache.camel.CamelContext;
-import org.apache.camel.ProducerTemplate;
 import org.eclipse.microprofile.lra.annotation.AfterLRA;
 import org.eclipse.microprofile.lra.annotation.Compensate;
 import org.eclipse.microprofile.lra.annotation.Complete;
@@ -71,10 +69,7 @@ public class Runtime {
 	transient Cache cache;
 	
 	@Inject
-	transient CamelContext camel;
-	
-	@Inject
-    transient ProducerTemplate producer;
+	transient Integration integration;
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -117,23 +112,17 @@ public class Runtime {
 	}
 	
 	private ResponseBuilder grpc(final Instance instance, final Task task, final GRPC grpc, final JsonValue input) throws Exception {
-		final String endpointUri = String.format("grpc:%s:%d/%s?method=%s", grpc.getService().getHost(), grpc.getService().getPort(), grpc.getService().getName(), grpc.getMethod());
-		final Object body = JsonUtil.asValue(input);
-		final Object entity = producer.requestBody(endpointUri, body);
+		final Object entity = integration.grpc(instance, task, grpc, input);
 		return new ResponseBuilder().entity(JsonUtil.toJsonValue(entity));
 	}
 	
 	private ResponseBuilder http(final Instance instance, final Task task, final HTTP http, final JsonValue input) throws Exception {
-		final String endpointUri = http.getEndpoint().isLeft() ? http.getEndpoint().getLeft() : http.getEndpoint().getRight().getUri();
-		final Object body = JsonUtil.asValue(input);
-		final Object entity = producer.requestBody(endpointUri, body);
+		final Object entity = integration.http(instance, task, http, input);
 		return new ResponseBuilder().entity(JsonUtil.toJsonValue(entity));
 	}
 	
 	private ResponseBuilder openapi(final Instance instance, final Task task, final OpenAPI openapi, final JsonValue input) throws Exception {
-		final String endpointUri = String.format("rest-openapi:%s#%s", openapi.getDocument().getEndpoint().getUri(), openapi.getOperationId());
-		final Object body = JsonUtil.asValue(input);
-		final Object entity = producer.requestBody(endpointUri, body);
+		final Object entity = integration.openapi(instance, task, openapi, input);
 		return new ResponseBuilder().entity(JsonUtil.toJsonValue(entity));
 	}
 	
