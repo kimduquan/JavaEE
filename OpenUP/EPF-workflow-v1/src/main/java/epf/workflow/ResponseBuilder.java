@@ -1,6 +1,5 @@
 package epf.workflow;
 
-import jakarta.json.JsonValue;
 import jakarta.ws.rs.core.Response;
 
 public class ResponseBuilder {
@@ -9,7 +8,7 @@ public class ResponseBuilder {
 		return this;
 	}
 	
-	public ResponseBuilder entity(final JsonValue output) {
+	public ResponseBuilder entity(final Object entity) {
 		return this;
 	}
 	

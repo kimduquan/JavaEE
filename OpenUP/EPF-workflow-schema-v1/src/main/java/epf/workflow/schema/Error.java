@@ -23,6 +23,16 @@ public class Error {
 	
 	@Description("A human-readable explanation specific to this occurrence of the error.")
 	private String detail;
+	
+	public Error clone() {
+		final Error error = new Error();
+		error.detail = detail;
+		error.status = status;
+		error.instance = instance;
+		error.title = title;
+		error.type = type;
+		return error;
+	}
 
 	public URI getType() {
 		return type;
