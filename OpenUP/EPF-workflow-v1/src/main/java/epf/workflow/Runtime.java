@@ -250,13 +250,14 @@ public class Runtime {
 		final WorkflowError workflowError = new WorkflowError();
 		epf.workflow.schema.Error error = null;
 		if(raise.getRaise().getError().isLeft()) {
-			error = instance.getWorkflow().getUse().getErrors().get(raise.getRaise().getError().getLeft()).clone();
+			error = instance.getWorkflow().getUse().getErrors().get(raise.getRaise().getError().getLeft());
 		}
 		else if(raise.getRaise().getError().isRight()) {
-			error = raise.getRaise().getError().getRight().clone();
+			error = raise.getRaise().getError().getRight();
 		}
-		error.setInstance(instance.getId().toString());
-		workflowError.setError(error);
+		final epf.workflow.schema.Error errorInstance = error.clone();
+		errorInstance.setInstance(instance.getId().toString());
+		workflowError.setError(errorInstance);
 		throw workflowError;
 	}
 	
