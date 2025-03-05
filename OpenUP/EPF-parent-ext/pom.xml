@@ -13,7 +13,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-    <quarkus.platform.version>3.18.3</quarkus.platform.version>
+    <quarkus.platform.version>3.19.1</quarkus.platform.version>
     <skipITs>true</skipITs>
     <surefire-plugin.version>3.5.2</surefire-plugin.version>
   </properties>
@@ -30,19 +30,19 @@
 		<dependency>
 			<groupId>org.neo4j</groupId>
 			<artifactId>neo4j-ogm-core</artifactId>
-			<version>4.0.13</version>
+			<version>4.0.16</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.neo4j/neo4j-ogm-bolt-driver -->
 		<dependency>
 			<groupId>org.neo4j</groupId>
 			<artifactId>neo4j-ogm-bolt-driver</artifactId>
-			<version>4.0.13</version>
+			<version>4.0.16</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.neo4j.driver/neo4j-java-driver -->
 		<dependency>
 			<groupId>org.neo4j.driver</groupId>
 			<artifactId>neo4j-java-driver</artifactId>
-			<version>5.27.0</version>
+			<version>5.28.2</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/dev.langchain4j/langchain4j-neo4j -->
 		<dependency>
