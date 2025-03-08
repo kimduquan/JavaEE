@@ -13,6 +13,13 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
+        <groupId>${quarkus.platform.group-id}</groupId>
+        <artifactId>${quarkus.platform.artifact-id}</artifactId>
+        <version>${quarkus.platform.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
         <groupId>org.jboss.narayana</groupId>
         <artifactId>narayana-bom</artifactId>
         <version>${narayana.version}</version>
