@@ -16,6 +16,7 @@
     <quarkus.platform.version>3.19.1</quarkus.platform.version>
     <skipITs>true</skipITs>
     <surefire-plugin.version>3.5.2</surefire-plugin.version>
+    <narayana.version>7.2.1.Final</narayana.version>
   </properties>
   <dependencyManagement>
     <dependencies>
