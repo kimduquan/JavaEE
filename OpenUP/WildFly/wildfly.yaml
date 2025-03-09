@@ -101,3 +101,24 @@ spec:
             - containerPort: 8787
               name: debug
               protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app.kubernetes.io/name: wildfly
+    app.kubernetes.io/version: 1.0.0
+  name: wildfly
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: chipmunk-capable-prawn.ngrok-free.app
+    - http:
+        paths:
+          - backend:
+              service:
+                name: wildfly
+                port:
+                  name: https
+            path: /
+            pathType: Prefix
