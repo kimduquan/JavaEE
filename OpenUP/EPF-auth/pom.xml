@@ -38,6 +38,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+                    <imageName>epf-auth:${project.version}</imageName>
+                </configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.graalvm.buildtools</groupId>
