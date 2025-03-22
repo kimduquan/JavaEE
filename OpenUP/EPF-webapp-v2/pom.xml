@@ -4,8 +4,8 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
        <groupId>epf</groupId>
-       <artifactId>EPF-parent-ext</artifactId>
-       <version>1.0.0</version>
+       <artifactId>EPF-webapp-parent</artifactId>
+       <version>0.0.1</version>
        <relativePath>../EPF-webapp-parent/pom.xml</relativePath>
     </parent>
     <artifactId>EPF-webapp-v2</artifactId>
