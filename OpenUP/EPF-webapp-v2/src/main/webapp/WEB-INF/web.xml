@@ -2,4 +2,17 @@
          xmlns="https://jakarta.ee/xml/ns/jakartaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+	<servlet>
+	    <servlet-name>Faces Servlet</servlet-name>
+	    <servlet-class>jakarta.faces.webapp.FacesServlet</servlet-class>
+	    <load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+	    <servlet-name>Faces Servlet</servlet-name>
+	    <url-pattern>*.xhtml</url-pattern>
+	</servlet-mapping>
+	<context-param>
+	    <param-name>jakarta.faces.AUTOMATIC_EXTENSIONLESS_MAPPING</param-name>
+	    <param-value>true</param-value>
+	</context-param>
 </web-app>
