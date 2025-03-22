@@ -976,6 +976,7 @@
 		<module>EPF-messaging-webapp</module>
 		<module>EPF-workflow-webapp</module>
 		<module>EPF-webapp</module>
+		<module>EPF-webapp-v2</module>
 		
 		<module>OpenUP-schema</module>
 		
