@@ -1,0 +1,1 @@
+helm install wildfly oci://registry-1.docker.io/bitnamicharts/wildfly -f wildfly_new.yaml
