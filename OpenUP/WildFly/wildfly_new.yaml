@@ -113,7 +113,7 @@ wildflyUsername: user
 ## @param wildflyPassword WildFly user password
 ## Defaults to a random 10-character alphanumeric string if not set
 ##
-wildflyPassword: "123456"
+wildflyPassword: "090323508"
 ## @param exposeManagementConsole Allows exposing the WildFly Management console outside the cluster
 ##
 exposeManagementConsole: false
@@ -544,7 +544,7 @@ ingress:
 
   ## @param ingress.pathType Ingress path type
   ##
-  pathType: ImplementationSpecific
+  pathType: Prefix
   ## @param ingress.apiVersion Force Ingress API version (automatically detected if not set)
   ##
   apiVersion: ""
@@ -624,7 +624,7 @@ ingress:
   ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
   ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
   ##
-  ingressClassName: ""
+  ingressClassName: "nginx"
   ## @param ingress.extraRules Additional rules to be covered with this ingress record
   ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
   ## e.g:
@@ -719,7 +719,7 @@ mgmtIngress:
   ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
   ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
   ##
-  ingressClassName: "nginx"
+  ingressClassName: ""
 ## @section Persistence Parameters
 
 ## Persistence Parameters
