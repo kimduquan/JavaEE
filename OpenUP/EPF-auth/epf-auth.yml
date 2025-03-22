@@ -54,7 +54,7 @@ spec:
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 10
-          name: epf-cache
+          name: epf-auth
           ports:
             - containerPort: 9196
               name: http
