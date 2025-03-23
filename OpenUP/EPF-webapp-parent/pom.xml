@@ -9,7 +9,7 @@
     <name>Eclipse Process Framework Web Application Parent</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <version.wildfly.maven.plugin>5.1.1.Final</version.wildfly.maven.plugin>
+        <version.wildfly.maven.plugin>5.1.2.Final</version.wildfly.maven.plugin>
         <version.wildfly.bom>35.0.1.Final</version.wildfly.bom>
         <version.junit5>5.10.1</version.junit5>
         <version.compiler.plugin>3.13.0</version.compiler.plugin>
@@ -137,6 +137,12 @@
                 <groupId>org.wildfly.plugins</groupId>
                 <artifactId>wildfly-maven-plugin</artifactId>
                 <version>${version.wildfly.maven.plugin}</version>
+				<configuration>
+					<commands>
+						<command>/subsystem=logging/console-handler=CONSOLE:write-attribute(name=level, value=TRACE)</command>
+						<command>reload</command>
+					</commands>
+				</configuration>
             </plugin>
         </plugins>
     </build>
