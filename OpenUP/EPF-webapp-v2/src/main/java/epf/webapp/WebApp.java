@@ -10,12 +10,14 @@ import jakarta.security.enterprise.authentication.mechanism.http.openid.LogoutDe
 @OpenIdAuthenticationMechanismDefinition(
 		providerURI = "${config.providerURI}",
 		clientId = "${config.clientId}",
+		clientSecret = "${config.clientSecret}",
 		logout = @LogoutDefinition(
 					notifyProvider = true,
 					accessTokenExpiry = true,
 					identityTokenExpiry = true
 				),
 		scopeExpression = "${config.scope}",
+		useSession = false,
 		redirectToOriginalResource = true,
 		extraParametersExpression = "${config.extraParameters}",
 		tokenAutoRefresh = true

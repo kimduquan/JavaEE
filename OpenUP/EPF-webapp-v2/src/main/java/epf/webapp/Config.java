@@ -9,6 +9,7 @@ public class Config {
 
 	private final String providerURI = "http://localhost:9196/.well-known/openid-configuration";
 	private final String clientId = "oidc-client";
+	private final String clientSecret = "{noop}secret";
 	private final String scope = "openid";
 	private final String[] extraParameters = new String[] {};
 
@@ -26,5 +27,9 @@ public class Config {
 
 	public String[] getExtraParameters() {
 		return extraParameters;
+	}
+
+	public String getClientSecret() {
+		return clientSecret;
 	}
 }
