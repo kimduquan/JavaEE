@@ -142,6 +142,7 @@
                         <command>/subsystem=undertow/application-security-domain=other:write-attribute(name=integrated-jaspi, value=false)</command>
                         <command>reload</command>
                     </commands>
+                    <debug>true</debug>
                 </configuration>
             </plugin>
         </plugins>
