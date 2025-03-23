@@ -3,9 +3,7 @@ package epf.webapp;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.faces.annotation.FacesConfig;
 import jakarta.security.enterprise.authentication.mechanism.http.OpenIdAuthenticationMechanismDefinition;
-import jakarta.security.enterprise.authentication.mechanism.http.openid.ClaimsDefinition;
 import jakarta.security.enterprise.authentication.mechanism.http.openid.LogoutDefinition;
-import jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdConstant;
 
 @ApplicationScoped
 @FacesConfig
@@ -13,15 +11,14 @@ import jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdCo
 		providerURI = "${config.providerURI}",
 		clientId = "${config.clientId}",
 		clientSecret = "${config.clientSecret}",
-		claimsDefinition = @ClaimsDefinition(
-					callerNameClaim = OpenIdConstant.SUBJECT_IDENTIFIER
-				),
 		logout = @LogoutDefinition(
 					notifyProvider = true,
 					accessTokenExpiry = true,
 					identityTokenExpiry = true
 				),
+		scopeExpression = "${config.scope}",
 		redirectToOriginalResource = true,
+		extraParametersExpression = "${config.extraParameters}",
 		tokenAutoRefresh = true
 		)
 public class WebApp {
