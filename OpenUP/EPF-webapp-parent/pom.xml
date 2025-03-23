@@ -139,7 +139,7 @@
                 <version>${version.wildfly.maven.plugin}</version>
 				<configuration>
 					<commands>
-						<command>/subsystem=logging/console-handler=CONSOLE:write-attribute(name=level, value=TRACE)</command>
+						<command>/subsystem=logging/console-handler=CONSOLE:write-attribute(name=level, value=DEBUG)</command>
 						<command>reload</command>
 					</commands>
 				</configuration>
