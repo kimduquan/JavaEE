@@ -18,7 +18,7 @@ import jakarta.security.enterprise.authentication.mechanism.http.openid.LogoutDe
 				),
 		scopeExpression = "${config.scope}",
 		useSession = false,
-		redirectToOriginalResource = true,
+		redirectToOriginalResource = false,
 		extraParametersExpression = "${config.extraParameters}",
 		tokenAutoRefresh = true
 		)
