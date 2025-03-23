@@ -24,7 +24,4 @@
 	    <param-name>jakarta.faces.AUTOMATIC_EXTENSIONLESS_MAPPING</param-name>
 	    <param-value>true</param-value>
 	</context-param>
-	<login-config>
-		<auth-method>OIDC</auth-method>
-	</login-config>
 </web-app>
