@@ -5,7 +5,7 @@
 	<security-constraint>
 		<web-resource-collection>
 		    <web-resource-name>EPF-webapp-v2</web-resource-name>
-		    <url-pattern>/webapp/*</url-pattern>
+		    <url-pattern>/*</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
 		    <role-name>Any_Role</role-name>
@@ -20,10 +20,6 @@
 	    <servlet-name>Faces Servlet</servlet-name>
 	    <url-pattern>*.html</url-pattern>
 	</servlet-mapping>
-	<context-param>
-	    <param-name>jakarta.faces.AUTOMATIC_EXTENSIONLESS_MAPPING</param-name>
-	    <param-value>true</param-value>
-	</context-param>
 	<security-role>
 		<role-name>Any_Role</role-name>
 	</security-role>
