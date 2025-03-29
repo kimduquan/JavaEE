@@ -7,7 +7,7 @@ import jakarta.inject.Named;
 @Named("config")
 public class Config {
 
-	private final String providerURI = "https://host.docker.internal/realms/EPF/.well-known/openid-configuration";
+	private final String providerURI = "https://host.docker.internal/openid/realms/EPF/.well-known/openid-configuration";
 	private final String clientId = "oidc-client";
 	private final String clientSecret = "Cp2WH4PLVor69p4Uw9t2yNyPoshwjfl9";
 
