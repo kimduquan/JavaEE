@@ -131,10 +131,10 @@ image:
 auth:
   ## @param auth.adminUser Keycloak administrator user
   ##
-  adminUser: user
+  adminUser: kimduquan
   ## @param auth.adminPassword Keycloak administrator password for the new user
   ##
-  adminPassword: ""
+  adminPassword: "090323508"
   ## @param auth.existingSecret Existing secret containing Keycloak admin password
   ##
   existingSecret: ""
@@ -230,7 +230,7 @@ proxy: ""
 ## @param httpRelativePath Set the path relative to '/' for serving resources. Useful if you are migrating from older version which were using '/auth/'
 ## ref: https://www.keycloak.org/migration/migrating-to-quarkus#_default_context_path_changed
 ##
-httpRelativePath: "/"
+httpRelativePath: "/openid/"
 ## Keycloak Service Discovery settings
 ## ref: https://github.com/bitnami/containers/tree/main/bitnami/keycloak#cluster-configuration
 ##
@@ -616,15 +616,15 @@ service:
 ingress:
   ## @param ingress.enabled Enable ingress record generation for Keycloak
   ##
-  enabled: false
+  enabled: true
   ## @param ingress.ingressClassName IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
   ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
   ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
   ##
-  ingressClassName: ""
+  ingressClassName: "nginx"
   ## @param ingress.pathType Ingress path type
   ##
-  pathType: ImplementationSpecific
+  pathType: Prefix
   ## @param ingress.apiVersion Force Ingress API version (automatically detected if not set)
   ##
   apiVersion: ""
@@ -635,7 +635,7 @@ ingress:
   controller: default
   ## @param ingress.hostname Default host for the ingress record (evaluated as template)
   ##
-  hostname: keycloak.local
+  hostname: host.docker.internal
   ## @param ingress.hostnameStrict Disables dynamically resolving the hostname from request headers.
   ## Should always be set to true in production, unless your reverse proxy overwrites the Host header.
   ## If enabled, the hostname option needs to be specified.
@@ -733,15 +733,15 @@ ingress:
 adminIngress:
   ## @param adminIngress.enabled Enable admin ingress record generation for Keycloak
   ##
-  enabled: false
+  enabled: true
   ## @param adminIngress.ingressClassName IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
   ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
   ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
   ##
-  ingressClassName: ""
+  ingressClassName: "nginx"
   ## @param adminIngress.pathType Ingress path type
   ##
-  pathType: ImplementationSpecific
+  pathType: Prefix
   ## @param adminIngress.apiVersion Force Ingress API version (automatically detected if not set)
   ##
   apiVersion: ""
@@ -752,7 +752,7 @@ adminIngress:
   controller: default
   ## @param adminIngress.hostname Default host for the admin ingress record (evaluated as template)
   ##
-  hostname: keycloak.local
+  hostname: host.docker.internal
   ## @param adminIngress.path [string] Default path for the admin ingress record (evaluated as template)
   ##
   path: "{{ .Values.httpRelativePath }}"
