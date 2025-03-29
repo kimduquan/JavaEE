@@ -1325,7 +1325,7 @@ keycloakConfigCli:
 ## @param postgresql.architecture PostgreSQL architecture (`standalone` or `replication`)
 ##
 postgresql:
-  enabled: false
+  enabled: true
   auth:
     postgresPassword: ""
     username: bn_keycloak
