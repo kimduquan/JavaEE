@@ -138,6 +138,8 @@
                 <artifactId>wildfly-maven-plugin</artifactId>
                 <version>${version.wildfly.maven.plugin}</version>
                 <configuration>
+					<username>user</username>
+					<password>090323508</password>
                     <commands>
                         <command>/subsystem=undertow/application-security-domain=other:write-attribute(name=integrated-jaspi, value=false)</command>
                         <command>reload</command>
