@@ -1,3 +1,1 @@
-helm repo add bitnami https://charts.bitnami.com/bitnami
-helm repo update
-helm install kafka bitnami/kafka -f values.yaml
+helm install kafka oci://registry-1.docker.io/bitnamicharts/kafka -f values.yaml
