@@ -1,1 +1,1 @@
-helm install scylladb oci://registry-1.docker.io/bitnamicharts/scylladb
+helm install scylladb oci://registry-1.docker.io/bitnamicharts/scylladb -f values.yaml
