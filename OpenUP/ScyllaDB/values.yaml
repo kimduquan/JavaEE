@@ -213,7 +213,7 @@ extraEnvVarsSecret: ""
 
 ## @param replicaCount Number of Scylladb replicas
 ##
-replicaCount: 1
+replicaCount: 0
 ## @param updateStrategy.type updateStrategy for Scylladb statefulset
 ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#update-strategies
 ##
@@ -586,7 +586,7 @@ jmxProxy:
   ## @param jmxProxy.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if jmxProxy.resources is set (jmxProxy.resources is recommended for production).
   ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
   ##
-  resourcesPreset: "micro"
+  resourcesPreset: "nano"
   ## @param jmxProxy.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
   ## Example:
   ## resources:
@@ -896,7 +896,7 @@ persistence:
   mountPath: /bitnami/scylladb
   ## @param persistence.size PVC Storage Request for Scylladb data volume
   ##
-  size: 8Gi
+  size: 1Gi
   commitLog:
     ## @param persistence.commitLog.storageClass PVC Storage Class for Scylladb Commit Log volume
     ## Storage class to use with SCYLLADB_COMMITLOG_DIR to reduce the concurrence for writing data and commit logs
