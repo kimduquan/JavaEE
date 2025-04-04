@@ -213,7 +213,7 @@ extraEnvVarsSecret: ""
 
 ## @param replicaCount Number of Scylladb replicas
 ##
-replicaCount: 0
+replicaCount: 1
 ## @param updateStrategy.type updateStrategy for Scylladb statefulset
 ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#update-strategies
 ##
@@ -916,7 +916,7 @@ persistence:
       - ReadWriteOnce
     ## @param persistence.commitLog.size PVC Storage Request for Scylladb data volume
     ##
-    size: 2Gi
+    size: 1Gi
     ## @param persistence.commitLog.mountPath The path the commit log volume will be mounted at. Unset by default. Set it to '/bitnami/scylladb/commitlog' to enable a separate commit log volume
     ##
     # mountPath: /bitnami/scylladb/commitlog
