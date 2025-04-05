@@ -623,8 +623,8 @@ resources:
     cpu: 100m
     memory: 128Mi
   limits:
-    cpu: 375m
-    memory: 384Mi
+    cpu: 500m
+    memory: 512Mi
 ## @param containerPorts.mongodb MongoDB(&reg;) container port
 ##
 containerPorts:
