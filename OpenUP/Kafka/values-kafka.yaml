@@ -671,7 +671,7 @@ controller:
   replicaCount: 1
   ## @param controller.controllerOnly If set to true, controller nodes will be deployed as dedicated controllers, instead of controller+broker processes.
   ##
-  controllerOnly: true
+  controllerOnly: false
   ## @param controller.quorumBootstrapServers Override the Kafka controller quorum bootstrap servers of the Kafka Kraft cluster. If not set, it will be automatically configured to use all controller-eligible nodes.
   ##
   quorumBootstrapServers: ""
