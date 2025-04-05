@@ -63,16 +63,6 @@
 	</dependency>
 	
 	<dependency>
-		<groupId>com.hazelcast</groupId>
-		<artifactId>hazelcast</artifactId>
-		<version>5.2.5</version>
-	</dependency>
-	<dependency>
-	    <groupId>javax.cache</groupId>
-	    <artifactId>cache-api</artifactId>
-	</dependency>
-	
-	<dependency>
         <groupId>openup</groupId>
         <artifactId>EPF-event-schema</artifactId>
         <version>${project.version}</version>

@@ -29,28 +29,16 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.core.Response.Status;
 
-/**
- * 
- */
 @ApplicationScoped
 @Path(Naming.EVENT)
 public class EventStore implements Event {
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient ColumnManager manager;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient EventCache eventCache;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	@Channel(Naming.Event.EPF_EVENT_OBSERVES)
 	transient Emitter<Map<String, Object>> observes;
