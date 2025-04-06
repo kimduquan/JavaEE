@@ -1,8 +1,8 @@
 package epf.workflow.schema.state;
 
 import java.util.Map;
-import org.eclipse.jnosql.mapping.DiscriminatorValue;
-import org.eclipse.jnosql.mapping.Embeddable;
+import jakarta.nosql.DiscriminatorValue;
+import jakarta.nosql.Embeddable;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
 import epf.nosql.schema.BooleanOrObject;

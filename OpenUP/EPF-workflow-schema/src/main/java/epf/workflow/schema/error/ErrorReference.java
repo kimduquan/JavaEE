@@ -1,7 +1,7 @@
 package epf.workflow.schema.error;
 
 import java.io.Serializable;
-import org.eclipse.jnosql.mapping.Embeddable;
+import jakarta.nosql.Embeddable;
 import org.eclipse.microprofile.graphql.Description;
 import jakarta.nosql.Column;
 

@@ -6,8 +6,8 @@ import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.json.bind.annotation.JsonbTypeInfo;
 import jakarta.nosql.Column;
 import java.io.Serializable;
-import org.eclipse.jnosql.mapping.DiscriminatorColumn;
-import org.eclipse.jnosql.mapping.MappedSuperclass;
+import jakarta.nosql.DiscriminatorColumn;
+import jakarta.nosql.MappedSuperclass;
 import org.eclipse.microprofile.graphql.Description;
 
 /**

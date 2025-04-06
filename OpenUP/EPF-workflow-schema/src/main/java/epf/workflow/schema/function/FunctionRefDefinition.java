@@ -3,7 +3,7 @@ package epf.workflow.schema.function;
 import jakarta.validation.constraints.NotNull;
 import jakarta.nosql.Column;
 import java.io.Serializable;
-import org.eclipse.jnosql.mapping.Embeddable;
+import jakarta.nosql.Embeddable;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
 

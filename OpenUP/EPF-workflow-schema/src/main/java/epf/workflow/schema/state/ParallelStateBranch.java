@@ -6,7 +6,7 @@ import epf.workflow.schema.action.ActionDefinition;
 import jakarta.nosql.Column;
 import java.io.Serializable;
 import java.util.List;
-import org.eclipse.jnosql.mapping.Embeddable;
+import jakarta.nosql.Embeddable;
 import org.eclipse.microprofile.graphql.Description;
 
 @Embeddable

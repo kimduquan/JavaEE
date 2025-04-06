@@ -3,7 +3,7 @@ package epf.workflow.schema.auth;
 import jakarta.nosql.Column;
 import java.io.Serializable;
 import java.util.Map;
-import org.eclipse.jnosql.mapping.MappedSuperclass;
+import jakarta.nosql.MappedSuperclass;
 import org.eclipse.microprofile.graphql.Description;
 
 @MappedSuperclass

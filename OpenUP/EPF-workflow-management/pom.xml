@@ -47,6 +47,10 @@
 	</dependency>
 	
 	<dependency>
+	    <groupId>org.eclipse.jnosql.mapping</groupId>
+	    <artifactId>jnosql-mapping-reflection</artifactId>
+	</dependency>
+	<dependency>
 		<groupId>com.hazelcast</groupId>
 		<artifactId>hazelcast</artifactId>
 		<version>5.2.5</version>

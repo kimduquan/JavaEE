@@ -1,7 +1,7 @@
 package epf.workflow.schema.auth;
 
 import java.util.List;
-import org.eclipse.jnosql.mapping.Embeddable;
+import jakarta.nosql.Embeddable;
 import org.eclipse.microprofile.graphql.Description;
 import jakarta.nosql.Column;
 import jakarta.validation.constraints.NotNull;

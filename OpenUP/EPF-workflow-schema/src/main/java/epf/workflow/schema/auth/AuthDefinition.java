@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import epf.workflow.schema.auth.adapter.AuthDefinitionAdapter;
 import jakarta.nosql.Column;
 import java.io.Serializable;
-import org.eclipse.jnosql.mapping.Embeddable;
+import jakarta.nosql.Embeddable;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
 

@@ -2,7 +2,7 @@ package epf.workflow.schema.action;
 
 import jakarta.nosql.Column;
 import java.io.Serializable;
-import org.eclipse.jnosql.mapping.Embeddable;
+import jakarta.nosql.Embeddable;
 
 @Embeddable
 public class Sleep implements Serializable {

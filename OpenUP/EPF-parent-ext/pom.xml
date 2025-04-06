@@ -99,6 +99,12 @@
 		    <artifactId>quarkus-jnosql-keyvalue-hazelcast</artifactId>
 		    <version>3.3.4</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.hazelcast/quarkus-hazelcast-client -->
+		<dependency>
+			<groupId>com.hazelcast</groupId>
+			<artifactId>quarkus-hazelcast-client</artifactId>
+			<version>4.0.0</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/jakarta.nosql/jakarta.nosql-api -->
 		<dependency>
 		    <groupId>jakarta.nosql</groupId>
@@ -109,18 +115,6 @@
 		<dependency>
 		    <groupId>org.eclipse.jnosql.mapping</groupId>
 		    <artifactId>jnosql-mapping-reflection</artifactId>
-		    <version>1.1.6</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.communication/jnosql-communication-column -->
-		<dependency>
-		    <groupId>org.eclipse.jnosql.communication</groupId>
-		    <artifactId>jnosql-communication-column</artifactId>
-		    <version>1.1.0</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.mapping/jnosql-mapping-key-value -->
-		<dependency>
-		    <groupId>org.eclipse.jnosql.mapping</groupId>
-		    <artifactId>jnosql-mapping-key-value</artifactId>
 		    <version>1.1.6</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.quarkus/quarkus-smallrye-opentracing -->

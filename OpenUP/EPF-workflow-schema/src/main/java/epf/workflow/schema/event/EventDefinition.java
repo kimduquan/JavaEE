@@ -6,7 +6,7 @@ import jakarta.nosql.Column;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-import org.eclipse.jnosql.mapping.Embeddable;
+import jakarta.nosql.Embeddable;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
 

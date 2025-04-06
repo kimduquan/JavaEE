@@ -1,7 +1,7 @@
 package epf.workflow.schema;
 
 import java.io.Serializable;
-import org.eclipse.jnosql.mapping.Embeddable;
+import jakarta.nosql.Embeddable;
 import jakarta.nosql.Column;
 
 @Embeddable

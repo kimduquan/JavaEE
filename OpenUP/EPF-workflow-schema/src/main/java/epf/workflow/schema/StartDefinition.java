@@ -4,7 +4,7 @@ import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import jakarta.validation.constraints.NotNull;
 import jakarta.nosql.Column;
 import java.io.Serializable;
-import org.eclipse.jnosql.mapping.Embeddable;
+import jakarta.nosql.Embeddable;
 import org.eclipse.microprofile.graphql.Description;
 import epf.nosql.schema.StringOrObject;
 import epf.workflow.schema.schedule.ScheduleDefinition;

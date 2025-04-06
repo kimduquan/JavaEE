@@ -3,7 +3,7 @@ package epf.workflow.schema.state;
 import jakarta.validation.constraints.NotNull;
 import epf.workflow.schema.event.EventDataFilter;
 import jakarta.nosql.Column;
-import org.eclipse.jnosql.mapping.Embeddable;
+import jakarta.nosql.Embeddable;
 import org.eclipse.microprofile.graphql.Description;
 
 @Embeddable

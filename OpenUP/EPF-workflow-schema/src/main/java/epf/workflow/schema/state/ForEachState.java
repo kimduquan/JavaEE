@@ -2,8 +2,6 @@ package epf.workflow.schema.state;
 
 import java.util.List;
 import java.util.Map;
-import org.eclipse.jnosql.mapping.DiscriminatorValue;
-import org.eclipse.jnosql.mapping.Embeddable;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
 import epf.nosql.schema.BooleanOrObject;
@@ -19,15 +17,14 @@ import epf.workflow.schema.error.ErrorDefinition;
 import epf.workflow.schema.util.StringOrNumber;
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import jakarta.nosql.Column;
+import jakarta.nosql.DiscriminatorValue;
+import jakarta.nosql.Embeddable;
 import jakarta.validation.constraints.NotNull;
 
 @Embeddable
 @DiscriminatorValue(Type.FOREACH)
 public class ForEachState extends State {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	@NotNull

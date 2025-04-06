@@ -2,7 +2,7 @@ package epf.workflow.schema.schedule;
 
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import java.io.Serializable;
-import org.eclipse.jnosql.mapping.Embeddable;
+import jakarta.nosql.Embeddable;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
 import epf.nosql.schema.StringOrObject;

@@ -13,7 +13,7 @@ import epf.workflow.schema.error.adapter.StringOrArrayErrorHandlerReferenceAdapt
 import jakarta.nosql.Column;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
-import org.eclipse.jnosql.mapping.Embeddable;
+import jakarta.nosql.Embeddable;
 import org.eclipse.microprofile.graphql.Description;
 
 @Embeddable

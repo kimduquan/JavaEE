@@ -22,30 +22,17 @@ import epf.workflow.management.internal.WorkflowPersistence;
 import epf.workflow.schema.WorkflowDefinition;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
-/**
- * @author PC
- *
- */
 @ApplicationScoped
 @Path(Naming.Workflow.WORKFLOW_MANAGEMENT)
 public class WorkflowManagement implements Management {
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient WorkflowPersistence persistence;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	@Readiness
 	transient WorkflowCache cache;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient Validator validator;
 	
