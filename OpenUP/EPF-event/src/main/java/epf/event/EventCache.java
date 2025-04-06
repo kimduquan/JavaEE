@@ -2,10 +2,10 @@ package epf.event;
 
 import java.util.Optional;
 import org.eclipse.jnosql.communication.keyvalue.KeyValueEntity;
+import org.eclipse.jnosql.mapping.keyvalue.KeyValueTemplate;
 import epf.event.schema.Link;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.nosql.keyvalue.KeyValueTemplate;
 
 @ApplicationScoped
 public class EventCache {
