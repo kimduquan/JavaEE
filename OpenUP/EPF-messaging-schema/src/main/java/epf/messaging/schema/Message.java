@@ -1,84 +1,45 @@
 package epf.messaging.schema;
 
 import java.util.Map;
-import org.eclipse.jnosql.mapping.MappedSuperclass;
 import jakarta.nosql.Column;
 import jakarta.nosql.Id;
+import jakarta.nosql.MappedSuperclass;
 
-/**
- * 
- */
 @MappedSuperclass
 public class Message {
 
-	/**
-	 * 
-	 */
 	private Map<String, Object> properties;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private String correlationID;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private Integer deliveryMode;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private Long deliveryTime;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private Destination destination;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private Long expiration;
 	
-	/**
-	 * 
-	 */
 	@Id("messageID")
 	private String messageID;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private Integer priority;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private Boolean redelivered;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private Destination replyTo;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private Long timestamp;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private String type;
 	

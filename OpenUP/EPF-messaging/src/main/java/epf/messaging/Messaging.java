@@ -1,5 +1,6 @@
 package epf.messaging;
 
+import org.eclipse.jnosql.mapping.column.ColumnTemplate;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
@@ -12,47 +13,28 @@ import epf.naming.Naming.Messaging.Internal;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.nosql.column.ColumnTemplate;
 
-/**
- * 
- */
 @ApplicationScoped 
 @Readiness
 public class Messaging implements HealthCheck {
 
-	/**
-	 * 
-	 */
 	@Inject
     @Channel(Internal.EPF_MESSAGING_TEXT_OUT)
 	transient Emitter<TextMessage> text;
 	
-	/**
-	 * 
-	 */
 	@Inject
     @Channel(Internal.EPF_MESSAGING_BYTES_OUT)
 	transient Emitter<ByteMessage> bytes;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient ColumnTemplate column;
 	
-	/**
-	 * @param message
-	 */
 	@Incoming(Internal.EPF_MESSAGING_TEXT_IN)
 	@RunOnVirtualThread
 	public void onMessage(final TextMessage message) {
 		text.send(column.insert(message));
 	}
 	
-	/**
-	 * @param message
-	 */
 	@Incoming(Internal.EPF_MESSAGING_BYTES_IN)
 	@RunOnVirtualThread
 	public void onMessage(final ByteMessage message) {

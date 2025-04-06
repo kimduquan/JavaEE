@@ -3,15 +3,9 @@ package epf.messaging.schema;
 import jakarta.nosql.Column;
 import jakarta.nosql.Entity;
 
-/**
- * 
- */
 @Entity
 public class Queue extends Destination {
 
-	/**
-	 * 
-	 */
 	@Column
 	private String queueName ;
 
