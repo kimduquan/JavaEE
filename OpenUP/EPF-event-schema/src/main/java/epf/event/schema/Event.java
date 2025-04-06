@@ -3,13 +3,13 @@ package epf.event.schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.nosql.Column;
+import jakarta.nosql.Convert;
 import jakarta.nosql.Entity;
+import epf.nosql.schema.util.UUIDAttributeConverter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import org.eclipse.jnosql.mapping.Convert;
 import epf.naming.Naming.Event.Schema;
-import epf.nosql.schema.util.UUIDAttributeConverter;
 import jakarta.nosql.Id;
 
 @Entity

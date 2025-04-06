@@ -49,6 +49,10 @@
 	    <groupId>io.quarkiverse.jnosql</groupId>
 	    <artifactId>quarkus-jnosql-keyvalue-hazelcast</artifactId>
 	</dependency>
+	<dependency>
+	    <groupId>org.eclipse.jnosql.mapping</groupId>
+	    <artifactId>jnosql-mapping-reflection</artifactId>
+	</dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-arc</artifactId>
@@ -65,7 +69,6 @@
 	<dependency>
 		<groupId>com.hazelcast</groupId>
 		<artifactId>hazelcast</artifactId>
-		<version>5.2.5</version>
 	</dependency>
 	<dependency>
 	    <groupId>javax.cache</groupId>
