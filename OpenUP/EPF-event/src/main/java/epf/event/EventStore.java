@@ -13,6 +13,8 @@ import org.eclipse.jnosql.communication.semistructured.DatabaseManager;
 import org.eclipse.jnosql.communication.semistructured.Element;
 import org.eclipse.jnosql.communication.semistructured.Elements;
 import org.eclipse.jnosql.communication.semistructured.SelectQuery;
+import org.eclipse.jnosql.mapping.Database;
+import org.eclipse.jnosql.mapping.DatabaseType;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 import epf.event.client.Event;
@@ -33,6 +35,7 @@ import jakarta.ws.rs.core.Response.Status;
 public class EventStore implements Event {
 	
 	@Inject
+	@Database(value = DatabaseType.COLUMN)
 	transient DatabaseManager manager;
 	
 	@Inject
