@@ -1,0 +1,1 @@
+helm install cassandra oci://registry-1.docker.io/bitnamicharts/cassandra -f values-cassandra.yaml
