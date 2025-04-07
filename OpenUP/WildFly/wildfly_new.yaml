@@ -116,7 +116,7 @@ wildflyUsername: user
 wildflyPassword: "090323508"
 ## @param exposeManagementConsole Allows exposing the WildFly Management console outside the cluster
 ##
-exposeManagementConsole: true
+exposeManagementConsole: false
 ## @param command [array] Override default container command (useful when using custom images)
 ##
 command: []
@@ -750,7 +750,7 @@ persistence:
     - ReadWriteOnce
   ## @param persistence.size Persistent Volume size
   ##
-  size: 8Gi
+  size: 1Gi
   ## @param persistence.annotations Persistent Volume Claim annotations
   ##
   annotations: {}
