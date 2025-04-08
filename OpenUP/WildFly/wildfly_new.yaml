@@ -135,10 +135,10 @@ lifecycleHooks: {}
 extraEnvVars: []
 ## @param extraEnvVarsCM Name of existing ConfigMap containing extra env vars
 ##
-extraEnvVarsCM: ""
+extraEnvVarsCM: "oidc"
 ## @param extraEnvVarsSecret Name of existing Secret containing extra env vars
 ##
-extraEnvVarsSecret: ""
+extraEnvVarsSecret: "oidc"
 ## @section WildFly deployment parameters
 
 ## @param replicaCount Number of Wildfly replicas to deploy
