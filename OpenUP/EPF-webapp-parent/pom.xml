@@ -96,6 +96,13 @@
                 <version>${jakartaee-api.version}</version>
                 <scope>provided</scope>
             </dependency>
+            <dependency>
+			    <groupId>org.wildfly.bom</groupId>
+			    <artifactId>wildfly-microprofile</artifactId>
+			    <version>33.0.2.Final</version>
+			    <type>pom</type>
+			    <scope>import</scope>
+			</dependency>
         </dependencies>
     </dependencyManagement>
     <dependencies>

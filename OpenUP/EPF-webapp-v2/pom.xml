@@ -11,4 +11,12 @@
     <artifactId>EPF-webapp-v2</artifactId>
     <packaging>war</packaging>
     <name>EPF-webapp-v2</name>
+    
+    <dependencies>
+    	<dependency>
+		    <groupId>org.eclipse.microprofile.config</groupId>
+		    <artifactId>microprofile-config-api</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+    </dependencies>
 </project>

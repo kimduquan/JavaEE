@@ -1,15 +1,25 @@
 package epf.webapp;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 @ApplicationScoped
 @Named("config")
 public class Config {
 
-	private final String providerURI = "http://host.docker.internal/openid/realms/EPF/.well-known/openid-configuration";
-	private final String clientId = "oidc-client";
-	private final String clientSecret = "Cp2WH4PLVor69p4Uw9t2yNyPoshwjfl9";
+	@Inject
+    @ConfigProperty(name = "oidc.provider.uri")
+	private String providerURI;
+	
+	@Inject
+    @ConfigProperty(name = "oidc.client.id")
+	private String clientId = "oidc-client";
+	
+	@Inject
+    @ConfigProperty(name = "oidc.client.secret")
+	private String clientSecret;
 
 	public String getProviderURI() {
 		return providerURI;
