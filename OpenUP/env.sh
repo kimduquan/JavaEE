@@ -16,4 +16,4 @@ export HAZELCAST_HOME=~/hazelcast-5.3.6
 export PATH=$MAVEN_HOME:$PATH
 export OIDC_CLIENT_ID=oidc-client
 export OIDC_CLIENT_SECRET=6lbr0kcDPXWu8tHrcNl190QxL9NHRMVO
-export OIDC_PROVIDER_URI=https://localhost/openid/realms/EPF/.well-known/openid-configuration
+export OIDC_PROVIDER_URI=https://host.docker.internal/openid/realms/EPF/.well-known/openid-configuration
