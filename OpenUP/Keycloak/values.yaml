@@ -753,7 +753,7 @@ adminIngress:
   controller: default
   ## @param adminIngress.hostname Default host for the admin ingress record (evaluated as template)
   ##
-  hostname: localhost
+  hostname: host.docker.internal
   ## @param adminIngress.path [string] Default path for the admin ingress record (evaluated as template)
   ##
   path: "{{ .Values.httpRelativePath }}"
