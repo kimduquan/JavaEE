@@ -11,3 +11,6 @@ set JAEGER_HOME="C:\jaeger-1.48.0-windows-amd64"
 set MAVEN_HOME=C:\apache-maven-3.9.9\bin
 set HAZELCAST_HOME=C:\hazelcast-5.3.2
 set PATH=%MAVEN_HOME%;%PATH%
+set OIDC_CLIENT_ID=oidc-client
+set OIDC_CLIENT_SECRET=6lbr0kcDPXWu8tHrcNl190QxL9NHRMVO
+set OIDC_PROVIDER_URI=http://host.docker.internal/openid/realms/EPF/.well-known/openid-configuration
