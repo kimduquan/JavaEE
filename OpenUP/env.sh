@@ -14,3 +14,6 @@ export MAVEN_HOME=~/apache-maven-3.9.9/bin
 export CASSANDRA_HOME=~/apache-cassandra-4.0.12
 export HAZELCAST_HOME=~/hazelcast-5.3.6
 export PATH=$MAVEN_HOME:$PATH
+export OIDC_CLIENT_ID=oidc-client
+export OIDC_CLIENT_SECRET=6lbr0kcDPXWu8tHrcNl190QxL9NHRMVO
+export OIDC_PROVIDER_URI=http://host.docker.internal/openid/realms/EPF/.well-known/openid-configuration
