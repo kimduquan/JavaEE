@@ -660,7 +660,7 @@ mgmtIngress:
   pathType: Prefix
   ## @param mgmtIngress.hostname When the Management ingress is enabled, a host pointing to this will be created
   ##
-  hostname: host.docker.internal
+  hostname: localhost
   ## @param mgmtIngress.annotations Additional annotations for the Management Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
   ## For a full list of possible ingress annotations, please see
   ## ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md
