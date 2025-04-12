@@ -650,7 +650,7 @@ ingress:
 mgmtIngress:
   ## @param mgmtIngress.enabled Set to true to enable ingress record generation for the Management console
   ##
-  enabled: false
+  enabled: true
   ## DEPRECATED: Use mgmtIngress.annotations instead of mgmtIngress.certManager
   ## certManager: false
   ##
