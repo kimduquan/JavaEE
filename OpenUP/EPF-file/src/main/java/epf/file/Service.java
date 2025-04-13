@@ -9,10 +9,6 @@ import jakarta.ws.rs.core.MediaType;
 import org.eclipse.microprofile.auth.LoginConfig;
 import epf.naming.Naming;
 
-/**
- *
- * @author FOXCONN
- */
 @ApplicationScoped
 @ApplicationPath("/")
 @LoginConfig(authMethod = "MP-JWT", realmName = Naming.EPF)

@@ -46,43 +46,24 @@ import epf.naming.Naming.Security;
 import epf.util.logging.LogManager;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
-/**
- *
- * @author FOXCONN
- */
 @jakarta.ws.rs.Path(Naming.FILE)
 @RolesAllowed(Security.DEFAULT_ROLE)
 @ApplicationScoped
 public class FileStore {
 	
-	/**
-	 * 
-	 */
 	private transient static final Logger LOGGER = LogManager.getLogger(FileStore.class.getName());
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient FileSystem system;
 	
-	/**
-	 * 
-	 */
 	@ConfigProperty(name = Naming.File.ROOT)
 	@Inject
 	transient String rootFolder;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	@Readiness
 	transient FileWatchService watchService;
 	
-	/**
-	 * 
-	 */
 	@PostConstruct
 	void postConstruct() {
 		final Path rootPath = system.getPath(rootFolder);
@@ -95,15 +76,6 @@ public class FileStore {
 		}
 	}
 
-	/**
-	 * @param tenant
-	 * @param paths
-	 * @param uriInfo
-	 * @param input
-	 * @param security
-	 * @return
-	 * @throws Exception
-	 */
 	@POST
 	@jakarta.ws.rs.Path("{paths: .+}")
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
@@ -145,14 +117,6 @@ public class FileStore {
 		return Response.ok().links(links).build();
 	}
 
-	/**
-	 * @param tenant
-	 * @param uriInfo
-	 * @param paths
-	 * @param security
-	 * @return
-	 * @throws Exception
-	 */
 	@GET
     @jakarta.ws.rs.Path("{paths: .+}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
@@ -176,14 +140,6 @@ public class FileStore {
 		return new EntityOutput(Files.newInputStream(targetFile));
 	}
 
-	/**
-	 * @param tenant
-	 * @param uriInfo
-	 * @param paths
-	 * @param security
-	 * @return
-	 * @throws Exception
-	 */
 	@DELETE
     @jakarta.ws.rs.Path("{paths: .+}")
 	@RunOnVirtualThread

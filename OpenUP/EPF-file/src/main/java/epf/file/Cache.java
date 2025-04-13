@@ -33,42 +33,21 @@ import epf.naming.Naming;
 import epf.naming.Naming.Security;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
-/**
- * 
- */
 @jakarta.ws.rs.Path(Naming.CACHE)
 @RolesAllowed(Security.DEFAULT_ROLE)
 @ApplicationScoped
 public class Cache {
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient FileSystem system;
 	
-	/**
-	 * 
-	 */
 	@ConfigProperty(name = Naming.File.Cache.ROOT)
 	@Inject
 	transient String rootFolder;
 	
-	/**
-	 *
-	 */
 	@Inject
 	transient FileCache cache;
 
-	/**
-	 * @param tenant
-	 * @param paths
-	 * @param uriInfo
-	 * @param input
-	 * @param security
-	 * @return
-	 * @throws Exception
-	 */
 	@POST
 	@jakarta.ws.rs.Path("{paths: .+}")
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
@@ -96,14 +75,6 @@ public class Cache {
 		return Response.ok().build();
 	}
 
-	/**
-	 * @param tenant
-	 * @param uriInfo
-	 * @param paths
-	 * @param security
-	 * @return
-	 * @throws Exception
-	 */
 	@GET
     @jakarta.ws.rs.Path("{paths: .+}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)

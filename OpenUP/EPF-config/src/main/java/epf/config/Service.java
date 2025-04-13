@@ -7,10 +7,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.MediaType;
 
-/**
- *
- * @author FOXCONN
- */
 @ApplicationScoped
 @ApplicationPath("/")
 @Consumes(MediaType.APPLICATION_JSON)

@@ -23,58 +23,30 @@ import epf.util.concurrent.ext.Emitter;
 import epf.util.concurrent.ext.EventEmitter;
 import epf.util.logging.LogManager;
 
-/**
- * @author PC
- *
- */
 @ApplicationScoped
 @Readiness
 public class FileWatchService implements HealthCheck {
 	
-	/**
-	 * 
-	 */
 	private transient static final Logger LOGGER = LogManager.getLogger(FileWatchService.class.getName());
 	
-	/**
-	 * 
-	 */
 	private transient final Map<Path, FileWatch> fileWatches = new ConcurrentHashMap<>();
 	
-	/**
-	 *
-	 */
 	private transient Emitter<FileEvent> emitter;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient Event<FileEvent> events;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient FileSystem system;
 	
-	/**
-	 *
-	 */
 	@Inject
 	transient ManagedExecutor executor;
 	
-	/**
-	 * 
-	 */
 	@PostConstruct
 	void postConstruct() {
 		emitter = new EventEmitter<>(events);
 	}
 	
-	/**
-	 * 
-	 */
 	@PreDestroy
 	void preDestroy() {
 		fileWatches.forEach((p, watch) -> {
@@ -87,9 +59,6 @@ public class FileWatchService implements HealthCheck {
 		});
 	}
 	
-	/**
-	 * @param path
-	 */
 	public void register(final Path path) {
 		Objects.requireNonNull(path, "Path");
 		fileWatches.computeIfAbsent(path, name -> {

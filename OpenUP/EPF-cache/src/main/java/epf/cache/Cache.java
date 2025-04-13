@@ -10,16 +10,10 @@ import epf.naming.Naming;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 
-/**
- * 
- */
 @ApplicationScoped
 @Readiness
 public class Cache implements HealthCheck {
 	
-	/**
-	 * 
-	 */
 	private javax.cache.Cache<String, Object> eventCache;
 	
 	@PostConstruct

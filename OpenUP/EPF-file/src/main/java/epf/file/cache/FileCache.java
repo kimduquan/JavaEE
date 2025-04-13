@@ -19,31 +19,16 @@ import epf.file.client.FileEvent;
 import epf.util.io.ByteBufferUtil;
 import epf.util.logging.LogManager;
 
-/**
- * 
- */
 @ApplicationScoped
 public class FileCache {
 	
-	/**
-	 *
-	 */
 	private transient static final Logger LOGGER = LogManager.getLogger(FileCache.class.getName());
 
-	/**
-	 *
-	 */
 	private final transient Map<Path, MappedByteBuffer> files = new ConcurrentHashMap<>();
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient FileSystem system;
 	
-	/**
-	 * 
-	 */
 	@PreDestroy
 	void preDestroy() {
 		files.forEach((p, buffer) -> {
@@ -52,9 +37,6 @@ public class FileCache {
 		files.clear();
 	}
 	
-	/**
-	 * @param event
-	 */
 	public void observes(
 			@ObservesAsync 
 			final FileEvent event) {
@@ -83,10 +65,6 @@ public class FileCache {
 		}
 	}
 	
-	/**
-	 * @param path
-	 * @throws Exception
-	 */
 	public Optional<FileOutput> getFile(final Path path) throws Exception {
 		Objects.requireNonNull(path, "Path");
 		Optional<FileOutput> fileOutput = Optional.empty();
