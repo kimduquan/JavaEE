@@ -17,6 +17,3 @@ set OIDC_PROVIDER_URI=http://host.docker.internal/realms/EPF-dev/.well-known/ope
 set MP_JWT_VERIFY_PUBLICKEY_LOCATION=http://host.docker.internal/realms/EPF-dev/protocol/openid-connect/certs
 set MP_JWT_VERIFY_AUDIENCES=http://gateway.docker.internal
 set MP_JWT_VERIFY_ISSUER=http://host.docker.internal/realms/EPF-dev
-set QUARKUS_KUBERNETES_ENV_VARS__MP_JWT_VERIFY_PUBLICKEY_LOCATION=%MP_JWT_VERIFY_PUBLICKEY_LOCATION%
-set QUARKUS_KUBERNETES_ENV_VARS__MP_JWT_VERIFY_AUDIENCES=%MP_JWT_VERIFY_AUDIENCES%
-set QUARKUS_KUBERNETES_ENV_VARS__MP_JWT_VERIFY_ISSUER=%MP_JWT_VERIFY_ISSUER%

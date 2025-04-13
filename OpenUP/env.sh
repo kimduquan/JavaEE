@@ -20,6 +20,3 @@ export OIDC_PROVIDER_URI=http://host.docker.internal/realms/EPF-dev/.well-known/
 export MP_JWT_VERIFY_PUBLICKEY_LOCATION=http://host.docker.internal/realms/EPF-dev/protocol/openid-connect/certs
 export MP_JWT_VERIFY_AUDIENCES=http://gateway.docker.internal
 export MP_JWT_VERIFY_ISSUER=http://host.docker.internal/realms/EPF-dev
-export QUARKUS_KUBERNETES_ENV_VARS__MP_JWT_VERIFY_PUBLICKEY_LOCATION=$MP_JWT_VERIFY_PUBLICKEY_LOCATION
-export QUARKUS_KUBERNETES_ENV_VARS__MP_JWT_VERIFY_AUDIENCES=$MP_JWT_VERIFY_AUDIENCES
-export QUARKUS_KUBERNETES_ENV_VARS__MP_JWT_VERIFY_ISSUER=$MP_JWT_VERIFY_ISSUER
