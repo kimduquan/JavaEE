@@ -23,35 +23,17 @@ import epf.gateway.Application;
 import epf.naming.Naming;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
-/**
- *
- * @author FOXCONN
- */
 @Path(Naming.PERSISTENCE)
 @ApplicationScoped
 @RolesAllowed(Naming.Security.DEFAULT_ROLE)
 public class Persistence {
     
-    /**
-     * 
-     */
     @Inject
     transient Application request;
     
-    /**
-     * 
-     */
     @Inject
     transient JsonWebToken jwt;
     
-    /**
-     * @param headers
-     * @param uriInfo
-     * @param req
-     * @param schema
-     * @param entity
-     * @param body
-     */
     @POST
     @Path("{schema}/{entity}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -68,15 +50,6 @@ public class Persistence {
     	return request.buildRequest(Naming.PERSISTENCE, jwt, headers, uriInfo, req, body);
     }
     
-    /**
-     * @param headers
-     * @param uriInfo
-     * @param req
-     * @param schema
-     * @param entity
-     * @param entityId
-     * @param body
-     */
     @PUT
     @Path("{schema}/{entity}/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -94,14 +67,6 @@ public class Persistence {
     	return request.buildRequest(Naming.PERSISTENCE, jwt, headers, uriInfo, req, body);
     }
     
-    /**
-     * @param headers
-     * @param uriInfo
-     * @param req
-     * @param schema
-     * @param entity
-     * @param entityId
-     */
     @DELETE
     @Path("{schema}/{entity}/{id}")
     @RunOnVirtualThread

@@ -11,23 +11,13 @@ import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 import epf.util.logging.LogManager;
 
-/**
- *
- * @author FOXCONN
- */
 @Provider
 public class ExceptionHandler implements 
         Serializable,
         ExceptionMapper<Throwable> {
 
-    /**
-    * 
-    */
     private static final long serialVersionUID = 1L;
     
-    /**
-     * 
-     */
     private static final Logger LOGGER = LogManager.getLogger(ExceptionHandler.class.getName());
     
     @Override

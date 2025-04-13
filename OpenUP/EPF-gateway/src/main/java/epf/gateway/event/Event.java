@@ -5,9 +5,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.Path;
 import epf.naming.Naming;
 
-/**
- * 
- */
 @Path(Naming.EVENT)
 @ApplicationScoped
 @RolesAllowed(Naming.Security.DEFAULT_ROLE)

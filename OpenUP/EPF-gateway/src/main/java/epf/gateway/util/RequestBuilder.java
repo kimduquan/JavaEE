@@ -8,51 +8,22 @@ import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 
-/**
- * 
- */
 public class RequestBuilder {
 	
-	/**
-	 * 
-	 */
 	private transient jakarta.ws.rs.client.Client client;
 	
-	/**
-	 *
-	 */
 	private final URI serviceUrl;
-	/**
-	 *
-	 */
+	
 	private transient final HttpHeaders headers;
-	/**
-	 *
-	 */
+	
 	private transient final UriInfo uriInfo;
-	/**
-	 *
-	 */
+	
 	private transient final String method;
-	/**
-	 *
-	 */
+	
 	private transient final InputStream body;
 	
-	/**
-	 * 
-	 */
 	private final boolean buildForwardHeaders;
 	
-	/**
-	 * @param client
-	 * @param serviceUrl
-	 * @param method
-	 * @param headers
-	 * @param uriInfo
-	 * @param body
-	 * @param buildForwardHeaders
-	 */
 	public RequestBuilder(final jakarta.ws.rs.client.Client client, final URI serviceUrl, final String method, final HttpHeaders headers, final UriInfo uriInfo, final InputStream body, final boolean buildForwardHeaders) {
 		this.client = client;
 		this.serviceUrl = serviceUrl;
@@ -63,9 +34,6 @@ public class RequestBuilder {
 		this.buildForwardHeaders = buildForwardHeaders;
 	}
 	
-	/**
-	 * @return
-	 */
 	public Response build(){
 		Response response;
 		WebTarget target = client.target(serviceUrl);

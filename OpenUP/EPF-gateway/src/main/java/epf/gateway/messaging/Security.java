@@ -20,35 +20,19 @@ import org.eclipse.microprofile.health.Readiness;
 import epf.gateway.Registry;
 import epf.naming.Naming;
 
-/**
- * 
- */
 @ApplicationScoped
 public class Security {
 	
-	/**
-	 *
-	 */
 	private URI securityUrl;
 	
-	/**
-	 * 
-	 */
 	@Inject @Readiness
 	transient Registry registry;
 	
-	/**
-	 * 
-	 */
 	@PostConstruct
 	protected void postConstruct() {
 		securityUrl = registry.lookup(Naming.SECURITY).orElseThrow(() -> new NoSuchElementException(Naming.SECURITY));
 	}
 	
-	/**
-	 * @param session
-	 * @return
-	 */
 	public Optional<String> getToken(final Session session) {
 		Optional<String> tokenId = Optional.empty();
 		final Map<String, List<String>> params = session.getRequestParameterMap();
@@ -61,13 +45,6 @@ public class Security {
 		return tokenId;
 	}
 	
-	/**
-	 * @param client
-	 * @param securityUrl
-	 * @param tenant
-	 * @param token
-	 * @return
-	 */
 	public Response authenticate(final Client client, final URI securityUrl, final Optional<String> tenant, final String token) {
 		final StringBuilder builder = new StringBuilder();
 		builder.append("Bearer ").append(token);
@@ -80,13 +57,6 @@ public class Security {
 				.get();
 	}
 	
-	/**
-	 * @param tenant
-	 * @param token
-	 * @param remotePath
-	 * @param session
-	 * @return
-	 */
 	public boolean authenticate(final Optional<String> tenant, final String token, final String remotePath, final Session session) {
 		final Client client = ClientBuilder.newClient();
 		try(Response response = authenticate(client, securityUrl, tenant, token)){

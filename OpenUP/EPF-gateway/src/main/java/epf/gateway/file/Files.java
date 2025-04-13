@@ -24,36 +24,17 @@ import epf.gateway.Application;
 import epf.naming.Naming;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
-/**
- *
- * @author FOXCONN
- */
 @Path(Naming.FILE)
 @ApplicationScoped
 @RolesAllowed(Naming.Security.DEFAULT_ROLE)
 public class Files {
     
-    /**
-     * 
-     */
     @Inject
     transient Application request;
     
-    /**
-     * 
-     */
     @Inject
     transient JsonWebToken jwt;
     
-    /**
-     * @param headers
-     * @param uriInfo
-     * @param req
-     * @param paths
-     * @param body
-     * @return
-     * @throws Exception 
-     */
     @POST
 	@Path("{paths: .+}")
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
@@ -70,14 +51,6 @@ public class Files {
     	return request.buildRequest(Naming.FILE, jwt, headers, uriInfo, req, body);
     }
     
-    /**
-     * @param headers
-     * @param uriInfo
-     * @param req
-     * @param paths
-     * @return
-     * @throws Exception 
-     */
     @GET
     @Path("{paths: .+}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
@@ -93,14 +66,6 @@ public class Files {
     	return request.buildRequest(Naming.FILE, jwt, headers, uriInfo, req, null);
     }
     
-    /**
-     * @param headers
-     * @param uriInfo
-     * @param req
-     * @param paths
-     * @return
-     * @throws Exception 
-     */
     @DELETE
     @Path("{paths: .+}")
     @RunOnVirtualThread

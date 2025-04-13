@@ -22,35 +22,17 @@ import epf.gateway.Application;
 import epf.naming.Naming;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
-/**
- * 
- */
 @Path(Naming.Workflow.WORKFLOW_MANAGEMENT)
 @ApplicationScoped
 @RolesAllowed(Naming.Security.DEFAULT_ROLE)
 public class Management {
     
-    /**
-     * 
-     */
     @Inject
     transient Application request;
     
-    /**
-     * 
-     */
     @Inject
     transient JsonWebToken jwt;
 
-    /**
-     * @param context
-     * @param headers
-     * @param uriInfo
-     * @param req
-     * @param body
-     * @return
-     * @throws Exception
-     */
     @POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -64,15 +46,6 @@ public class Management {
     	return request.buildRequest(Naming.Workflow.WORKFLOW_MANAGEMENT, jwt, headers, uriInfo, req, body);
     }
     
-    /**
-     * @param context
-     * @param headers
-     * @param uriInfo
-     * @param req
-     * @param workflow
-     * @return
-     * @throws Exception
-     */
     @GET
 	@Path("{workflow}")
 	@Consumes(MediaType.APPLICATION_JSON)

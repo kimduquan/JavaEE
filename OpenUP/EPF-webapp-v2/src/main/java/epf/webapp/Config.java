@@ -15,7 +15,7 @@ public class Config {
 	
 	@Inject
     @ConfigProperty(name = "oidc.client.id")
-	private String clientId = "oidc-client";
+	private String clientId;
 	
 	@Inject
     @ConfigProperty(name = "oidc.client.secret")

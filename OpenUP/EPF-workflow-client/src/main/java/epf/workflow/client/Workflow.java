@@ -3,7 +3,6 @@ package epf.workflow.client;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Optional;
-
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
 import epf.naming.Naming;
 import epf.workflow.client.util.LinkUtil;
@@ -20,20 +19,9 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 
-/**
- * 
- */
 @Path(Naming.WORKFLOW)
 public interface Workflow {
 
-	/**
-	 * @param workflow
-	 * @param version
-	 * @param instance
-	 * @param body
-	 * @return
-	 * @throws Exception
-	 */
 	@POST
 	@Path("{workflow}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -47,11 +35,6 @@ public interface Workflow {
 			final URI instance, 
 			final InputStream body) throws Exception;
 
-	/**
-	 * @param workflow
-	 * @param version
-	 * @return
-	 */
 	static Link startLink(final String workflow, final Optional<String> version) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}");
 		if(version.isPresent()) {

@@ -18,35 +18,17 @@ import epf.gateway.Application;
 import epf.naming.Naming;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
-/**
- * 
- */
 @Path(Naming.MAIL)
 @ApplicationScoped
 @RolesAllowed({Naming.Security.DEFAULT_ROLE, Naming.EPF})
 public class Mail {
 
-	/**
-     * 
-     */
-    @Inject
+	@Inject
     transient Application request;
     
-    /**
-     * 
-     */
     @Inject
     transient JsonWebToken jwt;
     
-    /**
-     * @param context
-     * @param headers
-     * @param uriInfo
-     * @param req
-     * @param body
-     * @return
-     * @throws Exception
-     */
     @POST
 	@Consumes(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread

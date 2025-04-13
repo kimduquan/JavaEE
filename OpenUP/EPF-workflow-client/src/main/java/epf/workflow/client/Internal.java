@@ -24,17 +24,9 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 
-/**
- * 
- */
 @Path(Naming.WORKFLOW)
 public interface Internal {
 	
-	/**
-	 * @param instance
-	 * @return
-	 * @throws Exception
-	 */
 	@PUT
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -43,11 +35,6 @@ public interface Internal {
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
 			final URI instance) throws Exception;
 	
-	/**
-	 * @param instance
-	 * @return
-	 * @throws Exception
-	 */
 	@DELETE
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -55,17 +42,6 @@ public interface Internal {
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
 			final URI instance) throws Exception;
 	
-	/**
-	 * @param workflow
-	 * @param version
-	 * @param terminate
-	 * @param compensate
-	 * @param continueAs
-	 * @param instance
-	 * @param body
-	 * @return
-	 * @throws Exception
-	 */
 	@PUT
 	@Path("{workflow}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -85,16 +61,6 @@ public interface Internal {
 			final URI instance,
 			final InputStream body) throws Exception;
 
-	/**
-	 * @param workflow
-	 * @param version
-	 * @param nextState
-	 * @param compensate
-	 * @param instance
-	 * @param body
-	 * @return
-	 * @throws Exception
-	 */
 	@POST
 	@Path("{workflow}/{nextState}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -112,15 +78,6 @@ public interface Internal {
 			final URI instance,
 			final InputStream body) throws Exception;
 	
-	/**
-	 * @param workflow
-	 * @param state
-	 * @param version
-	 * @param instance
-	 * @param body
-	 * @return
-	 * @throws Exception
-	 */
 	@PUT
 	@Path("{workflow}/{state}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -136,14 +93,6 @@ public interface Internal {
 			final URI instance,
 			final InputStream body) throws Exception;
 	
-	/**
-	 * @param workflow
-	 * @param state
-	 * @param version
-	 * @param map
-	 * @return
-	 * @throws Exception
-	 */
 	@POST
 	@Path("{workflow}/{state}/events")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -157,14 +106,6 @@ public interface Internal {
 			final String version,
 			final Map<String, Object> map) throws Exception;
 	
-	/**
-	 * @param workflow
-	 * @param state
-	 * @param version
-	 * @param map
-	 * @return
-	 * @throws Exception
-	 */
 	@PATCH
 	@Path("{workflow}/{state}/events")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -178,14 +119,6 @@ public interface Internal {
 			final String version,
 			final List<Map<String, Object>> events) throws Exception;
 	
-	/**
-	 * @param workflow
-	 * @param state
-	 * @param version
-	 * @param map
-	 * @return
-	 * @throws Exception
-	 */
 	@PATCH
 	@Path("{workflow}/{state}/callback")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -199,15 +132,6 @@ public interface Internal {
 			final String version,
 			final Map<String, Object> map) throws Exception;
 	
-	/**
-	 * @param workflow
-	 * @param state
-	 * @param version
-	 * @param instance
-	 * @param body
-	 * @return
-	 * @throws Exception
-	 */
 	@PATCH
 	@Path("{workflow}/{state}/batch")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -223,15 +147,6 @@ public interface Internal {
 			final URI instance,
 			final InputStream body) throws Exception;
 	
-	/**
-	 * @param workflow
-	 * @param state
-	 * @param version
-	 * @param instance
-	 * @param body
-	 * @return
-	 * @throws Exception
-	 */
 	@PATCH
 	@Path("{workflow}/{state}/iteration")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -247,16 +162,6 @@ public interface Internal {
 			final URI instance,
 			final InputStream body) throws Exception;
 	
-	/**
-	 * @param workflow
-	 * @param state
-	 * @param version
-	 * @param index
-	 * @param instance
-	 * @param body
-	 * @return
-	 * @throws Exception
-	 */
 	@PATCH
 	@Path("{workflow}/{state}/branch")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -274,15 +179,6 @@ public interface Internal {
 			final URI instance,
 			final InputStream body) throws Exception;
 	
-	/**
-	 * @param workflow
-	 * @param state
-	 * @param action
-	 * @param version
-	 * @param map
-	 * @return
-	 * @throws Exception
-	 */
 	@PATCH
 	@Path("{workflow}/{state}/{action}/events")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -298,13 +194,6 @@ public interface Internal {
 			final String version,
 			final Map<String, Object> map) throws Exception;
 
-	/**
-	 * @param workflow
-	 * @param version
-	 * @param state
-	 * @param at
-	 * @return
-	 */
 	static Link branchLink(final String workflow, final Optional<String> version, final String state, final int at) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}/branch");
 		if(version.isPresent()) {
@@ -314,12 +203,6 @@ public interface Internal {
 		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.PATCH, workflow, state);
 	}
 	
-	/**
-	 * @param workflow
-	 * @param state
-	 * @param version
-	 * @return
-	 */
 	static Link observesLink(final String workflow, final String state, final Optional<String> version) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}/events");
 		if(version.isPresent()) {
@@ -328,12 +211,6 @@ public interface Internal {
 		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.POST, workflow, state);
 	}
 	
-	/**
-	 * @param workflow
-	 * @param state
-	 * @param version
-	 * @return
-	 */
 	static Link onEventsLink(final String workflow, final String state, final Optional<String> version) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}/events");
 		if(version.isPresent()) {
@@ -342,13 +219,6 @@ public interface Internal {
 		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.PATCH, workflow, state);
 	}
 	
-	/**
-	 * @param index
-	 * @param workflow
-	 * @param state
-	 * @param version
-	 * @return
-	 */
 	static Link callbackLink(final String workflow, final String state, final Optional<String> version) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}/callback");
 		if(version.isPresent()) {
@@ -357,12 +227,6 @@ public interface Internal {
 		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.PATCH, workflow, state);
 	}
 	
-	/**
-	 * @param workflow
-	 * @param version
-	 * @param state
-	 * @return
-	 */
 	static Link batchLink(final String workflow, final Optional<String> version, final String state) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}/batch");
 		if(version.isPresent()) {
@@ -371,12 +235,6 @@ public interface Internal {
 		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.PATCH, workflow, state);
 	}
 
-	/**
-	 * @param workflow
-	 * @param version
-	 * @param state
-	 * @return
-	 */
 	static Link iterationLink(final String workflow, final Optional<String> version, final String state) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}/iteration");
 		if(version.isPresent()) {
@@ -385,13 +243,6 @@ public interface Internal {
 		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.PATCH, workflow, state);
 	}
 
-	/**
-	 * @param workflow
-	 * @param version
-	 * @param state
-	 * @param action
-	 * @return
-	 */
 	static Link actionLink(final String workflow, final Optional<String> version, final String state, final String action) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}/{action}");
 		if(version.isPresent()) {
@@ -400,12 +251,6 @@ public interface Internal {
 		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.POST, workflow, state, action);
 	}
 
-	/**
-	 * @param workflow
-	 * @param version
-	 * @param state
-	 * @return
-	 */
 	static Link compensateLink(final String workflow, final Optional<String> version, final String state) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}");
 		if(version.isPresent()) {
@@ -414,12 +259,6 @@ public interface Internal {
 		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.PUT, workflow, state);
 	}
 
-	/**
-	 * @param workflow
-	 * @param version
-	 * @param state
-	 * @return
-	 */
 	static Link transitionLink(final String workflow, final Optional<String> version, final String nextState, final Boolean compensate) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}/{nextState}");
 		if(version.isPresent()) {
@@ -436,14 +275,6 @@ public interface Internal {
 		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.DELETE);
 	}
 
-	/**
-	 * @param workflow
-	 * @param version
-	 * @param terminate
-	 * @param compensate
-	 * @param continueAs
-	 * @return
-	 */
 	static Link endLink(final String workflow, final Optional<String> version, final Boolean terminate, final Boolean compensate, final String continueAs) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}");
 		if(version.isPresent()) {

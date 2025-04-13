@@ -17,28 +17,14 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 
-/**
- * 
- */
 @Path(Naming.Workflow.WORKFLOW_MANAGEMENT)
 public interface Management {
 
-	/**
-	 * @param body
-	 * @return
-	 * @throws Exception
-	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	Response newWorkflowDefinition(final InputStream body) throws Exception;
 	
-	/**
-	 * @param workflow
-	 * @param version
-	 * @return
-	 * @throws Exception
-	 */
 	@GET
 	@Path("{workflow}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -48,12 +34,6 @@ public interface Management {
 			@QueryParam("version")
 			final String version) throws Exception;
 
-	/**
-	 * @param index
-	 * @param workflow
-	 * @param version
-	 * @return
-	 */
 	static Link getWorkflowLink(final int index, final String workflow, final Optional<String> version) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}");
 		if(version.isPresent()) {
