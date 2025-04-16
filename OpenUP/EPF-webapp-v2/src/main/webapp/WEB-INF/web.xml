@@ -23,4 +23,7 @@
 	<security-role>
 		<role-name>Any_Role</role-name>
 	</security-role>
+	<welcome-file-list>
+		<welcome-file>iframe.html</welcome-file>
+	</welcome-file-list>
 </web-app>
