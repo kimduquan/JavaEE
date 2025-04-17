@@ -151,7 +151,7 @@ auth:
   ## @param auth.password Redis&reg; password
   ## Defaults to a random 10-character alphanumeric string if not set
   ##
-  password: ""
+  password: "090323508"
   ## @param auth.existingSecret The name of an existing secret with Redis&reg; credentials
   ## NOTE: When it's set, the previous `auth.password` parameter is ignored
   ##
@@ -535,7 +535,7 @@ master:
       - ReadWriteOnce
     ## @param master.persistence.size Persistent Volume size
     ##
-    size: 8Gi
+    size: 1Gi
     ## @param master.persistence.annotations Additional custom annotations for the PVC
     ##
     annotations: {}
@@ -1020,7 +1020,7 @@ replica:
       - ReadWriteOnce
     ## @param replica.persistence.size Persistent Volume size
     ##
-    size: 8Gi
+    size: 1Gi
     ## @param replica.persistence.annotations Additional custom annotations for the PVC
     ##
     annotations: {}
