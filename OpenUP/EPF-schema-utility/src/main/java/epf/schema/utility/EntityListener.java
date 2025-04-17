@@ -8,34 +8,18 @@ import jakarta.persistence.PostPersist;
 import jakarta.persistence.PostRemove;
 import jakarta.persistence.PostUpdate;
 
-/**
- * @author PC
- *
- */
 @ApplicationScoped
 public class EntityListener {
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient Event<epf.schema.utility.PostPersist> persistEvent;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient Event<epf.schema.utility.PostRemove> removeEvent;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient Event<epf.schema.utility.PostUpdate> updateEvent;
 	
-	/**
-	 * @param entity
-	 */
 	@PostPersist
 	protected void postPersist(final Object entity) {
 		final epf.schema.utility.PostPersist event = new epf.schema.utility.PostPersist();
@@ -49,9 +33,6 @@ public class EntityListener {
 		persistEvent.fire(event);
 	}
 	
-	/**
-	 * @param entity
-	 */
 	@PostRemove
 	protected void postRemove(final Object entity) {
 		final epf.schema.utility.PostRemove event = new epf.schema.utility.PostRemove();
@@ -65,9 +46,6 @@ public class EntityListener {
 		removeEvent.fire(event);
 	}
 	
-	/**
-	 * @param entity
-	 */
 	@PostUpdate
 	protected void postUpdate(final Object entity) {
 		final epf.schema.utility.PostUpdate event = new epf.schema.utility.PostUpdate();

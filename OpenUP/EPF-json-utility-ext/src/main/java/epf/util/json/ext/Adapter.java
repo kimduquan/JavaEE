@@ -6,10 +6,6 @@ import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.json.bind.adapter.JsonbAdapter;
 
-/**
- * @author PC
- *
- */
 public class Adapter implements JsonbAdapter<Object, JsonObject> {
 	
 	@Override

@@ -8,18 +8,8 @@ import jakarta.json.JsonObjectBuilder;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 
-/**
- * @author PC
- *
- */
 public class Encoder {
 
-	/**
-	 * @param jsonb
-	 * @param object
-	 * @return
-	 * @throws Exception
-	 */
 	public String encode(final Jsonb jsonb, final Object object) throws Exception {
 		final String json = jsonb.toJson(object);
 		final JsonObject jsonObject = JsonUtil.readObject(json);
@@ -30,23 +20,12 @@ public class Encoder {
 		return encodedJsonObject.toString();
 	}
 	
-	/**
-	 * @param object
-	 * @return
-	 * @throws Exception
-	 */
 	public String encode(final Object object) throws Exception {
 		try(Jsonb jsonb = JsonbBuilder.create()){
 			return encode(jsonb, object);
 		}
 	}
 	
-	/**
-	 * @param jsonb
-	 * @param array
-	 * @return
-	 * @throws Exception
-	 */
 	public String encodeArray(final Jsonb jsonb, final List<Object> array) throws Exception {
 		final JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
 		for(Object object : array) {
@@ -59,11 +38,6 @@ public class Encoder {
 		return arrayBuilder.build().toString();
 	}
 	
-	/**
-	 * @param array
-	 * @return
-	 * @throws Exception
-	 */
 	public String encodeArray(final List<Object> array) throws Exception {
 		try(Jsonb jsonb = JsonbBuilder.create()){
 			return encodeArray(jsonb, array);

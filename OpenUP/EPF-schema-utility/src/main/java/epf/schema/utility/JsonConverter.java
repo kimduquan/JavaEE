@@ -5,16 +5,9 @@ import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import epf.util.json.ext.JsonUtil;
 
-/**
- * @author PC
- *
- */
 @Converter(autoApply = true)
 public class JsonConverter implements AttributeConverter<JsonObject, String> {
 
-	/**
-	 *
-	 */
 	@Override
 	public String convertToDatabaseColumn(final JsonObject attribute) {
 		String value = null;
@@ -24,9 +17,6 @@ public class JsonConverter implements AttributeConverter<JsonObject, String> {
         return value;
 	}
 
-	/**
-	 *
-	 */
 	@Override
 	public JsonObject convertToEntityAttribute(final String dbData) {
             JsonObject result = null;

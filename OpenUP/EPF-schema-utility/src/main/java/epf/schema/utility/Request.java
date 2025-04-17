@@ -2,21 +2,11 @@ package epf.schema.utility;
 
 import jakarta.enterprise.context.RequestScoped;
 
-/**
- * @author PC
- *
- */
 @RequestScoped
 public class Request {
 
-	/**
-	 * 
-	 */
 	private String tenant;
 	
-	/**
-	 * 
-	 */
 	private String schema;
 
 	public String getTenant() {

@@ -5,35 +5,16 @@ import java.time.Instant;
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import epf.util.json.ext.Adapter;
 
-/**
- * @author PC
- *
- */
 public class EntityEvent implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
-	/**
-	 * 
-	 */
 	private Long time;
 	
-	/**
-	 *
-	 */
 	private String tenant;
 	
-	/**
-	 * 
-	 */
 	private String schema;
 	
-	/**
-	 * 
-	 */
 	@JsonbTypeAdapter(Adapter.class)
 	private Object entity;
 	
