@@ -13,27 +13,14 @@ import org.eclipse.microprofile.health.Readiness;
 import epf.util.json.ext.Decoder;
 import epf.util.json.ext.Encoder;
 
-/**
- * @author PC
- *
- */
 @ApplicationScoped
 @Readiness
 public class TransactionCache implements HealthCheck {
 	
-	/**
-	 * 
-	 */
 	private transient Cache<String, Object> cache;
 	
-	/**
-	 * 
-	 */
 	private transient final Encoder encoder = new Encoder();
 	
-	/**
-	 * 
-	 */
 	private transient final Decoder decoder = new Decoder();
 	
 	@PostConstruct
@@ -55,21 +42,12 @@ public class TransactionCache implements HealthCheck {
 		return HealthCheckResponse.up("epf-persistence-transaction-cache");
 	}
 
-	/**
-	 * @param transaction
-	 * @throws Exception 
-	 */
 	public void put(final EntityTransaction transaction) throws Exception {
 		Objects.requireNonNull(transaction, "EntityTransaction");
 		Objects.requireNonNull(transaction.getId(), "EntityTransaction.Id");
 		cache.put(transaction.getId(), encoder.encode(transaction));
 	}
 	
-	/**
-	 * @param id
-	 * @return
-	 * @throws Exception 
-	 */
 	public EntityTransaction remove(final String id) throws Exception {
 		Objects.requireNonNull(id, "String");
 		EntityTransaction transaction = null;

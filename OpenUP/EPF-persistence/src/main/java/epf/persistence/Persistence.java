@@ -52,74 +52,37 @@ import epf.util.json.ext.JsonUtil;
 import epf.util.logging.LogManager;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
-/**
- *
- * @author FOXCONN
- */
 @Path(Naming.PERSISTENCE)
 @ApplicationScoped
 public class Persistence {
 	
-	/**
-	 *
-	 */
 	private transient final static Logger LOGGER = LogManager.getLogger(Persistence.class.getName());
 	
-	/**
-	 * 
-	 */
 	private transient SchemaUtil schemaUtil;
 	
-	/**
-	 * 
-	 */
 	@Inject @Readiness
 	transient TransactionCache cache;
     
-    /**
-     * 
-     */
     @Inject
     transient Validator validator;
     
-    /**
-     * 
-     */
     @Inject
     transient EntityManager manager;
     
-    /**
-     * 
-     */
     @Inject
     transient Request request;
     
-    /**
-	 * 
-	 */
-	@PostConstruct
+    @PostConstruct
 	protected void postConstruct() {
 		final List<Class<?>> entityClasses = manager.getMetamodel().getEntities().stream().map(entity -> entity.getJavaType()).collect(Collectors.toList());
 		schemaUtil = new SchemaUtil(entityClasses);
 	}
 	
-	/**
-	 * 
-	 */
 	@PreDestroy
 	protected void preDestroy() {
 		schemaUtil.clear();
 	}
     
-    /**
-     * @param tenant
-     * @param schema
-     * @param entity
-     * @param headers
-     * @param body
-     * @return
-     * @throws Exception
-     */
     @POST
     @Path("{schema}/{entity}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -185,16 +148,6 @@ public class Persistence {
         return Response.ok(JsonUtil.toString(entity)).build();
     }
     
-    /**
-     * @param tenant
-     * @param schema
-     * @param name
-     * @param entityId
-     * @param headers
-     * @param body
-     * @return
-     * @throws Exception
-     */
     @PUT
     @Path("{schema}/{entity}/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -274,15 +227,6 @@ public class Persistence {
         return Response.ok(JsonUtil.toString(mergedEntity)).build();
 	}
     
-    /**
-     * @param tenant
-     * @param schema
-     * @param name
-     * @param id
-     * @param headers
-     * @return
-     * @throws Exception
-     */
     @DELETE
     @Path("{schema}/{entity}/{id}")
     @Transactional
@@ -348,10 +292,6 @@ public class Persistence {
     	return Response.ok().build();
     }
     
-    /**
-     * @return
-     * @throws Exception 
-     */
     @Compensate
     @Path(Naming.TRANSACTION)
     @PUT
@@ -389,11 +329,6 @@ public class Persistence {
     	return Response.ok(ParticipantStatus.Compensated.name()).build();
     }
     
-    /**
-     * @param headers
-     * @return
-     * @throws Exception 
-     */
     @Forget
     @Path(Naming.TRANSACTION_ACTIVE)
     @PUT

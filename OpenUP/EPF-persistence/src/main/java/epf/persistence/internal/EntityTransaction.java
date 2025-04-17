@@ -5,35 +5,17 @@ import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import epf.schema.utility.EntityEvent;
 import epf.util.json.ext.Adapter;
 
-/**
- * 
- */
 public class EntityTransaction implements Serializable {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 *
-	 */
 	private String id;
 
-	/**
-	 *
-	 */
 	@JsonbTypeAdapter(Adapter.class)
 	private EntityEvent event;
 	
-	/**
-	 *
-	 */
 	private Object entityId;
 	
-	/**
-	 *
-	 */
 	private String diff;
 
 	public String getId() {

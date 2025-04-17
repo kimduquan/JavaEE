@@ -13,29 +13,15 @@ import epf.naming.Naming;
 import epf.schema.utility.EntityEvent;
 import epf.util.logging.LogManager;
 
-/**
- * 
- */
 @ApplicationScoped
 @Readiness
 public class EventEmitter implements HealthCheck {
 	
-	/**
-	 * 
-	 */
 	private transient static final Logger LOGGER = LogManager.getLogger(EventEmitter.class.getName());
 
-	/**
-	 * 
-	 */
 	@Channel(Naming.Persistence.PERSISTENCE_ENTITY_LISTENERS)
 	transient Emitter<EntityEvent> emitter;
 	
-	/**
-	 * @param event
-	 * @throws Exception 
-	 * @throws InterruptedException 
-	 */
 	public void send(@ObservesAsync final AsyncEvent event) throws Exception {
 		emitter.send(event.getEvent()).whenComplete((v, e) -> {
 			if(e != null) {

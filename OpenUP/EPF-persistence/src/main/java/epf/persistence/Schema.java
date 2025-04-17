@@ -20,23 +20,13 @@ import epf.persistence.schema.internal.EntityBuilder;
 import epf.persistence.schema.internal.EntityComparator;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
-/**
- * @author PC
- *
- */
 @Path(Naming.SCHEMA)
 @ApplicationScoped
 public class Schema {
 	
-	/**
-	 * 
-	 */
 	@Inject
     transient EntityManager manager;
 
-	/**
-	 * @return
-	 */
 	@GET
     @Produces(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
@@ -50,9 +40,6 @@ public class Schema {
 		return entities.collect(Collectors.toList());
 	}
 
-	/**
-	 * @return
-	 */
 	@GET
     @Path("embeddable")
     @Produces(MediaType.APPLICATION_JSON)
