@@ -17,7 +17,7 @@ import jakarta.security.enterprise.authentication.mechanism.http.openid.LogoutDe
 					identityTokenExpiry = true
 				),
 		useSession = true,
-		redirectToOriginalResource = true,
+		redirectToOriginalResource = false,
 		tokenAutoRefresh = true
 		)
 public class WebApp {
