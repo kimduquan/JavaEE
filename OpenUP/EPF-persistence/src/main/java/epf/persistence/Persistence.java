@@ -32,7 +32,6 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.lra.annotation.Compensate;
 import org.eclipse.microprofile.lra.annotation.Forget;
 import org.eclipse.microprofile.lra.annotation.ParticipantStatus;
@@ -60,7 +59,7 @@ public class Persistence {
 	
 	private transient SchemaUtil schemaUtil;
 	
-	@Inject @Readiness
+	@Inject
 	transient TransactionCache cache;
     
     @Inject
