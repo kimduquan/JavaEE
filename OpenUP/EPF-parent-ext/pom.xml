@@ -99,6 +99,18 @@
 		    <artifactId>quarkus-jnosql-keyvalue-redis</artifactId>
 		    <version>3.3.1</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.quarkiverse.jnosql/quarkus-jnosql-keyvalue-hazelcast -->
+		<dependency>
+		    <groupId>io.quarkiverse.jnosql</groupId>
+		    <artifactId>quarkus-jnosql-keyvalue-hazelcast</artifactId>
+		    <version>3.3.4</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.hazelcast/quarkus-hazelcast-client -->
+		<dependency>
+			<groupId>com.hazelcast</groupId>
+			<artifactId>quarkus-hazelcast-client</artifactId>
+			<version>4.0.0</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/jakarta.nosql/jakarta.nosql-api -->
 		<dependency>
 		    <groupId>jakarta.nosql</groupId>
@@ -116,6 +128,24 @@
 		    <groupId>io.quarkus</groupId>
 		    <artifactId>quarkus-smallrye-opentracing</artifactId>
 		    <version>3.12.3</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.json/javax.json-api -->
+		<dependency>
+			<groupId>javax.json</groupId>
+			<artifactId>javax.json-api</artifactId>
+			<version>1.1.4</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast -->
+		<dependency>
+			<groupId>com.hazelcast</groupId>
+			<artifactId>hazelcast</artifactId>
+			<version>5.5.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.cache/cache-api -->
+		<dependency>
+		    <groupId>javax.cache</groupId>
+		    <artifactId>cache-api</artifactId>
+		    <version>1.1.1</version>
 		</dependency>
     </dependencies>
   </dependencyManagement>
