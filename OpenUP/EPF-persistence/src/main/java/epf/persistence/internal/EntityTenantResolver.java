@@ -1,4 +1,4 @@
-package epf.persistence.internal.util;
+package epf.persistence.internal;
 
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
@@ -9,7 +9,7 @@ import io.quarkus.hibernate.orm.runtime.tenant.TenantResolver;
 
 @PersistenceUnitExtension
 @RequestScoped
-public class EPFTenantResolver implements TenantResolver {
+public class EntityTenantResolver implements TenantResolver {
 	
 	@Inject
     Request request;

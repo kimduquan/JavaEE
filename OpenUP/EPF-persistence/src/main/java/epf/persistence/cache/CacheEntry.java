@@ -1,11 +1,11 @@
-package epf.persistence.internal;
+package epf.persistence.cache;
 
 import jakarta.nosql.Column;
 import jakarta.nosql.Id;
 import jakarta.nosql.Entity;
 
 @Entity
-public class KeyValue {
+public class CacheEntry {
 
 	@Id
     private String key;
