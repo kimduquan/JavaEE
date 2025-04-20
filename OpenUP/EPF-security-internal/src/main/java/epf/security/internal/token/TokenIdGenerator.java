@@ -3,15 +3,8 @@ package epf.security.internal.token;
 import org.jose4j.jwt.JwtClaims;
 import epf.util.EPFException;
 
-/**
- * @author PC
- *
- */
 public class TokenIdGenerator {
 
-	/**
-	 * @return
-	 */
 	public String generate() {
 		final JwtClaims claims = new JwtClaims();
 		claims.setGeneratedJwtId();

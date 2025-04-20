@@ -4,44 +4,26 @@ import java.io.Serializable;
 import java.io.StreamCorruptedException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.ResponseBuilder;
+import jakarta.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.ext.Provider;
 import epf.util.EPFException;
 import epf.util.logging.LogManager;
 
-/**
- *
- * @author FOXCONN
- */
 @Provider
 public class ExceptionHandler implements ExceptionMapper<Exception>, Serializable {
 
-    /**
-    * 
-    */
     private static final long serialVersionUID = 1L;
     
-    /**
-     * 
-     */
     private static final Logger LOGGER = LogManager.getLogger(ExceptionHandler.class.getName());
 
-    /**
-     *
-     */
     @Override
     public Response toResponse(final Exception exception) {
         return handle(exception);
     }
     
-    /**
-     * @param failure
-     * @param builder
-     * @return
-     */
     protected static boolean map(final Throwable failure, final Response.ResponseBuilder builder){
         Response.StatusType status = Response.Status.INTERNAL_SERVER_ERROR;
         boolean mapped = true;
@@ -68,10 +50,6 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
         return mapped;
     }
     
-    /**
-     * @param failure
-     * @return
-     */
     protected static Response handle(final Throwable failure){
     	final ResponseBuilder builder = Response.serverError();
     	if(failure != null){

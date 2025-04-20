@@ -2,48 +2,35 @@ package epf.rules;
 
 import java.io.InputStream;
 import java.util.List;
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
-import javax.json.bind.JsonbConfig;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbBuilder;
+import jakarta.json.bind.JsonbConfig;
 import javax.rules.Handle;
 import javax.rules.StatelessRuleSession;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Link;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Link;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.ResponseBuilder;
 import org.eclipse.microprofile.health.Readiness;
 import epf.function.LinkFunction;
 import epf.naming.Naming;
-import epf.util.json.Adapter;
-import epf.util.json.Decoder;
-import epf.util.json.Encoder;
+import epf.util.json.ext.Adapter;
+import epf.util.json.ext.Decoder;
+import epf.util.json.ext.Encoder;
 
-/**
- * @author PC
- *
- */
 @Path(Naming.RULES)
 @RequestScoped
 public class Rules implements epf.rules.client.Rules {
 	
-	/**
-	 * 
-	 */
 	@Inject @Readiness
 	private transient Provider provider;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	private transient Session session;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	private transient Request request;
 

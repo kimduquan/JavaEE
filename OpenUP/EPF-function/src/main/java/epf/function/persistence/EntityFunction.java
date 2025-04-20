@@ -1,32 +1,16 @@
 package epf.function.persistence;
 
-import javax.ws.rs.core.Link;
+import jakarta.ws.rs.core.Link;
 import epf.function.Function;
 
-/**
- * @author PC
- *
- */
 public class EntityFunction extends Function {
 	
-	/**
-	 * 
-	 */
 	private String schema;
-	/**
-	 * 
-	 */
+	
 	private String entity;
-	/**
-	 * 
-	 */
+	
 	private String id;
 
-	/**
-	 * @param service
-	 * @param method
-	 * @param path
-	 */
 	public EntityFunction(final String service, final String method, final String path) {
 		super(service, method, path);
 	}

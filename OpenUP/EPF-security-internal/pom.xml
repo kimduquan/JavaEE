@@ -10,27 +10,23 @@
     <name>Eclipse Process Framework Security Internal</name>
     <packaging>jar</packaging>
     <dependencies>
-    	<!-- https://mvnrepository.com/artifact/javax.enterprise/cdi-api -->
-		<dependency>
-		    <groupId>javax.enterprise</groupId>
-		    <artifactId>cdi-api</artifactId>
+    	<dependency>
+		    <groupId>jakarta.enterprise</groupId>
+		    <artifactId>jakarta.enterprise.cdi-api</artifactId>
 		    <scope>provided</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.security.enterprise/javax.security.enterprise-api -->
 		<dependency>
-		    <groupId>javax.security.enterprise</groupId>
-		    <artifactId>javax.security.enterprise-api</artifactId>
+		    <groupId>jakarta.security.enterprise</groupId>
+		    <artifactId>jakarta.security.enterprise-api</artifactId>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
 		<dependency>
-		    <groupId>javax.annotation</groupId>
-		    <artifactId>javax.annotation-api</artifactId>
+		    <groupId>jakarta.annotation</groupId>
+		    <artifactId>jakarta.annotation-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.persistence/javax.persistence-api -->
 		<dependency>
-		    <groupId>javax.persistence</groupId>
-		    <artifactId>javax.persistence-api</artifactId>
+		    <groupId>jakarta.persistence</groupId>
+		    <artifactId>jakarta.persistence-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.jwt/microprofile-jwt-auth-api -->

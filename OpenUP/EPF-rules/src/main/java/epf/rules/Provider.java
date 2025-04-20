@@ -2,9 +2,9 @@ package epf.rules;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import javax.rules.ConfigurationException;
 import javax.rules.RuleRuntime;
 import javax.rules.RuleServiceProvider;
@@ -16,46 +16,24 @@ import org.eclipse.microprofile.health.Readiness;
 import epf.naming.Naming;
 import epf.util.logging.LogManager;
 
-/**
- * @author PC
- *
- */
 @ApplicationScoped
 @Readiness
 public class Provider implements HealthCheck {
 	
-	/**
-	 * 
-	 */
 	private transient static final Logger LOGGER = LogManager.getLogger(Provider.class.getName());
 	
-	/**
-	 * 
-	 */
 	private transient RuleServiceProvider ruleProvider;
 	
-	/**
-	 * 
-	 */
 	private transient RuleRuntime ruleRuntime;
 
-	/**
-	 * 
-	 */
 	@Inject
 	@ConfigProperty(name = Naming.Rules.PROVIDER_CLASS)
 	private transient String providerClass;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	@ConfigProperty(name = Naming.Rules.PROVIDER_URI)
 	private transient String providerUri;
 	
-	/**
-	 * 
-	 */
 	@PostConstruct
 	protected void postConstruct() {
 		Class<?> cls = null;

@@ -8,18 +8,18 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
-import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
-import javax.enterprise.concurrent.ManagedScheduledExecutorService;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.PathSegment;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import jakarta.annotation.PreDestroy;
+import jakarta.annotation.Resource;
+import jakarta.enterprise.concurrent.ManagedScheduledExecutorService;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.PathSegment;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.health.Readiness;
 import epf.naming.Naming;
 import epf.schedule.internal.Messaging;
@@ -30,43 +30,23 @@ import epf.schedule.util.ScheduleUtil;
 import epf.util.StringUtil;
 import epf.util.UUIDUtil;
 
-/**
- * @author PC
- * @param <ScheduledRequest>
- *
- */
 @ApplicationScoped
 @Path(Naming.SCHEDULE)
 public class Schedule implements epf.schedule.client.Schedule {
 	
-	/**
-	 * 
-	 */
 	private transient final Map<String, ScheduledFuture<Response>> scheduledFutures = new ConcurrentHashMap<>();
 
-	/**
-	 * 
-	 */
 	@Resource(lookup = Naming.Schedule.EXECUTOR_SERVICE)
 	private transient ManagedScheduledExecutorService scheduledExecutor;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	@Readiness
 	private transient Registry registry;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	@Readiness
 	private transient Messaging messaging;
 	
-	/**
-	 * 
-	 */
 	@PreDestroy
 	protected void preDestroy() {
 		scheduledFutures.values().parallelStream().forEach(scheduledFuture -> scheduledFuture.cancel(true));

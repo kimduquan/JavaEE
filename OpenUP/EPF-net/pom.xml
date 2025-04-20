@@ -4,21 +4,21 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
 	<groupId>epf</groupId>
-	<artifactId>EPF-parent</artifactId>
+	<artifactId>EPF-parent-ext</artifactId>
 	<version>1.0.0</version>
-	<relativePath>../EPF-parent/pom.xml</relativePath>
+	<relativePath>../EPF-parent-ext/pom.xml</relativePath>
   </parent>
   <artifactId>EPF-net</artifactId>
   <name>Eclipse Process Framework Network</name>
   <dependencies>
     <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy-reactive-jsonb</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy-reactive</artifactId>
-    </dependency>
+		<groupId>io.quarkus</groupId>
+		<artifactId>quarkus-rest-jsonb</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>io.quarkus</groupId>
+		<artifactId>quarkus-rest</artifactId>
+	</dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-arc</artifactId>
@@ -31,7 +31,6 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-container-image-jib</artifactId>
     </dependency>
-
 
 	<dependency>
         <groupId>openup</groupId>

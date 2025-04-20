@@ -3,23 +3,12 @@ package epf.schedule.schema;
 import java.time.Duration;
 import java.time.Instant;
 
-/**
- * @author PC
- *
- */
 public class TimeInterval {
 
-	/**
-	 * 
-	 */
 	private Instant start;
-	/**
-	 * 
-	 */
+	
 	private Duration duration;
-	/**
-	 * 
-	 */
+	
 	private Instant end;
 	
 	public Instant getStart() {

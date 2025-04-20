@@ -331,6 +331,27 @@
 			    <version>3.0.1</version>
 				<!--<scope>provided</scope>-->
 			</dependency>
+			<!-- https://mvnrepository.com/artifact/jakarta.resource/jakarta.resource-api -->
+			<dependency>
+			    <groupId>jakarta.resource</groupId>
+			    <artifactId>jakarta.resource-api</artifactId>
+			    <version>2.1.0</version>
+				<!--<scope>provided</scope>-->
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/jakarta.security.enterprise/jakarta.security.enterprise-api -->
+			<dependency>
+			    <groupId>jakarta.security.enterprise</groupId>
+			    <artifactId>jakarta.security.enterprise-api</artifactId>
+			    <version>3.0.0</version>
+				<!--<scope>provided</scope>-->
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/jakarta.transaction/jakarta.transaction-api -->
+			<dependency>
+			    <groupId>jakarta.transaction</groupId>
+			    <artifactId>jakarta.transaction-api</artifactId>
+			    <version>2.0.1</version>
+				<!--<scope>provided</scope>-->
+			</dependency>
 			
 			
 			<!-- https://mvnrepository.com/artifact/com.liferay.faces/com.liferay.faces.bridge.api -->

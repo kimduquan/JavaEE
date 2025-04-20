@@ -3,25 +3,15 @@ package epf.schedule.internal;
 import java.time.Instant;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
-import javax.enterprise.concurrent.LastExecution;
-import javax.enterprise.concurrent.Trigger;
+import jakarta.enterprise.concurrent.LastExecution;
+import jakarta.enterprise.concurrent.Trigger;
 import epf.schedule.schema.RecurringTimeInterval;
 import epf.schedule.schema.TimeInterval;
 
-/**
- * @author PC
- *
- */
 public class RecurringTimeIntervalTrigger implements Trigger {
 	
-	/**
-	 * 
-	 */
 	private final RecurringTimeInterval recurringTimeInterval;
 	
-	/**
-	 * 
-	 */
 	private final AtomicInteger numberOfRepetitions = new AtomicInteger();
 	
 	public RecurringTimeIntervalTrigger(final RecurringTimeInterval recurringTimeInterval) {

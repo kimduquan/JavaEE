@@ -7,11 +7,11 @@ import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Persistence;
+import jakarta.persistence.Query;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
@@ -25,33 +25,18 @@ import epf.security.util.Credential;
 import epf.security.util.TenantUtil;
 import epf.util.StringUtil;
 
-/**
- * @author PC
- *
- */
 @ApplicationScoped
 @Readiness
 public class JPAIdentityStore implements HealthCheck {
 	
-	/**
-	 * 
-	 */
 	@Inject
 	private transient ManagedExecutor executor;
 	
-	/**
-	 * @param credential
-	 * @return
-	 */
 	public CompletionStage<Set<String>> getCallerGroups(final EntityManager manager, final Credential credential) {
 		Objects.requireNonNull(credential, "Credential");
 		return getCallerGroups(manager, credential.getTenant().orElse(null));
 	}
 
-	/**
-	 * @param jwt
-	 * @return
-	 */
 	public CompletionStage<Set<String>> getCallerGroups(final JsonWebToken jwt) {
 		Objects.requireNonNull(jwt, "JsonWebToken");
 		return executor.completedStage(jwt.getGroups());
@@ -66,11 +51,6 @@ public class JPAIdentityStore implements HealthCheck {
 		return executor.completedStage(groups);
 	}
 
-	/**
-	 * @param credential
-	 * @return
-	 * @throws Exception
-	 */
 	public CompletionStage<JPAPrincipal> authenticate(final Credential credential) throws Exception {
 		final Map<String, Object> props = new ConcurrentHashMap<>();
         props.put(Naming.Persistence.JDBC.JDBC_USER, credential.getCaller());

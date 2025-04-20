@@ -5,15 +5,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.concurrent.CompletionStage;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.security.enterprise.CallerPrincipal;
-import javax.security.enterprise.credential.Password;
-import javax.transaction.Transactional;
-import javax.ws.rs.BadRequestException;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
+import jakarta.security.enterprise.CallerPrincipal;
+import jakarta.security.enterprise.credential.Password;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.BadRequestException;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
@@ -27,32 +27,16 @@ import epf.security.schema.Security;
 import epf.security.util.Credential;
 import epf.security.util.TenantUtil;
 
-/**
- * @author PC
- *
- */
 @ApplicationScoped
 @Readiness
 public class JPAPrincipalStore implements HealthCheck {
 	
-	/**
-	 * 
-	 */
 	@Inject
 	private transient ManagedExecutor executor;
 	
-	/**
-	 *
-	 */
 	@PersistenceContext(unitName = Naming.Security.Internal.SECURITY_PRINCIPAL_UNIT_NAME)
 	private transient EntityManager manager;
 
-	/**
-	 * @param jwt
-	 * @param password
-	 * @return
-	 * @throws Exception
-	 */
 	@Transactional
 	public CompletionStage<Void> setCallerPassword(final JsonWebToken jwt, final Password password) throws Exception{
 		Objects.requireNonNull(jwt, "JsonWebToken");
@@ -69,19 +53,11 @@ public class JPAPrincipalStore implements HealthCheck {
 		return executor.completedStage(null);
 	}
 
-	/**
-	 * @param jwt
-	 * @return
-	 */
 	public CompletionStage<Map<String, Object>> getCallerClaims(final JsonWebToken jwt) {
 		Objects.requireNonNull(jwt, "JsonWebToken");
 		return getCallerClaims(jwt.getName(), jwt.getClaim(Naming.Management.TENANT));
 	}
 	
-	/**
-	 * @param credential
-	 * @return
-	 */
 	public CompletionStage<Map<String, Object>> getCallerClaims(final Credential credential) {
 		Objects.requireNonNull(credential, "Credential");
 		return getCallerClaims(credential.getCaller(), credential.getTenant().orElse(null));
@@ -98,11 +74,6 @@ public class JPAPrincipalStore implements HealthCheck {
 		return executor.completedStage(claims);
 	}
 
-	/**
-	 * @param callerPrincipal
-	 * @param claims
-	 * @return
-	 */
 	@Transactional
 	public CompletionStage<Void> setCallerClaims(final CallerPrincipal callerPrincipal, final Map<String, Object> claims) {
 		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
@@ -123,11 +94,6 @@ public class JPAPrincipalStore implements HealthCheck {
 		return executor.completedStage(null);
 	}
 
-	/**
-	 * @param callerPrincipal
-	 * @return
-	 * @throws Exception
-	 */
 	@Transactional
 	public CompletionStage<Void> putCaller(final CallerPrincipal callerPrincipal) throws Exception {
 		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");

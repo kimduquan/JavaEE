@@ -1,57 +1,37 @@
 package epf.script;
 
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
-import javax.enterprise.context.ApplicationScoped;
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import jakarta.annotation.Resource;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ws.rs.ApplicationPath;
+import jakarta.ws.rs.core.Application;
 import org.jppf.jca.cci.JPPFConnection;
 import epf.util.logging.LogManager;
-import javax.resource.ResourceException;
-import javax.resource.cci.ConnectionFactory;
+import jakarta.resource.cci.ConnectionFactory;
 
-/**
- * @author PC
- *
- */
 @ApplicationScoped
 @ApplicationPath("/")
 public class Engine extends Application {
 	
-	/**
-	 * 
-	 */
 	private transient static final Logger LOGGER = LogManager.getLogger(Application.class.getName());
 
-	/**
-	 * 
-	 */
 	private transient JPPFConnection connection;
 	
-	/**
-	 * 
-	 */
 	@Resource(lookup = "eis/JPPFConnectionFactory")
 	private transient ConnectionFactory factory;
 	
-	/**
-	 * 
-	 */
 	@PostConstruct
 	public void postConstruct() {
 		try {
 			connection = (JPPFConnection) factory.getConnection();
 		} 
-		catch (ResourceException e) {
+		catch (jakarta.resource.ResourceException e) {
 			LOGGER.throwing(factory.getClass().getName(), "getConnection", e);
 		}
 	}
 	
-	/**
-	 * 
-	 */
 	@PreDestroy
 	public void preDestroy() {
 		try {
@@ -59,7 +39,7 @@ public class Engine extends Application {
 				connection.close();
 			}
 		} 
-		catch (ResourceException e) {
+		catch (javax.resource.ResourceException e) {
 			LOGGER.throwing(connection.getClass().getName(), "close", e);
 		}
 	}

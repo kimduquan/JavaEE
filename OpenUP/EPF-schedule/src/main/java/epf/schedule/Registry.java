@@ -6,10 +6,10 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.ws.rs.client.Client;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.client.Client;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
@@ -19,40 +19,21 @@ import epf.naming.Naming;
 import epf.util.MapUtil;
 import epf.util.logging.LogManager;
 
-/**
- * @author PC
- *
- */
 @ApplicationScoped
 @Readiness
 public class Registry implements HealthCheck  {
 	
-	/**
-	 *
-	 */
 	private transient static final Logger LOGGER = LogManager.getLogger(Registry.class.getName());
 	
-	/**
-	 * 
-	 */
 	private transient final Map<String, URI> remotes = new ConcurrentHashMap<>();
 	
-	/**
-	 *
-	 */
 	@Inject
 	transient ClientQueue clients;
 	
-	/**
-	 * 
-	 */
 	@ConfigProperty(name = Naming.Registry.REGISTRY_URL)
 	@Inject
 	String registryUrl;
 	
-	/**
-	 * 
-	 */
 	@PostConstruct
 	protected void postConstruct() {
 		initialize();
@@ -79,10 +60,6 @@ public class Registry implements HealthCheck  {
 		}
 	}
 	
-	/**
-	 * @param name
-	 * @return
-	 */
 	public Optional<URI> lookup(final String name) {
 		return MapUtil.get(remotes, name);
 	}
