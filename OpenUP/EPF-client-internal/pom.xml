@@ -17,7 +17,7 @@
 		</dependency>
 		<dependency>
 		    <groupId>jakarta.enterprise</groupId>
-		    <artifactId>cdi-api</artifactId>
+		    <artifactId>jakarta.enterprise.cdi-api</artifactId>
 		    <scope>provided</scope>
 		</dependency>
 		<dependency>

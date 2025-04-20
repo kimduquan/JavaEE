@@ -1,27 +1,19 @@
 package epf.config.client;
 
 import java.util.Map;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.DefaultValue;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.MediaType;
 import epf.client.util.Client;
 import epf.naming.Naming;
 
-/**
- * @author PC
- *
- */
 @Path(Naming.CONFIG)
 public interface Config {
     
-    /**
-     * @param name
-     * @return
-     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     Map<String, String> getProperties(
@@ -30,11 +22,6 @@ public interface Config {
     		final String name
     		);
     
-    /**
-     * @param client
-     * @param name
-     * @return
-     */
     static Map<String, String> getProperties(final Client client, final String name) {
     	return client.request(
     			target -> target, 

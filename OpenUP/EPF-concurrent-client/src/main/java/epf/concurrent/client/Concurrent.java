@@ -11,35 +11,17 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import epf.util.logging.LogManager;
 
-/**
- * 
- */
 @ApplicationScoped
 public class Concurrent {
 	
-	/**
-	 * 
-	 */
 	private transient static final Logger LOGGER = LogManager.getLogger(Concurrent.class.getName());
 	
-	/**
-	 * 
-	 */
 	private transient final Queue<Synchronized> internalSessions = new ConcurrentLinkedQueue<>();
 	
-	/**
-	 * 
-	 */
 	private transient Synchronized default_ = null;
 	
-	/**
-	 * 
-	 */
 	private URI serverEndpoint;
 	
-	/**
-	 * 
-	 */
 	@PreDestroy
 	protected void close() {
 		internalSessions.forEach(session -> {
@@ -94,18 +76,11 @@ public class Concurrent {
 		return synchronized_;
 	}
 	
-	/**
-	 * @param uri
-	 */
 	public void connectToServer(final URI uri) throws Exception {
 		this.serverEndpoint = uri;
 		default_ = newSynchronized();
 	}
 	
-	/**
-	 * @return
-	 * @throws Exception
-	 */
 	public Synchronized synchronized_() throws Exception {
 		return poll(sync -> !sync._synchronized(), () -> {
 			try {
@@ -119,11 +94,6 @@ public class Concurrent {
 		});
 	}
 	
-	/**
-	 * @param id
-	 * @return
-	 * @throws Exception
-	 */
 	public Synchronized synchronized_(final String id) throws Exception {
 		return poll(sync -> sync._synchronized(id), () -> {
 			try {

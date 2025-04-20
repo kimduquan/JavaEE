@@ -5,15 +5,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.cache.integration.CacheLoader;
 import javax.cache.integration.CacheLoaderException;
 
-/**
- * @param <K>
- * @param <V>
- */
 public class EmptyLoader<K, V> implements CacheLoader<K, V> {
 	
-	/**
-	 *
-	 */
 	private transient final Map<K, V> empty = new ConcurrentHashMap<>();
 
 	@Override

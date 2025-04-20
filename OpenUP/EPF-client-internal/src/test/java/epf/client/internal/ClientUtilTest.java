@@ -2,16 +2,12 @@ package epf.client.internal;
 
 import java.net.URI;
 import java.security.KeyStore;
-import javax.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.ClientBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-
-import epf.client.internal.ClientQueue;
-import epf.client.internal.ClientUtil;
-
-import javax.ws.rs.client.Client;
+import jakarta.ws.rs.client.Client;
 
 public class ClientUtilTest {
 	

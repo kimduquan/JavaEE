@@ -43,7 +43,7 @@ public class ClientUtil {
 	
 	public Client newClient(final URI url) {
 		Objects.requireNonNull(url, "URI");
-		final javax.ws.rs.client.Client rsClient = clients.poll(url, this::buildClient);
+		final jakarta.ws.rs.client.Client rsClient = clients.poll(url, this::buildClient);
 		return new Client(rsClient, url, clients::add);
 	}
 }

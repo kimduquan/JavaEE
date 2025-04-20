@@ -2,14 +2,8 @@ package epf.mail.client;
 
 import java.util.List;
 
-/**
- * 
- */
 public class MessageBodyPart extends MessagePart {
 
-	/**
-	 *
-	 */
 	private List<AttachFile> attachFiles;
 
 	public List<AttachFile> getAttachFiles() {

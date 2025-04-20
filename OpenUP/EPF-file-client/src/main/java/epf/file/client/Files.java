@@ -3,41 +3,29 @@ package epf.file.client;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.MatrixParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.PathSegment;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.StreamingOutput;
-import javax.ws.rs.core.UriInfo;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.MatrixParam;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.PathSegment;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
+import jakarta.ws.rs.core.StreamingOutput;
+import jakarta.ws.rs.core.UriInfo;
 import epf.client.util.Client;
 import epf.naming.Naming;
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
 
-/**
- *
- * @author FOXCONN
- */
 @Path(Naming.FILE)
 public interface Files {
 	
-	/**
-	 * @param paths
-	 * @param uriInfo
-	 * @param input
-	 * @param security
-	 * @return
-	 * @throws Exception
-	 */
 	@POST
 	@Path("{paths: .+}")
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
@@ -54,12 +42,6 @@ public interface Files {
 			final SecurityContext security
 			) throws Exception;
 	
-	/**
-	 * @param client
-	 * @param input
-	 * @param paths
-	 * @return
-	 */
 	static Response createFile(final Client client, final InputStream input, final java.nio.file.Path paths) {
 		return client
 				.request(
@@ -74,13 +56,6 @@ public interface Files {
 				.post(Entity.entity(input, MediaType.APPLICATION_OCTET_STREAM_TYPE));
 	}
 	
-    /**
-     * @param uriInfo
-     * @param paths
-     * @param security
-     * @return
-     * @throws Exception
-     */
     @GET
     @Path("{paths: .+}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
@@ -96,11 +71,6 @@ public interface Files {
 			final SecurityContext security
     		) throws Exception;
     
-    /**
-     * @param client
-     * @param paths
-     * @return
-     */
     static InputStream read(final Client client, final java.nio.file.Path paths) {
     	return client
     			.request(
@@ -116,13 +86,6 @@ public interface Files {
     			.get(InputStream.class);
     }
     
-    /**
-     * @param uriInfo
-     * @param paths
-     * @param security
-     * @return
-     * @throws Exception
-     */
     @DELETE
     @Path("{paths: .+}")
     Response delete(
@@ -136,11 +99,6 @@ public interface Files {
     		@Context
 			final SecurityContext security) throws Exception;
     
-    /**
-     * @param client
-     * @param paths
-     * @return
-     */
     static Response delete(final Client client, final java.nio.file.Path paths) {
     	return client
     			.request(

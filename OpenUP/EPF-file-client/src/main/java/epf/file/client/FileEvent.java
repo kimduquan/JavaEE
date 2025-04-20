@@ -3,50 +3,22 @@ package epf.file.client;
 import java.io.Serializable;
 import java.nio.file.Path;
 
-/**
- * @author PC
- *
- */
 public class FileEvent implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
-	/**
-	 * 
-	 */
 	private String source;
 	
-	/**
-	 * 
-	 */
 	private String context;
 	
-	/**
-	 * 
-	 */
 	private int count;
 	
-	/**
-	 * 
-	 */
 	private EventKind kind;
 	
-	/**
-	 * 
-	 */
 	public FileEvent() {
 		
 	}
 
-	/**
-	 * @param path
-	 * @param context
-	 * @param count
-	 * @param kind
-	 */
 	public FileEvent(final Path path, final Object context, final int count, final EventKind kind) {
 		this.source = path.toString();
 		this.context = String.valueOf(context);

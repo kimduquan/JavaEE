@@ -2,42 +2,20 @@ package epf.mail.client;
 
 import java.util.Map;
 
-/**
- * 
- */
 public class Message extends MessagePart {
 	
-	/**
-	 *
-	 */
 	public static final String TO = "To";
 	
-	/**
-	 *
-	 */
 	public static final String CC = "Cc";
 	
-	/**
-	 *
-	 */
 	public static final String BCC = "Bcc";
-	/**
-	 *
-	 */
+	
 	private String from;
-	/**
-	 *
-	 */
+	
 	private String subject;
 	
-	/**
-	 *
-	 */
 	private Map<String, String> recipients;
 	
-	/**
-	 *
-	 */
 	private MessageMultipart content;
 
 	public String getFrom() {
