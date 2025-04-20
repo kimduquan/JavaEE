@@ -19,18 +19,9 @@ import jakarta.ws.rs.core.SecurityContext;
 import epf.client.util.Client;
 import epf.naming.Naming;
 
-/**
- * 
- */
 @Path(Naming.SECURITY)
 public interface Management {
 	
-    /**
-     * @param email
-     * @param password
-     * @return
-     * @throws Exception
-     */
     @Path(Naming.Security.CREDENTIAL)
     @POST
     @Produces(MediaType.TEXT_PLAIN)
@@ -53,13 +44,6 @@ public interface Management {
             final List<String> forwardedHost
     		) throws Exception;
     
-    /**
-     * @param client
-     * @param email
-     * @param password
-     * @return
-     * @throws Exception
-     */
     static Response createCredential(final Client client, final String email, final String password, final String firstName, final String lastName) throws Exception {
     	return client.request(
     			target -> target.path(Naming.Security.CREDENTIAL), 
@@ -74,22 +58,12 @@ public interface Management {
     					);
     }
     
-    /**
-     * @param context
-     * @return
-     * @throws Exception
-     */
     @Path(Naming.Security.CREDENTIAL)
     @PUT
     Response activeCredential(
     		@Context 
     		final SecurityContext context) throws Exception;
     
-    /**
-     * @param client
-     * @return
-     * @throws Exception
-     */
     static Response activeCredential(final Client client) throws Exception {
     	return client.request(
     			target -> target.path(Naming.Security.CREDENTIAL), 
@@ -98,10 +72,6 @@ public interface Management {
     			.put(null);
     }
 
-    /**
-     * @param email
-     * @return
-     */
     @Path(Naming.Security.Credential.PASSWORD)
     @POST
     @Produces(MediaType.TEXT_PLAIN)
@@ -113,11 +83,6 @@ public interface Management {
     		@HeaderParam(Naming.Gateway.Headers.X_FORWARDED_HOST)
             final List<String> forwardedHost) throws Exception;
     
-    /**
-     * @param client
-     * @param email
-     * @return
-     */
     static Response resetPassword(final Client client, final String email) {
     	return client
     			.request(
@@ -127,12 +92,6 @@ public interface Management {
     			.post(Entity.form(new Form().param(Naming.Security.Claims.EMAIL, email)));
     }
     
-    /**
-     * @param password
-     * @param context
-     * @return
-     * @throws Exception
-     */
     @Path(Naming.Security.Credential.PASSWORD)
     @PUT
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -142,11 +101,6 @@ public interface Management {
     		@Context 
     		final SecurityContext context) throws Exception;
     
-    /**
-     * @param client
-     * @param password
-     * @return
-     */
     static Response setPassword(final Client client, final String password) {
     	return client
     			.request(

@@ -18,20 +18,9 @@ import jakarta.ws.rs.core.MediaType;
 import epf.client.util.Client;
 import epf.naming.Naming;
 
-/**
- * @author PC
- *
- */
 @Path(Naming.SECURITY)
 public interface OTPSecurity {
 
-    /**
-     * @param username
-     * @param passwordHash
-     * @param url
-     * @return
-     * @throws Exception 
-     */
     @POST
     @Path("otp")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -47,13 +36,6 @@ public interface OTPSecurity {
             final String tenant
     ) throws Exception;
     
-    /**
-     * @param client
-     * @param username
-     * @param passwordHash
-     * @param url
-     * @return
-     */
     static String loginOneTime(
     		final Client client,
     		final String username, 
@@ -68,10 +50,6 @@ public interface OTPSecurity {
     			.post(Entity.form(form), String.class);
     }
     
-    /**
-     * @param oneTimePassword
-     * @return
-     */
     @PUT
     @Path("otp")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -89,11 +67,6 @@ public interface OTPSecurity {
             final String tenant
     );
     
-    /**
-     * @param client
-     * @param oneTimePassword
-     * @return
-     */
     static String authenticateOneTime(
     		final Client client,
     		final String oneTimePassword,
