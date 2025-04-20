@@ -2,22 +2,12 @@ package epf.query.client;
 
 import java.util.Map;
 
-/**
- * 
- */
 public class EntityId {
 
-	/**
-	 *
-	 */
 	private String schema;
-	/**
-	 *
-	 */
+	
 	private String name;
-	/**
-	 *
-	 */
+	
 	private Map<String, Object> attributes;
 	
 	public String getSchema() {

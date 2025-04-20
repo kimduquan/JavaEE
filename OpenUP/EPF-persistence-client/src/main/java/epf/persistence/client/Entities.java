@@ -1,38 +1,27 @@
 package epf.persistence.client;
 
 import java.io.InputStream;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.MatrixParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.MatrixParam;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import epf.client.util.Client;
 import epf.naming.Naming;
 
-/**
- *
- * @author FOXCONN
- */
 @Path(Naming.PERSISTENCE)
 public interface Entities {
     
-    /**
-     * @param schema
-     * @param entity
-     * @param body
-     * @return
-     * @throws Exception 
-     */
     @POST
     @Path("{schema}/{entity}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -52,13 +41,6 @@ public interface Entities {
             final InputStream body
             ) throws Exception;
     
-    /**
-     * @param client
-     * @param cls
-     * @param schema
-     * @param entity
-     * @param body
-     */
     static <T> T persist(
     		final Client client,
     		final Class<T> cls,
@@ -73,12 +55,6 @@ public interface Entities {
     			.post(Entity.json(body), cls);
     }
     
-    /**
-     * @param client
-     * @param schema
-     * @param entity
-     * @param body
-     */
     static Response persist(
     		final Client client,
     		final String schema,
@@ -92,13 +68,6 @@ public interface Entities {
     			.post(Entity.entity(body, MediaType.APPLICATION_JSON));
     }
     
-    /**
-     * @param schema
-     * @param entity
-     * @param entityId
-     * @param body
-     * @throws Exception 
-     */
     @PUT
     @Path("{schema}/{entity}/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -120,13 +89,6 @@ public interface Entities {
             final InputStream body
             ) throws Exception;
     
-    /**
-     * @param client
-     * @param schema
-     * @param entity
-     * @param entityId
-     * @param body
-     */
     static void merge(
     		final Client client,
     		final String schema,
@@ -141,13 +103,6 @@ public interface Entities {
     	.put(Entity.json(body));
     }
     
-    /**
-     * @param client
-     * @param schema
-     * @param entity
-     * @param entityId
-     * @param body
-     */
     static void merge(
     		final Client client,
     		final String schema,
@@ -162,11 +117,6 @@ public interface Entities {
     	.put(Entity.entity(body, MediaType.APPLICATION_JSON_TYPE));
     }
     
-    /**
-     * @param schema
-     * @param entity
-     * @param entityId
-     */
     @DELETE
     @Path("{schema}/{entity}/{id}")
     Response remove(
@@ -185,12 +135,6 @@ public interface Entities {
             final HttpHeaders headers
             ) throws Exception;
     
-    /**
-     * @param client
-     * @param schema
-     * @param entity
-     * @param entityId
-     */
     static void remove(
     		final Client client,
     		final String schema,

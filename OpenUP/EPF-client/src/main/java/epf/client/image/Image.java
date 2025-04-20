@@ -1,38 +1,25 @@
 package epf.client.image;
 
 import java.io.InputStream;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import epf.client.util.Client;
 import epf.naming.Naming;
 
-/**
- * @author PC
- *
- */
 @Path(Naming.IMAGE)
 public interface Image {
 	
-	/**
-	 * @param input
-	 * @return
-	 */
 	@Path("contours")
 	@POST
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
 	@Produces(MediaType.APPLICATION_JSON)
 	Response findContours(final InputStream input) throws Exception;
 	
-	/**
-	 * @param client
-	 * @param input
-	 * @return
-	 */
 	static Response findContours(final Client client, final InputStream input) {
 		return client.request(
 				target -> target.path("contours"), 
