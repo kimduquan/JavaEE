@@ -22,39 +22,18 @@ import epf.schema.utility.Request;
 import epf.util.json.ext.JsonUtil;
 import epf.util.logging.LogManager;
 
-/**
- * 
- */
 @ApplicationScoped
 @Readiness
 public class QueryPersistence implements HealthCheck {
 	
-	/**
-	 *
-	 */
 	private transient static final Logger LOGGER = LogManager.getLogger(QueryPersistence.class.getName());
 	
-	/**
-	 *
-	 */
 	@PersistenceContext(unitName = epf.query.Naming.QUERY_UNIT_NAME)
 	transient EntityManager entityManager;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	Request request;
 	
-	/**
-	 * @param paths
-	 * @param firstResult
-	 * @param maxResults
-	 * @param context
-	 * @param sort
-	 * @return
-	 * @throws Exception
-	 */
 	public List<?> executeQuery(
 			final List<PathSegment> paths, 
 			final Integer firstResult, 
@@ -83,12 +62,6 @@ public class QueryPersistence implements HealthCheck {
     	return executeQuery(entityManager, criteria, firstResult, maxResults);
 	}
 	
-	/**
-	 * @param paths
-	 * @param context
-	 * @return
-	 * @throws Exception
-	 */
 	public Object executeCountQuery(
 			final List<PathSegment> paths,
 			final SecurityContext context) throws Exception {
@@ -115,14 +88,6 @@ public class QueryPersistence implements HealthCheck {
     	return query.getSingleResult();
 	}
 	
-	/**
-	 * @param manager
-	 * @param criteria
-	 * @param firstResult
-	 * @param maxResults
-	 * @return
-	 * @throws Exception 
-	 */
 	private List<?> executeQuery(
     		final EntityManager manager, 
     		final CriteriaQuery<Object> criteria,

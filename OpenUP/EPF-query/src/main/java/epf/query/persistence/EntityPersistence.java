@@ -20,41 +20,22 @@ import epf.schema.utility.PostUpdate;
 import epf.schema.utility.Request;
 import epf.util.logging.LogManager;
 
-/**
- * @author PC
- *
- */
 @ApplicationScoped
 @Readiness
 public class EntityPersistence implements HealthCheck {
 	
-	/**
-	 *
-	 */
 	private transient static final Logger LOGGER = LogManager.getLogger(EntityPersistence.class.getName());
 	
-	/**
-	 *
-	 */
 	@PersistenceContext(unitName = epf.query.Naming.QUERY_UNIT_NAME)
 	transient EntityManager entityManager;
 	
-	/**
-	 * 
-	 */
 	@Inject @Readiness
 	transient SchemaCache schemaCache;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	Request request;
 	
 	
-	/**
-	 * @param event
-	 */
 	@Transactional
 	@ActivateRequestContext
 	public void accept(final EntityEvent event) {

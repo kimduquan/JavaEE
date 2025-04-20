@@ -16,28 +16,15 @@ import epf.query.internal.QueryKey;
 import epf.query.internal.SchemaCache;
 import epf.schema.utility.Request;
 
-/**
- * @author PC
- *
- */
 @Dependent
 public class QueryLoader implements Loader<String, Integer> {
 	
-	/**
-	 *
-	 */
 	@PersistenceContext(unitName = epf.query.Naming.QUERY_UNIT_NAME)
 	transient EntityManager manager;
 
-	/**
-	 *
-	 */
 	@Inject @Readiness
 	transient SchemaCache schemaCache;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	Request request;
 
@@ -62,10 +49,6 @@ public class QueryLoader implements Loader<String, Integer> {
 		return null;
 	}
 	
-	/**
-	 * @param event
-	 * @throws Exception
-	 */
 	@ActivateRequestContext
 	public void loadAll(@Observes final QueryLoad event) throws Exception {
 		request.setTenant(event.getTenant());

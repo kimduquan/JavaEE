@@ -33,51 +33,25 @@ import epf.query.util.LinkUtil;
 import epf.schema.utility.Request;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
-/**
- * @author PC
- *
- */
 @ApplicationScoped
 @Path(Naming.QUERY)
 public class Query {
 
-	/**
-	 * 
-	 */
 	@Inject @Readiness
 	transient EntityCache entityCache;
 	
-	/**
-	 * 
-	 */
 	@Inject @Readiness
 	transient QueryCache queryCache;
 	
-	/**
-	 * 
-	 */
 	@Inject @Readiness
 	transient QueryPersistence persistence;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient Search search;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	Request request;
 	
-	/**
-	 * @param tenant
-	 * @param schema
-	 * @param entity
-	 * @param entityId
-	 * @return
-	 */
 	@GET
     @Path(Naming.Query.Client.ENTITY_PATH)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -104,12 +78,6 @@ public class Query {
 		return Response.ok(entity.orElseThrow(NotFoundException::new)).build();
 	}
 
-	/**
-	 * @param tenant
-	 * @param schema
-	 * @param entity
-	 * @return
-	 */
 	@HEAD
 	@Path("entity/{schema}/{entity}")
 	@RunOnVirtualThread
@@ -134,17 +102,6 @@ public class Query {
 		throw new NotFoundException();
 	}
 
-	/**
-	 * @param tenant
-	 * @param schema
-	 * @param paths
-	 * @param firstResult
-	 * @param maxResults
-	 * @param context
-	 * @param sort
-	 * @return
-	 * @throws Exception
-	 */
 	@GET
     @Path("query/{schema}/{criteria: .+}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -175,14 +132,6 @@ public class Query {
 		throw new NotFoundException();
 	}
 
-	/**
-	 * @param tenant
-	 * @param schema
-	 * @param paths
-	 * @param context
-	 * @return
-	 * @throws Exception
-	 */
 	@HEAD
     @Path("query/{schema}/{criteria: .+}")
 	@RunOnVirtualThread
@@ -206,11 +155,6 @@ public class Query {
 		throw new NotFoundException();
 	}
 
-	/**
-	 * @param tenant
-	 * @param entityIds
-	 * @return
-	 */
 	@PATCH
     @Path(Naming.Query.Client.ENTITY)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -227,9 +171,6 @@ public class Query {
 		return response.build();
 	}
 	
-	/**
-	 * @return
-	 */
 	@Path(Naming.Query.SEARCH)
 	public Search getSearch() {
 		return search;

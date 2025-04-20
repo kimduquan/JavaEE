@@ -7,17 +7,10 @@ import epf.schema.utility.TenantUtil;
 import io.quarkus.hibernate.orm.PersistenceUnitExtension;
 import io.quarkus.hibernate.orm.runtime.tenant.TenantResolver;
 
-/**
- * @author PC
- *
- */
 @PersistenceUnitExtension(epf.query.Naming.QUERY_UNIT_NAME)
 @ApplicationScoped
 public class EPFTenantResolver implements TenantResolver {
 	
-	/**
-	 * 
-	 */
 	@Inject
     Request request;
 

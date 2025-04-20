@@ -18,51 +18,26 @@ import epf.schema.utility.EntityEvent;
 import epf.schema.utility.Request;
 import epf.util.logging.LogManager;
 
-/**
- * @author PC
- *
- */
 @ApplicationScoped
 @Readiness
 public class QueryCache implements HealthCheck {
 	
-	/**
-	 * 
-	 */
 	private transient static final Logger LOGGER = LogManager.getLogger(QueryCache.class.getName());
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient CachingManager manager;
 	
-	/**
-	 * 
-	 */
 	@Inject  @Readiness
 	transient SchemaCache schemaCache;
 	
-	/**
-	 *
-	 */
 	@Inject
 	transient Event<QueryLoad> event;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	Request request;
 	
-	/**
-	 * 
-	 */
 	private transient Cache<String, Integer> queryCache;
 	
-	/**
-	 * 
-	 */
 	@PostConstruct
 	protected void postConstruct() {
 		try {
@@ -78,9 +53,6 @@ public class QueryCache implements HealthCheck {
 		queryCache.close();
 	}
 
-	/**
-	 * @param event
-	 */
 	public void accept(final EntityEvent event) {
 		final Optional<QueryKey> queryKey = schemaCache.getQueryKey(event.getEntity().getClass());
 		if(queryKey.isPresent()) {
@@ -89,10 +61,6 @@ public class QueryCache implements HealthCheck {
 		}
 	}
 	
-	/**
-	 * @param entity
-	 * @return
-	 */
 	public Optional<Integer> countEntity(
             final String entity
             ) {

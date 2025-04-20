@@ -15,34 +15,18 @@ import epf.schema.utility.EntityEvent;
 import epf.util.logging.LogManager;
 import io.smallrye.reactive.messaging.annotations.Blocking;
 
-/**
- * @author PC
- *
- */
 @ApplicationScoped
 @Readiness
 public class Listener implements HealthCheck {
 	
-	/**
-	 * 
-	 */
 	private transient static final Logger LOGGER = LogManager.getLogger(Listener.class.getName());
 	
-	/**
-	 * 
-	 */
 	@Inject @Readiness
 	transient EntityCache entityCache;
 	
-	/**
-	 * 
-	 */
 	@Inject @Readiness
 	transient QueryCache queryCache;
 	
-	/**
-	 * 
-	 */
 	@Inject @Readiness
 	transient EntityPersistence persistence;
 
@@ -51,9 +35,6 @@ public class Listener implements HealthCheck {
 		return HealthCheckResponse.up("EPF-query-listener");
 	}
 	
-	/**
-	 * @param event
-	 */
 	@Incoming(Naming.Persistence.PERSISTENCE_ENTITY_LISTENERS)
 	@Blocking
 	public void postEvent(final EntityEvent event) {

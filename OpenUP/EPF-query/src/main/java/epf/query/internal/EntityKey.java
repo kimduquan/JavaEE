@@ -3,30 +3,14 @@ package epf.query.internal;
 import java.util.Optional;
 import epf.util.StringUtil;
 
-/**
- * @author PC
- *
- */
 public class EntityKey {
 
-	/**
-	 * 
-	 */
 	private final String schema;
-	/**
-	 * 
-	 */
+	
 	private final String entity;
-	/**
-	 * 
-	 */
+	
 	private final Object id;
 	
-	/**
-	 * @param schema
-	 * @param entity
-	 * @param id
-	 */
 	protected EntityKey(final String schema, final String entity, final Object id) {
 		this.schema = schema;
 		this.entity = entity;
@@ -38,10 +22,6 @@ public class EntityKey {
 		return StringUtil.join(schema, entity, String.valueOf(id));
 	}
 	
-	/**
-	 * @param key
-	 * @return
-	 */
 	public static Optional<EntityKey> parseString(final String key) {
 		final String[] fragments = StringUtil.split(key);
 		if(fragments.length >= 3) {
