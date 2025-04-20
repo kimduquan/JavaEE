@@ -40,7 +40,7 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>epf</groupId>
+            <groupId>openup</groupId>
             <artifactId>EPF-persistence-schema</artifactId>
             <version>${project.version}</version>
         </dependency>
