@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import epf.persistence.schema.Attribute;
 import epf.persistence.schema.AttributeType;
 import epf.persistence.schema.Entity;
-import epf.util.json.JsonUtil;
+import epf.util.json.ext.JsonUtil;
 import epf.webapp.internal.GatewayUtil;
 import epf.webapp.internal.Session;
 import epf.webapp.naming.Naming;

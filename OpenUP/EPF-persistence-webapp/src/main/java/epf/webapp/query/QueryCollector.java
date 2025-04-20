@@ -22,7 +22,7 @@ import epf.naming.Naming;
 import epf.persistence.schema.Entity;
 import epf.query.client.Query;
 import epf.query.client.QueryUtil;
-import epf.util.json.JsonUtil;
+import epf.util.json.ext.JsonUtil;
 import epf.util.logging.LogManager;
 import epf.webapp.internal.GatewayUtil;
 

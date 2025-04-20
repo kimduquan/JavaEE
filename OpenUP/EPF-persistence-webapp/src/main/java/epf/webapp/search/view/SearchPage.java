@@ -8,7 +8,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.json.JsonValue;
 import jakarta.servlet.http.HttpServletRequest;
-import epf.util.json.JsonUtil;
+import epf.util.json.ext.JsonUtil;
 import epf.webapp.internal.GatewayUtil;
 import epf.webapp.internal.Session;
 import epf.webapp.naming.Naming;
