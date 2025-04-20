@@ -1,69 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>openup</groupId>
-        <artifactId>OpenUP-parent</artifactId>
-        <version>1.0.0</version>
+       <groupId>epf</groupId>
+       <artifactId>EPF-webapp-parent</artifactId>
+       <version>1.0.0</version>
+       <relativePath>../EPF-webapp-parent/pom.xml</relativePath>
     </parent>
     <artifactId>EPF-persistence-webapp</artifactId>
-    <name>Eclipse Process Framework Persistence Web Application</name>
     <packaging>war</packaging>
+    <name>Eclipse Process Framework Persistence Web Application</name>
+    
     <dependencies>
     	<dependency>
-		    <groupId>javax.enterprise</groupId>
-		    <artifactId>cdi-api</artifactId>
+		    <groupId>org.eclipse.microprofile.config</groupId>
+		    <artifactId>microprofile-config-api</artifactId>
 		    <scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>javax.security.enterprise</groupId>
-			<artifactId>javax.security.enterprise-api</artifactId>
-		    <scope>provided</scope>
-		</dependency>
-		<dependency>
-		    <groupId>javax.annotation</groupId>
-		    <artifactId>javax.annotation-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.ws.rs</groupId>
-			<artifactId>javax.ws.rs-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-		    <groupId>javax.servlet</groupId>
-		    <artifactId>javax.servlet-api</artifactId>
-		    <scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.json</groupId>
-			<artifactId>javax.json-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		
-		<dependency>
-		    <groupId>org.eclipse.microprofile.jwt</groupId>
-		    <artifactId>microprofile-jwt-auth-api</artifactId>
-		</dependency>
-		<dependency>
-		    <groupId>org.eclipse.microprofile.health</groupId>
-		    <artifactId>microprofile-health-api</artifactId>
-		</dependency>
-		<dependency>
-		    <groupId>org.eclipse.microprofile.context-propagation</groupId>
-		    <artifactId>microprofile-context-propagation-api</artifactId>
-		</dependency>
-		<dependency>
-		    <groupId>org.eclipse.microprofile.graphql</groupId>
-		    <artifactId>microprofile-graphql-api</artifactId>
-		</dependency>
-		<dependency>
-		    <groupId>org.eclipse.microprofile.openapi</groupId>
-		    <artifactId>microprofile-openapi-api</artifactId>
-		</dependency>
-		
-		<!-- https://mvnrepository.com/artifact/org.primefaces/primefaces -->
-		<dependency>
+	        <groupId>org.eclipse.microprofile.rest.client</groupId>
+	        <artifactId>microprofile-rest-client-api</artifactId>
+	        <scope>provided</scope>
+	    </dependency>
+	    
+	    <dependency>
 		    <groupId>org.primefaces</groupId>
 		    <artifactId>primefaces</artifactId>
 		</dependency>
@@ -79,7 +40,7 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>openup</groupId>
+            <groupId>epf</groupId>
             <artifactId>EPF-persistence-schema</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -110,7 +71,7 @@
         </dependency>
         <dependency>
             <groupId>openup</groupId>
-            <artifactId>EPF-json-utility</artifactId>
+            <artifactId>EPF-json-utility-ex</artifactId>
             <version>${project.version}</version>
         </dependency>
 	    <dependency>
@@ -129,12 +90,4 @@
             <version>${project.version}</version>
         </dependency>
     </dependencies>
-    <build>
-    	<plugins>
-			<plugin>
-	        	<groupId>org.wildfly.plugins</groupId>
-			    <artifactId>wildfly-maven-plugin</artifactId>
-	        </plugin>
-    	</plugins>
-    </build>
 </project>

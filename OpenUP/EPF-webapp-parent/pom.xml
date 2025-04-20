@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>epf</groupId>
     <artifactId>EPF-webapp-parent</artifactId>
-    <version>0.0.1</version>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
     <name>Eclipse Process Framework Web Application Parent</name>
     <properties>
@@ -111,6 +111,12 @@
             <artifactId>jakarta.jakartaee-web-api</artifactId>
             <scope>provided</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.primefaces/primefaces -->
+		<dependency>
+		    <groupId>org.primefaces</groupId>
+		    <artifactId>primefaces</artifactId>
+		    <version>15.0.3</version>
+		</dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -228,4 +234,8 @@
             </build>
         </profile>
     </profiles>
+	
+	<modules>
+		
+	</modules>
 </project>

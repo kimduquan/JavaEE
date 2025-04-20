@@ -5,12 +5,12 @@
     <parent>
        <groupId>epf</groupId>
        <artifactId>EPF-webapp-parent</artifactId>
-       <version>0.0.1</version>
+       <version>1.0.0</version>
        <relativePath>../EPF-webapp-parent/pom.xml</relativePath>
     </parent>
     <artifactId>EPF-webapp-v2</artifactId>
     <packaging>war</packaging>
-    <name>EPF-webapp-v2</name>
+    <name>Eclipse Process Framework Web Application</name>
     
     <dependencies>
     	<dependency>
