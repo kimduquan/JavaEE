@@ -1,9 +1,5 @@
 package epf.security.auth.core;
 
-/**
- * @author PC
- *
- */
 public enum StandardClaims {
 	sub,
 	name,

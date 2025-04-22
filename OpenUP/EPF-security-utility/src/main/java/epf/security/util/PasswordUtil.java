@@ -3,19 +3,8 @@ package epf.security.util;
 import java.security.MessageDigest;
 import java.util.Arrays;
 
-/**
- * @author PC
- *
- */
 public interface PasswordUtil {
 
-	/**
-	 * @param data
-	 * @param nullData
-	 * @param algorithm
-	 * @return
-	 * @throws Exception
-	 */
 	static byte[] getHash(final byte[] data, final boolean nullData, final String algorithm) throws Exception {
 		final byte[] result = MessageDigest.getInstance(algorithm).digest(data);
         if (nullData) {
@@ -24,13 +13,6 @@ public interface PasswordUtil {
         return result;
 	}
 	
-	/**
-	 * @param userName
-	 * @param password
-	 * @param algorithm
-	 * @return
-	 * @throws Exception
-	 */
 	static byte[] getPasswordHash(final String userName, final char[] password, final String algorithm) throws Exception {
         final String user = userName + "@";
         final byte[] buff = new byte[2 * (user.length() + password.length)];

@@ -13,6 +13,6 @@ import epf.naming.Naming;
 @LoginConfig(authMethod = "MP-JWT", realmName = Naming.EPF)
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class Application extends javax.ws.rs.core.Application {
+public class Application extends jakarta.ws.rs.core.Application {
 	
 }

@@ -1,30 +1,15 @@
 package epf.security.auth.core;
 
-/**
- * @author PC
- *
- */
 public class ImplicitAuthResponse {
 
-	/**
-	 * 
-	 */
 	private String access_token;
-	/**
-	 * 
-	 */
+	
 	private String token_type;
-	/**
-	 * 
-	 */
+	
 	private String id_token;
-	/**
-	 * 
-	 */
+	
 	private String state;
-	/**
-	 * 
-	 */
+	
 	private Long expires_in;
 	
 	public String getAccess_token() {

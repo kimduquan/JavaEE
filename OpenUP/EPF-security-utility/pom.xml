@@ -10,10 +10,9 @@
     <name>Eclipse Process Framework Security Utility</name>
     <packaging>jar</packaging>
     <dependencies>
-    	<!-- https://mvnrepository.com/artifact/javax.security.enterprise/javax.security.enterprise-api -->
-		<dependency>
-		    <groupId>javax.security.enterprise</groupId>
-		    <artifactId>javax.security.enterprise-api</artifactId>
+    	<dependency>
+		    <groupId>jakarta.security.enterprise</groupId>
+		    <artifactId>jakarta.security.enterprise-api</artifactId>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.eclipse.persistence/org.eclipse.persistence.core -->
 		<dependency>

@@ -1,31 +1,15 @@
 package epf.security.auth.core;
 
-/**
- * @author PC
- *
- */
 public class AuthError extends Exception {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 */
 	private String error;
-	/**
-	 * 
-	 */
+	
 	private String error_description;
-	/**
-	 * 
-	 */
+	
 	private String error_uri;
-	/**
-	 * 
-	 */
+	
 	private String state;
 	
 	public String getError() {

@@ -1,34 +1,17 @@
 package epf.security.auth.core;
 
-/**
- * @author PC
- *
- */
 public class AddressClaim {
 
-	/**
-	 * 
-	 */
 	private String formatted;
-	/**
-	 * 
-	 */
+	
 	private String street_address;
-	/**
-	 * 
-	 */
+	
 	private String locality;
-	/**
-	 * 
-	 */
+	
 	private String region;
-	/**
-	 * 
-	 */
+	
 	private String postal_code;
-	/**
-	 * 
-	 */
+	
 	private String country;
 	
 	public String getFormatted() {

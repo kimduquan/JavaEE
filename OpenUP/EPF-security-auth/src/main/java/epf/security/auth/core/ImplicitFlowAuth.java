@@ -4,35 +4,19 @@ import java.net.URI;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.core.MediaType;
 import epf.security.auth.discovery.ProviderMetadata;
 import epf.util.StringUtil;
 import epf.util.logging.LogManager;
 
-/**
- * @author PC
- *
- */
 public interface ImplicitFlowAuth {
 	
-	/**
-	 * 
-	 */
 	Logger LOGGER = LogManager.getLogger(ImplicitFlowAuth.class.getName());
 	
-	/**
-	 * 
-	 */
 	String DEFAULT_PROFILE = "profile";
 	
-	/**
-	 * @param builder
-	 * @param discoveryUrl
-	 * @return
-	 * @throws Exception
-	 */
 	default ProviderMetadata getProviderConfig(final ClientBuilder builder, final URI discoveryUrl) throws Exception {
 		final Client client = builder.build();
 		final ProviderMetadata metadata = client.target(discoveryUrl).request(MediaType.APPLICATION_JSON).get(ProviderMetadata.class);
@@ -40,12 +24,6 @@ public interface ImplicitFlowAuth {
 		return metadata;
 	}
 	
-	/**
-	 * @param metadata
-	 * @param authRequest
-	 * @return
-	 * @throws Exception
-	 */
 	default String getAuthorizeUrl(final ProviderMetadata metadata, final ImplicitAuthRequest authRequest, final String profile) throws Exception {
 		authRequest.setResponse_type("id_token token");
 		authRequest.setScope("openid email " + profile != null ? profile : DEFAULT_PROFILE);
@@ -89,9 +67,5 @@ public interface ImplicitFlowAuth {
 		return authRequestUrl.toString();
 	}
 	
-	/**
-	 * @param implicitAuthResponse
-	 * @return
-	 */
 	boolean validate(final ImplicitAuthResponse implicitAuthResponse);
 }

@@ -4,33 +4,20 @@ import java.net.URI;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import epf.security.auth.discovery.ProviderMetadata;
 import epf.util.StringUtil;
 import epf.util.logging.LogManager;
 
-/**
- * @author PC
- *
- */
 public interface CodeFlowAuth {
 	
-	/**
-	 * 
-	 */
 	Logger LOGGER = LogManager.getLogger(CodeFlowAuth.class.getName());
 	
-	/**
-	 * @param builder
-	 * @param discoveryUrl
-	 * @return
-	 * @throws Exception
-	 */
 	default ProviderMetadata getProviderConfig(final ClientBuilder builder, final URI discoveryUrl) throws Exception {
 		final Client client = builder.build();
 		final ProviderMetadata metadata = client.target(discoveryUrl).request(MediaType.APPLICATION_JSON).get(ProviderMetadata.class);
@@ -38,11 +25,6 @@ public interface CodeFlowAuth {
 		return metadata;
 	}
 	
-	/**
-	 * @param authRequest
-	 * @return
-	 * @throws Exception 
-	 */
 	default String getAuthorizeUrl(final ProviderMetadata metadata, final AuthRequest authRequest) throws Exception {
 		authRequest.setResponse_type("code");
 		authRequest.setScope("openid email profile");
@@ -91,19 +73,8 @@ public interface CodeFlowAuth {
 		return authRequestUrl.toString();
 	}
 	
-	/**
-	 * @param authResponse
-	 * @return
-	 */
 	boolean validate(final AuthResponse authResponse);
 	
-	/**
-	 * @param builder
-	 * @param metadata
-	 * @param tokenRequest
-	 * @return
-	 * @throws TokenErrorResponse
-	 */
 	default TokenResponse requestToken(final ClientBuilder builder, final ProviderMetadata metadata, final TokenRequest tokenRequest) throws TokenErrorResponse {
 		final Client client = builder.build();
 		try(Response response = client
@@ -124,9 +95,5 @@ public interface CodeFlowAuth {
 		}
 	}
 	
-	/**
-	 * @param tokenResponse
-	 * @return
-	 */
 	boolean validate(final TokenResponse tokenResponse);
 }

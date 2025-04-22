@@ -1,50 +1,25 @@
 package epf.security.auth.core;
 
-/**
- * @author PC
- *
- */
 public class IDToken {
 
-	/**
-	 * 
-	 */
 	private String iss;
-	/**
-	 * 
-	 */
+	
 	private String sub;
-	/**
-	 * 
-	 */
+	
 	private String[] aud;
-	/**
-	 * 
-	 */
+	
 	private Long exp;
-	/**
-	 * 
-	 */
+	
 	private Long iat;
-	/**
-	 * 
-	 */
+	
 	private Long auth_time;
-	/**
-	 * 
-	 */
+	
 	private String nonce;
-	/**
-	 * 
-	 */
+	
 	private String acr;
-	/**
-	 * 
-	 */
+	
 	private String[] amr;
-	/**
-	 * 
-	 */
+	
 	private String azp;
 	
 	public String getIss() {

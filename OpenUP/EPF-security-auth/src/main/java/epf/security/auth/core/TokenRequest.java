@@ -1,30 +1,15 @@
 package epf.security.auth.core;
 
-/**
- * @author PC
- *
- */
 public class TokenRequest {
 
-	/**
-	 * 
-	 */
 	private String grant_type;
-	/**
-	 * 
-	 */
+	
 	private String code;
-	/**
-	 * 
-	 */
+	
 	private String redirect_uri;
-	/**
-	 * 
-	 */
+	
 	private String client_id;
-	/**
-	 * 
-	 */
+	
 	private char[] client_secret;
 	
 	public String getGrant_type() {

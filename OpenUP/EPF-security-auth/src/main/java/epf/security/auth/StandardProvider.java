@@ -4,14 +4,14 @@ import java.net.URI;
 import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Form;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.Form;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import org.jose4j.jwk.HttpsJwks;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.jwt.consumer.JwtConsumer;
@@ -26,58 +26,24 @@ import epf.security.auth.discovery.ProviderMetadata;
 import epf.util.logging.LogManager;
 import epf.util.security.SecurityUtil;
 
-/**
- * @author PC
- *
- */
 public class StandardProvider implements Provider {
 	
-	/**
-	 * 
-	 */
 	private transient final static Logger LOGGER = LogManager.getLogger(StandardProvider.class.getName());
 	
-	/**
-	 * 
-	 */
 	private transient final URI discoveryUrl;
 	
-	/**
-	 *
-	 */
 	private transient final String clientId;
 	
-	/**
-	 * 
-	 */
 	private transient final char[] clientSecret;
 	
-	/**
-	 * 
-	 */
 	private transient ProviderMetadata metadata;
 	
-	/**
-	 * 
-	 */
 	private transient HttpsJwks jwks;
 	
-	/**
-	 * 
-	 */
 	private transient JwtConsumer jwtConsumer;
 	
-	/**
-	 *
-	 */
 	private transient final ClientBuilder clientBuilder;
 	
-	/**
-	 * @param discoveryUrl
-	 * @param clientSecret
-	 * @param clientId
-	 * @param clientBuilder
-	 */
 	public StandardProvider(final URI discoveryUrl, final char[] clientSecret, final String clientId, ClientBuilder clientBuilder) {
 		this.discoveryUrl = discoveryUrl;
 		this.clientSecret = clientSecret;

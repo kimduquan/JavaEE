@@ -1,23 +1,11 @@
 package epf.security.auth.core;
 
-/**
- * @author PC
- *
- */
 public class UserInfoError extends Exception {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 */
 	private String error;
-	/**
-	 * 
-	 */
+	
 	private String error_description;
 	
 	public String getError() {

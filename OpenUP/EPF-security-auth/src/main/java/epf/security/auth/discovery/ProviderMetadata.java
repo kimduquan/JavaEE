@@ -1,64 +1,27 @@
 package epf.security.auth.discovery;
 
-/**
- * @author PC
- *
- */
 public class ProviderMetadata {
 
-	/**
-	 * 
-	 */
 	private String issuer;
 	
-	/**
-	 * 
-	 */
 	private String authorization_endpoint;
 	
-	/**
-	 * 
-	 */
 	private String token_endpoint;
 	
-	/**
-	 * 
-	 */
 	private String userinfo_endpoint;
 	
-	/**
-	 * 
-	 */
 	private String jwks_uri;
 	
-	/**
-	 * 
-	 */
 	private String registration_endpoint;
 	
-	/**
-	 * 
-	 */
 	private String[] scopes_supported;
 	
-	/**
-	 * 
-	 */
 	private String[] response_types_supported;
 	
-	/**
-	 * 
-	 */
 	private String[] subject_types_supported;
 	
-	/**
-	 * 
-	 */
 	private String[] id_token_signing_alg_values_supported;
 	
-	/**
-	 * 
-	 */
 	private String[] claims_supported;
 
 	public String getIssuer() {
