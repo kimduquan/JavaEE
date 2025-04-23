@@ -3,28 +3,18 @@ package epf.webapp.util;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.faces.FacesException;
-import javax.faces.application.ProtectedViewException;
-import javax.faces.context.ExceptionHandler;
-import javax.faces.context.ExceptionHandlerWrapper;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ExceptionQueuedEvent;
+import jakarta.faces.FacesException;
+import jakarta.faces.application.ProtectedViewException;
+import jakarta.faces.context.ExceptionHandler;
+import jakarta.faces.context.ExceptionHandlerWrapper;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.ExceptionQueuedEvent;
 import epf.util.logging.LogManager;
 
-/**
- * @author PC
- *
- */
 public class ExceptionHelper extends ExceptionHandlerWrapper {
 	
-	/**
-	 * 
-	 */
 	private transient final static Logger LOGGER = LogManager.getLogger(ExceptionHelper.class.getName());
 	
-	/**
-	 * @param wrapped
-	 */
 	public ExceptionHelper(final ExceptionHandler wrapped) {
 		super(wrapped);
 	}

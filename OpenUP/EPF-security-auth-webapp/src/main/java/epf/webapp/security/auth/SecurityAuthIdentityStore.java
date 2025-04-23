@@ -7,13 +7,13 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.security.enterprise.CallerPrincipal;
-import javax.security.enterprise.credential.RememberMeCredential;
-import javax.security.enterprise.identitystore.CredentialValidationResult;
-import javax.security.enterprise.identitystore.RememberMeIdentityStore;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.security.enterprise.CallerPrincipal;
+import jakarta.security.enterprise.credential.RememberMeCredential;
+import jakarta.security.enterprise.identitystore.CredentialValidationResult;
+import jakarta.security.enterprise.identitystore.RememberMeIdentityStore;
 import org.eclipse.microprofile.jwt.Claims;
 import org.jose4j.jwt.JwtClaims;
 import epf.client.util.Client;
@@ -26,38 +26,19 @@ import epf.webapp.internal.ConfigUtil;
 import epf.webapp.internal.GatewayUtil;
 import epf.webapp.internal.TokenPrincipal;
 
-/**
- * @author PC
- *
- */
 @ApplicationScoped
 public class SecurityAuthIdentityStore implements RememberMeIdentityStore {
 	
-	/**
-	 * 
-	 */
 	private transient final static Logger LOGGER = LogManager.getLogger(SecurityAuthIdentityStore.class.getName());
 	
-	/**
-	 * 
-	 */
 	private transient final JwtUtil jwtUtil = new JwtUtil();
 	
-	/**
-	 * 
-	 */
 	@Inject
 	private transient GatewayUtil gatewayUtil;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	private transient ConfigUtil config;
 	
-	/**
-	 * 
-	 */
 	@PostConstruct
 	protected void postConstruct() {
 		try {

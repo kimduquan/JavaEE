@@ -1,7 +1,7 @@
 package epf.webapp.messaging;
 
 import java.io.Serializable;
-import javax.faces.application.FacesMessage;
+import jakarta.faces.application.FacesMessage;
 
 /**
  * @author PC

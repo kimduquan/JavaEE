@@ -2,10 +2,10 @@ package epf.webapp.messaging;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import javax.enterprise.context.ApplicationScoped;
-import javax.faces.push.Push;
-import javax.faces.push.PushContext;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.faces.push.Push;
+import jakarta.faces.push.PushContext;
+import jakarta.inject.Inject;
 import epf.webapp.naming.Naming;
 
 /**

@@ -5,11 +5,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import javax.crypto.SecretKey;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.ws.rs.client.ClientBuilder;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.client.ClientBuilder;
 import epf.naming.Naming;
 import epf.security.auth.Provider;
 import epf.security.auth.core.AuthRequest;
@@ -22,57 +22,26 @@ import epf.webapp.security.auth.core.CodeFlow;
 import epf.webapp.security.auth.core.ImplicitFlow;
 import epf.security.auth.StandardProvider;
 
-/**
- * @author PC
- *
- */
 @ApplicationScoped
 public class SecurityAuth {
 	
-	/**
-	 * 
-	 */
 	private transient final static Logger LOGGER = LogManager.getLogger(SecurityAuth.class.getName());
 	
-	/**
-	 * 
-	 */
 	private transient Provider googleProvider;
 	
-	/**
-	 * 
-	 */
 	private transient URI googleDiscoveryUrl;
 	
-	/**
-	 * 
-	 */
 	private transient Provider facebookProvider;
 	
-	/**
-	 * 
-	 */
 	private transient URI facebookDiscoveryUrl;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	private transient ConfigUtil config;
 	
-	/**
-	 * 
-	 */
 	private transient final Map<String, Provider> providers = new ConcurrentHashMap<>();
 	
-	/**
-	 *
-	 */
 	private transient ClientBuilder clientBuilder;
 	
-	/**
-	 * 
-	 */
 	@PostConstruct
 	protected void postConstruct() {
 		try {
@@ -93,12 +62,6 @@ public class SecurityAuth {
 		}
 	}
 	
-	/**
-	 * @param authFlow
-	 * @param authRequest
-	 * @return
-	 * @throws Exception
-	 */
 	public ProviderMetadata initGoogleProvider(final CodeFlow authFlow, final AuthRequest authRequest) throws Exception {
 		authRequest.setClient_id(config.getProperty(Naming.Security.Auth.GOOGLE_CLIENT_ID));
 		authRequest.setRedirect_uri(config.getProperty(Naming.Security.Auth.AUTH_URL));
@@ -107,12 +70,6 @@ public class SecurityAuth {
 		return metadata;
 	}
 	
-	/**
-	 * @param authFlow
-	 * @param authRequest
-	 * @return
-	 * @throws Exception
-	 */
 	public ProviderMetadata initFacebookProvider(final ImplicitFlow authFlow, final AuthRequest authRequest) throws Exception {
 		authRequest.setClient_id(config.getProperty(Naming.Security.Auth.FACEBOOK_CLIENT_ID));
 		authRequest.setRedirect_uri(config.getProperty(Naming.Security.Auth.AUTH_URL));
@@ -121,10 +78,6 @@ public class SecurityAuth {
 		return metadata;
 	}
 	
-	/**
-	 * @param provider
-	 * @return
-	 */
 	public Provider getProvider(final String provider) {
 		return providers.get(provider);
 	}

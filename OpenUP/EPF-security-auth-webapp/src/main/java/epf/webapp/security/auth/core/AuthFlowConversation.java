@@ -1,38 +1,20 @@
 package epf.webapp.security.auth.core;
 
 import java.io.Serializable;
-import javax.enterprise.context.ConversationScoped;
+import jakarta.enterprise.context.ConversationScoped;
 import epf.security.auth.discovery.ProviderMetadata;
 
-/**
- * 
- */
 @ConversationScoped
 public class AuthFlowConversation implements Serializable {
 	
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1L;
 	
-	/**
-	 *
-	 */
 	private Flow flow;
 
-	/**
-	 * 
-	 */
 	private ProviderMetadata providerMetadata;
 	
-	/**
-	 *
-	 */
 	private String provider;
 	
-	/**
-	 *
-	 */
 	private String url;
 
 	public Flow getFlow() {

@@ -4,11 +4,11 @@ import java.net.URL;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.security.enterprise.credential.UsernamePasswordCredential;
-import javax.security.enterprise.identitystore.CredentialValidationResult;
-import javax.security.enterprise.identitystore.IdentityStore;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.security.enterprise.credential.UsernamePasswordCredential;
+import jakarta.security.enterprise.identitystore.CredentialValidationResult;
+import jakarta.security.enterprise.identitystore.IdentityStore;
 import epf.util.config.ConfigUtil;
 import epf.util.logging.LogManager;
 import epf.webapp.internal.GatewayUtil;
@@ -23,35 +23,17 @@ import epf.security.auth.core.TokenResponse;
 import epf.security.client.Security;
 import epf.security.schema.Token;
 
-/**
- *
- * @author FOXCONN
- */
 @ApplicationScoped
 public class AuthIdentityStore implements IdentityStore {
 	
-	/**
-	 * 
-	 */
 	private static final Logger LOGGER = LogManager.getLogger(AuthIdentityStore.class.getName());
     
-    /**
-     * 
-     */
     @Inject
     private transient GatewayUtil gatewayUtil;
     
-    /**
-     * 
-     */
     @Inject
     private transient SecurityAuth securityAuth;
     
-    /**
-     * @param credential
-     * @return
-     * @throws Exception
-     */
     public CredentialValidationResult validate(final UsernamePasswordCredential credential) {
         CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
         try {
@@ -81,10 +63,6 @@ public class AuthIdentityStore implements IdentityStore {
         return validationResult.getCallerGroups();
     }
     
-    /**
-     * @param credential
-     * @return
-     */
     public CredentialValidationResult validate(final AuthCodeCredential credential) {
     	CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
     	final Provider provider = securityAuth.getProvider(credential.getProvider());
@@ -105,11 +83,6 @@ public class AuthIdentityStore implements IdentityStore {
     	return result;
     }
     
-    /**
-     * @param credential
-     * @return
-     * @throws Exception 
-     */
     public CredentialValidationResult validate(final ImplicitCredential credential) throws Exception {
     	CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
     	final URL webAppUrl = ConfigUtil.getURL(Naming.WebApp.WEB_APP_URL);

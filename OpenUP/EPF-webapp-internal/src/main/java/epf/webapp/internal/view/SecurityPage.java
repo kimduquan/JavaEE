@@ -2,14 +2,14 @@ package epf.webapp.internal.view;
 
 import java.io.Serializable;
 import java.util.List;
-import javax.faces.context.ExternalContext;
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.security.enterprise.SecurityContext;
-import javax.security.enterprise.authentication.mechanism.http.AuthenticationParameters;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.security.enterprise.SecurityContext;
+import jakarta.security.enterprise.authentication.mechanism.http.AuthenticationParameters;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.eclipse.microprofile.jwt.Claims;
 import epf.security.view.SecurityView;
 import epf.util.StringUtil;
@@ -18,46 +18,24 @@ import epf.webapp.internal.TokenCredential;
 import epf.webapp.naming.Naming;
 import epf.webapp.util.CookieUtil;
 
-/**
- * @author PC
- *
- */
 @ViewScoped
 @Named(Naming.Security.PRINCIPAL)
 public class SecurityPage implements SecurityView, Serializable {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	private transient HttpServletRequest request;
 	
-	/**
-	 * 
-	 */
 	@Inject
     private transient ExternalContext externalContext;
 	
-	/**
-	 *
-	 */
 	@Inject
 	private transient SecurityContext context;
 	
-	/**
-	 * 
-	 */
 	@Inject @Named(Naming.Security.SESSION)
 	private transient Session session;
 	
-	/**
-	 * @return
-	 */
 	@Override
 	public String getName() {
 		final String fullName = session.getClaim(Claims.full_name.name());
