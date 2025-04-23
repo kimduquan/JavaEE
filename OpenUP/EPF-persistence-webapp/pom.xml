@@ -27,6 +27,7 @@
 	    <dependency>
 		    <groupId>org.primefaces</groupId>
 		    <artifactId>primefaces</artifactId>
+			<classifier>jakarta</classifier>
 		</dependency>
 		
 		<dependency>

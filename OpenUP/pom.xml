@@ -397,9 +397,10 @@
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.primefaces/primefaces -->
 			<dependency>
-				<groupId>org.primefaces</groupId>
-				<artifactId>primefaces</artifactId>
-				<version>14.0.9</version>
+			    <groupId>org.primefaces</groupId>
+			    <artifactId>primefaces</artifactId>
+			    <version>15.0.3</version>
+			    <classifier>jakarta</classifier>
 			</dependency>
             <!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast -->
 			<dependency>

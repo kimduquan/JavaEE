@@ -1,8 +1,8 @@
 package epf.webapp;
 
-import javax.annotation.security.DeclareRoles;
-import javax.enterprise.context.ApplicationScoped;
-import javax.faces.annotation.FacesConfig;
+import jakarta.annotation.security.DeclareRoles;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.faces.annotation.FacesConfig;
 import epf.naming.Naming;
 
 /**
