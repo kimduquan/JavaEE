@@ -14,17 +14,8 @@ import jakarta.persistence.metamodel.Metamodel;
 import epf.persistence.internal.Embeddable;
 import epf.persistence.internal.Entity;
 
-/**
- * @author PC
- *
- */
 public interface SchemaUtil {
 	
-	/**
-	 * @param <T>
-	 * @param metamodel
-	 * @return
-	 */
 	static <T> Stream<Entity<T>> getEntities(final Metamodel metamodel) {
 		return metamodel
 				.getEntities()
@@ -46,11 +37,6 @@ public interface SchemaUtil {
     			.filter(entity -> entity != null);
 	}
 	
-	/**
-	 * @param <T>
-	 * @param metamodel
-	 * @return
-	 */
 	static <T> Stream<Embeddable<T>> getEmbeddables(final Metamodel metamodel){
 		return metamodel
 				.getEmbeddables()
@@ -72,11 +58,6 @@ public interface SchemaUtil {
     			.filter(embeddable -> embeddable != null);
 	}
 	
-	/**
-	 * @param metamodel
-	 * @param entityTables
-	 * @param entityAttributes
-	 */
 	static void mapEntities(
 			final Metamodel metamodel,
 			final Map<String, EntityType<?>> entityTables, 

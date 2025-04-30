@@ -6,16 +6,8 @@ import jakarta.persistence.metamodel.Bindable;
 import epf.persistence.schema.AttributeType;
 import epf.persistence.schema.Column;
 
-/**
- * @author PC
- *
- */
 public class AttributeBuilder {
 
-	/**
-	 * @param attr
-	 * @return
-	 */
 	public epf.persistence.schema.Attribute build(final Attribute<?, ?> attr){
 		final epf.persistence.schema.Attribute attribute = new epf.persistence.schema.Attribute();
 		attribute.setType(attr.getJavaType().getName());
@@ -35,10 +27,6 @@ public class AttributeBuilder {
 		return attribute;
 	}
 	
-	/**
-	 * @param type
-	 * @return
-	 */
 	protected static AttributeType buildAttrbuteType(final PersistentAttributeType type) {
 		AttributeType attrType = AttributeType.BASIC;
 		switch(type) {
@@ -69,10 +57,6 @@ public class AttributeBuilder {
 		return attrType;
 	}
 	
-	/**
-	 * @param bindable
-	 * @return
-	 */
 	protected static epf.persistence.schema.BindableType buildBindableType(final Bindable<?> bindable){
 		epf.persistence.schema.BindableType type = epf.persistence.schema.BindableType.ENTITY_TYPE;
 		switch(bindable.getBindableType()) {
@@ -90,10 +74,6 @@ public class AttributeBuilder {
 		return type;
 	}
 	
-	/**
-	 * @param columnAnnotation
-	 * @return
-	 */
 	protected static Column buildColumn(final jakarta.persistence.Column columnAnnotation) {
 		final Column column = new Column();
 		column.setColumnDefinition(columnAnnotation.columnDefinition());

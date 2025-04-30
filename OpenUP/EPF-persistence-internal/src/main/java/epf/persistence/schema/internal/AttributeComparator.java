@@ -3,10 +3,6 @@ package epf.persistence.schema.internal;
 import java.util.Comparator;
 import epf.persistence.schema.Attribute;
 
-/**
- * @author PC
- *
- */
 public class AttributeComparator implements Comparator<Attribute> {
 
 	@Override

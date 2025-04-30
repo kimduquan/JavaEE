@@ -2,19 +2,9 @@ package epf.persistence.internal;
 
 import jakarta.persistence.metamodel.EntityType;
 
-/**
- *
- * @author FOXCONN
- */
 public class Entity<T> {
     
-    /**
-     * 
-     */
     private EntityType<T> type;
-    /**
-     * 
-     */
     private T object;
 
     public EntityType<T> getType() {

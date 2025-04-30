@@ -23,5 +23,11 @@
 	        <artifactId>microprofile-rest-client-api</artifactId>
 	        <scope>provided</scope>
 	    </dependency>
+	    
+	    <dependency>
+            <groupId>epf</groupId>
+            <artifactId>EPF-webapp-internal-v2</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

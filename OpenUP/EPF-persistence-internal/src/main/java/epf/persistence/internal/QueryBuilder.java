@@ -22,43 +22,15 @@ import jakarta.ws.rs.core.PathSegment;
 import epf.naming.Naming;
 import epf.util.Var;
 
-/**
- * @author PC
- *
- */
 public class QueryBuilder {
 
-	/**
-	 * 
-	 */
 	private transient Metamodel metamodel;
-	/**
-	 * 
-	 */
 	private transient CriteriaBuilder criteria;
-	/**
-	 * 
-	 */
 	private transient Entity<Object> entityObject;
-	/**
-	 * 
-	 */
 	private transient List<PathSegment> pathSegments;
-	
-	/**
-	 *
-	 */
 	private transient List<String> sort;
-	
-	/**
-	 *
-	 */
 	private transient boolean countOnly = false;
 
-	/**
-	 * @param manager
-	 * @return
-	 */
 	public QueryBuilder criteria(final CriteriaBuilder criteria) {
 		this.criteria = criteria;
 		return this;
@@ -69,58 +41,30 @@ public class QueryBuilder {
 		return this;
 	}
 
-	/**
-	 * @param entity
-	 * @return
-	 */
 	public QueryBuilder entity(final Entity<Object> entity) {
 		this.entityObject = entity;
 		return this;
 	}
 
-	/**
-	 * @param paths
-	 * @return
-	 */
 	public QueryBuilder paths(final List<PathSegment> paths) {
 		this.pathSegments = paths;
 		return this;
 	}
 	
-	/**
-	 * @param sort
-	 * @return
-	 */
 	public QueryBuilder sort(final List<String> sort) {
 		this.sort = sort;
 		return this;
 	}
 	
-	/**
-	 * @return
-	 */
 	public QueryBuilder countOnly() {
 		this.countOnly = true;
 		return this;
 	}
 	
-	/**
-	 * @return
-	 */
 	public CriteriaQuery<Object> build() {
 		return build(metamodel, criteria, entityObject, pathSegments.get(0), pathSegments, sort, countOnly);
 	}
 	
-	/**
-	 * @param metamodel
-	 * @param criteria
-	 * @param entity
-	 * @param rootSegment
-	 * @param paths
-	 * @param sort
-	 * @param countOnly
-	 * @return
-	 */
 	protected static CriteriaQuery<Object> build(
 			final Metamodel metamodel, 
 			final CriteriaBuilder criteria,
@@ -203,15 +147,7 @@ public class QueryBuilder {
         return rootQuery;
 	}
 	
-	/**
-     * @param segment
-     * @param parentType
-     * @param parentJoin
-     * @param parentFrom
-     * @param allParams
-     * @param manager
-     */
-    protected static void buildAttributeSegment(
+	protected static void buildAttributeSegment(
     		final PathSegment segment, 
     		final Var<ManagedType<?>> parentType, 
     		final Var<Join<?,?>> parentJoin,

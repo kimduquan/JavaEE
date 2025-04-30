@@ -3,7 +3,7 @@ package epf.webapp.client;
 import java.util.Map;
 import org.eclipse.microprofile.rest.client.annotation.RegisterProvider;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
-import epf.webapp.util.AuthFilter;
+import epf.webapp.internal.AuthFilter;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.QueryParam;
 

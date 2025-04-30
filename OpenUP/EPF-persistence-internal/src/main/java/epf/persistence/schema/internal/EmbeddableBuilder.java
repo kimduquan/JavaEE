@@ -4,16 +4,8 @@ import java.util.stream.Collectors;
 import jakarta.persistence.metamodel.EmbeddableType;
 import epf.persistence.internal.Embeddable;
 
-/**
- * @author PC
- *
- */
 public class EmbeddableBuilder {
 
-	/**
-	 * @param entity
-	 * @return
-	 */
 	public epf.persistence.schema.Embeddable build(final Embeddable<?> embeddable){
 		final EmbeddableType<?> type = embeddable.getType();
 		final epf.persistence.schema.Embeddable embeddableType = new epf.persistence.schema.Embeddable();

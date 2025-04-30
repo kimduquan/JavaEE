@@ -90,5 +90,10 @@
             <artifactId>EPF-webapp-internal</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>epf</groupId>
+            <artifactId>EPF-webapp-internal-v2</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>
