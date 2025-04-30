@@ -916,6 +916,7 @@
 		<module>EPF-security-internal</module>
 		<module>EPF-webapp-utility</module>
 		<module>EPF-webapp-internal</module>
+		<module>EPF-webapp-internal-v2</module>
 		<module>EPF-function</module>
 		<module>EPF-math</module>
 		<module>EPF-schedule</module>
