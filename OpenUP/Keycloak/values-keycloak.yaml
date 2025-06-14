@@ -682,7 +682,7 @@ ingress:
   ## e.g:
   extraHosts:
     - name: host.docker.internal
-      path: "{{ .Values.httpRelativePath }}"
+      path: /
   ##
   ## @param ingress.extraPaths Any additional arbitrary paths that may need to be added to the ingress under the main host.
   ## For example: The ALB ingress controller requires a special rule for handling SSL redirection.
