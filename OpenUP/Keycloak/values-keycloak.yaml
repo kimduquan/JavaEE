@@ -661,6 +661,7 @@ ingress:
   ##
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/custom-headers: default/keycloak-custom-headers
   ## @param ingress.labels Additional labels for the Ingress resource.
   ## e.g:
   ## labels:
@@ -680,7 +681,9 @@ ingress:
   selfSigned: false
   ## @param ingress.extraHosts An array with additional hostname(s) to be covered with the ingress record
   ## e.g:
-  extraHosts: []
+  extraHosts:
+    - name: host.docker.internal
+      path: /
   ##
   ## @param ingress.extraPaths Any additional arbitrary paths that may need to be added to the ingress under the main host.
   ## For example: The ALB ingress controller requires a special rule for handling SSL redirection.
@@ -771,6 +774,7 @@ adminIngress:
   ##
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/custom-headers: default/keycloak-custom-headers
   ## @param adminIngress.labels Additional labels for the Ingress resource.
   ## e.g:
   ## labels:
