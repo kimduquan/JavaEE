@@ -910,6 +910,7 @@
 		<module>EPF-messaging-utility-ext</module>
 		<module>EPF-persistence-utility</module>
 		<module>EPF-persistence-internal</module>
+		<module>ERP-management-utility</module>
 		<module>EPF-security-utility</module>
 		<module>EPF-workflow-utility</module>
 		<module>EPF-security-auth-utility</module>
