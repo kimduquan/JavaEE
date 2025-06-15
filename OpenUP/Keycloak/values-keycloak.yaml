@@ -646,7 +646,7 @@ ingress:
   hostnameStrict: true
   ## @param ingress.path [string] Default path for the ingress record (evaluated as template)
   ##
-  path: "{{ .Values.httpRelativePath }}"
+  path: "{{ .Values.httpRelativePath }}realms/"
   ## @param ingress.servicePort Backend service port to use
   ## Default is http. Alternative is https.
   ##
