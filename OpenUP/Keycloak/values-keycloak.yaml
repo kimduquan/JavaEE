@@ -661,6 +661,7 @@ ingress:
   ##
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/global-allowed-response-headers: ngrok-skip-browser-warning
     nginx.ingress.kubernetes.io/custom-headers: default/keycloak-custom-headers
   ## @param ingress.labels Additional labels for the Ingress resource.
   ## e.g:
@@ -774,6 +775,7 @@ adminIngress:
   ##
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/global-allowed-response-headers: ngrok-skip-browser-warning
     nginx.ingress.kubernetes.io/custom-headers: default/keycloak-custom-headers
   ## @param adminIngress.labels Additional labels for the Ingress resource.
   ## e.g:

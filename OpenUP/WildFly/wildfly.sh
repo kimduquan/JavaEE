@@ -5,4 +5,4 @@ kubectl create cm oidc --from-literal=OIDC_PROVIDER_URI='https://touching-pika-e
 kubectl delete cm wildfly-custom-headers
 kubectl create cm wildfly-custom-headers --from-literal=ngrok-skip-browser-warning=true
 helm install wildfly oci://registry-1.docker.io/bitnamicharts/wildfly -f values-wildfly.yaml
-#/opt/bitnami/wildfly/bin/jboss-cli.sh --connect --controller=127.0.0.1:9990 --command=reload
+#/opt/bitnami/wildfly/bin/jboss-cli.sh --connect --controller=127.0.0.1:9990
