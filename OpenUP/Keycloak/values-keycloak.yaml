@@ -755,7 +755,7 @@ adminIngress:
   controller: default
   ## @param adminIngress.hostname Default host for the admin ingress record (evaluated as template)
   ##
-  hostname: gateway.docker.internal
+  hostname: kubernetes.docker.internal
   ## @param adminIngress.path [string] Default path for the admin ingress record (evaluated as template)
   ##
   path: "{{ .Values.httpRelativePath }}"
