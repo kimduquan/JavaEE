@@ -156,6 +156,7 @@
 					<password>090323508</password>
                     <commands>
                         <command>/subsystem=undertow/application-security-domain=other:write-attribute(name=integrated-jaspi, value=false)</command>
+						<command>/subsystem=undertow/server=default-server/host=default-host/location=\/:remove</command>
                         <command>reload</command>
                     </commands>
                     <debug>true</debug>
