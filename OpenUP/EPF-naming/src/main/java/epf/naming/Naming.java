@@ -624,7 +624,7 @@ public interface Naming {
 		/**
 		 * 
 		 */
-		String PERSISTENCE_ENTITY_LISTENERS = "persistence";
+		String ENTITY_LISTENERS = "persistence";
 		
 		/**
 		 * @author PC

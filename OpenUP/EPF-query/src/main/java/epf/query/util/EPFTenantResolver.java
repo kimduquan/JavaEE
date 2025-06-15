@@ -2,8 +2,8 @@ package epf.query.util;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import epf.management.util.TenantUtil;
 import epf.schema.utility.Request;
-import epf.schema.utility.TenantUtil;
 import io.quarkus.hibernate.orm.PersistenceUnitExtension;
 import io.quarkus.hibernate.orm.runtime.tenant.TenantResolver;
 

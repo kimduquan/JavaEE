@@ -38,6 +38,8 @@ import org.eclipse.microprofile.lra.annotation.ParticipantStatus;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
 import epf.naming.Naming;
 import epf.persistence.cache.TransactionCache;
+import epf.persistence.event.TransactionEvent;
+import epf.persistence.event.TransactionEventType;
 import epf.persistence.internal.EntityTransaction;
 import epf.persistence.util.EntityTypeUtil;
 import epf.persistence.util.EntityUtil;
@@ -45,7 +47,6 @@ import epf.schema.utility.EntityEvent;
 import epf.schema.utility.PostPersist;
 import epf.schema.utility.PostRemove;
 import epf.schema.utility.PostUpdate;
-import epf.schema.utility.Request;
 import epf.schema.utility.SchemaUtil;
 import epf.util.json.ext.JsonUtil;
 import epf.util.logging.LogManager;
@@ -67,9 +68,6 @@ public class Persistence {
     
     @Inject
     transient EntityManager manager;
-    
-    @Inject
-    transient Request request;
     
     @PostConstruct
 	protected void postConstruct() {
@@ -103,8 +101,6 @@ public class Persistence {
             @NotNull
             final InputStream body
             ) throws Exception {
-    	request.setTenant(tenant);
-    	request.setSchema(schema);
     	final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), name);
     	if(!entityType.isPresent()) {
     		return Response.status(Response.Status.NOT_FOUND).build();
@@ -129,13 +125,11 @@ public class Persistence {
         final JsonPatch diff = JsonUtil.createDiff(new Object(), entity);
         
         final Object transactionEntity = entity;
-        final PostPersist transactionEvent = new PostPersist();
-        transactionEvent.setTenant(request.getTenant());
-        transactionEvent.setSchema(request.getSchema());
-        transactionEvent.setEntity(transactionEntity);
+        final PostPersist entityEvent = new PostPersist();
+        entityEvent.setEntity(transactionEntity);
         final EntityTransaction transaction = new EntityTransaction();
         transaction.setId(headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER));
-        transaction.setEvent(transactionEvent);
+        transaction.setEvent(entityEvent);
         transaction.setDiff(JsonUtil.toString(diff.toJsonArray()));
         
         final Optional<Field> entityIdField = schemaUtil.getEntityIdField(transactionEntity.getClass());
@@ -170,8 +164,6 @@ public class Persistence {
             @NotNull
             final InputStream body
             ) throws Exception {
-    	request.setTenant(tenant);
-    	request.setSchema(schema);
     	final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), name);
     	if(!entityType.isPresent()) {
     		return Response.status(Response.Status.NOT_FOUND).build();
@@ -205,13 +197,11 @@ public class Persistence {
         final JsonObject preEntity = JsonUtil.toJsonObject(entityObject);
         
     	final Object transactionEntity = entityObject;
-        final PostUpdate transactionEvent = new PostUpdate();
-        transactionEvent.setTenant(request.getTenant());
-        transactionEvent.setSchema(request.getSchema());
-        transactionEvent.setEntity(transactionEntity);
+        final PostUpdate entityEvent = new PostUpdate();
+        entityEvent.setEntity(transactionEntity);
         final EntityTransaction transaction = new EntityTransaction();
         transaction.setId(headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER));
-        transaction.setEvent(transactionEvent);
+        transaction.setEvent(entityEvent);
         transaction.setEntityId(entityId);
         
         final Object mergedEntity = manager.merge(entity);
@@ -246,8 +236,6 @@ public class Persistence {
             @Context
             final HttpHeaders headers
             ) throws Exception {
-    	request.setTenant(tenant);
-    	request.setSchema(schema);
     	final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), name);
     	if(!entityType.isPresent()) {
     		return Response.status(Response.Status.NOT_FOUND).build();
@@ -276,13 +264,11 @@ public class Persistence {
     	manager.flush();
     	
     	final Object transactionEntity = entityObject;
-        final PostRemove transactionEvent = new PostRemove();
-        transactionEvent.setTenant(request.getTenant());
-        transactionEvent.setSchema(request.getSchema());
-        transactionEvent.setEntity(transactionEntity);
+        final PostRemove entityEvent = new PostRemove();
+        entityEvent.setEntity(transactionEntity);
         final EntityTransaction transaction = new EntityTransaction();
         transaction.setId(headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER));
-        transaction.setEvent(transactionEvent);
+        transaction.setEvent(entityEvent);
         transaction.setEntityId(entityId);
         transaction.setDiff(JsonUtil.toString(diff.toJsonArray()));
         
@@ -302,25 +288,26 @@ public class Persistence {
     	final String transactionId = headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER);
     	final EntityTransaction transaction = cache.remove(transactionId);
 		if(transaction != null) {
-    		final EntityEvent transactionEvent = transaction.getEvent();
-			request.setTenant(transactionEvent.getTenant());
-			request.setSchema(transactionEvent.getSchema());
-    		if(transactionEvent instanceof PostPersist) {
-     			final Object entity = manager.find(transactionEvent.getEntity().getClass(), transaction.getEntityId());
+	    	final TransactionEvent transactionEvent = new TransactionEvent();
+	    	transactionEvent.setEventType(TransactionEventType.rollback);
+	    	transactionEvent.setTransaction(transaction);
+    		final EntityEvent entityEvent = transaction.getEvent();
+    		if(entityEvent instanceof PostPersist) {
+     			final Object entity = manager.find(entityEvent.getEntity().getClass(), transaction.getEntityId());
     			if(entity != null) {
     				manager.remove(entity);
     				manager.flush();
     			}
     		}
-    		else if(transactionEvent instanceof PostUpdate) {
-    			final Object entity = manager.find(transactionEvent.getEntity().getClass(), transaction.getEntityId());
+    		else if(entityEvent instanceof PostUpdate) {
+    			final Object entity = manager.find(entityEvent.getEntity().getClass(), transaction.getEntityId());
     			if(entity != null) {
-    				manager.merge(transactionEvent.getEntity());
+    				manager.merge(entityEvent.getEntity());
     				manager.flush();
     			}
     		}
-     		else if(transactionEvent instanceof PostRemove) {
-    			manager.persist(transactionEvent.getEntity());
+     		else if(entityEvent instanceof PostRemove) {
+    			manager.persist(entityEvent.getEntity());
     			manager.flush();
     		}
             LOGGER.info(String.format("rollback[%s]id=%s", headers.getHeaderString(HttpHeaders.HOST), transaction.getId()));
@@ -331,12 +318,16 @@ public class Persistence {
     @Forget
     @Path(Naming.TRANSACTION_ACTIVE)
     @PUT
+    @Transactional
     @RunOnVirtualThread
     public Response commit(
     		@Context
     		final HttpHeaders headers) throws Exception {
     	final String transactionId = headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER);
-    	cache.remove(transactionId);
+    	final EntityTransaction transaction = cache.remove(transactionId);
+    	final TransactionEvent transactionEvent = new TransactionEvent();
+    	transactionEvent.setEventType(TransactionEventType.commit);
+    	transactionEvent.setTransaction(transaction);
         LOGGER.info(String.format("commit[%s]id=%s", headers.getHeaderString(HttpHeaders.HOST), transactionId));
     	return Response.ok(ParticipantStatus.Completed.name()).build();
     }

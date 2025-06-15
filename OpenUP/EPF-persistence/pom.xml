@@ -72,7 +72,7 @@
 	</dependency>
 	<dependency>
 	    <groupId>io.quarkiverse.jnosql</groupId>
-	    <artifactId>quarkus-jnosql-keyvalue-redis</artifactId>
+	    <artifactId>quarkus-jnosql-keyvalue-hazelcast</artifactId>
 	</dependency>
 	
 	<dependency>
@@ -113,6 +113,11 @@
 	<dependency>
 		<groupId>openup</groupId>
 		<artifactId>EPF-schema-utility</artifactId>
+		<version>${project.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>openup</groupId>
+		<artifactId>EPF-management-utility</artifactId>
 		<version>${project.version}</version>
 	</dependency>
 	<dependency>

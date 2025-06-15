@@ -35,7 +35,7 @@ public class Listener implements HealthCheck {
 		return HealthCheckResponse.up("EPF-query-listener");
 	}
 	
-	@Incoming(Naming.Persistence.PERSISTENCE_ENTITY_LISTENERS)
+	@Incoming(Naming.Persistence.ENTITY_LISTENERS)
 	@Blocking
 	public void postEvent(final EntityEvent event) {
 		if(event != null) {
