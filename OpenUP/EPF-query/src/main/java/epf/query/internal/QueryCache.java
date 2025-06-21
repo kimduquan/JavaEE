@@ -15,7 +15,6 @@ import org.eclipse.microprofile.health.Readiness;
 import epf.query.cache.CachingManager;
 import epf.query.cache.QueryLoad;
 import epf.schema.utility.EntityEvent;
-import epf.schema.utility.Request;
 import epf.util.logging.LogManager;
 
 @ApplicationScoped
@@ -32,9 +31,6 @@ public class QueryCache implements HealthCheck {
 	
 	@Inject
 	transient Event<QueryLoad> event;
-	
-	@Inject
-	Request request;
 	
 	private transient Cache<String, Integer> queryCache;
 	
@@ -62,10 +58,12 @@ public class QueryCache implements HealthCheck {
 	}
 	
 	public Optional<Integer> countEntity(
+			final String tenant,
+			final String schema,
             final String entity
             ) {
-		final QueryKey queryKey = schemaCache.getQueryKey(request.getSchema(), entity);
-		return Optional.ofNullable(manager.getQueryCache(request.getTenant()).get(queryKey.toString()));
+		final QueryKey queryKey = schemaCache.getQueryKey(schema, entity);
+		return Optional.ofNullable(manager.getQueryCache(tenant).get(queryKey.toString()));
 	}
 
 	@Override

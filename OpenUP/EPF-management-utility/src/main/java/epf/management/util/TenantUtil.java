@@ -3,13 +3,23 @@ package epf.management.util;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.naming.Naming;
 
-public interface TenantUtil {
+public class TenantUtil {
+	
+	private static final ThreadLocal<String> currentTenant = new ThreadLocal<>();
 
-	static String getTenantId(final JsonWebToken jwt) {
+	public static String getTenantId(final JsonWebToken jwt) {
 		return jwt.getClaim(Naming.Management.TENANT);
 	}
 	
-	static String getDefaultTenantId() {
+	public static String getDefaultTenantId() {
 		return "";
+	}
+	
+	public static void setTenantId(final String tenantId) {
+		currentTenant.set(tenantId);
+	}
+	
+	public static String getTenantId() {
+		return currentTenant.get();
 	}
 }

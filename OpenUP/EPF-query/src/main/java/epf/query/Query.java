@@ -9,7 +9,6 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HEAD;
-import jakarta.ws.rs.MatrixParam;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.Path;
@@ -23,6 +22,8 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
 import jakarta.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.health.Readiness;
+import org.eclipse.microprofile.jwt.JsonWebToken;
+import epf.management.util.TenantUtil;
 import epf.naming.Naming;
 import epf.naming.Naming.Query.Client;
 import epf.query.client.EntityId;
@@ -30,7 +31,6 @@ import epf.query.internal.EntityCache;
 import epf.query.internal.QueryCache;
 import epf.query.persistence.QueryPersistence;
 import epf.query.util.LinkUtil;
-import epf.schema.utility.Request;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
 @ApplicationScoped
@@ -50,15 +50,13 @@ public class Query {
 	transient Search search;
 	
 	@Inject
-	Request request;
+	transient JsonWebToken jwt;
 	
 	@GET
     @Path(Naming.Query.Client.ENTITY_PATH)
 	@Produces(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
     public Response getEntity(
-    		@MatrixParam(Naming.Management.TENANT)
-    		final String tenant,
     		@PathParam(Naming.Query.Client.SCHEMA)
             @NotNull
             @NotBlank
@@ -72,9 +70,8 @@ public class Query {
             @NotBlank
             final String entityId
             ) {
-		request.setSchema(schema);
-		request.setTenant(tenant);
-		final Optional<Object> entity = entityCache.getEntity(name, entityId);
+		final String tenant = TenantUtil.getTenantId(jwt);
+		final Optional<Object> entity = entityCache.getEntity(tenant, schema, name, entityId);
 		return Response.ok(entity.orElseThrow(NotFoundException::new)).build();
 	}
 
@@ -82,8 +79,6 @@ public class Query {
 	@Path("entity/{schema}/{entity}")
 	@RunOnVirtualThread
     public Response countEntity(
-    		@MatrixParam(Naming.Management.TENANT)
-    		final String tenant,
     		@PathParam(Naming.Query.Client.SCHEMA)
             @NotNull
             @NotBlank
@@ -93,9 +88,8 @@ public class Query {
             @NotBlank
             final String entity
             ) {
-		request.setSchema(schema);
-		request.setTenant(tenant);
-		final Optional<Integer> count = queryCache.countEntity(entity);
+		final String tenant = TenantUtil.getTenantId(jwt);
+		final Optional<Integer> count = queryCache.countEntity(tenant, schema, entity);
 		if(count.isPresent()) {
 			return Response.ok().header(Client.ENTITY_COUNT, count.get()).build();
 		}
@@ -107,8 +101,6 @@ public class Query {
     @Produces(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
 	public Response executeQuery(
-    		@MatrixParam(Naming.Management.TENANT)
-    		final String tenant,
     		@PathParam(Naming.Query.Client.SCHEMA)
             @NotBlank
             final String schema,
@@ -123,10 +115,9 @@ public class Query {
             @QueryParam(Naming.Query.Client.SORT)
     		final List<String> sort
             ) throws Exception {
-		request.setSchema(schema);
-		request.setTenant(tenant);
 		if(!paths.isEmpty()) {
-			final List<?> resultList = persistence.executeQuery(paths, firstResult, maxResults, context, sort);
+			final String tenant = TenantUtil.getTenantId(jwt);
+			final List<?> resultList = persistence.executeQuery(tenant, paths, firstResult, maxResults, context, sort);
 			return Response.ok(resultList).header(Client.ENTITY_COUNT, resultList.size()).build();
 		}
 		throw new NotFoundException();
@@ -136,8 +127,6 @@ public class Query {
     @Path("query/{schema}/{criteria: .+}")
 	@RunOnVirtualThread
 	public Response executeCountQuery(
-    		@MatrixParam(Naming.Management.TENANT)
-    		final String tenant,
     		@PathParam(Naming.Query.Client.SCHEMA)
             @NotBlank
             final String schema,
@@ -146,10 +135,9 @@ public class Query {
             @Context
             final SecurityContext context
             ) throws Exception {
-		request.setSchema(schema);
-		request.setTenant(tenant);
 		if(!paths.isEmpty()) {
-			final Object count = persistence.executeCountQuery(paths, context);
+			final String tenant = TenantUtil.getTenantId(jwt);
+			final Object count = persistence.executeCountQuery(tenant, paths, context);
 	    	return Response.ok().header(Client.ENTITY_COUNT, count).build();
 		}
 		throw new NotFoundException();
@@ -161,11 +149,9 @@ public class Query {
     @Produces(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
     public Response fetchEntities(
-    		@MatrixParam(Naming.Management.TENANT)
-    		final String tenant,
     		final List<EntityId> entityIds) {
-		request.setTenant(tenant);
-		final List<Object> entities = entityCache.getEntities(entityIds);
+		final String tenant = TenantUtil.getTenantId(jwt);
+		final List<Object> entities = entityCache.getEntities(tenant, entityIds);
 		ResponseBuilder response = Response.ok(entities).header(Client.ENTITY_COUNT, entities.size());
 		response = LinkUtil.links(response, "", entityIds);
 		return response.build();
