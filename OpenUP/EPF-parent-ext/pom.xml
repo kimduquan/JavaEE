@@ -81,6 +81,12 @@
 		    <artifactId>graphql-java-extended-scalars</artifactId>
 		    <version>22.0</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
+		<dependency>
+		    <groupId>redis.clients</groupId>
+		    <artifactId>jedis</artifactId>
+		    <version>5.2.0</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.quarkiverse.helm/quarkus-helm -->
 		<dependency>
 		    <groupId>io.quarkiverse.helm</groupId>
