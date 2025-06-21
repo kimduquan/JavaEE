@@ -13,7 +13,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-    <quarkus.platform.version>3.23.2</quarkus.platform.version>
+    <quarkus.platform.version>3.23.3</quarkus.platform.version>
     <skipITs>true</skipITs>
     <surefire-plugin.version>3.5.3</surefire-plugin.version>
     <narayana.version>7.2.1.Final</narayana.version>
@@ -80,6 +80,12 @@
 		    <groupId>com.graphql-java</groupId>
 		    <artifactId>graphql-java-extended-scalars</artifactId>
 		    <version>22.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.quarkiverse.helm/quarkus-helm -->
+		<dependency>
+		    <groupId>io.quarkiverse.helm</groupId>
+		    <artifactId>quarkus-helm</artifactId>
+		    <version>1.2.7</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.quarkiverse.jnosql/quarkus-jnosql-document-mongodb -->
 		<dependency>

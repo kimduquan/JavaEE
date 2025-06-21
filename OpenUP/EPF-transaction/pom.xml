@@ -61,5 +61,9 @@
 		<groupId>io.quarkus</groupId>
 		<artifactId>quarkus-container-image-jib</artifactId>
 	</dependency>
+	<dependency>
+		<groupId>io.quarkiverse.helm</groupId>
+		<artifactId>quarkus-helm</artifactId>
+	</dependency>
   </dependencies>
 </project>

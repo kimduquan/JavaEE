@@ -69,6 +69,10 @@
 			<groupId>io.quarkus</groupId>
 			<artifactId>quarkus-container-image-jib</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>io.quarkiverse.helm</groupId>
+			<artifactId>quarkus-helm</artifactId>
+		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.graphql/microprofile-graphql-api -->
 		<dependency>
