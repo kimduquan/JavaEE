@@ -1328,6 +1328,16 @@ public interface Naming {
 	     *
 	     */
 	    String WORKFLOW_MANAGEMENT = "workflow-management";
+	    
+	    /**
+	     * 
+	     */
+	    String WORKFLOW_LIFECYCLE_EVENTS = "workflow-lifecycle-events";
+	    
+	    /**
+	     * 
+	     */
+	    String TASK_LIFECYCLE_EVENTS = "task-lifecycle-events";
 		
 		/**
 		 * 

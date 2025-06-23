@@ -61,6 +61,10 @@
       <artifactId>quarkus-websockets-client</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-messaging-kafka</artifactId>
+    </dependency>
+    <dependency>
 	    <groupId>com.hazelcast</groupId>
 	    <artifactId>quarkus-hazelcast-client</artifactId>
 	</dependency>
@@ -95,12 +99,6 @@
     <dependency>
 	    <groupId>org.apache.camel.quarkus</groupId>
 	    <artifactId>camel-quarkus-file</artifactId>
-	</dependency>
-	
-	<dependency>
-		<groupId>com.hazelcast</groupId>
-		<artifactId>hazelcast</artifactId>
-		<version>5.2.5</version>
 	</dependency>
 	
 	<dependency>
