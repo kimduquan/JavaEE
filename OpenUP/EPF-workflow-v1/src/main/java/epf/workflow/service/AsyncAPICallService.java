@@ -1,5 +1,7 @@
 package epf.workflow.service;
 
-public interface AsyncAPICallService {
+import epf.workflow.schema.AsyncAPI;
+
+public interface AsyncAPICallService extends CallService<AsyncAPI> {
 
 }

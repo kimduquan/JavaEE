@@ -28,8 +28,8 @@ import epf.workflow.schema.Emit;
 import epf.workflow.schema.Export;
 import epf.workflow.schema.For;
 import epf.workflow.schema.Fork;
-import epf.workflow.schema.GRPC;
-import epf.workflow.schema.GRPCCall;
+import epf.workflow.schema.gRPC;
+import epf.workflow.schema.gRPCCall;
 import epf.workflow.schema.HTTP;
 import epf.workflow.schema.HTTPCall;
 import epf.workflow.schema.Listen;
@@ -123,8 +123,8 @@ public class Runtime {
 		return null;
 	}
 	
-	private ResponseBuilder grpc(final Instance instance, final Task task, final GRPC grpc, final JsonValue input) throws Exception {
-		final Object entity = integration.grpc(instance, task, grpc, input);
+	private ResponseBuilder gRPC(final Instance instance, final Task task, final gRPC gRPC, final JsonValue input) throws Exception {
+		final Object entity = integration.gRPC(instance, task, gRPC, input);
 		return new ResponseBuilder().entity(entity);
 	}
 	
@@ -191,9 +191,9 @@ public class Runtime {
 			final AsyncAPI asyncapi = ((AsyncAPICall) call).getWith();
 			return asyncapi(instance, task, asyncapi, input);
 		}
-		else if(call instanceof GRPCCall) {
-			final GRPC grpc = ((GRPCCall) call).getWith();
-			return grpc(instance, task, grpc, input);
+		else if(call instanceof gRPCCall) {
+			final gRPC gRPC = ((gRPCCall) call).getWith();
+			return gRPC(instance, task, gRPC, input);
 		}
 		else if(call instanceof HTTPCall) {
 			final HTTP http = ((HTTPCall) call).getWith();

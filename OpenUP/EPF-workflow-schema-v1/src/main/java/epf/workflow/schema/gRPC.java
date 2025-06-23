@@ -5,7 +5,7 @@ import org.eclipse.microprofile.graphql.Description;
 import jakarta.validation.constraints.NotNull;
 
 @Description("The gRPC Call enables communication with external systems via the gRPC protocol, enabling efficient and reliable communication between distributed components.")
-public class GRPC {
+public class gRPC {
 	
 	public class Service {
 		

@@ -1,5 +1,7 @@
 package epf.workflow.service;
 
-public interface gRPCCallService {
+import epf.workflow.schema.gRPCCall;
+
+public interface gRPCCallService extends CallService<gRPCCall> {
 
 }

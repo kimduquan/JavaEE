@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 @Description("Enables the execution of a specified function within a workflow, allowing seamless integration with custom business logic or external services.")
 @JsonbTypeInfo(key = "call", value = {
 		@JsonbSubtype(alias = "asyncapi", type = AsyncAPICall.class),
-		@JsonbSubtype(alias = "grpc", type = GRPCCall.class),
+		@JsonbSubtype(alias = "grpc", type = gRPCCall.class),
 		@JsonbSubtype(alias = "http", type = HTTPCall.class),
 		@JsonbSubtype(alias = "openapi", type = OpenAPICall.class)
 })

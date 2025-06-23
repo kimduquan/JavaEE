@@ -1,5 +1,7 @@
 package epf.workflow.service;
 
-public interface HTTPCallService {
+import epf.workflow.schema.HTTPCall;
+
+public interface HTTPCallService extends CallService<HTTPCall> {
 
 }

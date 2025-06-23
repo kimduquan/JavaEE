@@ -1,5 +1,7 @@
 package epf.workflow.service;
 
-public interface OpenAPICallService {
+import epf.workflow.schema.OpenAPICall;
+
+public interface OpenAPICallService extends CallService<OpenAPICall> {
 
 }
