@@ -2,6 +2,7 @@ package epf.workflow.spi;
 
 import java.util.Date;
 import java.util.Map;
+import epf.workflow.schema.Error;
 
 public interface TaskService {
 
