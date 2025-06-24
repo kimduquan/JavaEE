@@ -12,20 +12,24 @@ public class AsyncAPI {
 	private ExternalResource document;
 	
 	@NotNull
+	@Description("The name of the channel on which to perform the operation.")
+	private String channel;
+	
+	@NotNull
 	@Description("A reference to the AsyncAPI operation to call.")
-	private String operationRef;
+	private String operation;
 	
-	@Description("A reference to the server to call the specified AsyncAPI operation on. If not set, default to the first server matching the operation's channel.")
-	private String server;
+	@Description("An object used to configure to the server to call the specified AsyncAPI operation on.")
+	private AsyncAPIServer server;
 	
-	@Description("The name of the message to use. If not set, defaults to the first message defined by the operation.")
-	private String message;
+	@Description("The protocol to use to select the target server. Ignored if server has been set.")
+	private String protocol;
 	
-	@Description("The name of the binding to use. If not set, defaults to the first binding defined by the operation")
-	private String binding;
+	@Description("An object used to configure the message to publish using the target operation.")
+	private AsyncAPIOutboundMessage message;
 	
-	@Description("The operation's payload, as defined by the configured message")
-	private Object payload;
+	@Description("An object used to configure the subscription to messages consumed using the target operation.")
+	private AsyncAPISubscription subscription;
 	
 	@Description("The authentication policy, or the name of the authentication policy, to use when calling the AsyncAPI operation.")
 	private Either<String, Authentication> authentication;
@@ -38,44 +42,52 @@ public class AsyncAPI {
 		this.document = document;
 	}
 
-	public String getOperationRef() {
-		return operationRef;
+	public String getChannel() {
+		return channel;
 	}
 
-	public void setOperationRef(String operationRef) {
-		this.operationRef = operationRef;
+	public void setChannel(String channel) {
+		this.channel = channel;
 	}
 
-	public String getServer() {
+	public String getOperation() {
+		return operation;
+	}
+
+	public void setOperation(String operation) {
+		this.operation = operation;
+	}
+
+	public AsyncAPIServer getServer() {
 		return server;
 	}
 
-	public void setServer(String server) {
+	public void setServer(AsyncAPIServer server) {
 		this.server = server;
 	}
 
-	public String getMessage() {
+	public String getProtocol() {
+		return protocol;
+	}
+
+	public void setProtocol(String protocol) {
+		this.protocol = protocol;
+	}
+
+	public AsyncAPIOutboundMessage getMessage() {
 		return message;
 	}
 
-	public void setMessage(String message) {
+	public void setMessage(AsyncAPIOutboundMessage message) {
 		this.message = message;
 	}
 
-	public String getBinding() {
-		return binding;
+	public AsyncAPISubscription getSubscription() {
+		return subscription;
 	}
 
-	public void setBinding(String binding) {
-		this.binding = binding;
-	}
-
-	public Object getPayload() {
-		return payload;
-	}
-
-	public void setPayload(Object payload) {
-		this.payload = payload;
+	public void setSubscription(AsyncAPISubscription subscription) {
+		this.subscription = subscription;
 	}
 
 	public Either<String, Authentication> getAuthentication() {

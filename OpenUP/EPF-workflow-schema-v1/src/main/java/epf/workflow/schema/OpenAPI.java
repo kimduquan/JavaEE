@@ -1,7 +1,9 @@
 package epf.workflow.schema;
 
 import java.util.Map;
+import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 @Description("The OpenAPI Call enables workflows to interact with external services described by OpenAPI.")
@@ -11,18 +13,23 @@ public class OpenAPI {
 	@Description("The OpenAPI document that defines the operation to call.")
 	private ExternalResource document;
 	
-	@NotNull
+	@NotBlank
 	@Description("The id of the OpenAPI operation to call.")
 	private String operationId;
 	
 	@Description("A name/value mapping of the parameters, if any, of the OpenAPI operation to call.")
-	private Map<? ,?> arguments;
+	private Map<String, Object> arguments;
 	
 	@Description("The authentication policy, or the name of the authentication policy, to use when calling the OpenAPI operation.")
 	private Authentication authentication;
 	
+	@DefaultValue("content")
 	@Description("The OpenAPI call's output format.")
-	private String output;
+	private String output = "content";
+	
+	@DefaultValue("false")
+	@Description("Specifies whether redirection status codes (300–399) should be treated as errors.")
+	private Boolean redirect = false;
 
 	public ExternalResource getDocument() {
 		return document;
@@ -40,14 +47,6 @@ public class OpenAPI {
 		this.operationId = operationId;
 	}
 
-	public Map<?, ?> getArguments() {
-		return arguments;
-	}
-
-	public void setArguments(Map<?, ?> arguments) {
-		this.arguments = arguments;
-	}
-
 	public Authentication getAuthentication() {
 		return authentication;
 	}
@@ -62,5 +61,17 @@ public class OpenAPI {
 
 	public void setOutput(String output) {
 		this.output = output;
+	}
+
+	public Boolean getRedirect() {
+		return redirect;
+	}
+
+	public void setRedirect(Boolean redirect) {
+		this.redirect = redirect;
+	}
+
+	public void setArguments(Map<String, Object> arguments) {
+		this.arguments = arguments;
 	}
 }
