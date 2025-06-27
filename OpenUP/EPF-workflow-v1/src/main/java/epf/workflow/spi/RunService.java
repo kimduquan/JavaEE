@@ -1,6 +1,6 @@
 package epf.workflow.spi;
 
-import epf.workflow.schema.Run;
+import epf.workflow.task.schema.Run;
 
 public interface RunService {
 

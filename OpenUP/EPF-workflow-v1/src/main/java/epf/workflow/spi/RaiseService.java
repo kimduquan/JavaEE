@@ -1,6 +1,6 @@
 package epf.workflow.spi;
 
-import epf.workflow.schema.Raise;
+import epf.workflow.task.schema.Raise;
 
 public interface RaiseService {
 

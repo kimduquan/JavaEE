@@ -1,6 +1,6 @@
 package epf.workflow.spi;
 
-import epf.workflow.schema.Listen;
+import epf.workflow.task.schema.Listen;
 
 public interface ListenService {
 

@@ -1,6 +1,6 @@
 package epf.workflow.spi;
 
-import epf.workflow.schema.Emit;
+import epf.workflow.task.schema.Emit;
 
 public interface EmitService {
 

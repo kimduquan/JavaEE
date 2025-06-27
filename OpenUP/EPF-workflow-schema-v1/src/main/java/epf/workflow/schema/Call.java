@@ -3,9 +3,8 @@ package epf.workflow.schema;
 import org.eclipse.microprofile.graphql.Description;
 import jakarta.json.bind.annotation.JsonbSubtype;
 import jakarta.json.bind.annotation.JsonbTypeInfo;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
-@Description("Enables the execution of a specified function within a workflow, allowing seamless integration with custom business logic or external services.")
 @JsonbTypeInfo(key = "call", value = {
 		@JsonbSubtype(alias = "asyncapi", type = AsyncAPICall.class),
 		@JsonbSubtype(alias = "grpc", type = gRPCCall.class),
@@ -14,7 +13,7 @@ import jakarta.validation.constraints.NotNull;
 })
 public class Call<T> {
 
-	@NotNull
+	@NotBlank
 	@Description("The name of the function to call.")
 	private String call;
 	

@@ -2,6 +2,7 @@ package epf.workflow.schema;
 
 import java.util.Map;
 import org.eclipse.microprofile.graphql.Description;
+
 import jakarta.validation.constraints.NotNull;
 
 @Description("Holds the definition for extending functionality, providing configuration options for how an extension extends and interacts with other components.")

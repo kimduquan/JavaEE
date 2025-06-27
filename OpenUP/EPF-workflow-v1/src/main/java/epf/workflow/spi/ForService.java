@@ -1,6 +1,6 @@
 package epf.workflow.spi;
 
-import epf.workflow.schema.For;
+import epf.workflow.task.schema.For;
 
 public interface ForService {
 

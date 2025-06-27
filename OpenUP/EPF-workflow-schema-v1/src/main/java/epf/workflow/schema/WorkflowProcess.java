@@ -2,16 +2,16 @@ package epf.workflow.schema;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 @Description("Enables the invocation and execution of nested workflows within a parent workflow, facilitating modularization, reusability, and abstraction of complex logic or business processes by encapsulating them into standalone workflow units.")
 public class WorkflowProcess {
 
-	@NotNull
+	@NotBlank
 	@Description("The name of the workflow to run")
 	private String name;
 	
-	@NotNull
+	@NotBlank
 	@Description("The version of the workflow to run.")
 	@DefaultValue("latest")
 	private String version = "latest";

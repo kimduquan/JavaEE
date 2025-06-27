@@ -1,6 +1,6 @@
 package epf.workflow.spi;
 
-import epf.workflow.schema.Fork;
+import epf.workflow.task.schema.Fork;
 
 public interface ForkService {
 

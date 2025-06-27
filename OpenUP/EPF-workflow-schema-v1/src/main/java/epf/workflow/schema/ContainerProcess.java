@@ -2,26 +2,32 @@ package epf.workflow.schema;
 
 import java.util.Map;
 import org.eclipse.microprofile.graphql.Description;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 @Description("Enables the execution of external processes encapsulated within a containerized environment, allowing workflows to interact with and execute complex operations using containerized applications, scripts, or commands.")
 public class ContainerProcess {
 
-	@NotNull
+	@NotBlank
 	@Description("The name of the container image to run")
 	private String image;
+	
+	@Description("A runtime expression, if any, used to give specific name to the container.")
+	private String name;
 	
 	@Description("The command, if any, to execute on the container")
 	private String command;
 	
 	@Description("The container's port mappings, if any")
-	private Map<?, ?> ports;
+	private Map<Integer, Integer> ports;
 	
 	@Description("The container's volume mappings, if any")
-	private Map<?, ?> volumes;
+	private Map<String, String> volumes;
 	
 	@Description("A key/value mapping of the environment variables, if any, to use when running the configured process")
-	private Map<?, ?> environment;
+	private Map<String, String> environment;
+	
+	@Description("An object used to configure the container's lifetime.")
+	private ContainerLifetime lifetime;
 
 	public String getImage() {
 		return image;
@@ -39,27 +45,43 @@ public class ContainerProcess {
 		this.command = command;
 	}
 
-	public Map<?, ?> getPorts() {
+	public Map<Integer, Integer> getPorts() {
 		return ports;
 	}
 
-	public void setPorts(Map<?, ?> ports) {
+	public void setPorts(Map<Integer, Integer> ports) {
 		this.ports = ports;
 	}
 
-	public Map<?, ?> getVolumes() {
+	public Map<String, String> getVolumes() {
 		return volumes;
 	}
 
-	public void setVolumes(Map<?, ?> volumes) {
+	public void setVolumes(Map<String, String> volumes) {
 		this.volumes = volumes;
 	}
 
-	public Map<?, ?> getEnvironment() {
+	public Map<String, String> getEnvironment() {
 		return environment;
 	}
 
-	public void setEnvironment(Map<?, ?> environment) {
+	public void setEnvironment(Map<String, String> environment) {
 		this.environment = environment;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public ContainerLifetime getLifetime() {
+		return lifetime;
+	}
+
+	public void setLifetime(ContainerLifetime lifetime) {
+		this.lifetime = lifetime;
 	}
 }
