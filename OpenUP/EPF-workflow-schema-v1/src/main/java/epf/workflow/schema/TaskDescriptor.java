@@ -1,12 +1,10 @@
 package epf.workflow.schema;
 
-import java.util.Map;
-
 public class TaskDescriptor {
 
 	private String name;
 	private String reference;
-	private Map<String, Object> definition;
+	private Task definition;
 	private Object input;
 	private Object output;
 	private DateTimeDescriptor startedAt;
@@ -23,10 +21,10 @@ public class TaskDescriptor {
 	public void setReference(String reference) {
 		this.reference = reference;
 	}
-	public Map<String, Object> getDefinition() {
+	public Task getDefinition() {
 		return definition;
 	}
-	public void setDefinition(Map<String, Object> definition) {
+	public void setDefinition(Task definition) {
 		this.definition = definition;
 	}
 	public Object getInput() {

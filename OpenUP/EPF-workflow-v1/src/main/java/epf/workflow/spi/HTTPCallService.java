@@ -1,7 +1,9 @@
 package epf.workflow.spi;
 
-import epf.workflow.schema.HTTPCall;
+import epf.workflow.schema.HTTP;
+import epf.workflow.schema.Error;
 
-public interface HTTPCallService extends CallService<HTTPCall> {
+public interface HTTPCallService {
 
+	Object call(final HTTP http) throws Error;
 }

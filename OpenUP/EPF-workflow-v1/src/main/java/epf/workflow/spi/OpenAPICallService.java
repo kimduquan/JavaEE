@@ -1,7 +1,9 @@
 package epf.workflow.spi;
 
-import epf.workflow.schema.OpenAPICall;
+import epf.workflow.schema.OpenAPI;
+import epf.workflow.schema.Error;
 
-public interface OpenAPICallService extends CallService<OpenAPICall> {
+public interface OpenAPICallService {
 
+	Object call(final OpenAPI openAPI) throws Error;
 }

@@ -1,11 +1,9 @@
 package epf.workflow.schema;
 
-import java.util.Map;
-
 public class WorkflowDescriptor {
 
 	private String id;
-	private Map<String, Object> definition;
+	private Workflow definition;
 	private Object input;
 	private DateTimeDescriptor startedAt;
 	
@@ -15,10 +13,10 @@ public class WorkflowDescriptor {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public Map<String, Object> getDefinition() {
+	public Workflow getDefinition() {
 		return definition;
 	}
-	public void setDefinition(Map<String, Object> definition) {
+	public void setDefinition(Workflow definition) {
 		this.definition = definition;
 	}
 	public Object getInput() {
