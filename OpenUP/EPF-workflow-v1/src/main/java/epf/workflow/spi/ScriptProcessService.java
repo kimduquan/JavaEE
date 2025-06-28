@@ -1,8 +1,9 @@
 package epf.workflow.spi;
 
+import epf.workflow.schema.ProcessResult;
 import epf.workflow.schema.ScriptProcess;
 
 public interface ScriptProcessService {
 
-	void run(final ScriptProcess scriptProcess) throws Exception;
+	ProcessResult run(final ScriptProcess scriptProcess, final boolean await) throws Error;
 }

@@ -2,10 +2,17 @@ package epf.workflow.task.schema;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
-
 import epf.workflow.schema.Task;
 
 public class RunTask extends Task {
+	
+	public enum Output {
+		stdout,
+		stderr,
+		code,
+		all,
+		none
+	}
 
 	private Run run;
 	
@@ -15,7 +22,7 @@ public class RunTask extends Task {
 	
 	@Description("Configures the output of the process.")
 	@DefaultValue("stdout")
-	private String return_ = "stdout";
+	private Output return_ = Output.stdout;
 
 	public Run getRun() {
 		return run;
@@ -33,11 +40,11 @@ public class RunTask extends Task {
 		this.await = await;
 	}
 
-	public String getReturn_() {
+	public Output getReturn_() {
 		return return_;
 	}
 
-	public void setReturn_(String return_) {
+	public void setReturn_(Output return_) {
 		this.return_ = return_;
 	}
 }

@@ -1,6 +1,8 @@
 package epf.workflow.service;
 
+import epf.workflow.schema.ProcessResult;
 import epf.workflow.schema.Workflow;
+import epf.workflow.schema.Error;
 import epf.workflow.schema.WorkflowProcess;
 import epf.workflow.spi.WorkflowProcessService;
 import epf.workflow.spi.WorkflowService;
@@ -14,8 +16,10 @@ public class WorkflowProcessServiceImpl implements WorkflowProcessService {
 	transient WorkflowService workflowService;
 
 	@Override
-	public void run(final WorkflowProcess workflowProcess) throws Exception {
+	public ProcessResult run(final WorkflowProcess workflowProcess, final boolean await) throws Error {
 		final Workflow workflow = workflowService.getWorkflow(workflowProcess.getName(), workflowProcess.getVersion());
-		workflowService.start(workflow);
+		workflowService.start(workflowProcess.getInput(), workflow);
+		final ProcessResult processResult = new ProcessResult();
+		return processResult;
 	}
 }

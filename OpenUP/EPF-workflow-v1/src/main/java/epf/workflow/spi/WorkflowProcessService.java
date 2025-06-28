@@ -1,8 +1,10 @@
 package epf.workflow.spi;
 
+import epf.workflow.schema.ProcessResult;
 import epf.workflow.schema.WorkflowProcess;
+import epf.workflow.schema.Error;
 
 public interface WorkflowProcessService {
 
-	void run(final WorkflowProcess workflowProcess) throws Exception;
+	ProcessResult run(final WorkflowProcess workflowProcess, final boolean await) throws Error;
 }
