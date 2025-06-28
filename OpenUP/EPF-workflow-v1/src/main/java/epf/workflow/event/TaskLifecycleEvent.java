@@ -1,9 +1,11 @@
 package epf.workflow.event;
 
+import java.net.URI;
+
 public abstract class TaskLifecycleEvent {
 
 	private String workflow;
-	private String task;
+	private URI task;
 	
 	public String getWorkflow() {
 		return workflow;
@@ -11,10 +13,10 @@ public abstract class TaskLifecycleEvent {
 	public void setWorkflow(String workflow) {
 		this.workflow = workflow;
 	}
-	public String getTask() {
+	public URI getTask() {
 		return task;
 	}
-	public void setTask(String task) {
+	public void setTask(URI task) {
 		this.task = task;
 	}
 }

@@ -1,8 +1,11 @@
 package epf.workflow.spi;
 
-import epf.workflow.task.schema.Listen;
+import epf.workflow.schema.Error;
+import epf.workflow.schema.RuntimeExpressionArguments;
+import epf.workflow.schema.Workflow;
+import epf.workflow.task.schema.ListenTask;
 
 public interface ListenService {
 
-	void listen(final Listen listen) throws Exception;
+	Object listen(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments, final String taskName, final ListenTask task, final Object taskInput) throws Error;
 }

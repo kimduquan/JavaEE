@@ -1,8 +1,10 @@
 package epf.workflow.spi;
 
+import java.util.Map;
 import epf.workflow.schema.Use;
+import epf.workflow.schema.Error;
 
 public interface UseService {
-
-	void use(final Use use) throws Exception;
+	
+	Map<String, Object> useSecrets(final Use use) throws Error;
 }

@@ -1,10 +1,12 @@
 package epf.workflow.spi;
 
 import epf.workflow.schema.Workflow;
+import epf.workflow.schema.Error;
+import epf.workflow.schema.RuntimeError;
 
 public interface WorkflowService {
 
-	Workflow getWorkflow(final String name, final String version) throws Exception;
+	Workflow getWorkflow(final String name, final String version) throws RuntimeError;
 	
-	void start(final Workflow workflow) throws Exception;
+	Object start(final Object rawInput, final Workflow workflow) throws Error;
 }

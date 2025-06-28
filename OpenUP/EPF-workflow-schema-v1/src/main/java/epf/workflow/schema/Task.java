@@ -25,7 +25,7 @@ public class Task {
 	
 	@Description("The flow directive to execute next.")
 	@DefaultValue("continue")
-	private FlowDirective then = FlowDirective._continue;
+	private String then = FlowDirective._continue;
 	
 	@Description("Additional information about the task.")
 	private Map<String, Object> metadata;
@@ -70,11 +70,11 @@ public class Task {
 		this.timeout = timeout;
 	}
 
-	public FlowDirective getThen() {
+	public String getThen() {
 		return then;
 	}
 
-	public void setThen(FlowDirective then) {
+	public void setThen(String then) {
 		this.then = then;
 	}
 

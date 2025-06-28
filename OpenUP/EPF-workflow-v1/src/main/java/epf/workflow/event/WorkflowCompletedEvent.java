@@ -6,7 +6,7 @@ import java.util.Map;
 public class WorkflowCompletedEvent extends WorkflowLifecycleEvent {
 
 	private Date completedAt;
-	private Map<String, String> output;
+	private Map<String, Object> output;
 	
 	public Date getCompletedAt() {
 		return completedAt;
@@ -14,10 +14,10 @@ public class WorkflowCompletedEvent extends WorkflowLifecycleEvent {
 	public void setCompletedAt(Date completedAt) {
 		this.completedAt = completedAt;
 	}
-	public Map<String, String> getOutput() {
+	public Map<String, Object> getOutput() {
 		return output;
 	}
-	public void setOutput(Map<String, String> output) {
+	public void setOutput(Map<String, Object> output) {
 		this.output = output;
 	}
 	

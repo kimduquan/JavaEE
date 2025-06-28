@@ -13,6 +13,7 @@ import epf.workflow.event.TaskRetriedEvent;
 import epf.workflow.event.TaskStartedEvent;
 import epf.workflow.event.TaskStatusChangedEvent;
 import epf.workflow.event.TaskSuspendedEvent;
+import epf.workflow.schema.RuntimeError;
 import epf.workflow.spi.TaskLifecycleEventsService;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -23,47 +24,47 @@ public class TaskLifecycleEventsServiceImpl implements TaskLifecycleEventsServic
 	transient Emitter<TaskLifecycleEvent> emitter;
 
 	@Override
-	public void fire(final TaskCreatedEvent event) throws Exception {
+	public void fire(final TaskCreatedEvent event) throws RuntimeError {
 		emitter.send(event);
 	}
 
 	@Override
-	public void fire(final TaskStartedEvent event) throws Exception {
+	public void fire(final TaskStartedEvent event) throws RuntimeError {
 		emitter.send(event);
 	}
 
 	@Override
-	public void fire(final TaskSuspendedEvent event) throws Exception {
+	public void fire(final TaskSuspendedEvent event) throws RuntimeError {
 		emitter.send(event);
 	}
 
 	@Override
-	public void fire(final TaskResumedEvent event) throws Exception {
+	public void fire(final TaskResumedEvent event) throws RuntimeError {
 		emitter.send(event);
 	}
 
 	@Override
-	public void fire(final TaskRetriedEvent event) throws Exception {
+	public void fire(final TaskRetriedEvent event) throws RuntimeError {
 		emitter.send(event);
 	}
 
 	@Override
-	public void fire(final TaskCancelledEvent event) throws Exception {
+	public void fire(final TaskCancelledEvent event) throws RuntimeError {
 		emitter.send(event);
 	}
 
 	@Override
-	public void fire(final TaskFaultedEvent event) throws Exception {
+	public void fire(final TaskFaultedEvent event) throws RuntimeError {
 		emitter.send(event);
 	}
 
 	@Override
-	public void fire(final TaskCompletedEvent event) throws Exception {
+	public void fire(final TaskCompletedEvent event) throws RuntimeError {
 		emitter.send(event);
 	}
 
 	@Override
-	public void fire(final TaskStatusChangedEvent event) throws Exception {
+	public void fire(final TaskStatusChangedEvent event) throws RuntimeError {
 		emitter.send(event);
 	}
 

@@ -35,8 +35,8 @@ public class Either<L, R> implements Serializable {
 		return right != null;
 	}
 	
-	public boolean isNull() {
-		return left == null && right == null;
+	public static <L, R> boolean isNull(final Either<L, R> either) {
+		return either == null || (either.left == null && either.right == null);
 	}
 	
 	public void copy(final Either<L, R> from) {

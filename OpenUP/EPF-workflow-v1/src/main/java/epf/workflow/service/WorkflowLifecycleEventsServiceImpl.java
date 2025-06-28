@@ -13,6 +13,7 @@ import epf.workflow.event.WorkflowResumedEvent;
 import epf.workflow.event.WorkflowStartedEvent;
 import epf.workflow.event.WorkflowStatusChangedEvent;
 import epf.workflow.event.WorkflowSuspendedEvent;
+import epf.workflow.schema.RuntimeError;
 import epf.workflow.spi.WorkflowLifecycleEventsService;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -23,47 +24,47 @@ public class WorkflowLifecycleEventsServiceImpl implements WorkflowLifecycleEven
 	transient Emitter<WorkflowLifecycleEvent> emitter;
 
 	@Override
-	public void fire(final WorkflowStartedEvent event) throws Exception {
+	public void fire(final WorkflowStartedEvent event) throws RuntimeError {
 		emitter.send(event);
 	}
 
 	@Override
-	public void fire(final WorkflowSuspendedEvent event) throws Exception {
+	public void fire(final WorkflowSuspendedEvent event) throws RuntimeError {
 		emitter.send(event);
 	}
 
 	@Override
-	public void fire(final WorkflowResumedEvent event) throws Exception {
+	public void fire(final WorkflowResumedEvent event) throws RuntimeError {
 		emitter.send(event);
 	}
 
 	@Override
-	public void fire(final WorkflowCorrelationStartedEvent event) throws Exception {
+	public void fire(final WorkflowCorrelationStartedEvent event) throws RuntimeError {
 		emitter.send(event);
 	}
 
 	@Override
-	public void fire(final WorkflowCorrelationCompletedEvent event) throws Exception {
+	public void fire(final WorkflowCorrelationCompletedEvent event) throws RuntimeError {
 		emitter.send(event);
 	}
 
 	@Override
-	public void fire(final WorkflowCancelledEvent event) throws Exception {
+	public void fire(final WorkflowCancelledEvent event) throws RuntimeError {
 		emitter.send(event);
 	}
 
 	@Override
-	public void fire(final WorkflowFaultedEvent event) throws Exception {
+	public void fire(final WorkflowFaultedEvent event) throws RuntimeError {
 		emitter.send(event);
 	}
 
 	@Override
-	public void fire(final WorkflowCompletedEvent event) throws Exception {
+	public void fire(final WorkflowCompletedEvent event) throws RuntimeError {
 		emitter.send(event);
 	}
 
 	@Override
-	public void fire(final WorkflowStatusChangedEvent event) throws Exception {
+	public void fire(final WorkflowStatusChangedEvent event) throws RuntimeError {
 		emitter.send(event);
 	}
 

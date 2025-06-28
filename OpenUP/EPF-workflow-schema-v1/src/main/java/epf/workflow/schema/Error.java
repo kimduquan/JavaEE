@@ -5,7 +5,12 @@ import org.eclipse.microprofile.graphql.Description;
 import jakarta.validation.constraints.NotNull;
 
 @Description("Defines the Problem Details RFC compliant description of an error.")
-public class Error {
+public class Error extends Exception {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@NotNull
 	@Description("A URI reference that identifies the error type. For cross-compatibility concerns, it is strongly recommended to use Standard Error Types whenever possible.")
@@ -23,6 +28,14 @@ public class Error {
 	
 	@Description("A human-readable explanation specific to this occurrence of the error.")
 	private String detail;
+	
+	public Error() {
+		super();
+	}
+	
+	public Error(final Throwable throwable) {
+		super(throwable);
+	}
 	
 	public Error clone() {
 		final Error error = new Error();
