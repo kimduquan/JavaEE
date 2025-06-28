@@ -12,13 +12,13 @@ import epf.workflow.event.TaskSuspendedEvent;
 
 public interface TaskLifecycleEventsService {
 
-	void notify(final TaskCreatedEvent event) throws Exception;
-	void notify(final TaskStartedEvent event) throws Exception;
-	void notify(final TaskSuspendedEvent event) throws Exception;
-	void notify(final TaskResumedEvent event) throws Exception;
-	void notify(final TaskRetriedEvent event) throws Exception;
-	void notify(final TaskCancelledEvent event) throws Exception;
-	void notify(final TaskFaultedEvent event) throws Exception;
-	void notify(final TaskCompletedEvent event) throws Exception;
-	void notify(final TaskStatusChangedEvent event) throws Exception;
+	void fire(final TaskCreatedEvent event) throws Exception;
+	void fire(final TaskStartedEvent event) throws Exception;
+	void fire(final TaskSuspendedEvent event) throws Exception;
+	void fire(final TaskResumedEvent event) throws Exception;
+	void fire(final TaskRetriedEvent event) throws Exception;
+	void fire(final TaskCancelledEvent event) throws Exception;
+	void fire(final TaskFaultedEvent event) throws Exception;
+	void fire(final TaskCompletedEvent event) throws Exception;
+	void fire(final TaskStatusChangedEvent event) throws Exception;
 }

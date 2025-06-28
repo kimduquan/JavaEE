@@ -12,13 +12,13 @@ import epf.workflow.event.WorkflowSuspendedEvent;
 
 public interface WorkflowLifecycleEventsService {
 
-	void notify(final WorkflowStartedEvent event) throws Exception;
-	void notify(final WorkflowSuspendedEvent event) throws Exception;
-	void notify(final WorkflowResumedEvent event) throws Exception;
-	void notify(final WorkflowCorrelationStartedEvent event) throws Exception;
-	void notify(final WorkflowCorrelationCompletedEvent event) throws Exception;
-	void notify(final WorkflowCancelledEvent event) throws Exception;
-	void notify(final WorkflowFaultedEvent event) throws Exception;
-	void notify(final WorkflowCompletedEvent event) throws Exception;
-	void notify(final WorkflowStatusChangedEvent event) throws Exception;
+	void fire(final WorkflowStartedEvent event) throws Exception;
+	void fire(final WorkflowSuspendedEvent event) throws Exception;
+	void fire(final WorkflowResumedEvent event) throws Exception;
+	void fire(final WorkflowCorrelationStartedEvent event) throws Exception;
+	void fire(final WorkflowCorrelationCompletedEvent event) throws Exception;
+	void fire(final WorkflowCancelledEvent event) throws Exception;
+	void fire(final WorkflowFaultedEvent event) throws Exception;
+	void fire(final WorkflowCompletedEvent event) throws Exception;
+	void fire(final WorkflowStatusChangedEvent event) throws Exception;
 }

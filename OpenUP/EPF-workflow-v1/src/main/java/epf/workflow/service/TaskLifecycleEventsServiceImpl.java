@@ -23,47 +23,47 @@ public class TaskLifecycleEventsServiceImpl implements TaskLifecycleEventsServic
 	transient Emitter<TaskLifecycleEvent> emitter;
 
 	@Override
-	public void notify(final TaskCreatedEvent event) throws Exception {
+	public void fire(final TaskCreatedEvent event) throws Exception {
 		emitter.send(event);
 	}
 
 	@Override
-	public void notify(final TaskStartedEvent event) throws Exception {
+	public void fire(final TaskStartedEvent event) throws Exception {
 		emitter.send(event);
 	}
 
 	@Override
-	public void notify(final TaskSuspendedEvent event) throws Exception {
+	public void fire(final TaskSuspendedEvent event) throws Exception {
 		emitter.send(event);
 	}
 
 	@Override
-	public void notify(final TaskResumedEvent event) throws Exception {
+	public void fire(final TaskResumedEvent event) throws Exception {
 		emitter.send(event);
 	}
 
 	@Override
-	public void notify(final TaskRetriedEvent event) throws Exception {
+	public void fire(final TaskRetriedEvent event) throws Exception {
 		emitter.send(event);
 	}
 
 	@Override
-	public void notify(final TaskCancelledEvent event) throws Exception {
+	public void fire(final TaskCancelledEvent event) throws Exception {
 		emitter.send(event);
 	}
 
 	@Override
-	public void notify(final TaskFaultedEvent event) throws Exception {
+	public void fire(final TaskFaultedEvent event) throws Exception {
 		emitter.send(event);
 	}
 
 	@Override
-	public void notify(final TaskCompletedEvent event) throws Exception {
+	public void fire(final TaskCompletedEvent event) throws Exception {
 		emitter.send(event);
 	}
 
 	@Override
-	public void notify(final TaskStatusChangedEvent event) throws Exception {
+	public void fire(final TaskStatusChangedEvent event) throws Exception {
 		emitter.send(event);
 	}
 

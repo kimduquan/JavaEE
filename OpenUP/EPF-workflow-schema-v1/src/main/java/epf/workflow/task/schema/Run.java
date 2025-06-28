@@ -1,11 +1,11 @@
 package epf.workflow.task.schema;
 
 import org.eclipse.microprofile.graphql.Description;
-
 import epf.workflow.schema.ContainerProcess;
 import epf.workflow.schema.ScriptProcess;
 import epf.workflow.schema.ShellProcess;
 import epf.workflow.schema.Workflow;
+import epf.workflow.schema.WorkflowProcess;
 
 @Description("Provides the capability to execute external containers, shell commands, scripts, or workflows.")
 public class Run {
@@ -20,7 +20,7 @@ public class Run {
 	private ShellProcess shell;
 	
 	@Description("The definition of the workflow to run.")
-	private Workflow workflow;
+	private WorkflowProcess workflow;
 
 	public ContainerProcess getContainer() {
 		return container;
@@ -46,11 +46,11 @@ public class Run {
 		this.shell = shell;
 	}
 
-	public Workflow getWorkflow() {
+	public WorkflowProcess getWorkflow() {
 		return workflow;
 	}
 
-	public void setWorkflow(Workflow workflow) {
+	public void setWorkflow(WorkflowProcess workflow) {
 		this.workflow = workflow;
 	}
 }

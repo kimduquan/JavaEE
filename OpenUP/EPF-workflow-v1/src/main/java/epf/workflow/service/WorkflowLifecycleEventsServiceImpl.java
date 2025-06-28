@@ -23,47 +23,47 @@ public class WorkflowLifecycleEventsServiceImpl implements WorkflowLifecycleEven
 	transient Emitter<WorkflowLifecycleEvent> emitter;
 
 	@Override
-	public void notify(final WorkflowStartedEvent event) throws Exception {
+	public void fire(final WorkflowStartedEvent event) throws Exception {
 		emitter.send(event);
 	}
 
 	@Override
-	public void notify(final WorkflowSuspendedEvent event) throws Exception {
+	public void fire(final WorkflowSuspendedEvent event) throws Exception {
 		emitter.send(event);
 	}
 
 	@Override
-	public void notify(final WorkflowResumedEvent event) throws Exception {
+	public void fire(final WorkflowResumedEvent event) throws Exception {
 		emitter.send(event);
 	}
 
 	@Override
-	public void notify(final WorkflowCorrelationStartedEvent event) throws Exception {
+	public void fire(final WorkflowCorrelationStartedEvent event) throws Exception {
 		emitter.send(event);
 	}
 
 	@Override
-	public void notify(final WorkflowCorrelationCompletedEvent event) throws Exception {
+	public void fire(final WorkflowCorrelationCompletedEvent event) throws Exception {
 		emitter.send(event);
 	}
 
 	@Override
-	public void notify(final WorkflowCancelledEvent event) throws Exception {
+	public void fire(final WorkflowCancelledEvent event) throws Exception {
 		emitter.send(event);
 	}
 
 	@Override
-	public void notify(final WorkflowFaultedEvent event) throws Exception {
+	public void fire(final WorkflowFaultedEvent event) throws Exception {
 		emitter.send(event);
 	}
 
 	@Override
-	public void notify(final WorkflowCompletedEvent event) throws Exception {
+	public void fire(final WorkflowCompletedEvent event) throws Exception {
 		emitter.send(event);
 	}
 
 	@Override
-	public void notify(final WorkflowStatusChangedEvent event) throws Exception {
+	public void fire(final WorkflowStatusChangedEvent event) throws Exception {
 		emitter.send(event);
 	}
 
