@@ -8,8 +8,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
-
 import epf.workflow.schema.Error;
 import epf.workflow.schema.FlowDirective;
 import epf.workflow.event.TaskCreatedEvent;

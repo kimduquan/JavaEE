@@ -4,7 +4,6 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import epf.workflow.event.TaskCompletedEvent;
 import epf.workflow.event.TaskFaultedEvent;
 import epf.workflow.event.TaskStartedEvent;
