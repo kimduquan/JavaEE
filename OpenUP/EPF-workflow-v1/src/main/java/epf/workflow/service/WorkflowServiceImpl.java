@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import epf.workflow.schema.Error;
 import epf.workflow.event.WorkflowCompletedEvent;
 import epf.workflow.event.WorkflowFaultedEvent;
