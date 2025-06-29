@@ -108,13 +108,13 @@ public class TaskServiceImpl implements TaskService {
 			fireTaskStartedEvent(workflow, arguments, taskURI, taskStartedAt);
 			final TaskDescriptor taskDescriptor = createTaskDescriptor(workflowInput, taskName, taskURI, task, taskStartedAt);
 			arguments.setTask(taskDescriptor);
-			taskOutput = doTask(workflow, workflowInput, arguments, taskName, taskURI, task, taskInput, end);
+			taskOutput = doTask(workflow, workflowInput, arguments, taskURI, task, taskInput, end);
 		}
 		fireTaskCompletedEvent(workflow, arguments, taskURI);
 		return taskOutput;
 	}
 
-	private Object doTask(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments, final String taskName, final URI taskURI, final Task task, Object taskInput, final AtomicBoolean end) throws RuntimeError, Error {
+	private Object doTask(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments, final URI taskURI, final Task task, Object taskInput, final AtomicBoolean end) throws RuntimeError, Error {
 		try {
 			Object taskOutput = null;
 			if(task instanceof CallTask) {
