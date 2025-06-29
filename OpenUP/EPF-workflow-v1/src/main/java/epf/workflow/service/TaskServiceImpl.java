@@ -104,7 +104,7 @@ public class TaskServiceImpl implements TaskService {
 			}
 			else if(task instanceof DoTask) {
 				final DoTask doTask = (DoTask) task;
-				taskOutput = doService.do_(workflow, workflowInput, arguments, taskName, doTask, taskInput);
+				taskOutput = doService.do_(workflow, doTask.getDo_(), workflowInput, arguments, taskURI);
 			}
 			else if(task instanceof EmitTask) {
 				final EmitTask emitTask = (EmitTask) task;
