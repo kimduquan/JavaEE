@@ -24,7 +24,7 @@ public class EventFilterServiceImpl implements EventFilterService {
 	
 	@Inject
 	@Database(value = DatabaseType.COLUMN)
-	transient DatabaseManager eventFilterRepository;
+	transient DatabaseManager database;
 
 	@Override
 	public List<EventFilter> getEventFilters(final EventProperties event) throws Error {
@@ -118,7 +118,7 @@ public class EventFilterServiceImpl implements EventFilterService {
 	
 	private List<EventFilter> queryEventFilters(final SelectQuery eventFilterQuery) {
 		final List<EventFilter> eventFilters = new ArrayList<>();
-		eventFilterRepository.select(eventFilterQuery).forEach(entity -> {
+		database.select(eventFilterQuery).forEach(entity -> {
 			final EventFilter eventFilter = buildEventFilter(entity);
 			eventFilters.add(eventFilter);
 		});
