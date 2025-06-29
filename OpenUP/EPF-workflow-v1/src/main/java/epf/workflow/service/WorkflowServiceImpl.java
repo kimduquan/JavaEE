@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import epf.workflow.schema.Error;
-import epf.workflow.schema.ExpressionError;
 import epf.workflow.event.WorkflowCompletedEvent;
 import epf.workflow.event.WorkflowFaultedEvent;
 import epf.workflow.event.WorkflowStartedEvent;
@@ -15,7 +14,6 @@ import epf.workflow.schema.DateTimeDescriptor;
 import epf.workflow.schema.RuntimeDescriptor;
 import epf.workflow.schema.RuntimeError;
 import epf.workflow.schema.RuntimeExpressionArguments;
-import epf.workflow.schema.ValidationError;
 import epf.workflow.schema.Workflow;
 import epf.workflow.schema.WorkflowDefinitionReference;
 import epf.workflow.schema.WorkflowDescriptor;
@@ -60,8 +58,15 @@ public class WorkflowServiceImpl implements WorkflowService {
 		final String workflowName = WorkflowUtil.getName(workflow.getDocument().getName(), uuid.toString(), workflow.getDocument().getNamespace());
 		fireWorkflowStartedEvent(workflow, startedAt, workflowName);
 		final RuntimeExpressionArguments arguments = createRuntimeExpressionArguments(rawInput, workflow, startedAt, uuid);
-		Object workflowInput = null;
-		workflowInput = validateWorkflowInput(rawInput, workflow, arguments, workflowInput);
+		Object workflowInput = rawInput;
+		if(workflow.getInput() != null) {
+			if(workflow.getInput().getSchema() != null) {
+				inputService.validate(workflowInput, workflow.getInput());
+			}
+			if(!Either.isNull(workflow.getInput().getFrom())) {
+				workflowInput = runtimeExpressionsService.evaluate(workflow.getInput().getFrom().getLeft(), arguments.getSecrets(), arguments.getWorkflow(), arguments.getRuntime());
+			}
+		}
 		try {
 			final URI doURI = URI.create("/do");
 			final Object workflowOutput = doService.do_(workflow, workflow.getDo_(), workflowInput, arguments, doURI);
@@ -90,18 +95,6 @@ public class WorkflowServiceImpl implements WorkflowService {
 		arguments.setRuntime(runtimeDescriptor);
 		arguments.setWorkflow(workflowDescriptor);
 		return arguments;
-	}
-
-	private Object validateWorkflowInput(final Object rawInput, final Workflow workflow, final RuntimeExpressionArguments arguments, Object workflowInput) throws ValidationError, ExpressionError {
-		if(workflow.getInput() != null) {
-			if(workflow.getInput().getSchema() != null) {
-				inputService.validate(rawInput, workflow.getInput());
-			}
-			if(!Either.isNull(workflow.getInput().getFrom())) {
-				workflowInput = runtimeExpressionsService.evaluate(workflow.getInput().getFrom().getLeft(), arguments.getSecrets(), arguments.getWorkflow(), arguments.getRuntime());
-			}
-		}
-		return workflowInput;
 	}
 
 	private void fireWorkflowFaultedEvent(final String workflowName, Error error) throws RuntimeError {
