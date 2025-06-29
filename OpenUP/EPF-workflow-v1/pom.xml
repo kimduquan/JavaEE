@@ -66,7 +66,7 @@
     </dependency>
 	<dependency>
 	    <groupId>io.quarkiverse.jnosql</groupId>
-	    <artifactId>quarkus-jnosql-column-cassandra</artifactId>
+	    <artifactId>quarkus-jnosql-cassandra</artifactId>
 	</dependency>
 	<dependency>
 	    <groupId>org.eclipse.jnosql.mapping</groupId>
