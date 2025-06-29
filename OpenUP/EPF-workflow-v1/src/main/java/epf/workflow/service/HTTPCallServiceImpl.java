@@ -17,7 +17,7 @@ import jakarta.ws.rs.core.Response;
 public class HTTPCallServiceImpl implements HTTPCallService {
 
 	@Override
-	public Object call(final HTTP http) throws Error {
+	public Object call(final HTTP http, final Object input) throws Error {
 		final Client client = ClientBuilder.newClient();
 		WebTarget target = null;
 		if(http.getEndpoint().isLeft()) {
@@ -28,8 +28,8 @@ public class HTTPCallServiceImpl implements HTTPCallService {
 		}
 		Builder builder = target.request();
 		Response response = null;
-		if(http.getBody() != null) {
-			response = builder.method(http.getMethod(), Entity.entity(http.getBody(), MediaType.APPLICATION_JSON_TYPE));
+		if(input != null) {
+			response = builder.method(http.getMethod(), Entity.entity(input, MediaType.APPLICATION_JSON_TYPE));
 		}
 		else {
 			response = builder.method(http.getMethod());

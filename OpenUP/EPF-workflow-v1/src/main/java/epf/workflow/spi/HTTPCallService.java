@@ -5,5 +5,5 @@ import epf.workflow.schema.Error;
 
 public interface HTTPCallService {
 
-	Object call(final HTTP http) throws Error;
+	Object call(final HTTP http, final Object input) throws Error;
 }

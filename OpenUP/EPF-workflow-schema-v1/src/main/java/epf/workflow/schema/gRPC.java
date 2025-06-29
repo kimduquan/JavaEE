@@ -9,7 +9,6 @@ import jakarta.validation.constraints.NotNull;
 public class gRPC {
 
 	public class Service {
-		
 		@NotBlank
 		@Description("The name of the GRPC service to call.")
 		private String name;
@@ -23,6 +22,38 @@ public class gRPC {
 		
 		@Description("The authentication policy, or the name of the authentication policy, to use when calling the GRPC service.")
 		private Authentication authentication;
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public String getHost() {
+			return host;
+		}
+
+		public void setHost(String host) {
+			this.host = host;
+		}
+
+		public Integer getPort() {
+			return port;
+		}
+
+		public void setPort(Integer port) {
+			this.port = port;
+		}
+
+		public Authentication getAuthentication() {
+			return authentication;
+		}
+
+		public void setAuthentication(Authentication authentication) {
+			this.authentication = authentication;
+		}
 	}
 	
 	@NotNull

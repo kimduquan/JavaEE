@@ -5,5 +5,5 @@ import epf.workflow.schema.Error;
 
 public interface gRPCCallService {
 
-	Object call(final gRPC grpc) throws Error;
+	Object call(final gRPC grpc, final Object input) throws Error;
 }

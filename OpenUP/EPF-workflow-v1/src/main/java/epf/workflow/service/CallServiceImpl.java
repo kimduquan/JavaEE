@@ -40,19 +40,19 @@ public class CallServiceImpl implements CallService {
 		Object output = null;
 		if(task.getCall() instanceof AsyncAPICall) {
 			final AsyncAPI asyncAPI = ((AsyncAPICall)task.getCall()).getWith();
-			output = asyncAPICallService.call(asyncAPI);
+			output = asyncAPICallService.call(asyncAPI, taskInput);
 		}
 		else if(task.getCall() instanceof HTTPCall) {
 			final HTTP http = ((HTTPCall)task.getCall()).getWith();
-			output = httpCallService.call(http);
+			output = httpCallService.call(http, taskInput);
 		}
 		else if(task.getCall() instanceof OpenAPICall) {
 			final OpenAPI openAPI = ((OpenAPICall)task.getCall()).getWith();
-			output = openAPICallService.call(openAPI);
+			output = openAPICallService.call(openAPI, taskInput);
 		}
 		else if(task.getCall() instanceof gRPCCall) {
 			final gRPC grpc = ((gRPCCall)task.getCall()).getWith();
-			output = gRPCCallService.call(grpc);
+			output = gRPCCallService.call(grpc, taskInput);
 		}
 		return output;
 	}

@@ -5,5 +5,5 @@ import epf.workflow.schema.Error;
 
 public interface OpenAPICallService {
 
-	Object call(final OpenAPI openAPI) throws Error;
+	Object call(final OpenAPI openAPI, final Object input) throws Error;
 }
