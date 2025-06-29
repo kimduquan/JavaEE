@@ -1,5 +1,6 @@
 package epf.workflow.spi;
 
+import java.util.List;
 import java.util.Map;
 import epf.workflow.schema.AuthorizationDescriptor;
 import epf.workflow.schema.ExpressionError;
@@ -24,4 +25,12 @@ public interface RuntimeExpressionsService {
 	Object evaluate(final String lastTaskTransformedOutput, final Map<String, Object> context, final Map<String, Object> secrets, final WorkflowDescriptor workflow, final RuntimeDescriptor runtime) throws ExpressionError;
 	
 	boolean if_(final String condition, final Map<String, Object> context, final Map<String, Object> secrets) throws ExpressionError;
+	
+	<T> List<T> in(final String in, final Map<String, Object> context, final Map<String, Object> secrets) throws ExpressionError;
+	
+	Map<String, Object> createContext(final Map<String, Object> context) throws Error;
+	
+	void set(final Map<String, Object> context, final String name, final Object value) throws Error;
+	
+	<T> T get(final Map<String, Object> context, final String name) throws Error;
 }
