@@ -1,5 +1,6 @@
 package epf.workflow.service;
 
+import epf.workflow.schema.Duration;
 import epf.workflow.schema.Error;
 import epf.workflow.schema.ProcessResult;
 import epf.workflow.schema.RuntimeExpressionArguments;
@@ -8,6 +9,7 @@ import epf.workflow.spi.ContainerProcessService;
 import epf.workflow.spi.RunService;
 import epf.workflow.spi.ScriptProcessService;
 import epf.workflow.spi.ShellProcessService;
+import epf.workflow.spi.TimeoutService;
 import epf.workflow.spi.WorkflowProcessService;
 import epf.workflow.task.schema.RunTask;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -15,6 +17,9 @@ import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class RunServiceImpl implements RunService {
+	
+	@Inject
+	transient TimeoutService timeoutService;
 	
 	@Inject
 	transient ContainerProcessService containerProcessService;
@@ -30,18 +35,19 @@ public class RunServiceImpl implements RunService {
 	
 	@Override
 	public Object run(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments, final RunTask task, final Object taskInput) throws Error {
+		final Duration timeout = timeoutService.getTimeout(workflow, task);
 		ProcessResult processResult = null;
 		if(task.getRun().getContainer() != null) {
-			processResult = containerProcessService.run(task.getRun().getContainer(), task.isAwait());
+			processResult = containerProcessService.run(task.getRun().getContainer(), task.isAwait(), timeout);
 		}
 		else if(task.getRun().getShell() != null) {
-			processResult = shellProcessService.run(task.getRun().getShell(), task.isAwait());
+			processResult = shellProcessService.run(task.getRun().getShell(), task.isAwait(), timeout);
 		}
 		else if(task.getRun().getScript() != null) {
-			processResult = scriptProcessService.run(task.getRun().getScript(), task.isAwait());
+			processResult = scriptProcessService.run(task.getRun().getScript(), task.isAwait(), timeout);
 		}
 		else if(task.getRun().getWorkflow() != null) {
-			workflowProcessService.run(task.getRun().getWorkflow(), task.isAwait());
+			workflowProcessService.run(task.getRun().getWorkflow(), task.isAwait(), timeout);
 		}
 		Object taskOutput;
 		switch(task.getReturn_()) {

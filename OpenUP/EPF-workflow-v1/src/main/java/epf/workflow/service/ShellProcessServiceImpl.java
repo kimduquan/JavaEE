@@ -2,11 +2,14 @@ package epf.workflow.service;
 
 import epf.workflow.schema.RuntimeError;
 import epf.workflow.schema.ShellProcess;
+import epf.workflow.schema.util.DurationUtil;
 import epf.workflow.spi.ShellProcessService;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import epf.workflow.schema.Duration;
 import epf.workflow.schema.Error;
 import epf.workflow.schema.ProcessResult;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -15,7 +18,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 public class ShellProcessServiceImpl implements ShellProcessService {
 
 	@Override
-	public ProcessResult run(final ShellProcess shellProcess, final boolean await) throws Error {
+	public ProcessResult run(final ShellProcess shellProcess, final boolean await, final Duration timeout) throws Error {
 		try {
 			ProcessBuilder builder = new ProcessBuilder();
 			final Path tempDir = Files.createTempDirectory(null);
@@ -40,7 +43,15 @@ public class ShellProcessServiceImpl implements ShellProcessService {
 			final Process process = builder.start();
 			int exitCode;
 			if(await) {
-				exitCode = process.waitFor();
+				if(timeout != null) {
+					final TimeUnit timeUnit = DurationUtil.getTimeUnit(timeout);
+					final long time = DurationUtil.getTime(timeout, timeUnit);
+					process.waitFor(time, timeUnit);
+					exitCode = process.exitValue();
+				}
+				else {
+					exitCode = process.waitFor();
+				}
 			}
 			else {
 				exitCode = process.exitValue();
