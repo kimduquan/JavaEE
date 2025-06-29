@@ -1338,6 +1338,11 @@ public interface Naming {
 	     * 
 	     */
 	    String TASK_LIFECYCLE_EVENTS = "task-lifecycle-events";
+	    
+	    /**
+	     * 
+	     */
+	    String EVENTS = "events";
 		
 		/**
 		 * 

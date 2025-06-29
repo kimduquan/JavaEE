@@ -7,5 +7,5 @@ import epf.workflow.task.schema.CallTask;
 
 public interface CallService {
 
-	Object call(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments, final String taskName, final CallTask task, final Object taskInput) throws Error;
+	Object call(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments, final CallTask task, final Object taskInput) throws Error;
 }

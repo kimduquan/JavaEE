@@ -7,5 +7,5 @@ import epf.workflow.task.schema.SetTask;
 
 public interface SetService {
 
-	Object set(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments, final String taskName, final SetTask task, final Object taskInput) throws Error;
+	Object set(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments, final SetTask task, final Object taskInput) throws Error;
 }

@@ -36,7 +36,7 @@ public class CallServiceImpl implements CallService {
 	transient gRPCCallService gRPCCallService;
 
 	@Override
-	public Object call(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments, final String taskName, final CallTask task, final Object taskInput) throws Error {
+	public Object call(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments, final CallTask task, final Object taskInput) throws Error {
 		Object output = null;
 		if(task.getCall() instanceof AsyncAPICall) {
 			final AsyncAPI asyncAPI = ((AsyncAPICall)task.getCall()).getWith();

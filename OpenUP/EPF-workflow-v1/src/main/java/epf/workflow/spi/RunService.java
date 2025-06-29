@@ -7,5 +7,5 @@ import epf.workflow.task.schema.RunTask;
 
 public interface RunService {
 
-	Object run(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments, final String taskName, final RunTask task, final Object taskInput) throws Error;
+	Object run(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments, final RunTask task, final Object taskInput) throws Error;
 }

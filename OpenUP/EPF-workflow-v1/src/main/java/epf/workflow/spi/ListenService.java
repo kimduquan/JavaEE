@@ -7,5 +7,5 @@ import epf.workflow.task.schema.ListenTask;
 
 public interface ListenService {
 
-	Object listen(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments, final String taskName, final ListenTask task, final Object taskInput) throws Error;
+	Object listen(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments, final ListenTask task, final Object taskInput) throws Error;
 }

@@ -2,8 +2,6 @@ package epf.workflow.schema;
 
 import java.time.Instant;
 
-import epf.workflow.schema.DateTimeDescriptor.Epoch;
-
 public class DateTimeDescriptor {
 	
 	public class Epoch {

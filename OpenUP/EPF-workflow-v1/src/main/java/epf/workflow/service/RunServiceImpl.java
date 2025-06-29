@@ -29,7 +29,7 @@ public class RunServiceImpl implements RunService {
 	transient WorkflowProcessService workflowProcessService;
 	
 	@Override
-	public Object run(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments, final String taskName, final RunTask task, final Object taskInput) throws Error {
+	public Object run(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments, final RunTask task, final Object taskInput) throws Error {
 		ProcessResult processResult = null;
 		if(task.getRun().getContainer() != null) {
 			processResult = containerProcessService.run(task.getRun().getContainer(), task.isAwait());

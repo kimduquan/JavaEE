@@ -108,68 +108,69 @@ public class TaskServiceImpl implements TaskService {
 			fireTaskStartedEvent(workflow, arguments, taskURI, taskStartedAt);
 			final TaskDescriptor taskDescriptor = createTaskDescriptor(workflowInput, taskName, taskURI, task, taskStartedAt);
 			arguments.setTask(taskDescriptor);
-			taskOutput = doTask(workflow, workflowInput, arguments, taskName, taskURI, task, taskInput, taskOutput);
+			taskOutput = doTask(workflow, workflowInput, arguments, taskName, taskURI, task, taskInput, end);
 		}
 		fireTaskCompletedEvent(workflow, arguments, taskURI);
 		return taskOutput;
 	}
 
-	private Object doTask(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments, final String taskName, final URI taskURI, final Task task, Object taskInput, Object taskOutput) throws RuntimeError, Error {
+	private Object doTask(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments, final String taskName, final URI taskURI, final Task task, Object taskInput, final AtomicBoolean end) throws RuntimeError, Error {
 		try {
+			Object taskOutput = null;
 			if(task instanceof CallTask) {
 				final CallTask callTask = (CallTask) task;
-				taskOutput = callService.call(workflow, workflowInput, arguments, taskName, callTask, taskInput);
+				taskOutput = callService.call(workflow, workflowInput, arguments, callTask, taskInput);
 			}
 			else if(task instanceof DoTask) {
 				final DoTask doTask = (DoTask) task;
-				taskOutput = doService.do_(workflow, doTask.getDo_(), workflowInput, arguments, taskURI);
+				taskOutput = doService.do_(workflow, doTask.getDo_(), workflowInput, arguments, taskURI, end);
 			}
 			else if(task instanceof EmitTask) {
 				final EmitTask emitTask = (EmitTask) task;
-				taskOutput = emitService.emit(workflow, workflowInput, arguments, taskName, emitTask, taskInput);
+				taskOutput = emitService.emit(workflow, workflowInput, arguments, emitTask, taskInput);
 			}
 			else if(task instanceof ForkTask) {
 				final ForkTask forkTask = (ForkTask) task;
-				taskOutput = forkService.fork(workflow, workflowInput, arguments, taskName, forkTask, taskInput);
+				taskOutput = forkService.fork(workflow, workflowInput, arguments, forkTask, end);
 			}
 			else if(task instanceof ForTask) {
 				final ForTask forTask = (ForTask) task;
-				taskOutput = forService._for(workflow, workflowInput, arguments, taskName, forTask, taskInput);
+				taskOutput = forService._for(workflow, workflowInput, arguments, forTask, taskInput, end);
 			}
 			else if(task instanceof ListenTask) {
 				final ListenTask listenTask = (ListenTask) task;
-				taskOutput = listenService.listen(workflow, workflowInput, arguments, taskName, listenTask, taskInput);
+				taskOutput = listenService.listen(workflow, workflowInput, arguments, listenTask, taskInput);
 			}
 			else if(task instanceof RaiseTask) {
 				final RaiseTask raiseTask = (RaiseTask) task;
-				taskOutput = raiseService.raise(workflow, workflowInput, arguments, taskName, raiseTask, taskInput);
+				taskOutput = raiseService.raise(workflow, workflowInput, arguments, raiseTask, taskInput);
 			}
 			else if(task instanceof RunTask) {
 				final RunTask runTask = (RunTask) task;
-				taskOutput = runService.run(workflow, workflowInput, arguments, taskName, runTask, taskInput);
+				taskOutput = runService.run(workflow, workflowInput, arguments, runTask, taskInput);
 			}
 			else if(task instanceof SetTask) {
 				final SetTask setTask = (SetTask) task;
-				taskOutput = setService.set(workflow, workflowInput, arguments, taskName, setTask, taskInput);
+				taskOutput = setService.set(workflow, workflowInput, arguments, setTask, taskInput);
 			}
 			else if(task instanceof SwitchTask) {
 				final SwitchTask switchTask = (SwitchTask) task;
-				taskOutput = switchService._switch(workflow, workflowInput, arguments, taskName, switchTask, taskInput);
+				taskOutput = switchService._switch(workflow, workflowInput, arguments, switchTask, taskInput, end);
 			}
 			else if(task instanceof TryTask) {
 				final TryTask tryTask = (TryTask) task;
-				taskOutput = tryService._try(workflow, workflowInput, arguments, taskName, tryTask, taskInput);
+				taskOutput = tryService._try(workflow, workflowInput, arguments, tryTask, taskInput, end);
 			}
 			else if(task instanceof WaitTask) {
 				final WaitTask waitTask = (WaitTask) task;
-				taskOutput = waitService.wait(workflow, workflowInput, arguments, taskName, waitTask, taskInput);
+				taskOutput = waitService.wait(workflow, workflowInput, arguments, waitTask, taskInput);
 			}
+			return taskOutput;
 		}
 		catch(Error error) {
 			fireTaskFaultedEvent(workflow, arguments, taskURI, error);
 			throw error;
 		}
-		return taskOutput;
 	}
 
 	private void fireTaskCompletedEvent(final Workflow workflow, final RuntimeExpressionArguments arguments, final URI taskURI) throws RuntimeError {

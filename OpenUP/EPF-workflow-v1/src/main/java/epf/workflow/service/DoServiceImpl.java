@@ -29,24 +29,22 @@ public class DoServiceImpl implements DoService {
 	transient TaskService taskService;
 
 	@Override
-	public Object do_(final Workflow workflow, final Map<String, Task> do_, final Object workflowInput, final RuntimeExpressionArguments arguments, final URI parentURI) throws Error {
+	public Object do_(final Workflow workflow, final Map<String, Task> do_, final Object workflowInput, final RuntimeExpressionArguments arguments, final URI parentURI, final AtomicBoolean end) throws Error {
 		Object workflowOutput = null;
 		int taskIndex = 0;
 		final Iterator<Map.Entry<String, Task>> taskIt = do_.entrySet().iterator();
 		String taskName;
 		Task task;
 		URI taskURI;
-		Object taskInput;
+		Object taskInput = null;
 		Object taskOutput = null;
 		String then;
-		final AtomicBoolean end = new AtomicBoolean();
 		while(!end.get()) {
 			taskIndex++;
 			final Map.Entry<String, Task> entry = taskIt.next();
 			taskName = entry.getKey();
 			task = entry.getValue();
 			taskURI = parentURI.resolve("" + taskIndex).resolve(taskName);
-			taskInput = workflowInput;
 			taskOutput = taskService.start(workflow, workflowInput, arguments, taskName, taskURI, task, taskInput, end);
 			workflowOutput = taskOutput;
 			then = task.getThen();
@@ -54,8 +52,7 @@ public class DoServiceImpl implements DoService {
 				taskName = task.getThen();
 				task = workflow.getDo_().get(taskName);
 				final URI nextTaskURI = taskURI.resolve(taskName);
-				taskInput = workflowInput;
-				taskOutput = taskService.start(workflow, workflowInput, arguments, taskName, nextTaskURI, task, taskInput, end);
+				taskOutput = taskService.start(workflow, workflowInput, arguments, taskName, nextTaskURI, task, taskOutput, end);
 				workflowOutput = taskOutput;
 				then = task.getThen();
 			}

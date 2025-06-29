@@ -7,5 +7,5 @@ import epf.workflow.task.schema.RaiseTask;
 
 public interface RaiseService {
 
-	Object raise(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments, final String taskName, final RaiseTask task, final Object taskInput) throws Error;
+	Object raise(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments, final RaiseTask task, final Object taskInput) throws Error;
 }
