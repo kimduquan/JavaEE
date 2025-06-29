@@ -164,7 +164,7 @@ public class TaskServiceImpl implements TaskService {
 		taskLifecycleEventsService.fire(taskCompletedEvent);
 	}
 
-	private void fireTaskFaultedEvent(final Workflow workflow, final RuntimeExpressionArguments arguments, final URI taskURI, Error error) throws RuntimeError {
+	private void fireTaskFaultedEvent(final Workflow workflow, final RuntimeExpressionArguments arguments, final URI taskURI, final Error error) throws RuntimeError {
 		final Date faultedAt = Date.from(Instant.now());
 		final TaskFaultedEvent taskFaultedEvent = new TaskFaultedEvent();
 		taskFaultedEvent.setError(error);

@@ -72,7 +72,8 @@ public class WorkflowServiceImpl implements WorkflowService {
 		Object workflowInput = null;
 		workflowInput = validateWorkflowInput(rawInput, workflow, arguments, workflowInput);
 		try {
-			final Object workflowOutput = do_(workflow, workflowInput, arguments);
+			final URI doURI = URI.create("/do");
+			final Object workflowOutput = do_(workflow, workflow.getDo_(), workflowInput, arguments, doURI);
 			fireWorkflowCompletedEvent(workflowName);
 			return workflowOutput;
 		}
@@ -141,50 +142,36 @@ public class WorkflowServiceImpl implements WorkflowService {
 		workflowLifecycleEventsService.fire(workflowStartedEvent);
 	}
 
-	private Object do_(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments) throws Error {
+	private Object do_(final Workflow workflow, final Map<String, Task> do_, final Object workflowInput, final RuntimeExpressionArguments arguments, final URI parentURI) throws Error {
 		Object workflowOutput = null;
 		int taskIndex = 0;
-		final URI doURI = URI.create("/do");
-		final Iterator<Map.Entry<String, Task>> taskIt = workflow.getDo_().entrySet().iterator();
+		final Iterator<Map.Entry<String, Task>> taskIt = do_.entrySet().iterator();
 		String taskName;
 		Task task;
 		URI taskURI;
 		Object taskInput;
-		Object taskOutput;
+		Object taskOutput = null;
 		String then;
 		final AtomicBoolean end = new AtomicBoolean();
 		while(!end.get()) {
-			
 			taskIndex++;
 			final Map.Entry<String, Task> entry = taskIt.next();
 			taskName = entry.getKey();
 			task = entry.getValue();
-			taskURI = doURI.resolve("" + taskIndex).resolve(taskName);
+			taskURI = parentURI.resolve("" + taskIndex).resolve(taskName);
 			taskInput = workflowInput;
-			
-			taskInput = validateTaskInput(arguments, task, taskInput);
-			fireTaskCreatedEvent(workflow, arguments, taskURI);
-			if(checkTaskShouldBeRun(task, arguments)) {
-				taskOutput = taskService.start(workflow, workflowInput, arguments, taskName, taskURI, task, taskInput, end);
-				workflowOutput = taskOutput;
-			}
+			taskOutput = doTask(workflow, workflowInput, arguments, taskName, task, taskURI, taskInput, taskOutput, end);
+			workflowOutput = taskOutput;
 			then = task.getThen();
-			
 			if(!FlowDirective._continue.equals(then) && !FlowDirective._continue.equals(then) && !FlowDirective._continue.equals(then)) {
 				taskName = task.getThen();
 				task = workflow.getDo_().get(taskName);
 				final URI nextTaskURI = taskURI.resolve(taskName);
 				taskInput = workflowInput;
-				
-				taskInput = validateTaskInput(arguments, task, taskInput);
-				fireTaskCreatedEvent(workflow, arguments, taskURI);
-				if(checkTaskShouldBeRun(task, arguments)) {
-					taskOutput = taskService.start(workflow, workflowInput, arguments, taskName, nextTaskURI, task, taskInput, end);
-					workflowOutput = taskOutput;
-				}
+				taskOutput = doTask(workflow, workflowInput, arguments, taskName, task, nextTaskURI, taskInput, taskOutput, end);
+				workflowOutput = taskOutput;
 				then = task.getThen();
 			}
-			
 			if(FlowDirective._continue.equals(then)) {
 				continue;
 			}
@@ -196,6 +183,15 @@ public class WorkflowServiceImpl implements WorkflowService {
 			}
 		}
 		return workflowOutput;
+	}
+
+	private Object doTask(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments, final String taskName, final Task task, URI taskURI, Object taskInput, Object taskOutput, final AtomicBoolean end) throws ValidationError, ExpressionError, RuntimeError, Error {
+		taskInput = validateTaskInput(arguments, task, taskInput);
+		fireTaskCreatedEvent(workflow, arguments, taskURI);
+		if(checkTaskShouldBeRun(task, arguments)) {
+			taskOutput = taskService.start(workflow, workflowInput, arguments, taskName, taskURI, task, taskInput, end);
+		}
+		return taskOutput;
 	}
 
 	private Object validateTaskInput(final RuntimeExpressionArguments arguments, Task task, Object taskInput)
