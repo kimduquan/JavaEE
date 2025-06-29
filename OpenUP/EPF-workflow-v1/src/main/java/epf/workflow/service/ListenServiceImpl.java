@@ -1,6 +1,9 @@
 package epf.workflow.service;
 
+import org.eclipse.microprofile.reactive.messaging.Incoming;
+import epf.naming.Naming;
 import epf.workflow.schema.Error;
+import epf.workflow.schema.EventProperties;
 import epf.workflow.schema.RuntimeExpressionArguments;
 import epf.workflow.schema.Workflow;
 import epf.workflow.spi.ListenService;
@@ -15,4 +18,8 @@ public class ListenServiceImpl implements ListenService {
 		return null;
 	}
 
+	@Incoming(Naming.Workflow.EVENTS)
+	public void listen(final EventProperties event) throws Error {
+		
+	}
 }
