@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import epf.workflow.schema.Error;
+import epf.workflow.schema.ExpressionError;
 import epf.workflow.schema.FlowDirective;
 import epf.workflow.event.TaskCreatedEvent;
 import epf.workflow.event.WorkflowCompletedEvent;
@@ -19,6 +20,7 @@ import epf.workflow.schema.RuntimeDescriptor;
 import epf.workflow.schema.RuntimeError;
 import epf.workflow.schema.RuntimeExpressionArguments;
 import epf.workflow.schema.Task;
+import epf.workflow.schema.ValidationError;
 import epf.workflow.schema.Workflow;
 import epf.workflow.schema.WorkflowDefinitionReference;
 import epf.workflow.schema.WorkflowDescriptor;
@@ -62,78 +64,81 @@ public class WorkflowServiceImpl implements WorkflowService {
 
 	@Override
 	public Object start(final Object rawInput, final Workflow workflow) throws Error {
-		
 		final Instant startedAt = Instant.now();
 		final UUID uuid = UUID.randomUUID();
 		final String workflowName = WorkflowUtil.getName(workflow.getDocument().getName(), uuid.toString(), workflow.getDocument().getNamespace());
-		
-		final WorkflowDefinitionReference workflowDefinitionReference = new WorkflowDefinitionReference();
-		workflowDefinitionReference.setName(workflow.getDocument().getName());
-		workflowDefinitionReference.setNamespace(workflow.getDocument().getNamespace());
-		workflowDefinitionReference.setVersion(workflow.getDocument().getVersion());
-		
-		final WorkflowStartedEvent workflowStartedEvent = new WorkflowStartedEvent();
-		workflowStartedEvent.setDefinition(workflowDefinitionReference);
-		workflowStartedEvent.setName(workflowName);
-		workflowStartedEvent.setStartedAt(Date.from(startedAt));
-		
-		workflowLifecycleEventsService.fire(workflowStartedEvent);
-		
+		fireWorkflowStartedEvent(workflow, startedAt, workflowName);
+		final RuntimeExpressionArguments arguments = createRuntimeExpressionArguments(rawInput, workflow, startedAt, uuid);
+		Object workflowInput = null;
+		workflowInput = validateWorkflowInput(rawInput, workflow, arguments, workflowInput);
+		try {
+			final Object workflowOutput = do_(workflow, workflowInput, arguments);
+			fireWorkflowCompletedEvent(workflowName);
+			return workflowOutput;
+		}
+		catch(Error error) {
+			fireWorkflowFaultedEvent(workflowName, error);
+			throw error;
+		}
+	}
+
+	private RuntimeExpressionArguments createRuntimeExpressionArguments(final Object rawInput, final Workflow workflow, final Instant startedAt, final UUID uuid) throws Error {
 		final DateTimeDescriptor dateTimeDescriptor = DateTimeDescriptor.from(startedAt);
-		
 		final WorkflowDescriptor workflowDescriptor = new WorkflowDescriptor();
 		workflowDescriptor.setId(uuid.toString());
-		workflowDescriptor.setDefinition(WorkflowUtil.toMap(workflow));
+		workflowDescriptor.setDefinition(workflow);
 		workflowDescriptor.setInput(rawInput);
 		workflowDescriptor.setStartedAt(dateTimeDescriptor);
-		
 		final RuntimeDescriptor runtimeDescriptor = new RuntimeDescriptor();
-		
 		final Map<String, Object> context = new HashMap<>();
-		
 		final Map<String, Object> secrets = useService.useSecrets(workflow.getUse());
-		
 		final RuntimeExpressionArguments arguments = new RuntimeExpressionArguments();
 		arguments.setContext(context);
 		arguments.setSecrets(secrets);
 		arguments.setRuntime(runtimeDescriptor);
 		arguments.setWorkflow(workflowDescriptor);
-		
-		Object workflowInput = null;
-		
+		return arguments;
+	}
+
+	private Object validateWorkflowInput(final Object rawInput, final Workflow workflow, final RuntimeExpressionArguments arguments, Object workflowInput) throws ValidationError, ExpressionError {
 		if(workflow.getInput() != null) {
 			if(workflow.getInput().getSchema() != null) {
 				inputService.validate(rawInput, workflow.getInput());
 			}
 			if(!Either.isNull(workflow.getInput().getFrom())) {
-				workflowInput = runtimeExpressionsService.evaluate(workflow.getInput().getFrom().getLeft(), secrets, workflowDescriptor, runtimeDescriptor);
+				workflowInput = runtimeExpressionsService.evaluate(workflow.getInput().getFrom().getLeft(), arguments.getSecrets(), arguments.getWorkflow(), arguments.getRuntime());
 			}
 		}
-		
-		try {
-			
-			final Object workflowOutput = do_(workflow, workflowInput, arguments);
-			
-			final Date completedAt = Date.from(Instant.now());
-			final WorkflowCompletedEvent workflowCompletedEvent = new WorkflowCompletedEvent();
-			workflowCompletedEvent.setCompletedAt(completedAt);
-			workflowCompletedEvent.setName(workflowName);
-			
-			workflowLifecycleEventsService.fire(workflowCompletedEvent);
-			
-			return workflowOutput;
-		}
-		catch(Error error) {
-			final Date faultedAt = Date.from(Instant.now());
-			final WorkflowFaultedEvent workflowFaultedEvent = new WorkflowFaultedEvent();
-			workflowFaultedEvent.setError(error);
-			workflowFaultedEvent.setFaultedAt(faultedAt);
-			workflowFaultedEvent.setName(workflowName);
-			
-			workflowLifecycleEventsService.fire(workflowFaultedEvent);
-			
-			throw error;
-		}
+		return workflowInput;
+	}
+
+	private void fireWorkflowFaultedEvent(final String workflowName, Error error) throws RuntimeError {
+		final Date faultedAt = Date.from(Instant.now());
+		final WorkflowFaultedEvent workflowFaultedEvent = new WorkflowFaultedEvent();
+		workflowFaultedEvent.setError(error);
+		workflowFaultedEvent.setFaultedAt(faultedAt);
+		workflowFaultedEvent.setName(workflowName);
+		workflowLifecycleEventsService.fire(workflowFaultedEvent);
+	}
+
+	private void fireWorkflowCompletedEvent(final String workflowName) throws RuntimeError {
+		final Date completedAt = Date.from(Instant.now());
+		final WorkflowCompletedEvent workflowCompletedEvent = new WorkflowCompletedEvent();
+		workflowCompletedEvent.setCompletedAt(completedAt);
+		workflowCompletedEvent.setName(workflowName);
+		workflowLifecycleEventsService.fire(workflowCompletedEvent);
+	}
+
+	private void fireWorkflowStartedEvent(final Workflow workflow, final Instant startedAt, final String workflowName) throws RuntimeError {
+		final WorkflowDefinitionReference workflowDefinitionReference = new WorkflowDefinitionReference();
+		workflowDefinitionReference.setName(workflow.getDocument().getName());
+		workflowDefinitionReference.setNamespace(workflow.getDocument().getNamespace());
+		workflowDefinitionReference.setVersion(workflow.getDocument().getVersion());
+		final WorkflowStartedEvent workflowStartedEvent = new WorkflowStartedEvent();
+		workflowStartedEvent.setDefinition(workflowDefinitionReference);
+		workflowStartedEvent.setName(workflowName);
+		workflowStartedEvent.setStartedAt(Date.from(startedAt));
+		workflowLifecycleEventsService.fire(workflowStartedEvent);
 	}
 
 	private Object do_(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments) throws Error {
@@ -156,8 +161,13 @@ public class WorkflowServiceImpl implements WorkflowService {
 			task = entry.getValue();
 			taskURI = doURI.resolve("" + taskIndex).resolve(taskName);
 			taskInput = workflowInput;
-			taskOutput = doTask(workflow, workflowInput, arguments, taskName, taskURI, task, taskInput, end);
-			workflowOutput = taskOutput;
+			
+			taskInput = validateTaskInput(arguments, task, taskInput);
+			fireTaskCreatedEvent(workflow, arguments, taskURI);
+			if(checkTaskShouldBeRun(task, arguments)) {
+				taskOutput = taskService.start(workflow, workflowInput, arguments, taskName, taskURI, task, taskInput, end);
+				workflowOutput = taskOutput;
+			}
 			then = task.getThen();
 			
 			if(!FlowDirective._continue.equals(then) && !FlowDirective._continue.equals(then) && !FlowDirective._continue.equals(then)) {
@@ -165,8 +175,13 @@ public class WorkflowServiceImpl implements WorkflowService {
 				task = workflow.getDo_().get(taskName);
 				final URI nextTaskURI = taskURI.resolve(taskName);
 				taskInput = workflowInput;
-				taskOutput = doTask(workflow, workflowInput, arguments, taskName, nextTaskURI, task, taskInput, end);
-				workflowOutput = taskOutput;
+				
+				taskInput = validateTaskInput(arguments, task, taskInput);
+				fireTaskCreatedEvent(workflow, arguments, taskURI);
+				if(checkTaskShouldBeRun(task, arguments)) {
+					taskOutput = taskService.start(workflow, workflowInput, arguments, taskName, nextTaskURI, task, taskInput, end);
+					workflowOutput = taskOutput;
+				}
 				then = task.getThen();
 			}
 			
@@ -182,32 +197,34 @@ public class WorkflowServiceImpl implements WorkflowService {
 		}
 		return workflowOutput;
 	}
-	
-	private Object doTask(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments, final String taskName, final URI taskURI, final Task task, final Object taskInput, final AtomicBoolean end) throws Error {
-		Object taskOutput = null;
+
+	private Object validateTaskInput(final RuntimeExpressionArguments arguments, Task task, Object taskInput)
+			throws ValidationError, ExpressionError {
+		if(task.getInput() != null) {
+			if(task.getInput().getSchema() != null) {
+				inputService.validate(taskInput, task.getInput());
+			}
+			if(!Either.isNull(task.getInput().getFrom())) {
+				taskInput = runtimeExpressionsService.evaluate(task.getInput().getFrom().getLeft(), arguments.getSecrets(), arguments.getWorkflow(), arguments.getRuntime());
+			}
+		}
+		return taskInput;
+	}
+
+	private void fireTaskCreatedEvent(final Workflow workflow, final RuntimeExpressionArguments arguments, final URI taskURI) throws RuntimeError {
+		final Instant taskCreatedAt = Instant.now();
+		final TaskCreatedEvent taskCreatedEvent = new TaskCreatedEvent();
+		taskCreatedEvent.setCreatedAt(Date.from(taskCreatedAt));
+		taskCreatedEvent.setTask(taskURI);
+		taskCreatedEvent.setWorkflow(WorkflowUtil.getName(workflow, arguments.getWorkflow()));
+		taskLifecycleEventsService.fire(taskCreatedEvent);
+	}
+
+	private boolean checkTaskShouldBeRun(final Task task, final RuntimeExpressionArguments arguments) throws ExpressionError {
 		boolean shouldBeRunTask = true;
 		if(task.getIf_() != null) {
 			shouldBeRunTask = runtimeExpressionsService.if_(task.getIf_(), arguments.getContext(), arguments.getSecrets());
 		}
-		if(shouldBeRunTask) {
-			final Instant taskCreatedAt = Instant.now();
-			
-			final TaskCreatedEvent taskCreatedEvent = new TaskCreatedEvent();
-			taskCreatedEvent.setCreatedAt(Date.from(taskCreatedAt));
-			taskCreatedEvent.setTask(taskURI);
-			taskCreatedEvent.setWorkflow(WorkflowUtil.getName(workflow, arguments.getWorkflow()));
-			
-			taskLifecycleEventsService.fire(taskCreatedEvent);
-			
-			boolean taskShouldBeRun = true;
-			if(task.getIf_() != null) {
-				taskShouldBeRun = runtimeExpressionsService.if_(task.getIf_(), arguments.getContext(), arguments.getSecrets());
-			}
-			
-			if(taskShouldBeRun) {
-				taskOutput = taskService.start(workflow, workflowInput, arguments, taskName, taskURI, task, taskInput, end);
-			}
-		}
-		return taskOutput;
+		return shouldBeRunTask;
 	}
 }

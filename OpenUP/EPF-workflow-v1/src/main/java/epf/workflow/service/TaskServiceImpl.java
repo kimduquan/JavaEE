@@ -9,6 +9,7 @@ import epf.workflow.event.TaskFaultedEvent;
 import epf.workflow.event.TaskStartedEvent;
 import epf.workflow.schema.DateTimeDescriptor;
 import epf.workflow.schema.Error;
+import epf.workflow.schema.RuntimeError;
 import epf.workflow.schema.RuntimeExpressionArguments;
 import epf.workflow.schema.Task;
 import epf.workflow.schema.TaskDescriptor;
@@ -91,29 +92,11 @@ public class TaskServiceImpl implements TaskService {
 
 	@Override
 	public Object start(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments, final String taskName, final URI taskURI, final Task task, final Object taskInput, final AtomicBoolean end) throws Error {
-		
 		final Instant taskStartedAt = Instant.now();
-		
-		final TaskStartedEvent taskStartedEvent = new TaskStartedEvent();
-		taskStartedEvent.setStartedAt(Date.from(taskStartedAt));
-		taskStartedEvent.setTask(taskURI);
-		taskStartedEvent.setWorkflow(WorkflowUtil.getName(workflow, arguments.getWorkflow()));
-		
-		taskLifecycleEventsService.fire(taskStartedEvent);
-		
-		final DateTimeDescriptor dateTimeDescriptor = DateTimeDescriptor.from(taskStartedAt);
-		
-		final TaskDescriptor taskDescriptor = new TaskDescriptor();
-		taskDescriptor.setDefinition(WorkflowUtil.toMap(task));
-		taskDescriptor.setInput(workflowInput);
-		taskDescriptor.setName(taskName);
-		taskDescriptor.setReference(taskURI.toString());
-		taskDescriptor.setStartedAt(dateTimeDescriptor);
-		
+		fireTaskStartedEvent(workflow, arguments, taskURI, taskStartedAt);
+		final TaskDescriptor taskDescriptor = createTaskDescriptor(workflowInput, taskName, taskURI, task, taskStartedAt);
 		arguments.setTask(taskDescriptor);
-		
 		Object taskOutput = null;
-		
 		try {
 			if(task instanceof CallTask) {
 				final CallTask callTask = (CallTask) task;
@@ -165,28 +148,48 @@ public class TaskServiceImpl implements TaskService {
 			}
 		}
 		catch(Error error) {
-			
-			final Date faultedAt = Date.from(Instant.now());
-			final TaskFaultedEvent taskFaultedEvent = new TaskFaultedEvent();
-			taskFaultedEvent.setError(error);
-			taskFaultedEvent.setFaultedAt(faultedAt);
-			taskFaultedEvent.setTask(taskURI);
-			taskFaultedEvent.setWorkflow(WorkflowUtil.getName(workflow, arguments.getWorkflow()));
-			
-			taskLifecycleEventsService.fire(taskFaultedEvent);
-			
+			fireTaskFaultedEvent(workflow, arguments, taskURI, error);
 			throw error;
 		}
-		
+		fireTaskCompletedEvent(workflow, arguments, taskURI);
+		return taskOutput;
+	}
+
+	private void fireTaskCompletedEvent(final Workflow workflow, final RuntimeExpressionArguments arguments, final URI taskURI) throws RuntimeError {
 		final Date completedAt = Date.from(Instant.now());
 		final TaskCompletedEvent taskCompletedEvent = new TaskCompletedEvent();
 		taskCompletedEvent.setTask(taskURI);
 		taskCompletedEvent.setCompletedAt(completedAt);
 		taskCompletedEvent.setWorkflow(WorkflowUtil.getName(workflow, arguments.getWorkflow()));
-		
 		taskLifecycleEventsService.fire(taskCompletedEvent);
-		
-		return taskOutput;
 	}
 
+	private void fireTaskFaultedEvent(final Workflow workflow, final RuntimeExpressionArguments arguments, final URI taskURI, Error error) throws RuntimeError {
+		final Date faultedAt = Date.from(Instant.now());
+		final TaskFaultedEvent taskFaultedEvent = new TaskFaultedEvent();
+		taskFaultedEvent.setError(error);
+		taskFaultedEvent.setFaultedAt(faultedAt);
+		taskFaultedEvent.setTask(taskURI);
+		taskFaultedEvent.setWorkflow(WorkflowUtil.getName(workflow, arguments.getWorkflow()));
+		taskLifecycleEventsService.fire(taskFaultedEvent);
+	}
+
+	private TaskDescriptor createTaskDescriptor(final Object workflowInput, final String taskName, final URI taskURI, final Task task, final Instant taskStartedAt) {
+		final DateTimeDescriptor dateTimeDescriptor = DateTimeDescriptor.from(taskStartedAt);
+		final TaskDescriptor taskDescriptor = new TaskDescriptor();
+		taskDescriptor.setDefinition(task);
+		taskDescriptor.setInput(workflowInput);
+		taskDescriptor.setName(taskName);
+		taskDescriptor.setReference(taskURI.toString());
+		taskDescriptor.setStartedAt(dateTimeDescriptor);
+		return taskDescriptor;
+	}
+
+	private void fireTaskStartedEvent(final Workflow workflow, final RuntimeExpressionArguments arguments, final URI taskURI, final Instant taskStartedAt) throws RuntimeError {
+		final TaskStartedEvent taskStartedEvent = new TaskStartedEvent();
+		taskStartedEvent.setStartedAt(Date.from(taskStartedAt));
+		taskStartedEvent.setTask(taskURI);
+		taskStartedEvent.setWorkflow(WorkflowUtil.getName(workflow, arguments.getWorkflow()));
+		taskLifecycleEventsService.fire(taskStartedEvent);
+	}
 }
