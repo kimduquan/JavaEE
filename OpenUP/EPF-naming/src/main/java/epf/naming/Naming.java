@@ -1325,6 +1325,11 @@ public interface Naming {
 		String EVENT = "Event";
 		
 		/**
+		 * 
+		 */
+		String EVENT_FILTER = "EventFilter";
+		
+		/**
 	     *
 	     */
 	    String WORKFLOW_MANAGEMENT = "workflow-management";

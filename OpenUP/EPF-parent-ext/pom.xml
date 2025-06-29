@@ -99,6 +99,12 @@
 		    <artifactId>quarkus-jnosql-cassandra</artifactId>
 		    <version>3.4.6</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.quarkiverse.jnosql/quarkus-jnosql-mongodb -->
+		<dependency>
+		    <groupId>io.quarkiverse.jnosql</groupId>
+		    <artifactId>quarkus-jnosql-mongodb</artifactId>
+		    <version>3.4.6</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.quarkiverse.jnosql/quarkus-jnosql-hazelcast -->
 		<dependency>
 		    <groupId>io.quarkiverse.jnosql</groupId>
