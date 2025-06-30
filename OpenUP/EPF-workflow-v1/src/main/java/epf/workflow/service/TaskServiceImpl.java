@@ -16,7 +16,6 @@ import epf.workflow.schema.RuntimeExpressionArguments;
 import epf.workflow.schema.Task;
 import epf.workflow.schema.TaskDescriptor;
 import epf.workflow.schema.ValidationError;
-import epf.workflow.schema.Workflow;
 import epf.workflow.schema.util.Either;
 import epf.workflow.schema.util.WorkflowUtil;
 import epf.workflow.spi.CallService;
@@ -99,115 +98,115 @@ public class TaskServiceImpl implements TaskService {
 	transient WaitService waitService;
 
 	@Override
-	public Object start(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments, final String taskName, final URI taskURI, final Task task, Object taskInput, final AtomicBoolean end) throws Error {
+	public Object start(final RuntimeExpressionArguments arguments, final String taskName, final URI taskURI, final Task task, Object taskInput, final AtomicBoolean end) throws Error {
 		taskInput = validateTaskInput(arguments, task, taskInput);
-		fireTaskCreatedEvent(workflow, arguments, taskURI);
+		fireTaskCreatedEvent(arguments, taskURI);
 		Object taskOutput = null;
 		if(checkTaskShouldBeStart(task, arguments)) {
 			final Instant taskStartedAt = Instant.now();
-			fireTaskStartedEvent(workflow, arguments, taskURI, taskStartedAt);
-			final TaskDescriptor taskDescriptor = createTaskDescriptor(workflowInput, taskName, taskURI, task, taskStartedAt);
+			fireTaskStartedEvent(arguments, taskURI, taskStartedAt);
+			final TaskDescriptor taskDescriptor = createTaskDescriptor(taskName, taskURI, task, taskStartedAt, taskInput);
 			arguments.setTask(taskDescriptor);
-			taskOutput = doTask(workflow, workflowInput, arguments, taskURI, task, taskInput, end);
+			taskOutput = doTask(arguments, taskURI, task, taskInput, end);
 		}
-		fireTaskCompletedEvent(workflow, arguments, taskURI);
+		fireTaskCompletedEvent(arguments, taskURI);
 		return taskOutput;
 	}
 
-	private Object doTask(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments, final URI taskURI, final Task task, Object taskInput, final AtomicBoolean end) throws RuntimeError, Error {
+	private Object doTask(final RuntimeExpressionArguments arguments, final URI taskURI, final Task task, Object taskInput, final AtomicBoolean end) throws RuntimeError, Error {
 		try {
 			Object taskOutput = null;
 			if(task instanceof CallTask) {
 				final CallTask callTask = (CallTask) task;
-				taskOutput = callService.call(workflow, workflowInput, arguments, callTask, taskInput);
+				taskOutput = callService.call(arguments, callTask, taskInput);
 			}
 			else if(task instanceof DoTask) {
 				final DoTask doTask = (DoTask) task;
-				taskOutput = doService.do_(workflow, doTask.getDo_(), workflowInput, arguments, taskURI, end);
+				taskOutput = doService.do_(doTask.getDo_(), arguments, taskURI, end);
 			}
 			else if(task instanceof EmitTask) {
 				final EmitTask emitTask = (EmitTask) task;
-				taskOutput = emitService.emit(workflow, workflowInput, arguments, emitTask, taskInput);
+				taskOutput = emitService.emit(arguments, emitTask, taskInput);
 			}
 			else if(task instanceof ForkTask) {
 				final ForkTask forkTask = (ForkTask) task;
-				taskOutput = forkService.fork(workflow, workflowInput, arguments, forkTask, end);
+				taskOutput = forkService.fork(arguments, forkTask, end);
 			}
 			else if(task instanceof ForTask) {
 				final ForTask forTask = (ForTask) task;
-				taskOutput = forService._for(workflow, workflowInput, arguments, forTask, taskInput, end);
+				taskOutput = forService._for(arguments, forTask, taskInput, end);
 			}
 			else if(task instanceof ListenTask) {
 				final ListenTask listenTask = (ListenTask) task;
-				taskOutput = listenService.listen(workflow, workflowInput, arguments, listenTask, taskInput);
+				taskOutput = listenService.listen(arguments, listenTask, taskInput);
 			}
 			else if(task instanceof RaiseTask) {
 				final RaiseTask raiseTask = (RaiseTask) task;
-				taskOutput = raiseService.raise(workflow, workflowInput, arguments, raiseTask, taskInput);
+				taskOutput = raiseService.raise(arguments, raiseTask, taskInput);
 			}
 			else if(task instanceof RunTask) {
 				final RunTask runTask = (RunTask) task;
-				taskOutput = runService.run(workflow, workflowInput, arguments, runTask, taskInput);
+				taskOutput = runService.run(arguments, runTask, taskInput);
 			}
 			else if(task instanceof SetTask) {
 				final SetTask setTask = (SetTask) task;
-				taskOutput = setService.set(workflow, workflowInput, arguments, setTask, taskInput);
+				taskOutput = setService.set(arguments, setTask, taskInput);
 			}
 			else if(task instanceof SwitchTask) {
 				final SwitchTask switchTask = (SwitchTask) task;
-				taskOutput = switchService._switch(workflow, workflowInput, arguments, switchTask, taskInput, end);
+				taskOutput = switchService._switch(arguments, switchTask, taskInput, end);
 			}
 			else if(task instanceof TryTask) {
 				final TryTask tryTask = (TryTask) task;
-				taskOutput = tryService._try(workflow, workflowInput, arguments, tryTask, taskInput, end);
+				taskOutput = tryService._try(arguments, tryTask, taskInput, end);
 			}
 			else if(task instanceof WaitTask) {
 				final WaitTask waitTask = (WaitTask) task;
-				taskOutput = waitService.wait(workflow, workflowInput, arguments, waitTask, taskInput);
+				taskOutput = waitService.wait(arguments, waitTask, taskInput);
 			}
 			return taskOutput;
 		}
 		catch(Error error) {
-			fireTaskFaultedEvent(workflow, arguments, taskURI, error);
+			fireTaskFaultedEvent(arguments, taskURI, error);
 			throw error;
 		}
 	}
 
-	private void fireTaskCompletedEvent(final Workflow workflow, final RuntimeExpressionArguments arguments, final URI taskURI) throws RuntimeError {
+	private void fireTaskCompletedEvent(final RuntimeExpressionArguments arguments, final URI taskURI) throws RuntimeError {
 		final Date completedAt = Date.from(Instant.now());
 		final TaskCompletedEvent taskCompletedEvent = new TaskCompletedEvent();
 		taskCompletedEvent.setTask(taskURI);
 		taskCompletedEvent.setCompletedAt(completedAt);
-		taskCompletedEvent.setWorkflow(WorkflowUtil.getName(workflow, arguments.getWorkflow()));
+		taskCompletedEvent.setWorkflow(WorkflowUtil.getName(arguments.getWorkflow().getDefinition(), arguments.getWorkflow()));
 		taskLifecycleEventsService.fire(taskCompletedEvent);
 	}
 
-	private void fireTaskFaultedEvent(final Workflow workflow, final RuntimeExpressionArguments arguments, final URI taskURI, final Error error) throws RuntimeError {
+	private void fireTaskFaultedEvent(final RuntimeExpressionArguments arguments, final URI taskURI, final Error error) throws RuntimeError {
 		final Date faultedAt = Date.from(Instant.now());
 		final TaskFaultedEvent taskFaultedEvent = new TaskFaultedEvent();
 		taskFaultedEvent.setError(error);
 		taskFaultedEvent.setFaultedAt(faultedAt);
 		taskFaultedEvent.setTask(taskURI);
-		taskFaultedEvent.setWorkflow(WorkflowUtil.getName(workflow, arguments.getWorkflow()));
+		taskFaultedEvent.setWorkflow(WorkflowUtil.getName(arguments.getWorkflow().getDefinition(), arguments.getWorkflow()));
 		taskLifecycleEventsService.fire(taskFaultedEvent);
 	}
 
-	private TaskDescriptor createTaskDescriptor(final Object workflowInput, final String taskName, final URI taskURI, final Task task, final Instant taskStartedAt) {
+	private TaskDescriptor createTaskDescriptor(final String taskName, final URI taskURI, final Task task, final Instant taskStartedAt, final Object taskInput) {
 		final DateTimeDescriptor dateTimeDescriptor = DateTimeDescriptor.from(taskStartedAt);
 		final TaskDescriptor taskDescriptor = new TaskDescriptor();
 		taskDescriptor.setDefinition(task);
-		taskDescriptor.setInput(workflowInput);
+		taskDescriptor.setInput(taskInput);
 		taskDescriptor.setName(taskName);
 		taskDescriptor.setReference(taskURI.toString());
 		taskDescriptor.setStartedAt(dateTimeDescriptor);
 		return taskDescriptor;
 	}
 
-	private void fireTaskStartedEvent(final Workflow workflow, final RuntimeExpressionArguments arguments, final URI taskURI, final Instant taskStartedAt) throws RuntimeError {
+	private void fireTaskStartedEvent(final RuntimeExpressionArguments arguments, final URI taskURI, final Instant taskStartedAt) throws RuntimeError {
 		final TaskStartedEvent taskStartedEvent = new TaskStartedEvent();
 		taskStartedEvent.setStartedAt(Date.from(taskStartedAt));
 		taskStartedEvent.setTask(taskURI);
-		taskStartedEvent.setWorkflow(WorkflowUtil.getName(workflow, arguments.getWorkflow()));
+		taskStartedEvent.setWorkflow(WorkflowUtil.getName(arguments.getWorkflow().getDefinition(), arguments.getWorkflow()));
 		taskLifecycleEventsService.fire(taskStartedEvent);
 	}
 
@@ -223,12 +222,12 @@ public class TaskServiceImpl implements TaskService {
 		return taskInput;
 	}
 
-	private void fireTaskCreatedEvent(final Workflow workflow, final RuntimeExpressionArguments arguments, final URI taskURI) throws RuntimeError {
+	private void fireTaskCreatedEvent(final RuntimeExpressionArguments arguments, final URI taskURI) throws RuntimeError {
 		final Instant taskCreatedAt = Instant.now();
 		final TaskCreatedEvent taskCreatedEvent = new TaskCreatedEvent();
 		taskCreatedEvent.setCreatedAt(Date.from(taskCreatedAt));
 		taskCreatedEvent.setTask(taskURI);
-		taskCreatedEvent.setWorkflow(WorkflowUtil.getName(workflow, arguments.getWorkflow()));
+		taskCreatedEvent.setWorkflow(WorkflowUtil.getName(arguments.getWorkflow().getDefinition(), arguments.getWorkflow()));
 		taskLifecycleEventsService.fire(taskCreatedEvent);
 	}
 

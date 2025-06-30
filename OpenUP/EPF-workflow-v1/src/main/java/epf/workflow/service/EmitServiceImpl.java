@@ -7,7 +7,6 @@ import epf.naming.Naming;
 import epf.workflow.schema.Error;
 import epf.workflow.schema.EventProperties;
 import epf.workflow.schema.RuntimeExpressionArguments;
-import epf.workflow.schema.Workflow;
 import epf.workflow.spi.EmitService;
 import epf.workflow.task.schema.EmitTask;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -19,7 +18,7 @@ public class EmitServiceImpl implements EmitService {
 	transient Emitter<EventProperties> emitter;
 
 	@Override
-	public Object emit(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments, final EmitTask task, final Object taskInput) throws Error {
+	public Object emit(final RuntimeExpressionArguments arguments, final EmitTask task, final Object taskInput) throws Error {
 		final Message<EventProperties> msg = Message.of(task.getEmit().getEvent());
 		emitter.send(msg);
 		return null;

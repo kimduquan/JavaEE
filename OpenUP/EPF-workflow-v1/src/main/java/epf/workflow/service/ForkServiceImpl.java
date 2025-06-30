@@ -12,7 +12,6 @@ import epf.workflow.schema.Duration;
 import epf.workflow.schema.Error;
 import epf.workflow.schema.RuntimeError;
 import epf.workflow.schema.RuntimeExpressionArguments;
-import epf.workflow.schema.Workflow;
 import epf.workflow.schema.util.DurationUtil;
 import epf.workflow.spi.ForkService;
 import epf.workflow.spi.TaskService;
@@ -34,15 +33,15 @@ public class ForkServiceImpl implements ForkService {
 	transient TimeoutService timeoutService;
 
 	@Override
-	public Object fork(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments, final ForkTask task, final AtomicBoolean end) throws Error {
+	public Object fork(final RuntimeExpressionArguments arguments, final ForkTask task, final AtomicBoolean end) throws Error {
 		final List<Callable<Object>> branchTasks = new ArrayList<>();
 		task.getFork().getBranches().forEach((branchTaskName, branchTask) -> {
 			final URI branchURI = URI.create(arguments.getTask().getReference()).resolve(branchTaskName);
-			branchTasks.add(() -> taskService.start(workflow, workflowInput, arguments, branchTaskName, branchURI, branchTask, arguments.getInput(), end));
+			branchTasks.add(() -> taskService.start(arguments, branchTaskName, branchURI, branchTask, arguments.getInput(), end));
 		});
 		try {
 			Object taskOutput;
-			final Duration timeout = timeoutService.getTimeout(workflow, task);
+			final Duration timeout = timeoutService.getTimeout(arguments.getWorkflow().getDefinition(), task);
 			TimeUnit timeUnit = TimeUnit.NANOSECONDS;
 			long time = 0;
 			if(timeout != null) {

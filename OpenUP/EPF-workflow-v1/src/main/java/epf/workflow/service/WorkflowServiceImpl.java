@@ -71,7 +71,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 		try {
 			final URI doURI = URI.create("/do");
 			final AtomicBoolean end = new AtomicBoolean();
-			final Object workflowOutput = doService.do_(workflow, workflow.getDo_(), workflowInput, arguments, doURI, end);
+			final Object workflowOutput = doService.do_(workflow.getDo_(), arguments, doURI, end);
 			fireWorkflowCompletedEvent(workflowName);
 			return workflowOutput;
 		}

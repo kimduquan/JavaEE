@@ -10,7 +10,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 public class TimeoutServiceImpl implements TimeoutService {
 
 	@Override
-	public Duration getTimeout(Workflow workflow, Task task) throws Error {
+	public Duration getTimeout(final Workflow workflow, final Task task) throws Error {
 		return null;
 	}
 }

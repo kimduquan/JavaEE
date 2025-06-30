@@ -6,7 +6,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.net.URI;
 import epf.workflow.schema.Error;
 import epf.workflow.schema.RuntimeExpressionArguments;
-import epf.workflow.schema.Workflow;
 import epf.workflow.spi.DoService;
 import epf.workflow.spi.ForService;
 import epf.workflow.spi.RuntimeExpressionsService;
@@ -24,7 +23,7 @@ public class ForServiceImpl implements ForService {
 	transient DoService doService;
 
 	@Override
-	public Object _for(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments, final ForTask task, final Object taskInput, final AtomicBoolean end) throws Error {
+	public Object _for(final RuntimeExpressionArguments arguments, final ForTask task, final Object taskInput, final AtomicBoolean end) throws Error {
 		final Map<String, Object> parentContext = arguments.getContext();
 		final URI taskURI = URI.create(arguments.getTask().getReference());
 		final List<Object> in = runtimeExpressionsService.in(task.getFor_().getIn(), parentContext, arguments.getSecrets());
@@ -35,7 +34,7 @@ public class ForServiceImpl implements ForService {
 			runtimeExpressionsService.set(forContext, task.getFor_().getAt(), at);
 			runtimeExpressionsService.set(forContext, task.getFor_().getEach(), each);
 			arguments.setContext(forContext);
-			doService.do_(workflow, task.getDo_(), workflowInput, arguments, taskURI, end);
+			doService.do_(task.getDo_(), arguments, taskURI, end);
 			if(end.get()) {
 				break;
 			}

@@ -4,7 +4,6 @@ import epf.workflow.schema.Duration;
 import epf.workflow.schema.Error;
 import epf.workflow.schema.ProcessResult;
 import epf.workflow.schema.RuntimeExpressionArguments;
-import epf.workflow.schema.Workflow;
 import epf.workflow.spi.ContainerProcessService;
 import epf.workflow.spi.RunService;
 import epf.workflow.spi.ScriptProcessService;
@@ -34,8 +33,8 @@ public class RunServiceImpl implements RunService {
 	transient WorkflowProcessService workflowProcessService;
 	
 	@Override
-	public Object run(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments, final RunTask task, final Object taskInput) throws Error {
-		final Duration timeout = timeoutService.getTimeout(workflow, task);
+	public Object run(final RuntimeExpressionArguments arguments, final RunTask task, final Object taskInput) throws Error {
+		final Duration timeout = timeoutService.getTimeout(arguments.getWorkflow().getDefinition(), task);
 		ProcessResult processResult = null;
 		if(task.getRun().getContainer() != null) {
 			processResult = containerProcessService.run(task.getRun().getContainer(), task.isAwait(), timeout);

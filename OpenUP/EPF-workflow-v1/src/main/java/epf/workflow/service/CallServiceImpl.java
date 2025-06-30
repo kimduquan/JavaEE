@@ -8,7 +8,6 @@ import epf.workflow.schema.HTTPCall;
 import epf.workflow.schema.OpenAPI;
 import epf.workflow.schema.OpenAPICall;
 import epf.workflow.schema.RuntimeExpressionArguments;
-import epf.workflow.schema.Workflow;
 import epf.workflow.schema.gRPC;
 import epf.workflow.schema.gRPCCall;
 import epf.workflow.spi.AsyncAPICallService;
@@ -36,7 +35,7 @@ public class CallServiceImpl implements CallService {
 	transient gRPCCallService gRPCCallService;
 
 	@Override
-	public Object call(final Workflow workflow, final Object workflowInput, final RuntimeExpressionArguments arguments, final CallTask task, final Object taskInput) throws Error {
+	public Object call(final RuntimeExpressionArguments arguments, final CallTask task, final Object taskInput) throws Error {
 		Object output = null;
 		if(task.getCall() instanceof AsyncAPICall) {
 			final AsyncAPI asyncAPI = ((AsyncAPICall)task.getCall()).getWith();

@@ -8,7 +8,6 @@ import epf.workflow.schema.Error;
 import epf.workflow.schema.FlowDirective;
 import epf.workflow.schema.RuntimeExpressionArguments;
 import epf.workflow.schema.Task;
-import epf.workflow.schema.Workflow;
 import epf.workflow.spi.DoService;
 import epf.workflow.spi.RuntimeExpressionsService;
 import epf.workflow.spi.TaskLifecycleEventsService;
@@ -29,7 +28,7 @@ public class DoServiceImpl implements DoService {
 	transient TaskService taskService;
 
 	@Override
-	public Object do_(final Workflow workflow, final Map<String, Task> do_, final Object workflowInput, final RuntimeExpressionArguments arguments, final URI parentURI, final AtomicBoolean end) throws Error {
+	public Object do_(final Map<String, Task> do_, final RuntimeExpressionArguments arguments, final URI parentURI, final AtomicBoolean end) throws Error {
 		Object workflowOutput = null;
 		int taskIndex = 0;
 		final Iterator<Map.Entry<String, Task>> taskIt = do_.entrySet().iterator();
@@ -46,7 +45,7 @@ public class DoServiceImpl implements DoService {
 				taskName = entry.getKey();
 				task = entry.getValue();
 				taskURI = parentURI.resolve("" + taskIndex).resolve(taskName);
-				taskOutput = taskService.start(workflow, workflowInput, arguments, taskName, taskURI, task, taskInput, end);
+				taskOutput = taskService.start(arguments, taskName, taskURI, task, taskInput, end);
 				workflowOutput = taskOutput;
 				then = task.getThen();
 				if(FlowDirective._continue.equals(then)) {
@@ -62,9 +61,9 @@ public class DoServiceImpl implements DoService {
 				else {
 					taskIndex++;
 					taskName = task.getThen();
-					task = workflow.getDo_().get(taskName);
+					task = arguments.getWorkflow().getDefinition().getDo_().get(taskName);
 					final URI nextTaskURI = taskURI.resolve(taskName);
-					taskOutput = taskService.start(workflow, workflowInput, arguments, taskName, nextTaskURI, task, taskOutput, end);
+					taskOutput = taskService.start(arguments, taskName, nextTaskURI, task, taskOutput, end);
 					workflowOutput = taskOutput;
 					then = task.getThen();
 				}
