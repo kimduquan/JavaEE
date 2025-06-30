@@ -3,7 +3,7 @@ package epf.workflow.service;
 import java.net.URI;
 import java.time.Instant;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -53,7 +53,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 	}
 
 	@Override
-	public Object start(final Object rawInput, final Workflow workflow) throws Error {
+	public Object start(final Workflow workflow, final Object rawInput) throws Error {
 		final Instant startedAt = Instant.now();
 		final UUID uuid = UUID.randomUUID();
 		final String workflowName = WorkflowUtil.getName(workflow.getDocument().getName(), uuid.toString(), workflow.getDocument().getNamespace());
@@ -89,7 +89,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 		workflowDescriptor.setInput(rawInput);
 		workflowDescriptor.setStartedAt(dateTimeDescriptor);
 		final RuntimeDescriptor runtimeDescriptor = new RuntimeDescriptor();
-		final Map<String, Object> context = new HashMap<>();
+		final Map<String, Object> context = new LinkedHashMap<>();
 		final Map<String, Object> secrets = useService.useSecrets(workflow.getUse());
 		final RuntimeExpressionArguments arguments = new RuntimeExpressionArguments();
 		arguments.setContext(context);

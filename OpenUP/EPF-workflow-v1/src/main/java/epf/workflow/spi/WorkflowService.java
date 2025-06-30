@@ -8,5 +8,5 @@ public interface WorkflowService {
 
 	Workflow getWorkflow(final String name, final String version) throws RuntimeError;
 	
-	Object start(final Object rawInput, final Workflow workflow) throws Error;
+	Object start(final Workflow workflow, final Object rawInput) throws Error;
 }

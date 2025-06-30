@@ -19,7 +19,7 @@ public class WorkflowProcessServiceImpl implements WorkflowProcessService {
 	@Override
 	public ProcessResult run(final WorkflowProcess workflowProcess, final boolean await, final Duration timeout) throws Error {
 		final Workflow workflow = workflowService.getWorkflow(workflowProcess.getName(), workflowProcess.getVersion());
-		workflowService.start(workflowProcess.getInput(), workflow);
+		workflowService.start(workflow, workflowProcess.getInput());
 		final ProcessResult processResult = new ProcessResult();
 		return processResult;
 	}
