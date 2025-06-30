@@ -43,10 +43,10 @@ public class RunServiceImpl implements RunService {
 			processResult = shellProcessService.run(task.getRun().getShell(), task.isAwait(), timeout);
 		}
 		else if(task.getRun().getScript() != null) {
-			processResult = scriptProcessService.run(task.getRun().getScript(), task.isAwait(), timeout);
+			return scriptProcessService.run(task.getRun().getScript(), task.isAwait(), timeout);
 		}
 		else if(task.getRun().getWorkflow() != null) {
-			workflowProcessService.run(task.getRun().getWorkflow(), task.isAwait(), timeout);
+			return workflowProcessService.run(task.getRun().getWorkflow(), task.isAwait(), timeout);
 		}
 		Object taskOutput;
 		switch(task.getReturn_()) {

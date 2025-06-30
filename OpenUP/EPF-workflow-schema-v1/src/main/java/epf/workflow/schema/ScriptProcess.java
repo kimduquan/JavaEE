@@ -6,6 +6,9 @@ import jakarta.validation.constraints.NotBlank;
 
 @Description("Enables the execution of custom scripts or code within a workflow, empowering workflows to perform specialized logic, data processing, or integration tasks by executing user-defined scripts written in various programming languages.")
 public class ScriptProcess {
+	
+	public static final String JS = "js";
+	public static final String PYTHON = "python";
 
 	@NotBlank
 	@Description("The language of the script to run.")
