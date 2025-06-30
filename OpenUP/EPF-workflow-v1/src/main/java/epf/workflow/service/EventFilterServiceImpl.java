@@ -35,38 +35,30 @@ public class EventFilterServiceImpl implements EventFilterService {
 	}
 	
 	private CriteriaCondition buildEventFilterCondition(final EventProperties event) {
-		final CriteriaCondition idFilter = CriteriaCondition.or(CriteriaCondition.eq("id", null), CriteriaCondition.eq("id", event.getId()));
-		final CriteriaCondition sourceFilter = CriteriaCondition.or(CriteriaCondition.eq("source", null), CriteriaCondition.eq("source", event.getSource()));
-		final CriteriaCondition typeFilter = CriteriaCondition.or(CriteriaCondition.eq("type", null), CriteriaCondition.eq("type", event.getType()));
+		final CriteriaCondition sourceFilter = CriteriaCondition.or(CriteriaCondition.eq(Naming.Event.Schema.SOURCE, null), CriteriaCondition.eq(Naming.Event.Schema.SOURCE, event.getSource()));
+		final CriteriaCondition typeFilter = CriteriaCondition.or(CriteriaCondition.eq(Naming.Event.Schema.TYPE, null), CriteriaCondition.eq(Naming.Event.Schema.TYPE, event.getType()));
 		CriteriaCondition datacontenttypeFilter;
 		if(event.getDatacontenttype() != null) {
-			datacontenttypeFilter = CriteriaCondition.or(CriteriaCondition.eq("datacontenttype", null), CriteriaCondition.eq("datacontenttype", event.getDatacontenttype()));
+			datacontenttypeFilter = CriteriaCondition.or(CriteriaCondition.eq(Naming.Event.Schema.DATA_CONTENT_TYPE, null), CriteriaCondition.eq(Naming.Event.Schema.DATA_CONTENT_TYPE, event.getDatacontenttype()));
 		}
 		else {
-			datacontenttypeFilter = CriteriaCondition.eq("datacontenttype", null);
+			datacontenttypeFilter = CriteriaCondition.eq(Naming.Event.Schema.DATA_CONTENT_TYPE, null);
 		}
 		CriteriaCondition dataschemaFilter;
 		if(event.getDataschema() != null) {
-			dataschemaFilter = CriteriaCondition.or(CriteriaCondition.eq("dataschema", null), CriteriaCondition.eq("dataschema", event.getDataschema()));
+			dataschemaFilter = CriteriaCondition.or(CriteriaCondition.eq(Naming.Event.Schema.DATA_SCHEMA, null), CriteriaCondition.eq(Naming.Event.Schema.DATA_SCHEMA, event.getDataschema()));
 		}
 		else {
-			dataschemaFilter = CriteriaCondition.eq("dataschema", null);
+			dataschemaFilter = CriteriaCondition.eq(Naming.Event.Schema.DATA_SCHEMA, null);
 		}
 		CriteriaCondition subjectFilter;
 		if(event.getSubject() != null) {
-			subjectFilter = CriteriaCondition.or(CriteriaCondition.eq("subject", null), CriteriaCondition.eq("subject", event.getSubject()));
+			subjectFilter = CriteriaCondition.or(CriteriaCondition.eq(Naming.Event.Schema.SUBJECT, null), CriteriaCondition.eq(Naming.Event.Schema.SUBJECT, event.getSubject()));
 		}
 		else {
-			subjectFilter = CriteriaCondition.eq("subject", null);
+			subjectFilter = CriteriaCondition.eq(Naming.Event.Schema.SUBJECT, null);
 		}
-		CriteriaCondition timeFilter;
-		if(event.getTime() != null) {
-			timeFilter = CriteriaCondition.or(CriteriaCondition.eq("time", null), CriteriaCondition.eq("time", event.getTime()));
-		}
-		else {
-			timeFilter = CriteriaCondition.eq("time", null);
-		}
-		return CriteriaCondition.and(idFilter, sourceFilter, typeFilter, datacontenttypeFilter, dataschemaFilter, subjectFilter, timeFilter);
+		return CriteriaCondition.and(sourceFilter, typeFilter, datacontenttypeFilter, dataschemaFilter, subjectFilter);
 	}
 	
 	private SelectQuery buildEventFilterQuery(final CriteriaCondition eventFilterCondition) {
@@ -79,28 +71,28 @@ public class EventFilterServiceImpl implements EventFilterService {
 		final Map<String, Object> extData = new LinkedHashMap<>();
 		final Map<String, Object> data = entity.toMap();
 		data.forEach((property, value) -> {
-			if("id".equals(property)) {
+			if(Naming.Event.Schema.ID.equals(property)) {
 				eventFilter.getWith().setId((String)value);
 			}
-			else if("source".equals(property)) {
+			else if(Naming.Event.Schema.SOURCE.equals(property)) {
 				eventFilter.getWith().setSource((String)value);
 			}
-			else if("type".equals(property)) {
+			else if(Naming.Event.Schema.TYPE.equals(property)) {
 				eventFilter.getWith().setType((String)value);
 			}
-			else if("datacontenttype".equals(property)) {
+			else if(Naming.Event.Schema.DATA_CONTENT_TYPE.equals(property)) {
 				eventFilter.getWith().setDatacontenttype(value != null ? (String)value : null);
 			}
-			else if("dataschema".equals(property)) {
+			else if(Naming.Event.Schema.DATA_SCHEMA.equals(property)) {
 				eventFilter.getWith().setDataschema(value != null ? (String)value : null);
 			}
-			else if("subject".equals(property)) {
+			else if(Naming.Event.Schema.SUBJECT.equals(property)) {
 				eventFilter.getWith().setSubject(value != null ? (String)value : null);
 			}
-			else if("time".equals(property)) {
+			else if(Naming.Event.Schema.TIME.equals(property)) {
 				eventFilter.getWith().setTime(value != null ? (String)value : null);
 			}
-			else if(!"specversion".equals(property)) {
+			else if(!Naming.Event.Schema.SPEC_VERSION.equals(property)) {
 				extData.put(property, value);
 			}
 		});
