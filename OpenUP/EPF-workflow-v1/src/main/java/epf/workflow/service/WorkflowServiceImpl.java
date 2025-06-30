@@ -53,13 +53,12 @@ public class WorkflowServiceImpl implements WorkflowService {
 	}
 
 	@Override
-	public Object start(final Workflow workflow, final Object rawInput) throws Error {
+	public Object start(final Workflow workflow, Object workflowInput) throws Error {
 		final Instant startedAt = Instant.now();
 		final UUID uuid = UUID.randomUUID();
 		final String workflowName = WorkflowUtil.getName(workflow.getDocument().getName(), uuid.toString(), workflow.getDocument().getNamespace());
 		fireWorkflowStartedEvent(workflow, startedAt, workflowName);
-		final RuntimeExpressionArguments arguments = createRuntimeExpressionArguments(rawInput, workflow, startedAt, uuid);
-		Object workflowInput = rawInput;
+		final RuntimeExpressionArguments arguments = createRuntimeExpressionArguments(workflow, startedAt, uuid);
 		if(workflow.getInput() != null) {
 			if(workflow.getInput().getSchema() != null) {
 				inputService.validate(workflowInput, workflow.getInput());
@@ -68,6 +67,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 				workflowInput = runtimeExpressionsService.evaluate(workflow.getInput().getFrom().getLeft(), arguments.getSecrets(), arguments.getWorkflow(), arguments.getRuntime());
 			}
 		}
+		arguments.getWorkflow().setInput(workflowInput);
 		try {
 			final URI doURI = URI.create("/do");
 			final AtomicBoolean end = new AtomicBoolean();
@@ -81,12 +81,11 @@ public class WorkflowServiceImpl implements WorkflowService {
 		}
 	}
 
-	private RuntimeExpressionArguments createRuntimeExpressionArguments(final Object rawInput, final Workflow workflow, final Instant startedAt, final UUID uuid) throws Error {
+	private RuntimeExpressionArguments createRuntimeExpressionArguments(final Workflow workflow, final Instant startedAt, final UUID uuid) throws Error {
 		final DateTimeDescriptor dateTimeDescriptor = DateTimeDescriptor.from(startedAt);
 		final WorkflowDescriptor workflowDescriptor = new WorkflowDescriptor();
 		workflowDescriptor.setId(uuid.toString());
 		workflowDescriptor.setDefinition(workflow);
-		workflowDescriptor.setInput(rawInput);
 		workflowDescriptor.setStartedAt(dateTimeDescriptor);
 		final RuntimeDescriptor runtimeDescriptor = new RuntimeDescriptor();
 		final Map<String, Object> context = new LinkedHashMap<>();
