@@ -18,7 +18,7 @@ public class ContainerProcess {
 	private String command;
 	
 	@Description("The container's port mappings, if any")
-	private Map<Integer, Integer> ports;
+	private Map<String, String> ports;
 	
 	@Description("The container's volume mappings, if any")
 	private Map<String, String> volumes;
@@ -45,11 +45,11 @@ public class ContainerProcess {
 		this.command = command;
 	}
 
-	public Map<Integer, Integer> getPorts() {
+	public Map<String, String> getPorts() {
 		return ports;
 	}
 
-	public void setPorts(Map<Integer, Integer> ports) {
+	public void setPorts(Map<String, String> ports) {
 		this.ports = ports;
 	}
 

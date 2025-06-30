@@ -37,7 +37,7 @@ public class RunServiceImpl implements RunService {
 		final Duration timeout = timeoutService.getTimeout(arguments.getWorkflow().getDefinition(), task);
 		ProcessResult processResult = null;
 		if(task.getRun().getContainer() != null) {
-			processResult = containerProcessService.run(task.getRun().getContainer(), task.isAwait(), timeout);
+			processResult = containerProcessService.run(task.getRun().getContainer(), arguments, task.isAwait(), timeout);
 		}
 		else if(task.getRun().getShell() != null) {
 			processResult = shellProcessService.run(task.getRun().getShell(), task.isAwait(), timeout);
