@@ -14,7 +14,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class EmitServiceImpl implements EmitService {
 	
-	@Channel(Naming.Workflow.WORKFLOW_LIFECYCLE_EVENTS)
+	@Channel(Naming.Workflow.EVENTS)
 	transient Emitter<EventProperties> emitter;
 
 	@Override

@@ -100,14 +100,6 @@
         <groupId>org.apache.camel.quarkus</groupId>
         <artifactId>camel-quarkus-rest-openapi</artifactId>
     </dependency>
-    <dependency>
-        <groupId>org.apache.camel.quarkus</groupId>
-        <artifactId>camel-quarkus-http</artifactId>
-    </dependency>
-    <dependency>
-	    <groupId>org.apache.camel.quarkus</groupId>
-	    <artifactId>camel-quarkus-file</artifactId>
-	</dependency>
 	
 	<dependency>
         <groupId>openup</groupId>

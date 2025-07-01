@@ -9,7 +9,7 @@ import epf.workflow.schema.util.Either;
 public class Catch {
 
 	@Description("The definition of the errors to catch.")
-	private Object errors;
+	private Error errors;
 	
 	@Description("The name of the runtime expression variable to save the error as.")
 	@DefaultValue("error")
@@ -25,13 +25,13 @@ public class Catch {
 	private Either<String, RetryPolicy> retry;
 	
 	@Description("The definition of the task(s) to run when catching an error.")
-	private Map<String, Task>[] _do;
+	private Map<String, Task> _do;
 
-	public Object getErrors() {
+	public Error getErrors() {
 		return errors;
 	}
 
-	public void setErrors(Object errors) {
+	public void setErrors(Error errors) {
 		this.errors = errors;
 	}
 
@@ -67,11 +67,11 @@ public class Catch {
 		this.retry = retry;
 	}
 
-	public Map<String, Task>[] get_do() {
+	public Map<String, Task> get_do() {
 		return _do;
 	}
 
-	public void set_do(Map<String, Task>[] _do) {
+	public void set_do(Map<String, Task> _do) {
 		this._do = _do;
 	}
 }
