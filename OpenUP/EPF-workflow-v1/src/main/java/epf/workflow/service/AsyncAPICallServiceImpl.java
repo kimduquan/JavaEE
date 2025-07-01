@@ -18,6 +18,6 @@ public class AsyncAPICallServiceImpl implements AsyncAPICallService {
 
 	@Override
 	public Object call(final AsyncAPI asyncAPI, final Object input) throws Error {
-		return null;
+		return input;
 	}
 }

@@ -1,7 +1,7 @@
 package epf.workflow.service;
 
 import java.net.URI;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import epf.workflow.schema.Catch;
 import epf.workflow.schema.Error;
 import epf.workflow.schema.RuntimeExpressionArguments;
@@ -18,14 +18,14 @@ public class TryServiceImpl implements TryService {
 	transient DoService doService;
 
 	@Override
-	public Object _try(final RuntimeExpressionArguments arguments, final TryTask task, final Object taskInput, final AtomicBoolean end) throws Error {
+	public Object _try(final RuntimeExpressionArguments arguments, final TryTask task, final Object taskInput, final AtomicReference<String> flowDirective) throws Error {
 		final URI taskURI = URI.create(arguments.getTask().getReference());
 		try {
-			return doService.do_(task.getTry_(), arguments, taskURI, end);
+			return doService.do_(task.getTry_(), arguments, taskURI, flowDirective);
 		}
 		catch(Error error) {
 			if(catch_(task.getCatch_(), error)) {
-				return doService.do_(task.getCatch_().get_do(), arguments, taskURI, end);
+				return doService.do_(task.getCatch_().get_do(), arguments, taskURI, flowDirective);
 			}
 			else {
 				throw error;

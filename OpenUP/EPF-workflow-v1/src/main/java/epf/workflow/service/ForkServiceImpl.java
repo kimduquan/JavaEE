@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.workflow.schema.Duration;
 import epf.workflow.schema.Error;
@@ -33,11 +33,11 @@ public class ForkServiceImpl implements ForkService {
 	transient TimeoutService timeoutService;
 
 	@Override
-	public Object fork(final RuntimeExpressionArguments arguments, final ForkTask task, final AtomicBoolean end) throws Error {
+	public Object fork(final RuntimeExpressionArguments arguments, final ForkTask task, final AtomicReference<String> flowDirective) throws Error {
 		final List<Callable<Object>> branchTasks = new ArrayList<>();
 		task.getFork().getBranches().forEach((branchTaskName, branchTask) -> {
 			final URI branchURI = URI.create(arguments.getTask().getReference()).resolve(branchTaskName);
-			branchTasks.add(() -> taskService.start(arguments, branchTaskName, branchURI, branchTask, arguments.getInput(), end));
+			branchTasks.add(() -> taskService.start(arguments, branchTaskName, branchURI, branchTask, arguments.getInput(), flowDirective));
 		});
 		try {
 			Object taskOutput;

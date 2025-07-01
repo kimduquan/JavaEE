@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import epf.workflow.schema.Error;
 import epf.workflow.event.WorkflowCompletedEvent;
 import epf.workflow.event.WorkflowFaultedEvent;
@@ -70,8 +70,8 @@ public class WorkflowServiceImpl implements WorkflowService {
 		arguments.getWorkflow().setInput(workflowInput);
 		try {
 			final URI doURI = URI.create("/do");
-			final AtomicBoolean end = new AtomicBoolean();
-			final Object workflowOutput = doService.do_(workflow.getDo_(), arguments, doURI, end);
+			final AtomicReference<String> flowDirective = new AtomicReference<>();
+			final Object workflowOutput = doService.do_(workflow.getDo_(), arguments, doURI, flowDirective);
 			fireWorkflowCompletedEvent(workflowName);
 			return workflowOutput;
 		}

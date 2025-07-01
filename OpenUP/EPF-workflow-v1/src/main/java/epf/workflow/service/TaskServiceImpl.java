@@ -3,7 +3,7 @@ package epf.workflow.service;
 import java.net.URI;
 import java.time.Instant;
 import java.util.Date;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import epf.workflow.event.TaskCompletedEvent;
 import epf.workflow.event.TaskCreatedEvent;
 import epf.workflow.event.TaskFaultedEvent;
@@ -98,7 +98,7 @@ public class TaskServiceImpl implements TaskService {
 	transient WaitService waitService;
 
 	@Override
-	public Object start(final RuntimeExpressionArguments arguments, final String taskName, final URI taskURI, final Task task, Object taskInput, final AtomicBoolean end) throws Error {
+	public Object start(final RuntimeExpressionArguments arguments, final String taskName, final URI taskURI, final Task task, Object taskInput, final AtomicReference<String> flowDirective) throws Error {
 		taskInput = validateTaskInput(arguments, task, taskInput);
 		fireTaskCreatedEvent(arguments, taskURI);
 		Object taskOutput = null;
@@ -107,13 +107,13 @@ public class TaskServiceImpl implements TaskService {
 			fireTaskStartedEvent(arguments, taskURI, taskStartedAt);
 			final TaskDescriptor taskDescriptor = createTaskDescriptor(taskName, taskURI, task, taskStartedAt, taskInput);
 			arguments.setTask(taskDescriptor);
-			taskOutput = doTask(arguments, taskURI, task, taskInput, end);
+			taskOutput = doTask(arguments, taskURI, task, taskInput, flowDirective);
 		}
 		fireTaskCompletedEvent(arguments, taskURI);
 		return taskOutput;
 	}
 
-	private Object doTask(final RuntimeExpressionArguments arguments, final URI taskURI, final Task task, Object taskInput, final AtomicBoolean end) throws RuntimeError, Error {
+	private Object doTask(final RuntimeExpressionArguments arguments, final URI taskURI, final Task task, Object taskInput, final AtomicReference<String> flowDirective) throws RuntimeError, Error {
 		try {
 			Object taskOutput = null;
 			if(task instanceof CallTask) {
@@ -122,7 +122,7 @@ public class TaskServiceImpl implements TaskService {
 			}
 			else if(task instanceof DoTask) {
 				final DoTask doTask = (DoTask) task;
-				taskOutput = doService.do_(doTask.getDo_(), arguments, taskURI, end);
+				taskOutput = doService.do_(doTask.getDo_(), arguments, taskURI, flowDirective);
 			}
 			else if(task instanceof EmitTask) {
 				final EmitTask emitTask = (EmitTask) task;
@@ -130,11 +130,11 @@ public class TaskServiceImpl implements TaskService {
 			}
 			else if(task instanceof ForkTask) {
 				final ForkTask forkTask = (ForkTask) task;
-				taskOutput = forkService.fork(arguments, forkTask, end);
+				taskOutput = forkService.fork(arguments, forkTask, flowDirective);
 			}
 			else if(task instanceof ForTask) {
 				final ForTask forTask = (ForTask) task;
-				taskOutput = forService._for(arguments, forTask, taskInput, end);
+				taskOutput = forService._for(arguments, forTask, taskInput, flowDirective);
 			}
 			else if(task instanceof ListenTask) {
 				final ListenTask listenTask = (ListenTask) task;
@@ -154,11 +154,11 @@ public class TaskServiceImpl implements TaskService {
 			}
 			else if(task instanceof SwitchTask) {
 				final SwitchTask switchTask = (SwitchTask) task;
-				taskOutput = switchService._switch(arguments, switchTask, taskInput, end);
+				taskOutput = switchService._switch(arguments, switchTask, taskInput, flowDirective);
 			}
 			else if(task instanceof TryTask) {
 				final TryTask tryTask = (TryTask) task;
-				taskOutput = tryService._try(arguments, tryTask, taskInput, end);
+				taskOutput = tryService._try(arguments, tryTask, taskInput, flowDirective);
 			}
 			else if(task instanceof WaitTask) {
 				final WaitTask waitTask = (WaitTask) task;

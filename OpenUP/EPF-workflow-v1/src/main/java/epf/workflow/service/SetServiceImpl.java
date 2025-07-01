@@ -14,6 +14,6 @@ public class SetServiceImpl implements SetService {
 		if(task.getSet().isRight()) {
 			arguments.getContext().putAll(task.getSet().getRight());
 		}
-		return null;
+		return taskInput;
 	}
 }

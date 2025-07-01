@@ -16,4 +16,8 @@ public interface FlowDirective {
 	
 	@Description("Continues the workflow at the task with the specified name")
 	String string = "string";
+	
+	static boolean isString(final String flowDirective) {
+		return !_continue.equals(flowDirective) && !exit.equals(flowDirective) && ! end.equals(flowDirective);
+	}
 }

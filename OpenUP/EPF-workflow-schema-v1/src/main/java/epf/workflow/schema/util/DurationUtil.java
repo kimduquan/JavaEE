@@ -64,4 +64,24 @@ public interface DurationUtil {
 		}
 		return time;
 	}
+	
+	static java.time.Duration getDuration(final Duration duration) {
+		java.time.Duration d = java.time.Duration.ZERO;
+		if(duration.getDays() != null) {
+			d = d.plusDays(duration.getDays());
+		}
+		if(duration.getHours() != null) {
+			d = d.plusHours(duration.getHours());
+		}
+		if(duration.getMinutes() != null) {
+			d = d.plusMinutes(duration.getMinutes());
+		}
+		if(duration.getSeconds() != null) {
+			d = d.plusSeconds(duration.getSeconds());
+		}
+		if(duration.getMilliseconds() != null) {
+			d = d.plusMillis(duration.getMilliseconds());
+		}
+		return d;
+	}
 }

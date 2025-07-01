@@ -2,7 +2,7 @@ package epf.workflow.service;
 
 import java.net.URI;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import epf.workflow.schema.Error;
 import epf.workflow.schema.FlowDirective;
 import epf.workflow.schema.RuntimeExpressionArguments;
@@ -25,7 +25,7 @@ public class SwitchServiceImpl implements SwitchService {
 	transient TaskService taskService;
 
 	@Override
-	public Object _switch(final RuntimeExpressionArguments arguments, final SwitchTask task, final Object taskInput, final AtomicBoolean end) throws Error {
+	public Object _switch(final RuntimeExpressionArguments arguments, final SwitchTask task, final Object taskInput, final AtomicReference<String> flowDirective) throws Error {
 		SwitchCase switchCase = task.getSwitch_().get(SwitchCase.DEFAULT);
 		String switchCaseName = null;
 		for(Map.Entry<String, SwitchCase> entry : task.getSwitch_().entrySet()) {
@@ -47,22 +47,14 @@ public class SwitchServiceImpl implements SwitchService {
 				break;
 			}
 		}
-		if(switchCase != null) {
-			if(FlowDirective._continue.equals(switchCase.getThen()) || FlowDirective.exit.equals(switchCase.getThen())) {
-				return null;
-			}
-			else if(FlowDirective.end.equals(switchCase.getThen())) {
-				end.set(true);
-				return null;
-			}
-			else {
-				final String caseTaskName = switchCase.getThen();
-				final Task caseTask = arguments.getWorkflow().getDefinition().getDo_().get(caseTaskName);
-				final URI caseTaskURI = URI.create(arguments.getTask().getReference()).resolve(switchCaseName).resolve(caseTaskName);
-				return taskService.start(arguments, caseTaskName, caseTaskURI, caseTask, taskInput, end);
-			}
+		if(switchCase != null && FlowDirective.isString(switchCase.getThen())) {
+			final String caseTaskName = switchCase.getThen();
+			final Task caseTask = arguments.getWorkflow().getDefinition().getDo_().get(caseTaskName);
+			final URI caseTaskURI = URI.create(arguments.getTask().getReference()).resolve(switchCaseName).resolve(caseTaskName);
+			flowDirective.set(null);
+			return taskService.start(arguments, caseTaskName, caseTaskURI, caseTask, taskInput, flowDirective);
 		}
-		return null;
+		return taskInput;
 	}
 
 }

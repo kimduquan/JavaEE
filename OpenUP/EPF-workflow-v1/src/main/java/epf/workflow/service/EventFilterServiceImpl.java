@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.eclipse.jnosql.communication.semistructured.CommunicationEntity;
 import org.eclipse.jnosql.communication.semistructured.CriteriaCondition;
 import org.eclipse.jnosql.communication.semistructured.DatabaseManager;
@@ -12,6 +14,7 @@ import org.eclipse.jnosql.communication.semistructured.SelectQuery;
 import org.eclipse.jnosql.mapping.Database;
 import org.eclipse.jnosql.mapping.DatabaseType;
 import epf.naming.Naming;
+import epf.workflow.schema.Error;
 import epf.workflow.schema.Correlation;
 import epf.workflow.schema.EventFilter;
 import epf.workflow.schema.EventProperties;
@@ -27,7 +30,7 @@ public class EventFilterServiceImpl implements EventFilterService {
 	transient DatabaseManager database;
 
 	@Override
-	public List<EventFilter> getEventFilters(final EventProperties event) throws Error {
+	public List<EventFilter> findEventFilters(final EventProperties event) throws Error {
 		final CriteriaCondition eventFilterCondition = buildEventFilterCondition(event);
 		final SelectQuery eventFilterQuery = buildEventFilterQuery(eventFilterCondition);
 		final List<EventFilter> eventFilters = queryEventFilters(eventFilterQuery);
@@ -115,5 +118,48 @@ public class EventFilterServiceImpl implements EventFilterService {
 			eventFilters.add(eventFilter);
 		});
 		return eventFilters;
+	}
+	
+	private CommunicationEntity toEntity(final EventFilter eventFilter) {
+		final CommunicationEntity entity = CommunicationEntity.of(Naming.Workflow.EVENT_FILTER);
+		if(eventFilter.getWith().getId() != null) {
+			entity.add(Naming.Event.Schema.ID, eventFilter.getWith().getId());
+		}
+		if(eventFilter.getWith().getDatacontenttype() != null) {
+			entity.add(Naming.Event.Schema.DATA_CONTENT_TYPE, eventFilter.getWith().getDatacontenttype());
+		}
+		if(eventFilter.getWith().getDataschema() != null) {
+			entity.add(Naming.Event.Schema.DATA_SCHEMA, eventFilter.getWith().getDataschema());
+		}
+		if(eventFilter.getWith().getSource() != null) {
+			entity.add(Naming.Event.Schema.SOURCE, eventFilter.getWith().getSource());
+		}
+		if(eventFilter.getWith().getSubject() != null) {
+			entity.add(Naming.Event.Schema.SUBJECT, eventFilter.getWith().getSubject());
+		}
+		if(eventFilter.getWith().getTime() != null) {
+			entity.add(Naming.Event.Schema.TIME, eventFilter.getWith().getTime());
+		}
+		if(eventFilter.getWith().getType() != null) {
+			entity.add(Naming.Event.Schema.TYPE, eventFilter.getWith().getType());
+		}
+		if(eventFilter.getCorrelate() != null) {
+			eventFilter.getCorrelate().forEach((name, correlate) -> {
+				entity.add(name, correlate.getFrom());
+			});
+		}
+		return entity;
+	}
+
+	@Override
+	public void persist(final EventFilter eventFilter) throws Error {
+		final CommunicationEntity entity = toEntity(eventFilter);
+		database.insert(entity);
+	}
+
+	@Override
+	public void persist(final List<EventFilter> eventFilters) throws Error {
+		final List<CommunicationEntity> entities = eventFilters.stream().map(eventFilter -> toEntity(eventFilter)).collect(Collectors.toList());
+		database.insert(entities);
 	}
 }

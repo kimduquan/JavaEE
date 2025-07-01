@@ -21,6 +21,6 @@ public class EmitServiceImpl implements EmitService {
 	public Object emit(final RuntimeExpressionArguments arguments, final EmitTask task, final Object taskInput) throws Error {
 		final Message<EventProperties> msg = Message.of(task.getEmit().getEvent());
 		emitter.send(msg);
-		return null;
+		return taskInput;
 	}
 }
