@@ -6,7 +6,7 @@
         <artifactId>OpenUP-parent</artifactId>
         <version>1.0.0</version>
     </parent>
-    <artifactId>EPF-workflow-schema-v1</artifactId>
+    <artifactId>EPF-workflow-task-schema</artifactId>
     <name>Eclipse Process Framework Workflow Task Schema</name>
     <packaging>jar</packaging>
     <dependencies>
