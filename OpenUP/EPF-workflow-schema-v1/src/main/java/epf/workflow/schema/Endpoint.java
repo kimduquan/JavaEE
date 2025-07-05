@@ -1,6 +1,7 @@
 package epf.workflow.schema;
 
 import org.eclipse.microprofile.graphql.Description;
+import epf.workflow.authentication.schema.Authentication;
 
 @Description("Describes an enpoint.")
 public class Endpoint {

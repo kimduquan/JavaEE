@@ -4,8 +4,8 @@ import epf.workflow.schema.Workflow;
 import epf.workflow.schema.Duration;
 import epf.workflow.schema.Error;
 import epf.workflow.schema.WorkflowProcess;
-import epf.workflow.spi.WorkflowProcessService;
 import epf.workflow.spi.WorkflowService;
+import epf.workflow.task.run.spi.WorkflowProcessService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 

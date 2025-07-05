@@ -2,6 +2,7 @@ package epf.workflow.schema;
 
 import java.util.Map;
 import org.eclipse.microprofile.graphql.Description;
+import epf.workflow.authentication.schema.Authentication;
 
 @Description("Defines the workflow's reusable components.")
 public class Use {

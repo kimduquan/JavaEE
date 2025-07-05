@@ -9,7 +9,7 @@ import epf.workflow.schema.FlowDirective;
 import epf.workflow.schema.RuntimeExpressionArguments;
 import epf.workflow.schema.Task;
 import epf.workflow.spi.RuntimeExpressionsService;
-import epf.workflow.spi.TaskLifecycleEventsService;
+import epf.workflow.task.event.spi.TaskLifecycleEventsService;
 import epf.workflow.task.spi.DoService;
 import epf.workflow.task.spi.TaskService;
 import jakarta.enterprise.context.ApplicationScoped;

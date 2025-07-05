@@ -3,7 +3,6 @@ package epf.workflow.schema;
 import java.util.Map;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
-
 import epf.workflow.schema.util.Either;
 
 public class Task {

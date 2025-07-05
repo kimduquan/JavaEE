@@ -1,9 +1,11 @@
 package epf.workflow.service;
 
 import epf.workflow.schema.RuntimeError;
-import epf.workflow.schema.ShellProcess;
 import epf.workflow.schema.DurationUtil;
-import epf.workflow.spi.ShellProcessService;
+import epf.workflow.task.run.schema.ProcessResult;
+import epf.workflow.task.run.schema.ShellProcess;
+import epf.workflow.task.run.spi.ShellProcessService;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -11,7 +13,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import epf.workflow.schema.Duration;
 import epf.workflow.schema.Error;
-import epf.workflow.schema.ProcessResult;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped

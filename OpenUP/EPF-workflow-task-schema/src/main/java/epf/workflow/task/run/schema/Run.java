@@ -1,9 +1,7 @@
 package epf.workflow.task.run.schema;
 
 import org.eclipse.microprofile.graphql.Description;
-import epf.workflow.schema.ContainerProcess;
-import epf.workflow.schema.ScriptProcess;
-import epf.workflow.schema.ShellProcess;
+
 import epf.workflow.schema.WorkflowProcess;
 
 @Description("Provides the capability to execute external containers, shell commands, scripts, or workflows.")

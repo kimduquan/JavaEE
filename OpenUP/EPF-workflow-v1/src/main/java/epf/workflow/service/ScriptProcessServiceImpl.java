@@ -8,8 +8,8 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.SimpleBindings;
 import epf.workflow.schema.Duration;
-import epf.workflow.schema.ScriptProcess;
-import epf.workflow.spi.ScriptProcessService;
+import epf.workflow.task.run.schema.ScriptProcess;
+import epf.workflow.task.run.spi.ScriptProcessService;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
