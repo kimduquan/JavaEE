@@ -948,6 +948,7 @@
 		<module>EPF-nosql-schema</module>
 		<module>EPF-lang-schema</module>
 		<module>EPF-workflow-schema-utility</module>
+		<module>EPF-workflow-schema-utility-v1</module>
 		<module>EPF-net-schema</module>
 		<module>EPF-security-schema</module>
 		
