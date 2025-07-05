@@ -1,9 +1,9 @@
 package epf.net;
 
 import java.io.InputStream;
-import javax.enterprise.context.ApplicationScoped;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Response;
 import epf.net.schema.URL;
 import epf.util.StringUtil;
 import epf.util.json.JsonUtil;
@@ -12,10 +12,6 @@ import epf.function.persistence.PersistFunction;
 import epf.function.LinkFunction;
 import epf.naming.Naming;
 
-/**
- * @author PC
- *
- */
 @Path(Naming.NET)
 @ApplicationScoped
 public class Net implements epf.net.client.Net {

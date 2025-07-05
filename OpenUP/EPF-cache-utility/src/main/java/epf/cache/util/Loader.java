@@ -11,37 +11,16 @@ import javax.cache.integration.CacheLoader;
 import javax.cache.integration.CacheLoaderException;
 import epf.util.concurrent.ext.Emitter;
 
-/**
- * @param <K>
- * @param <V>
- */
 public class Loader<K, V, E extends CacheLoad<K, V>> implements CacheLoader<K, V>, Serializable {
 	
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 *
-	 */
 	private transient final Emitter<E> emitter;
 	
-	/**
-	 *
-	 */
 	private transient final Supplier<E> factory;
 	
-	/**
-	 * 
-	 */
 	private final String tenant;
 	
-	/**
-	 * @param tenant
-	 * @param emitter
-	 * @param factory
-	 */
 	public Loader(final String tenant, final Emitter<E> emitter, final Supplier<E> factory) {
 		Objects.requireNonNull(emitter, "Emitter");
 		Objects.requireNonNull(factory, "Supplier");

@@ -1,32 +1,22 @@
 package epf.rules.client.admin;
 
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
 import epf.client.util.Client;
 import epf.naming.Naming;
 import java.io.InputStream;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.client.Entity;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.client.Entity;
 
-/**
- * @author PC
- *
- */
 @Path(Naming.Rules.RULES_ADMIN)
 public interface Admin {
 
-	/**
-	 * @param ruleSet
-	 * @param input
-	 * @return
-	 * @throws Exception
-	 */
 	@Path("{ruleSet}")
 	@PUT
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
@@ -38,12 +28,6 @@ public interface Admin {
 			final InputStream input
 			) throws Exception;
 	
-	/**
-	 * @param client
-	 * @param name
-	 * @param input
-	 * @return
-	 */
 	static Response registerRuleExecutionSet(
 			final Client client, 
 			final String name, 
@@ -61,12 +45,6 @@ public interface Admin {
 						);
 	}
 	
-	/**
-	 * @param name
-	 * @param uriInfo
-	 * @return
-	 * @throws Exception
-	 */
 	@Path("{ruleSet}")
 	@DELETE
 	Response deregisterRuleExecutionSet(
@@ -76,12 +54,6 @@ public interface Admin {
 			final UriInfo uriInfo
 			) throws Exception;
 	
-	/**
-	 * @param client
-	 * @param name
-	 * @return
-	 * @throws Exception
-	 */
 	static Response deregisterRuleExecutionSet(
 			final Client client,
 			final String name

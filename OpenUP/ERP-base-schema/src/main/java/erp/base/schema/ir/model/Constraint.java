@@ -3,75 +3,57 @@ package erp.base.schema.ir.model;
 import org.eclipse.microprofile.graphql.Description;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import erp.base.schema.ir.Model;
+import erp.base.schema.ir.module.Module;
 
-/**
- * 
- */
 @Entity
 @Table(name = "ir_model_constraint")
 @Description("Model Constraint")
 public class Constraint {
+	
+	@Id
+	private int id;
 
-	/**
-	 * 
-	 */
-	@Column(nullable = false)
+	@Column(nullable = false, updatable = false)
 	@NotNull
 	@Description("Constraint")
 	private String name;
 	
-	/**
-	 * 
-	 */
-	@Column
+	@Column(updatable = false)
 	@Description("PostgreSQL constraint definition")
 	private String definition;
 	
-	/**
-	 * 
-	 */
 	@Column
-	@Description("Error message returned when the constraint is violated.")
 	private String message;
 	
-	/**
-	 * 
-	 */
-	@Column(nullable = false)
-	@ManyToOne(targetEntity = Model.class)
+	@JoinColumn(name = "model", nullable = false, updatable = false)
+	@ManyToOne(targetEntity = Model.class, fetch = FetchType.LAZY)
 	@NotNull
-	private String model;
+	private Model model;
 	
-	/**
-	 * 
-	 */
-	@Column(nullable = false)
-	@ManyToOne(targetEntity = Module.class)
+	@JoinColumn(name = "module", nullable = false, updatable = false)
+	@ManyToOne(targetEntity = Module.class, fetch = FetchType.LAZY)
 	@NotNull
-	private String module;
+	private Module module;
 	
-	/**
-	 * 
-	 */
-	@Column(nullable = false, length = 1)
+	@Column(nullable = false, updatable = false, length = 1)
 	@NotNull
 	@Description("Constraint Type")
 	private String type;
-	
-	/**
-	 * 
-	 */
-	@Column
-	private String write_date;
-	
-	/**
-	 * 
-	 */
-	@Column
-	private String create_date;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public String getName() {
 		return name;
@@ -97,19 +79,19 @@ public class Constraint {
 		this.message = message;
 	}
 
-	public String getModel() {
+	public Model getModel() {
 		return model;
 	}
 
-	public void setModel(String model) {
+	public void setModel(Model model) {
 		this.model = model;
 	}
 
-	public String getModule() {
+	public Module getModule() {
 		return module;
 	}
 
-	public void setModule(String module) {
+	public void setModule(Module module) {
 		this.module = module;
 	}
 
@@ -119,21 +101,5 @@ public class Constraint {
 
 	public void setType(String type) {
 		this.type = type;
-	}
-
-	public String getWrite_date() {
-		return write_date;
-	}
-
-	public void setWrite_date(String write_date) {
-		this.write_date = write_date;
-	}
-
-	public String getCreate_date() {
-		return create_date;
-	}
-
-	public void setCreate_date(String create_date) {
-		this.create_date = create_date;
 	}
 }

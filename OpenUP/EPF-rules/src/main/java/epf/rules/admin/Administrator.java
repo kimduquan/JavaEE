@@ -3,9 +3,9 @@ package epf.rules.admin;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import javax.rules.ConfigurationException;
 import javax.rules.admin.LocalRuleExecutionSetProvider;
 import javax.rules.admin.RuleAdministrator;
@@ -15,32 +15,16 @@ import org.eclipse.microprofile.health.Readiness;
 import epf.rules.Provider;
 import epf.util.logging.LogManager;
 
-/**
- * @author PC
- *
- */
 @ApplicationScoped
 @Readiness
 public class Administrator implements HealthCheck {
 	
-	/**
-	 * 
-	 */
 	private transient static final Logger LOGGER = LogManager.getLogger(Administrator.class.getName());
 	
-	/**
-	 * 
-	 */
 	private transient RuleAdministrator ruleAdmin;
 	
-	/**
-	 * 
-	 */
 	private transient LocalRuleExecutionSetProvider localRuleProvider;
 
-	/**
-	 * 
-	 */
 	@Inject @Readiness
 	private transient Provider provider;
 	

@@ -4,8 +4,8 @@ import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import javax.cache.Cache;
 import javax.cache.CacheManager;
 import javax.cache.Caching;
@@ -13,8 +13,8 @@ import javax.cache.configuration.Factory;
 import javax.cache.configuration.MutableConfiguration;
 import javax.cache.expiry.CreatedExpiryPolicy;
 import javax.cache.expiry.ExpiryPolicy;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
@@ -23,34 +23,18 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.naming.Naming;
 import epf.util.logging.LogManager;
 
-/**
- * @author PC
- *
- */
 @ApplicationScoped
 @Readiness
 public class TokenCache implements HealthCheck {
 	
-	/**
-	 * 
-	 */
 	private transient static final Logger LOGGER = LogManager.getLogger(TokenCache.class.getName());
 	
-	/**
-	 * 
-	 */
 	private transient Cache<String, String> tokenCache;
 	
-	/**
-     * 
-     */
-    @Inject
+	@Inject
     @ConfigProperty(name = Naming.Security.JWT.EXPIRE_DURATION)
     transient String expireDuration;
 	
-	/**
-	 * 
-	 */
 	@PostConstruct
 	protected void postConstruct() {
 		try {
@@ -70,9 +54,6 @@ public class TokenCache implements HealthCheck {
 		}
 	}
 	
-	/**
-	 * 
-	 */
 	@PreDestroy
 	protected void preDestroy() {
 		tokenCache.close();
@@ -86,9 +67,6 @@ public class TokenCache implements HealthCheck {
 		return HealthCheckResponse.up("epf-security-cache");
 	}
 
-	/**
-	 * @param jwt
-	 */
 	public void expireToken(final JsonWebToken jwt) {
 		tokenCache.put(jwt.getTokenID(), jwt.getRawToken());
 	}

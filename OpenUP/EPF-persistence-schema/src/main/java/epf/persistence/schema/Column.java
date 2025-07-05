@@ -1,58 +1,16 @@
 package epf.persistence.schema;
 
-/**
- * 
- */
 public class Column {
-
-	/**
-	 *
-	 */
+	
 	private String name;
-
-	/**
-	 *
-	 */
 	private boolean unique;
-
-	/**
-	 *
-	 */
 	private boolean nullable;
-
-	/**
-	 *
-	 */
 	private boolean insertable;
-
-	/**
-	 *
-	 */
 	private boolean updatable;
-
-	/**
-	 *
-	 */
 	private String columnDefinition;
-
-	/**
-	 *
-	 */
 	private String table;
-
-	/**
-	 *
-	 */
 	private int length;
-
-	/**
-	 *
-	 */
 	private int precision;
-
-	/**
-	 *
-	 */
 	private int scale;
 
 	public String getName() {

@@ -10,21 +10,10 @@ import epf.persistence.schema.Attribute;
 import epf.persistence.schema.Table;
 import epf.util.logging.LogManager;
 
-/**
- * @author PC
- *
- */
 public class EntityBuilder {
 	
-	/**
-	 * 
-	 */
 	private static final Logger LOGGER = LogManager.getLogger(EntityBuilder.class.getName());
 
-	/**
-	 * @param entity
-	 * @return
-	 */
 	public epf.persistence.schema.Entity build(final Entity<?> entity){
 		final EntityType<?> type = entity.getType();
 		final epf.persistence.schema.Entity entityType = new epf.persistence.schema.Entity();
@@ -57,10 +46,6 @@ public class EntityBuilder {
 		return entityType;
 	}
 	
-	/**
-	 * @param type
-	 * @return
-	 */
 	protected static epf.persistence.schema.EntityType buildEntityType(final PersistenceType type) {
 		epf.persistence.schema.EntityType entityType = null;
 		switch(type) {
@@ -82,10 +67,6 @@ public class EntityBuilder {
 		return entityType;
 	}
 	
-	/**
-	 * @param cls
-	 * @return
-	 */
 	protected static Table buildTable(final Class<?> cls) {
 		final jakarta.persistence.Table tableAnnotation = cls.getAnnotation(jakarta.persistence.Table.class);
 		final Table table = new Table();

@@ -5,13 +5,11 @@ import epf.workflow.schema.function.mapping.FunctionTypeConverter;
 import jakarta.nosql.Column;
 import java.io.Serializable;
 import java.util.Map;
-import org.eclipse.jnosql.mapping.Convert;
-import org.eclipse.jnosql.mapping.Embeddable;
+import jakarta.nosql.Convert;
+import jakarta.nosql.Embeddable;
+import org.eclipse.microprofile.graphql.DefaultValue;
+import org.eclipse.microprofile.graphql.Description;
 
-/**
- * @author PC
- *
- */
 @Embeddable
 public class FunctionDefinition implements Serializable {
 
@@ -20,36 +18,27 @@ public class FunctionDefinition implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 */
 	@NotNull
 	@Column
+	@Description("Unique function name. Must follow the Serverless Workflow Naming Convention")
 	private String name;
 	
-	/**
-	 * 
-	 */
 	@NotNull
 	@Column
 	private String operation;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Defines the function type. Can be either http, openapi, asyncapi, rpc, graphql, odata, expression, or custom.")
+	@DefaultValue("openapi")
 	@Convert(value = FunctionTypeConverter.class)
-	private FunctionType type = FunctionType.rest;
+	private FunctionType type = FunctionType.openapi;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("References an auth definition name to be used to access to resource defined in the operation parameter")
 	private String authRef;
 	
-	/**
-	 * 
-	 */
+	@Column
+	@Description("Metadata information. Can be used to define custom function information")
 	private Map<String, String> metadata;
 
 	public String getName() {

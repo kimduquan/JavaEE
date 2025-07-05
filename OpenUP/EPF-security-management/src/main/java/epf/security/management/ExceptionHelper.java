@@ -7,36 +7,23 @@ import java.sql.SQLInvalidAuthorizationSpecException;
 import java.sql.SQLSyntaxErrorException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.validation.ValidationException;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
+import jakarta.validation.ValidationException;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.ResponseBuilder;
+import jakarta.ws.rs.core.Response.Status;
+import jakarta.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.ext.Provider;
 import epf.util.EPFException;
 import epf.util.logging.LogManager;
 
-/**
- *
- * @author FOXCONN
- */
 @Provider
 public class ExceptionHelper implements ExceptionMapper<Exception>, Serializable {
 
-    /**
-    * 
-    */
     private static final long serialVersionUID = 1L;
     
-    /**
-     * 
-     */
     private static final Logger LOGGER = LogManager.getLogger(ExceptionHelper.class.getName());
 
-    /**
-     *
-     */
     @Override
     public Response toResponse(final Exception exception) {
         final Response response = handle(exception);
@@ -46,11 +33,6 @@ public class ExceptionHelper implements ExceptionMapper<Exception>, Serializable
         return response;
     }
     
-    /**
-     * @param failure
-     * @param builder
-     * @return
-     */
     protected static boolean map(final Throwable failure, final Response.ResponseBuilder builder){
         Response.StatusType status = Response.Status.INTERNAL_SERVER_ERROR;
         boolean mapped = true;
@@ -89,10 +71,6 @@ public class ExceptionHelper implements ExceptionMapper<Exception>, Serializable
         return mapped;
     }
     
-    /**
-     * @param failure
-     * @return
-     */
     protected static Response handle(final Throwable failure){
     	final ResponseBuilder builder = Response.serverError();
     	if(failure != null){

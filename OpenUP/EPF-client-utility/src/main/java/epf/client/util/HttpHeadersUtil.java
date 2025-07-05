@@ -4,59 +4,31 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import javax.ws.rs.core.Cookie;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.Cookie;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedHashMap;
+import jakarta.ws.rs.core.MultivaluedMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import epf.util.StringUtil;
 
-/**
- * @author PC
- *
- */
 public class HttpHeadersUtil implements HttpHeaders {
 	
-	/**
-	 * 
-	 */
 	private MultivaluedMap<String, String> requestHeaders;
 	
-	/**
-	 * 
-	 */
 	private List<MediaType> acceptableMediaTypes;
 	
-	/**
-	 * 
-	 */
 	private List<Locale> acceptableLanguages;
 	
-	/**
-	 * 
-	 */
 	private MediaType mediaType;
 	
-	/**
-	 * 
-	 */
 	private Locale language;
 	
-	/**
-	 * 
-	 */
 	private Map<String, Cookie> cookies;
 	
-	/**
-	 * 
-	 */
 	private Date date;
 	
-	/**
-	 * 
-	 */
 	private int length;
 
 	@Override
@@ -114,10 +86,6 @@ public class HttpHeadersUtil implements HttpHeaders {
 		return length;
 	}
 
-	/**
-	 * @param httpHeaders
-	 * @return
-	 */
 	public static HttpHeaders clone(final HttpHeaders httpHeaders) {
 		final HttpHeadersUtil newHttpHeaders = new HttpHeadersUtil();
 		newHttpHeaders.acceptableLanguages = new ArrayList<>(httpHeaders.getAcceptableLanguages());

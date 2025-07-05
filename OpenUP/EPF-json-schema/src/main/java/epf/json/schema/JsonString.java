@@ -1,42 +1,28 @@
 package epf.json.schema;
 
-/**
- * @author PC
- *
- */
 public class JsonString extends TypeValue {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	/**
-	 * 
-	 */
-	private int minLength;
-	/**
-	 * 
-	 */
-	private int maxLength;
-	/**
-	 * 
-	 */
+	
+	private Integer minLength;
+	private Integer maxLength;
 	private String pattern;
-	/**
-	 * 
-	 */
 	private Format format;
 	
-	public int getMinLength() {
+	public JsonString() {
+		setType(Type.string);
+	}
+	
+	public Integer getMinLength() {
 		return minLength;
 	}
-	public void setMinLength(final int minLength) {
+	public void setMinLength(final Integer minLength) {
 		this.minLength = minLength;
 	}
-	public int getMaxLength() {
+	public Integer getMaxLength() {
 		return maxLength;
 	}
-	public void setMaxLength(final int maxLength) {
+	public void setMaxLength(final Integer maxLength) {
 		this.maxLength = maxLength;
 	}
 	public String getPattern() {

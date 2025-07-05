@@ -2,19 +2,9 @@ package epf.persistence.internal;
 
 import jakarta.persistence.metamodel.EmbeddableType;
 
-/**
- *
- * @author FOXCONN
- */
 public class Embeddable<T> {
     
-    /**
-     * 
-     */
     private EmbeddableType<T> type;
-    /**
-     * 
-     */
     private T object;
 
     public EmbeddableType<T> getType() {

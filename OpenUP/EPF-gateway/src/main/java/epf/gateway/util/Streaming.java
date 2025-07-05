@@ -13,20 +13,11 @@ import jakarta.websocket.ContainerProvider;
 import jakarta.websocket.RemoteEndpoint.Basic;
 import jakarta.websocket.Session;
 
-/**
- * 
- */
 @ClientEndpoint
 public class Streaming implements BiFunction<InputStream, Throwable, InputStream> {
 	
-	/**
-	 * 
-	 */
 	private final AtomicReference<Throwable> throwable = new AtomicReference<>();
 	
-	/**
-	 * 
-	 */
 	private Session session;
 
 	@Override
@@ -71,11 +62,6 @@ public class Streaming implements BiFunction<InputStream, Throwable, InputStream
 		}
 	}
 	
-	/**
-	 * @param id
-	 * @param stream
-	 * @throws Exception
-	 */
 	public void send(final String id, final CompletionStage<InputStream> input) throws Exception {
 		final Optional<Session> session = this.session.getOpenSessions().stream().filter(ss -> ss.getId().equals(id)).findFirst();
 		if(session.isPresent()) {
@@ -83,19 +69,10 @@ public class Streaming implements BiFunction<InputStream, Throwable, InputStream
 		}
 	}
 	
-	/**
-	 * @param stream
-	 * @throws Exception
-	 */
 	public void send(final InputStream stream) throws Exception {
 		send(session, stream);
 	}
 	
-	/**
-	 * @param uri
-	 * @return
-	 * @throws Exception
-	 */
 	public static Streaming connectToServer(final URI uri) throws Exception {
 		final Streaming stream = new Streaming();
 		stream.session = ContainerProvider.getWebSocketContainer().connectToServer(stream, uri);

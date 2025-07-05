@@ -24,90 +24,38 @@ import java.util.HashSet;
 import java.util.HashMap;
 import jakarta.ws.rs.core.MultivaluedHashMap;
 
-/**
- * @author PC
- *
- */
 public class ResponseUtil extends Response {
 	
-	/**
-	 * 
-	 */
 	private int status;
 	
-	/**
-	 * 
-	 */
 	private StatusType statusInfo;
 	
-	/**
-	 * 
-	 */
 	private Object entity;
 	
-	/**
-	 * 
-	 */
 	private boolean hasEntity;
 	
-	/**
-	 * 
-	 */
 	private MediaType mediaType;
 	
-	/**
-	 * 
-	 */
 	private Locale language;
 	
-	/**
-	 * 
-	 */
 	private int length;
 	
-	/**
-	 * 
-	 */
 	private Set<String> allowedMethods;
 	
-	/**
-	 * 
-	 */
 	private Map<String, NewCookie> cookies;
 	
-	/**
-	 * 
-	 */
 	private EntityTag entityTag;
 	
-	/**
-	 * 
-	 */
 	private Date date;
 	
-	/**
-	 * 
-	 */
 	private Date lastModified;
 	
-	/**
-	 * 
-	 */
 	private URI location;
 	
-	/**
-	 * 
-	 */
 	private Set<Link> links;
 	
-	/**
-	 * 
-	 */
 	private MultivaluedMap<String, Object> metadata;
 	
-	/**
-	 * 
-	 */
 	private MultivaluedMap<String, String> stringHeaders;
 
 	@Override
@@ -251,10 +199,6 @@ public class ResponseUtil extends Response {
 		return headerString;
 	}
 	
-	/**
-	 * @param response
-	 * @return
-	 */
 	public static Response clone(final Response response) {
 		final ResponseUtil newResponse = new ResponseUtil();
 		newResponse.allowedMethods = new HashSet<>(response.getAllowedMethods());
@@ -276,12 +220,6 @@ public class ResponseUtil extends Response {
 		return newResponse;
 	}
     
-    /**
-     * @param response
-     * @param entity
-     * @param baseUri
-     * @return
-     */
     public static Response buildResponse(final Response response, final Optional<Object> entity, final URI baseUri){
     	ResponseBuilder builder = fromResponse(response);
     	if(entity.isPresent()) {

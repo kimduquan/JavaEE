@@ -1,37 +1,21 @@
 package epf.webapp.security.auth.core;
 
 import java.io.Serializable;
-import javax.enterprise.context.ConversationScoped;
+import jakarta.enterprise.context.ConversationScoped;
 import epf.security.auth.core.ImplicitAuthError;
 import epf.security.auth.core.ImplicitAuthRequest;
 import epf.security.auth.core.ImplicitAuthResponse;
 import epf.security.auth.core.ImplicitFlowAuth;
 
-/**
- * @author PC
- *
- */
 @ConversationScoped
 public class ImplicitFlow implements ImplicitFlowAuth, Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
-	/**
-	 * 
-	 */
 	private ImplicitAuthRequest authRequest;
 	
-	/**
-	 * 
-	 */
 	private ImplicitAuthResponse authResponse;
 	
-	/**
-	 * 
-	 */
 	private ImplicitAuthError authError;
 
 	public ImplicitAuthRequest getAuthRequest() {

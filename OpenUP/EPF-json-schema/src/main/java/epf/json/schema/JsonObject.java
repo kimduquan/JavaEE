@@ -2,48 +2,22 @@ package epf.json.schema;
 
 import java.util.Map;
 
-/**
- * @author PC
- *
- */
 public class JsonObject extends TypeValue {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	/**
-	 * 
-	 */
+	
 	private Map<String, Value> properties;
-	/**
-	 * 
-	 */
 	private Map<String, Value> patternProperties;
-	/**
-	 * 
-	 */
-	private boolean additionalProperties = true;
-	/**
-	 * 
-	 */
-	private boolean unevaluatedProperties;
-	/**
-	 * 
-	 */
+	private Boolean additionalProperties;
+	private Boolean unevaluatedProperties;
 	private String[] required;
-	/**
-	 * 
-	 */
 	private JsonString propertyNames;
-	/**
-	 * 
-	 */
-	private int minProperties;
-	/**
-	 * 
-	 */
-	private int maxProperties;
+	private Integer minProperties;
+	private Integer maxProperties;
+	
+	public JsonObject() {
+		setType(Type.object);
+	}
 	
 	public Map<String, Value> getProperties() {
 		return properties;
@@ -57,16 +31,16 @@ public class JsonObject extends TypeValue {
 	public void setPatternProperties(Map<String, Value> patternProperties) {
 		this.patternProperties = patternProperties;
 	}
-	public boolean isAdditionalProperties() {
+	public Boolean isAdditionalProperties() {
 		return additionalProperties;
 	}
-	public void setAdditionalProperties(boolean additionalProperties) {
+	public void setAdditionalProperties(Boolean additionalProperties) {
 		this.additionalProperties = additionalProperties;
 	}
-	public boolean isUnevaluatedProperties() {
+	public Boolean isUnevaluatedProperties() {
 		return unevaluatedProperties;
 	}
-	public void setUnevaluatedProperties(boolean unevaluatedProperties) {
+	public void setUnevaluatedProperties(Boolean unevaluatedProperties) {
 		this.unevaluatedProperties = unevaluatedProperties;
 	}
 	public String[] getRequired() {
@@ -81,16 +55,16 @@ public class JsonObject extends TypeValue {
 	public void setPropertyNames(JsonString propertyNames) {
 		this.propertyNames = propertyNames;
 	}
-	public int getMinProperties() {
+	public Integer getMinProperties() {
 		return minProperties;
 	}
-	public void setMinProperties(int minProperties) {
+	public void setMinProperties(Integer minProperties) {
 		this.minProperties = minProperties;
 	}
-	public int getMaxProperties() {
+	public Integer getMaxProperties() {
 		return maxProperties;
 	}
-	public void setMaxProperties(int maxProperties) {
+	public void setMaxProperties(Integer maxProperties) {
 		this.maxProperties = maxProperties;
 	}
 }

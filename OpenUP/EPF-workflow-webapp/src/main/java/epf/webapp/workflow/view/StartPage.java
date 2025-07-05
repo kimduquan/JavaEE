@@ -4,18 +4,18 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.json.JsonObject;
-import javax.json.JsonValue;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Response;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonValue;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.core.Response;
 import epf.naming.Naming.Workflow.Schema;
 import epf.client.util.Client;
 import epf.json.schema.JsonSchema;
-import epf.util.json.JsonUtil;
+import epf.util.json.ext.JsonUtil;
 import epf.util.logging.LogManager;
 import epf.webapp.internal.GatewayUtil;
 import epf.webapp.internal.Session;
@@ -24,64 +24,30 @@ import epf.webapp.workflow.client.Management;
 import epf.webapp.workflow.client.Workflow;
 import epf.workflow.view.StartView;
 
-/**
- * @author PC
- *
- */
 @ViewScoped
 @Named(Naming.Workflow.WORKFLOW_START)
 public class StartPage implements StartView, Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
-	/**
-	 * 
-	 */
 	private static transient final Logger LOGGER = LogManager.getLogger(StartPage.class.getName());
 	
-	/**
-	 * 
-	 */
 	private String workflow;
 	
-	/**
-	 * 
-	 */
 	private String version;
 	
-	/**
-	 * 
-	 */
 	private JsonSchema schema;
 	
-	/**
-	 * 
-	 */
 	private JsonValue input;
 	
-	/**
-	 * 
-	 */
 	private JsonValue output;
 	
-	/**
-	 *
-	 */
 	@Inject
 	private transient GatewayUtil gateway;
 	
-	/**
-	 *
-	 */
 	@Inject
 	private transient Session session;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	private HttpServletRequest request;
 

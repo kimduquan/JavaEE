@@ -14,9 +14,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.json.JsonValue;
 
-/**
- * 
- */
 @ApplicationScoped
 public class StateDataFilters {
 	
@@ -26,14 +23,10 @@ public class StateDataFilters {
 	@Inject
 	transient WorkflowExpressions workflowExpressions;
 	
-	/**
-	 * @param state
-	 * @return
-	 */
 	public StateDataFilter getStateDataFilter(final State state) {
 		StateDataFilter stateDataFilter = null;
 		switch(state.getType_()) {
-			case Switch:
+			case switch_:
 				final SwitchState switchState = (SwitchState) state;
 				stateDataFilter = switchState.getStateDataFilter();
 				break;
@@ -60,8 +53,6 @@ public class StateDataFilters {
 			case parallel:
 				final ParallelState parallelState = (ParallelState) state;
 				stateDataFilter = parallelState.getStateDataFilter();
-				break;
-			case sleep:
 				break;
 			default:
 				break;

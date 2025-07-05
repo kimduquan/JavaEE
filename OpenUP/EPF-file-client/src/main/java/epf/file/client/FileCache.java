@@ -3,39 +3,28 @@ package epf.file.client;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
-import javax.validation.constraints.NotEmpty;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.MatrixParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.PathSegment;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.StreamingOutput;
-import javax.ws.rs.core.UriInfo;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.MatrixParam;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.PathSegment;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
+import jakarta.ws.rs.core.StreamingOutput;
+import jakarta.ws.rs.core.UriInfo;
 import epf.client.util.Client;
 import epf.naming.Naming;
 
-/**
- * 
- */
 @Path(Naming.CACHE + "/" + Naming.FILE)
 public interface FileCache {
 
-	/**
-	 * @param paths
-	 * @param uriInfo
-	 * @param input
-	 * @param security
-	 * @return
-	 * @throws Exception
-	 */
 	@POST
 	@Path("{paths: .+}")
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
@@ -52,12 +41,6 @@ public interface FileCache {
 			final SecurityContext security
 			) throws Exception;
 	
-	/**
-	 * @param client
-	 * @param input
-	 * @param paths
-	 * @return
-	 */
 	static Response putFile(final Client client, final InputStream input, final java.nio.file.Path paths) {
 		return client
 				.request(
@@ -87,12 +70,7 @@ public interface FileCache {
 			final SecurityContext security
     		) throws Exception;
 	
-	/**
-     * @param client
-     * @param paths
-     * @return
-     */
-    static InputStream getFile(final Client client, final java.nio.file.Path paths) {
+	static InputStream getFile(final Client client, final java.nio.file.Path paths) {
     	return client
     			.request(
     					target -> {

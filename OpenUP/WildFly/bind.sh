@@ -1,1 +1,0 @@
-sudo kubectl port-forward svc/wildfly 443 &

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+       <groupId>epf</groupId>
+       <artifactId>EPF-webapp-parent</artifactId>
+       <version>1.0.0</version>
+       <relativePath>../EPF-webapp-parent/pom.xml</relativePath>
+    </parent>
+    <artifactId>EPF-webapp-v2</artifactId>
+    <packaging>war</packaging>
+    <name>Eclipse Process Framework Web Application</name>
+    
+    <dependencies>
+    	<dependency>
+		    <groupId>org.eclipse.microprofile.config</groupId>
+		    <artifactId>microprofile-config-api</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+		<dependency>
+	        <groupId>org.eclipse.microprofile.rest.client</groupId>
+	        <artifactId>microprofile-rest-client-api</artifactId>
+	        <scope>provided</scope>
+	    </dependency>
+	    
+	    <dependency>
+            <groupId>epf</groupId>
+            <artifactId>EPF-webapp-internal-v2</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+</project>

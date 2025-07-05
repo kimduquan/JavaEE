@@ -21,36 +21,17 @@ import epf.gateway.Application;
 import epf.naming.Naming;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
-/**
- * 
- */
 @Path(Naming.WORKFLOW)
 @ApplicationScoped
 @RolesAllowed(Naming.Security.DEFAULT_ROLE)
 public class Workflow {
     
-    /**
-     * 
-     */
     @Inject
     transient Application request;
     
-    /**
-     * 
-     */
     @Inject
     transient JsonWebToken jwt;
     
-    /**
-     * @param context
-     * @param headers
-     * @param uriInfo
-     * @param req
-     * @param workflow
-     * @param body
-     * @return
-     * @throws Exception
-     */
     @POST
 	@Path("{workflow}")
 	@Consumes(MediaType.APPLICATION_JSON)

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.image;
 
 import java.io.InputStream;
@@ -9,10 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Response;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -21,22 +18,12 @@ import org.opencv.imgproc.Imgproc;
 import epf.naming.Naming;
 import epf.util.logging.LogManager;
 
-/**
- * @author PC
- *
- */
 @Path(Naming.IMAGE)
 @ApplicationScoped
 public class Image implements epf.client.image.Image {
 	
-	/**
-	 * 
-	 */
 	private transient final Logger LOGGER = LogManager.getLogger(Image.class.getName());
 	
-	/**
-	 * 
-	 */
 	@PostConstruct
 	protected void postConstruct() {
 		try {

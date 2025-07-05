@@ -3,93 +3,91 @@ package erp.base.schema.ir;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
 import erp.base.schema.ir.actions.Actions;
-import erp.base.schema.res.users.Users;
+import erp.base.schema.res.Users;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 
-/**
- * 
- */
 @Entity
 @Table(name = "ir_filters")
 @Description("Filters")
 public class Filters {
+	
+	@Id
+	private int id;
 
-	/**
-	 * 
-	 */
 	@Column(nullable = false)
 	@NotNull
 	@Description("Filter Name")
 	private String name;
 	
-	/**
-	 * 
-	 */
-	@Column
-	@ManyToOne(targetEntity = Users.class)
+	@Transient
+	private Integer user_id;
+
+	@ManyToOne(targetEntity = Users.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id")
 	@Description("User")
-	private String user_id;
+	private Users user;
 	
-	/**
-	 * 
-	 */
 	@Column(nullable = false)
 	@NotNull
 	@DefaultValue("[]")
 	private String domain = "[]";
 	
-	/**
-	 * 
-	 */
 	@Column(nullable = false)
 	@NotNull
 	@DefaultValue("{}")
 	private String context = "{}";
 	
-	/**
-	 * 
-	 */
 	@Column(nullable = false)
 	@NotNull
 	@DefaultValue("[]")
 	private String sort = "[]";
 	
-	/**
-	 * 
-	 */
 	@Column(nullable = false)
-	@Enumerated(EnumType.STRING)
 	@NotNull
 	@Description("Model")
 	private String model_id;
 	
-	/**
-	 * 
-	 */
 	@Column
 	@Description("Default Filter")
 	private Boolean is_default;
 	
-	/**
-	 * 
-	 */
-	@Column
-	@ManyToOne(targetEntity = Actions.class)
+	@Transient
+	private Integer action_id;
+
+	@ManyToOne(targetEntity = Actions.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "action_id")
 	@Description("Action")
-	private String action_id;
+	private Actions action;
 	
-	/**
-	 * 
-	 */
+	@Transient
+	private Integer embedded_action_id;
+	
+	@ManyToOne(targetEntity = erp.base.schema.ir.embedded.Actions.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "embedded_action_id")
+	private erp.base.schema.ir.embedded.Actions embedded_action;
+	
+	@Column
+	private Integer embedded_parent_res_id;
+	
 	@Column
 	@DefaultValue("true")
 	private Boolean active = true;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public String getName() {
 		return name;
@@ -99,12 +97,20 @@ public class Filters {
 		this.name = name;
 	}
 
-	public String getUser_id() {
+	public Integer getUser_id() {
 		return user_id;
 	}
 
-	public void setUser_id(String user_id) {
+	public void setUser_id(Integer user_id) {
 		this.user_id = user_id;
+	}
+
+	public Users getUser() {
+		return user;
+	}
+
+	public void setUser(Users user) {
+		this.user = user;
 	}
 
 	public String getDomain() {
@@ -147,12 +153,44 @@ public class Filters {
 		this.is_default = is_default;
 	}
 
-	public String getAction_id() {
+	public Integer getAction_id() {
 		return action_id;
 	}
 
-	public void setAction_id(String action_id) {
+	public void setAction_id(Integer action_id) {
 		this.action_id = action_id;
+	}
+
+	public Actions getAction() {
+		return action;
+	}
+
+	public void setAction(Actions action) {
+		this.action = action;
+	}
+
+	public Integer getEmbedded_action_id() {
+		return embedded_action_id;
+	}
+
+	public void setEmbedded_action_id(Integer embedded_action_id) {
+		this.embedded_action_id = embedded_action_id;
+	}
+
+	public erp.base.schema.ir.embedded.Actions getEmbedded_action() {
+		return embedded_action;
+	}
+
+	public void setEmbedded_action(erp.base.schema.ir.embedded.Actions embedded_action) {
+		this.embedded_action = embedded_action;
+	}
+
+	public Integer getEmbedded_parent_res_id() {
+		return embedded_parent_res_id;
+	}
+
+	public void setEmbedded_parent_res_id(Integer embedded_parent_res_id) {
+		this.embedded_parent_res_id = embedded_parent_res_id;
 	}
 
 	public Boolean getActive() {
@@ -162,4 +200,6 @@ public class Filters {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+	
+	
 }

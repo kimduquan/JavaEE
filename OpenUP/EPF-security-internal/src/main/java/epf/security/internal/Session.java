@@ -3,32 +3,14 @@ package epf.security.internal;
 import java.util.Map;
 import java.util.Set;
 
-/**
- *
- * @author FOXCONN
- */
 public class Session {
     
-    /**
-     * 
-     */
     private final String name;
     
-    /**
-     * 
-     */
     private final Set<String> groups;
     
-    /**
-     * 
-     */
     private final Map<String, Object> claims;
 
-    /**
-     * @param name
-     * @param groups
-     * @param claims
-     */
     public Session(final String name, final Set<String> groups, final Map<String, Object> claims) {
 		this.name = name;
 		this.groups = groups;

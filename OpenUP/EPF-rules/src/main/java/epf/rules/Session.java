@@ -6,9 +6,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PreDestroy;
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Inject;
+import jakarta.annotation.PreDestroy;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Inject;
 import javax.rules.InvalidRuleSessionException;
 import javax.rules.RuleExecutionSetNotFoundException;
 import javax.rules.RuleRuntime;
@@ -18,37 +18,18 @@ import javax.rules.StatefulRuleSession;
 import org.eclipse.microprofile.health.Readiness;
 import epf.util.logging.LogManager;
 
-/**
- * @author PC
- *
- */
 @SessionScoped
 public class Session implements Serializable {
 	
-	/**
-	 * 
-	 */
 	private transient static final Logger LOGGER = LogManager.getLogger(Session.class.getName());
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
-	/**
-	 * 
-	 */
 	private transient final Map<String, StatefulRuleSession> statefulSessions = new ConcurrentHashMap<>();
 	
-	/**
-	 * 
-	 */
 	@Inject @Readiness
 	private transient Provider provider;
 	
-	/**
-	 * 
-	 */
 	@PreDestroy
 	protected void preDestroy() {
 		statefulSessions.forEach((name, session) -> {
@@ -61,10 +42,6 @@ public class Session implements Serializable {
 		});
 	}
 	
-	/**
-	 * @param ruleSet
-	 * @return
-	 */
 	protected StatefulRuleSession createRuleSession(final String ruleSet) {
 		StatefulRuleSession ruleSession = null;
 		try {
@@ -86,10 +63,6 @@ public class Session implements Serializable {
 		return ruleSession;
 	}
 
-	/**
-	 * @param ruleSet
-	 * @return
-	 */
 	public StatefulRuleSession getRuleSession(final String ruleSet) {
 		return statefulSessions.computeIfAbsent(ruleSet, this::createRuleSession);
 	}

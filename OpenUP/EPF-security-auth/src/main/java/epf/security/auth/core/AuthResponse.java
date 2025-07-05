@@ -1,18 +1,9 @@
 package epf.security.auth.core;
 
-/**
- * @author PC
- *
- */
 public class AuthResponse {
 
-	/**
-	 * 
-	 */
 	private String code;
-	/**
-	 * 
-	 */
+	
 	private String state;
 	
 	public String getCode() {

@@ -3,10 +3,6 @@ package epf.persistence.schema.internal;
 import java.util.Comparator;
 import epf.persistence.schema.Embeddable;
 
-/**
- * @author PC
- *
- */
 public class EmbeddableComparator implements Comparator<Embeddable> {
 
 	@Override

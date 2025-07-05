@@ -50,46 +50,23 @@ import epf.naming.Naming;
 import epf.util.io.InputStreamUtil;
 import epf.util.logging.LogManager;
 
-/**
- *
- * @author FOXCONN
- */
 @ApplicationScoped
 public class Application {
 	
-	/**
-	 * 
-	 */
 	private transient static final Logger LOGGER = LogManager.getLogger(Application.class.getName());
 	
-	/**
-	 * 
-	 */
 	private transient final Map<URI, Streaming> streamings = new ConcurrentHashMap<>();
     
-    /**
-     * 
-     */
     @Inject 
     @Readiness
     transient Registry registry;
     
-    /**
-     * 
-     */
     @Inject
-    @Readiness
     transient Security security;
     
-    /**
-     * 
-     */
     @Inject
     transient Concurrent concurrent;
     
-    /**
-     * 
-     */
     @PostConstruct
     protected void postConstruct() {
     	final Optional<URI> uri = registry.lookup(Naming.CONCURRENT);
@@ -126,15 +103,7 @@ public class Application {
 		});
     }
     
-    /**
-     * @param service
-     * @param jwt
-     * @param headers
-     * @param uriInfo
-     * @param req
-     * @param body
-     */
-	public Response buildRequest(
+    public Response buildRequest(
     		final String service,
     		final JsonWebToken jwt,
     		final HttpHeaders headers, 

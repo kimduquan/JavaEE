@@ -20,27 +20,10 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 import epf.naming.Naming;
 
-/**
- * @author PC
- *
- */
 public interface HATEOAS {
 	
-	/**
-	 * 
-	 */
 	String STREAM = "ws";
     
-    /**
-     * @param client
-     * @param serviceUrl
-     * @param headers
-     * @param response
-     * @param entity
-     * @param mediaType
-     * @param link
-     * @return
-     */
     static Response buildLinkRequest(
     		final Client client,
     		final URI serviceUrl,
@@ -119,10 +102,6 @@ public interface HATEOAS {
 		}
     }
     
-    /**
-     * @param response
-     * @return
-     */
     static Optional<Object> readEntity(final Response response){
     	Objects.requireNonNull(response, "Response");
     	Optional<Object> entity = Optional.empty();
@@ -132,32 +111,18 @@ public interface HATEOAS {
     	return entity;
     }
     
-    /**
-     * @param response
-     * @return
-     */
     static Stream<Link> getRequestLinks(final Response response){
     	Objects.requireNonNull(response, "Response");
     	final Comparator<Link> comparator = new LinkComparator();
     	return response.getLinks().stream().filter(link -> link.getType() != null).sorted(comparator);
     }
     
-    /**
-     * @param uriInfo
-     * @param request
-     * @param service
-     * @return
-     */
     static Link selfLink(final UriInfo uriInfo, final Request request, final String service) {
     	Objects.requireNonNull(uriInfo, "UriInfo");
     	Objects.requireNonNull(request, "Request");
     	return Link.fromPath(uriInfo.getPath()).type(request.getMethod()).rel(service).build();
     }
     
-    /**
-     * @param link
-     * @return
-     */
     static boolean isSelfLink(final Link link) {
     	Objects.requireNonNull(link, "Link");
     	final String linkRel = link.getRel();
@@ -167,37 +132,21 @@ public interface HATEOAS {
 		return false;
     }
     
-    /**
-     * @param link
-     * @return
-     */
     static boolean isSynchronized(final Link link) {
     	Objects.requireNonNull(link, "Link");
     	return "true".equals(link.getParams().getOrDefault("synchronized", "true"));
     }
     
-    /**
-     * @param link
-     * @return
-     */
     static Optional<String> volatile_(final Link link) {
     	Objects.requireNonNull(link, "Link");
     	return Optional.ofNullable(link.getParams().get("volatile"));
     }
     
-    /**
-     * @param link
-     * @return
-     */
     static Optional<String> this_(final Link link) {
     	Objects.requireNonNull(link, "Link");
     	return Optional.ofNullable(link.getParams().get("this"));
     }
     
-    /**
-     * @param link
-     * @return
-     */
     static boolean hasEntity(final Link link) {
     	Objects.requireNonNull(link, "Link");
     	boolean hasEntity = true;
@@ -219,10 +168,6 @@ public interface HATEOAS {
     	return hasEntity;
     }
     
-    /**
-     * @param link
-     * @return
-     */
     static boolean isRequestLink(final Link link) {
     	Objects.requireNonNull(link, "Link");
     	if(link.getType() != null) {
@@ -242,35 +187,19 @@ public interface HATEOAS {
     	return false;
     }
     
-    /**
-     * @param link
-     * @return
-     */
     static boolean isStreamLink(final Link link) {
     	Objects.requireNonNull(link, "Link");
     	return STREAM.equals(link.getType());
     }
     
-    /**
-     * @param link
-     * @return
-     */
     static Optional<String> synchronized_(final Link link) {
     	return Optional.ofNullable(link.getParams().get("synchronized"));
     }
     
-    /**
-     * @param link
-     * @return
-     */
     static Optional<String> continue_(final Link link) {
     	return Optional.ofNullable(link.getParams().get("continue"));
     }
     
-    /**
-     * @param link
-     * @return
-     */
     static Optional<String> time(final Link link) {
     	return Optional.ofNullable(link.getParams().get("time"));
     }

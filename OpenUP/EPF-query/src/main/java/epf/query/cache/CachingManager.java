@@ -13,39 +13,19 @@ import epf.cache.util.Loader;
 import epf.query.Naming;
 import epf.util.concurrent.ext.EventEmitter;
 
-/**
- * @author PC
- *
- */
 @ApplicationScoped
 public class CachingManager {
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient Event<EntityLoad> entityLoad;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient Event<QueryLoad> queryLoad;
 	
-	/**
-	 * 
-	 */
 	private transient final Map<String, Cache<String, Object>> entityCaches = new ConcurrentHashMap<>();
 	
-	/**
-	 * 
-	 */
 	private transient final Map<String, Cache<String, Integer>> queryCaches = new ConcurrentHashMap<>();
 
-	/**
-	 * @param tenant
-	 * @return
-	 */
 	public Cache<String, Object> getEntityCache(final String tenant){
 		return entityCaches.computeIfAbsent(tenant != null ? String.join("-", Naming.ENTITY_CACHE, tenant) : Naming.ENTITY_CACHE, cacheName -> {
 			final MutableConfiguration<String, Object> config = new MutableConfiguration<>();
@@ -55,10 +35,6 @@ public class CachingManager {
 		});
 	}
 	
-	/**
-	 * @param tenant
-	 * @return
-	 */
 	public Cache<String, Integer> getQueryCache(final String tenant){
 		return queryCaches.computeIfAbsent(tenant != null ? String.join("-", Naming.QUERY_CACHE, tenant) : Naming.QUERY_CACHE, cacheName -> {
 			final MutableConfiguration<String, Integer> config = new MutableConfiguration<>();

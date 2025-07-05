@@ -3,58 +3,36 @@ package epf.event.schema;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-
-import org.eclipse.jnosql.mapping.Convert;
 import epf.naming.Naming.Event.Schema;
 import epf.nosql.schema.util.UUIDAttributeConverter;
 import jakarta.nosql.Column;
+import jakarta.nosql.Convert;
 import jakarta.nosql.Entity;
 import jakarta.nosql.Id;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-/**
- * 
- */
 @Entity
 public class Link {
 	
-	/**
-	 * 
-	 */
 	@Id(Schema.ID)
 	@Convert(UUIDAttributeConverter.class)
 	@NotNull
 	@NotBlank
 	private String id;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private String rel;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private String title;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private String type;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private Map<String, String> params;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private String uri;
 

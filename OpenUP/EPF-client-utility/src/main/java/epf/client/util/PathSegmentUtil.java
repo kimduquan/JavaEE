@@ -1,23 +1,13 @@
 package epf.client.util;
 
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.PathSegment;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.MultivaluedHashMap;
+import jakarta.ws.rs.core.PathSegment;
 
-/**
- * @author PC
- *
- */
 public class PathSegmentUtil implements PathSegment {
 	
-	/**
-	 * 
-	 */
 	private String path;
 	
-	/**
-	 * 
-	 */
 	private MultivaluedMap<String, String> matrixParameters;
 
 	@Override
@@ -30,10 +20,6 @@ public class PathSegmentUtil implements PathSegment {
 		return matrixParameters;
 	}
 
-	/**
-	 * @param pathSegment
-	 * @return
-	 */
 	public static PathSegment clone(final PathSegment pathSegment) {
 		final PathSegmentUtil pathSegmentUtil = new PathSegmentUtil();
 		pathSegmentUtil.path = pathSegment.getPath();

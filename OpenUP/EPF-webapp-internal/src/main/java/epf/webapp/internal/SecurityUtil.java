@@ -6,57 +6,30 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
 import epf.naming.Naming;
 import epf.util.config.ConfigUtil;
 import epf.util.logging.LogManager;
 import epf.util.security.KeyStoreUtil;
 
-/**
- * 
- */
 @ApplicationScoped
 public class SecurityUtil {
 	
-	/**
-	 *
-	 */
 	private transient static final Logger LOGGER = LogManager.getLogger(SecurityUtil.class.getName());
 	
-	/**
-	 *
-	 */
 	private transient KeyStore keyStore;
 	
-	/**
-	 *
-	 */
 	private transient String keyAlias;
 	
-	/**
-	 *
-	 */
 	private transient char[] keyPassword;
 	
-	/**
-	 *
-	 */
 	private transient KeyStore trustStore;
 	
-	/**
-	 *
-	 */
 	private transient PrivateKey privateKey;
 	
-	/**
-	 *
-	 */
 	private transient PublicKey publicKey;
 
-	/**
-	 * 
-	 */
 	@PostConstruct
 	protected void postConstruct() {
 		final Path keyStoreFile = ConfigUtil.getPath(Naming.Client.SSL_KEY_STORE);

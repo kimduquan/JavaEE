@@ -1,28 +1,16 @@
 package epf.function.persistence;
 
-import javax.ws.rs.HttpMethod;
-import javax.ws.rs.core.Link;
+import jakarta.ws.rs.HttpMethod;
+import jakarta.ws.rs.core.Link;
 import epf.function.Function;
 import epf.naming.Naming;
 
-/**
- * @author PC
- *
- */
 public class PersistFunction extends Function {
 
-	/**
-	 * 
-	 */
 	private String schema;
-	/**
-	 * 
-	 */
+	
 	private String entity;
 
-	/**
-	 * 
-	 */
 	public PersistFunction() {
 		super(Naming.PERSISTENCE, HttpMethod.POST, "{schema}/{entity}");
 	}

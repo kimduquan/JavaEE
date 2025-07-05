@@ -19,46 +19,24 @@ import epf.naming.Naming;
 import epf.util.MapUtil;
 import epf.util.logging.LogManager;
 
-/**
- * @author PC
- *
- */
 @ApplicationScoped
 @Readiness
 public class Registry implements HealthCheck  {
 	
-	/**
-	 *
-	 */
 	private transient static final Logger LOGGER = LogManager.getLogger(Registry.class.getName());
 	
-	/**
-	 * 
-	 */
 	private transient final Map<String, URI> remotes = new ConcurrentHashMap<>();
 	
-	/**
-	 * 
-	 */
 	private URI localhost;
 	
-	/**
-	 * 
-	 */
 	@ConfigProperty(name = Naming.Registry.REGISTRY_URL)
 	@Inject
 	URI registryUrl;
 	
-	/**
-	 * 
-	 */
 	@ConfigProperty(name = "quarkus.http.port")
 	@Inject
 	String port;
 	
-	/**
-	 * 
-	 */
 	@PostConstruct
 	protected void postConstruct() {
 		initialize();
@@ -84,10 +62,6 @@ public class Registry implements HealthCheck  {
 		}
 	}
 	
-	/**
-	 * @param name
-	 * @return
-	 */
 	public Optional<URI> lookup(final String name) {
 		if(Naming.GATEWAY.equals(name)) {
 			return Optional.of(localhost);

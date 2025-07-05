@@ -8,21 +8,10 @@ import jakarta.ws.rs.core.PathSegment;
 import jakarta.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
-/**
- * 
- */
 public interface PathValidator {
 	
-	/**
-	 * 
-	 */
 	int USER_INDEX = 1;
 
-	/**
-	 * @param paths
-	 * @param security
-	 * @param httpMethod
-	 */
 	static void validate(final List<PathSegment> paths, final SecurityContext security, final String httpMethod) {
 		final Principal principal = security.getUserPrincipal();
 		final String principalName = principal.getName();

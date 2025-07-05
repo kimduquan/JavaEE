@@ -11,9 +11,9 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import javax.json.JsonObject;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Response;
+import jakarta.json.JsonObject;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.Response;
 import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortMeta;
@@ -22,56 +22,26 @@ import epf.naming.Naming;
 import epf.persistence.schema.Entity;
 import epf.query.client.Query;
 import epf.query.client.QueryUtil;
-import epf.util.json.JsonUtil;
+import epf.util.json.ext.JsonUtil;
 import epf.util.logging.LogManager;
 import epf.webapp.internal.GatewayUtil;
 
-/**
- * 
- */
 public class QueryCollector extends LazyDataModel<JsonObject> {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1L;
 	
-	/**
-	 *
-	 */
 	private transient static final Logger LOGGER = LogManager.getLogger(QueryCollector.class.getName());
 	
-	/**
-	 *
-	 */
 	private transient final GatewayUtil gateway;
 	
-	/**
-	 *
-	 */
 	private transient final char[] token;
 	
-	/**
-	 *
-	 */
 	private final String schema;
 	
-	/**
-	 *
-	 */
 	private final Entity entity;
 	
-	/**
-	 *
-	 */
 	private final Map<String, JsonObject> entityMap = new HashMap<>();
 	
-	/**
-	 * @param gateway
-	 * @param token
-	 * @param schema
-	 * @param entity
-	 */
 	public QueryCollector(final GatewayUtil gateway, final char[] token, final String schema, final Entity entity) {
 		this.gateway = gateway;
 		this.token = token;
@@ -79,12 +49,6 @@ public class QueryCollector extends LazyDataModel<JsonObject> {
 		this.entity = entity;
 	}
 	
-	/**
-	 * @param target
-	 * @param entity
-	 * @param filters
-	 * @return
-	 */
 	private WebTarget buildFilters(final WebTarget target, final String entity, final Collection<FilterMeta> filters) {
 		WebTarget newTarget = target.path(entity);
 		for(FilterMeta filter : filters) {
@@ -93,10 +57,6 @@ public class QueryCollector extends LazyDataModel<JsonObject> {
 		return newTarget;
 	}
 	
-	/**
-	 * @param sortBy
-	 * @return
-	 */
 	private String[] buildSorts(final Map<String, SortMeta> sortBy) {
 		return sortBy
 		.entrySet()

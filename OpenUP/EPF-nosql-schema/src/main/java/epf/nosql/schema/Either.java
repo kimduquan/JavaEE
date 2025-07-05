@@ -3,23 +3,13 @@ package epf.nosql.schema;
 import java.io.Serializable;
 import jakarta.json.bind.annotation.JsonbTransient;
 
-/**
- * 
- */
 public class Either<L, R> implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	/**
-	 * 
-	 */
+	
 	@JsonbTransient
 	private L left;
-	/**
-	 * 
-	 */
+	
 	@JsonbTransient
 	private R right;
 	
@@ -45,16 +35,10 @@ public class Either<L, R> implements Serializable {
 		return right != null;
 	}
 	
-	/**
-	 * @return
-	 */
 	public boolean isNull() {
 		return left == null && right == null;
 	}
 	
-	/**
-	 * @param from
-	 */
 	public void copy(final Either<L, R> from) {
 		left = from.left;
 		right = from.right;

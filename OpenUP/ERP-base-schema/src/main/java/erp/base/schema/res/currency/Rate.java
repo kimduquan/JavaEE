@@ -1,72 +1,74 @@
 package erp.base.schema.res.currency;
 
+import java.util.Date;
 import org.eclipse.microprofile.graphql.Description;
 import erp.base.schema.res.Company;
+import erp.base.schema.res.Currency;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 
-/**
- * 
- */
 @Entity
 @Table(name = "res_currency_rate")
 @Description("Currency Rate")
 public class Rate {
+	
+	@Id
+	private int id;
 
-	/**
-	 * 
-	 */
 	@Column(nullable = false)
 	@NotNull
 	@Description("Date")
-	private String name;
+	private Date name;
 	
-	/**
-	 * 
-	 */
 	@Column
 	@Description("Technical Rate")
 	private Float rate;
 	
-	/**
-	 * 
-	 */
-	@Column
+	@Transient
 	@Description("The currency of rate 1 to the rate of the currency.")
 	private Float company_rate;
 	
-	/**
-	 * 
-	 */
-	@Column
+	@Transient
 	@Description("The rate of the currency to the currency of rate 1 ")
 	private Float inverse_company_rate;
 	
-	/**
-	 * 
-	 */
-	@Column(nullable = false, updatable = false)
-	@ManyToOne(targetEntity = Currency.class)
+	@Transient
+	private Integer currency_id;
+
+	@ManyToOne(targetEntity = Currency.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "currency_id", nullable = false, updatable = false)
 	@NotNull
 	@Description("Currency")
-	private String currency_id;
+	private Currency currency;
 	
-	/**
-	 * 
-	 */
-	@Column
-	@ManyToOne(targetEntity = Company.class)
+	@Transient
+	private Integer company_id;
+	
+	@ManyToOne(targetEntity = Company.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "company_id")
 	@Description("Company")
-	private String company_id;
+	private Company company;
 
-	public String getName() {
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Date getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(Date name) {
 		this.name = name;
 	}
 
@@ -94,19 +96,35 @@ public class Rate {
 		this.inverse_company_rate = inverse_company_rate;
 	}
 
-	public String getCurrency_id() {
+	public Integer getCurrency_id() {
 		return currency_id;
 	}
 
-	public void setCurrency_id(String currency_id) {
+	public void setCurrency_id(Integer currency_id) {
 		this.currency_id = currency_id;
 	}
 
-	public String getCompany_id() {
+	public Currency getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(Currency currency) {
+		this.currency = currency;
+	}
+
+	public Integer getCompany_id() {
 		return company_id;
 	}
 
-	public void setCompany_id(String company_id) {
+	public void setCompany_id(Integer company_id) {
 		this.company_id = company_id;
+	}
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
 	}
 }

@@ -1,19 +1,9 @@
 package epf.schedule.schema;
 
-/**
- * @author PC
- *
- */
 public class RecurringTimeInterval {
 	
-	/**
-	 * 
-	 */
 	private TimeInterval timeInterval;
 	
-	/**
-	 * 
-	 */
 	private Integer numberOfRepetitions;
 	
 	public Integer getNumberOfRepetitions() {

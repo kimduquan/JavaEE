@@ -25,35 +25,17 @@ import epf.gateway.Application;
 import epf.naming.Naming;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
-/**
- * @author PC
- *
- */
 @Path(Naming.QUERY)
 @ApplicationScoped
 @RolesAllowed(Naming.Security.DEFAULT_ROLE)
 public class Query {
 
-	/**
-	 * 
-	 */
 	@Inject
     transient Application request;
     
-    /**
-     * 
-     */
     @Inject
     transient JsonWebToken jwt;
 	
-	/**
-	 * @param headers
-	 * @param uriInfo
-	 * @param req
-	 * @param schema
-	 * @param entity
-	 * @param entityId
-	 */
 	@GET
     @Path(Naming.Query.Client.ENTITY_PATH)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -69,14 +51,6 @@ public class Query {
     	return request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, null);
     }
 	
-	/**
-	 * @param context
-	 * @param headers
-	 * @param uriInfo
-	 * @param req
-	 * @param schema
-	 * @param entity
-	 */
 	@HEAD
 	@Path("entity/{schema}/{entity}")
     @RunOnVirtualThread
@@ -91,14 +65,6 @@ public class Query {
     	return request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, null);
     }
 	
-	/**
-	 * @param context
-	 * @param headers
-	 * @param uriInfo
-	 * @param req
-	 * @return
-	 * @throws Exception
-	 */
 	@PATCH
     @Path(Naming.Query.Client.ENTITY)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -113,14 +79,6 @@ public class Query {
     	return request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, body);
     }
 	
-	/**
-	 * @param context
-	 * @param headers
-	 * @param uriInfo
-	 * @param req
-	 * @param schema
-	 * @param paths
-	 */
 	@GET
     @Path("query/{schema}/{criteria: .+}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -141,14 +99,6 @@ public class Query {
     	return request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, null);
 	}
 	
-	/**
-	 * @param context
-	 * @param headers
-	 * @param uriInfo
-	 * @param req
-	 * @param schema
-	 * @param paths
-	 */
 	@HEAD
     @Path("query/{schema}/{criteria: .+}")
     @RunOnVirtualThread
@@ -168,14 +118,6 @@ public class Query {
 		return request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, null);
     	}
 	
-	/**
-	 * @param context
-	 * @param headers
-	 * @param uriInfo
-	 * @param req
-	 * @return
-	 * @throws Exception
-	 */
 	@GET
 	@Path(Naming.Query.SEARCH)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -188,14 +130,6 @@ public class Query {
 		return request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, null);
     }
 	
-	/**
-	 * @param context
-	 * @param headers
-	 * @param uriInfo
-	 * @param req
-	 * @return
-	 * @throws Exception
-	 */
 	@HEAD
 	@Path(Naming.Query.SEARCH)
     @RunOnVirtualThread

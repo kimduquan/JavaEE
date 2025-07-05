@@ -1,38 +1,22 @@
 package epf.webapp.security.auth.core;
 
 import java.io.Serializable;
-import javax.enterprise.context.ConversationScoped;
+import jakarta.enterprise.context.ConversationScoped;
 import epf.security.auth.core.AuthError;
 import epf.security.auth.core.AuthRequest;
 import epf.security.auth.core.AuthResponse;
 import epf.security.auth.core.CodeFlowAuth;
 import epf.security.auth.core.TokenResponse;
 
-/**
- * @author PC
- *
- */
 @ConversationScoped
 public class CodeFlow implements CodeFlowAuth, Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
-	/**
-	 * 
-	 */
 	private AuthRequest authRequest;
 	
-	/**
-	 * 
-	 */
 	private AuthResponse authResponse;
 	
-	/**
-	 * 
-	 */
 	private AuthError authError;
 
 	public AuthRequest getAuthRequest() {

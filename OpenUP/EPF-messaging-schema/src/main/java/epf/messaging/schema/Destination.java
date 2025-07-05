@@ -1,17 +1,11 @@
 package epf.messaging.schema;
 
-import org.eclipse.jnosql.mapping.MappedSuperclass;
 import jakarta.nosql.Id;
+import jakarta.nosql.MappedSuperclass;
 
-/**
- * 
- */
 @MappedSuperclass
 public class Destination {
 	
-	/**
-	 * 
-	 */
 	@Id
 	private String id;
 

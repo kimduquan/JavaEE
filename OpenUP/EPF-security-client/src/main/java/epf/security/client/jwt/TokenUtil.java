@@ -8,21 +8,10 @@ import java.util.Set;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.security.schema.Token;
 
-/**
- * @author PC
- *
- */
 public interface TokenUtil {
 	
-	/**
-	 * 
-	 */
 	String[] DEFAULT_CLAIMS = new String[] {"aud", "exp", "groups", "iat", "iss", "raw_token", "sub", "jti", "upn", "token_type", "nbf"};
 
-	/**
-	 * @param jwt
-	 * @return
-	 */
 	static Map<String, Object> getClaims(final JsonWebToken jwt){
 		final Map<String, Object> claims = new HashMap<>();
 		final Set<String> names = new HashSet<>();
@@ -35,10 +24,6 @@ public interface TokenUtil {
 		return claims;
 	}
 	
-	/**
-	 * @param jwt
-	 * @return
-	 */
 	static Token from(final JsonWebToken jwt) {
 		final Token token = new Token();
         token.setAudience(jwt.getAudience());

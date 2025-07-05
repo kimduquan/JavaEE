@@ -18,48 +18,22 @@ import org.eclipse.microprofile.health.Readiness;
 import epf.query.cache.CachingManager;
 import epf.query.client.EntityId;
 import epf.schema.utility.EntityEvent;
-import epf.schema.utility.Request;
 import epf.util.logging.LogManager;
 
-/**
- * @author PC
- *
- */
 @ApplicationScoped
 @Readiness
 public class EntityCache implements HealthCheck {
 	
-	/**
-	 * 
-	 */
 	private transient static final Logger LOGGER = LogManager.getLogger(EntityCache.class.getName());
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient CachingManager manager;
 	
-	/**
-	 * 
-	 */
 	@Inject @Readiness
 	transient SchemaCache schemaCache;
 	
-	/**
-	 * 
-	 */
-	@Inject
-	Request request;
-	
-	/**
-	 * 
-	 */
 	transient Cache<String, Object> entityCache;
 	
-	/**
-	 * 
-	 */
 	@PostConstruct
 	protected void postConstruct() {
 		try {
@@ -75,9 +49,6 @@ public class EntityCache implements HealthCheck {
 		entityCache.close();
 	}
 
-	/**
-	 * @param event
-	 */
 	public void accept(final EntityEvent event) {
 		final Optional<EntityKey> key = schemaCache.getKey(event.getEntity());
 		if(key.isPresent()) {
@@ -85,27 +56,20 @@ public class EntityCache implements HealthCheck {
 		}
 	}
 	
-	/**
-	 * @param entity
-	 * @param entityId
-	 * @return
-	 */
 	public Optional<Object> getEntity(
+			final String tenant,
+			final String schema,
             final String entity,
             final String entityId
             ) {
-		final EntityKey key = schemaCache.getKey(request.getSchema(), entity, entityId);
-		return Optional.ofNullable(manager.getEntityCache(request.getTenant()).get(key.toString()));
+		final EntityKey key = schemaCache.getKey(schema, entity, entityId);
+		return Optional.ofNullable(manager.getEntityCache(tenant).get(key.toString()));
 	}
 	
-	/**
-	 * @param entityIds
-	 * @return
-	 */
-	public List<Object> getEntities(final List<EntityId> entityIds){
+	public List<Object> getEntities(final String tenant, final List<EntityId> entityIds){
 		final List<EntityKey> entityKeys = entityIds.stream().map(key -> schemaCache.getSearchKey(key)).collect(Collectors.toList());
 		final List<String> keys = entityKeys.stream().map(EntityKey::toString).collect(Collectors.toList());
-		final Map<String, Object> values = manager.getEntityCache(request.getTenant()).getAll(keys.stream().collect(Collectors.toSet()));
+		final Map<String, Object> values = manager.getEntityCache(tenant).getAll(keys.stream().collect(Collectors.toSet()));
 		final List<Object> result = new ArrayList<>();
 		keys.forEach(key -> {
 			result.add(values.get(key));

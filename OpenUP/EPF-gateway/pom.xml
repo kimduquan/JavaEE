@@ -24,10 +24,6 @@
 	</dependency>
 	<dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-messaging-kafka</artifactId>
-    </dependency>
-	<dependency>
-      <groupId>io.quarkus</groupId>
       <artifactId>quarkus-rest-client-jsonb</artifactId>
     </dependency>
 	<dependency>
@@ -63,27 +59,12 @@
 		<artifactId>quarkus-container-image-jib</artifactId>
 	</dependency>
 	<dependency>
-		<groupId>io.quarkiverse.opentracing</groupId>
-		<artifactId>quarkus-smallrye-opentracing</artifactId>
+		<groupId>io.quarkiverse.helm</groupId>
+		<artifactId>quarkus-helm</artifactId>
 	</dependency>
 	<dependency>
 	    <groupId>io.quarkus</groupId>
 	    <artifactId>quarkus-smallrye-openapi</artifactId>
-	</dependency>
-	<dependency>
-	    <groupId>org.bitbucket.b_c</groupId>
-	    <artifactId>jose4j</artifactId>
-	    <version>0.8.0</version>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast -->
-	<dependency>
-		<groupId>com.hazelcast</groupId>
-		<artifactId>hazelcast</artifactId>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/javax.cache/cache-api -->
-	<dependency>
-		<groupId>javax.cache</groupId>
-		<artifactId>cache-api</artifactId>
 	</dependency>
 
     <dependency>

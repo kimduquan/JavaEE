@@ -1,54 +1,23 @@
 package epf.function.file;
 
-/**
- * @author PC
- *
- */
 public class Path {
 
-	/**
-	 * 
-	 */
 	private String lastModifiedTime;
 	
-	/**
-	 * 
-	 */
 	private boolean directory;
 	
-	/**
-	 * 
-	 */
 	private boolean executable;
 	
-	/**
-	 * 
-	 */
 	private boolean hidden;
 	
-	/**
-	 * 
-	 */
 	private boolean readable;
 	
-	/**
-	 * 
-	 */
 	private boolean symbolicLink;
 	
-	/**
-	 * 
-	 */
 	private boolean writable;
 	
-	/**
-	 * 
-	 */
 	private Path[] list;
 	
-	/**
-	 * 
-	 */
 	private long size;
 
 	public String getLastModifiedTime() {

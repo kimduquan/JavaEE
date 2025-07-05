@@ -13,6 +13,18 @@
         <maven.compiler.release>21</maven.compiler.release>
     </properties>
     <dependencies>
+	    <dependency>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-hibernate-orm</artifactId>
+	    </dependency>
+		<dependency>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-hibernate-validator</artifactId>
+		</dependency>
+	    <dependency>
+		    <groupId>io.quarkus</groupId>
+		    <artifactId>quarkus-jdbc-postgresql</artifactId>
+		</dependency>
     	<dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-rest-client-jsonb</artifactId>
@@ -57,6 +69,17 @@
 			<groupId>io.quarkus</groupId>
 			<artifactId>quarkus-container-image-jib</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>io.quarkiverse.helm</groupId>
+			<artifactId>quarkus-helm</artifactId>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.graphql/microprofile-graphql-api -->
+		<dependency>
+		    <groupId>org.eclipse.microprofile.graphql</groupId>
+		    <artifactId>microprofile-graphql-api</artifactId>
+		    <version>2.0</version>
+		</dependency>
         
         
 		<!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast -->
@@ -70,22 +93,58 @@
 			<artifactId>cache-api</artifactId>
 		</dependency>
         
-        <!-- https://mvnrepository.com/artifact/dev.langchain4j/langchain4j-neo4j -->
+		<!-- https://mvnrepository.com/artifact/org.neo4j/neo4j-ogm-core -->
 		<dependency>
-		    <groupId>dev.langchain4j</groupId>
-		    <artifactId>langchain4j-neo4j</artifactId>
-		    <version>0.32.0</version>
+		    <groupId>org.neo4j</groupId>
+		    <artifactId>neo4j-ogm-core</artifactId>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/dev.langchain4j/langchain4j -->
+		<!-- https://mvnrepository.com/artifact/com.graphql-java/graphql-java -->
 		<dependency>
-		    <groupId>dev.langchain4j</groupId>
-		    <artifactId>langchain4j</artifactId>
-		    <version>0.32.0</version>
+		    <groupId>com.graphql-java</groupId>
+		    <artifactId>graphql-java</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.graphql-java/graphql-java-extended-scalars -->
+		<dependency>
+		    <groupId>com.graphql-java</groupId>
+		    <artifactId>graphql-java-extended-scalars</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.github.jknack/handlebars -->
+		<dependency>
+		    <groupId>com.github.jknack</groupId>
+		    <artifactId>handlebars</artifactId>
+		    <version>4.4.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.lsp4j/org.eclipse.lsp4j.websocket.jakarta -->
+		<dependency>
+		    <groupId>org.eclipse.lsp4j</groupId>
+		    <artifactId>org.eclipse.lsp4j.websocket.jakarta</artifactId>
+		    <version>0.23.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.github.camel-tooling/camel-lsp-server -->
+		<dependency>
+		    <groupId>com.github.camel-tooling</groupId>
+		    <artifactId>camel-lsp-server</artifactId>
+		    <version>1.25.0</version>
 		</dependency>
         
         <dependency>
 	        <groupId>openup</groupId>
 	        <artifactId>EPF-logging-utility</artifactId>
+	        <version>${project.version}</version>
+	    </dependency>
+		<dependency>
+	        <groupId>openup</groupId>
+	        <artifactId>EPF-json-utility-ext</artifactId>
+	        <version>${project.version}</version>
+	    </dependency>
+		<dependency>
+	        <groupId>openup</groupId>
+	        <artifactId>ERP-schema-utility</artifactId>
+	        <version>${project.version}</version>
+	    </dependency>
+	    <dependency>
+	        <groupId>openup</groupId>
+	        <artifactId>EPF-json-schema</artifactId>
 	        <version>${project.version}</version>
 	    </dependency>
         <dependency>
@@ -96,6 +155,11 @@
 	    <dependency>
 	        <groupId>openup</groupId>
 	        <artifactId>EPF-lang-schema</artifactId>
+	        <version>${project.version}</version>
+	    </dependency>
+	    <dependency>
+	        <groupId>openup</groupId>
+	        <artifactId>ERP-base-schema</artifactId>
 	        <version>${project.version}</version>
 	    </dependency>
     </dependencies>

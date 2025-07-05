@@ -1,24 +1,14 @@
 package epf.function.file;
 
-import javax.ws.rs.HttpMethod;
-import javax.ws.rs.core.Link;
+import jakarta.ws.rs.HttpMethod;
+import jakarta.ws.rs.core.Link;
 import epf.function.Function;
 import epf.naming.Naming;
 
-/**
- * @author PC
- *
- */
 public class DeleteFunction extends Function {
 	
-	/**
-	 * 
-	 */
 	private String fileName;
 
-	/**
-	 * @param path
-	 */
 	public DeleteFunction(final String path) {
 		super(Naming.FILE, HttpMethod.DELETE, path + "/{fileName}");
 	}

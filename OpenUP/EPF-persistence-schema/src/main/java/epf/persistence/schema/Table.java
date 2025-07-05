@@ -3,31 +3,13 @@ package epf.persistence.schema;
 import java.io.Serializable;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-/**
- * @author PC
- *
- */
 @XmlRootElement
 public class Table implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
-	/**
-	 * 
-	 */
 	private String catalog;
-	
-	/**
-	 * 
-	 */
 	private String name;
-	
-	/**
-	 * 
-	 */
 	private String schema;
 
 	public String getSchema() {

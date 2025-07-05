@@ -2,43 +2,32 @@ package epf.query.client;
 
 import java.util.List;
 import java.util.function.Function;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.HEAD;
-import javax.ws.rs.HttpMethod;
-import javax.ws.rs.MatrixParam;
-import javax.ws.rs.PATCH;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.PathSegment;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HEAD;
+import jakarta.ws.rs.HttpMethod;
+import jakarta.ws.rs.MatrixParam;
+import jakarta.ws.rs.PATCH;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.PathSegment;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 import epf.client.util.Client;
 import epf.naming.Naming;
 
-/**
- * @author PC
- *
- */
 @Path(Naming.QUERY)
 public interface Query {
 	
-	/**
-	 * @param tenant
-	 * @param schema
-	 * @param entity
-	 * @param entityId
-	 * @return
-	 */
 	@GET
     @Path(Naming.Query.Client.ENTITY_PATH)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -59,13 +48,6 @@ public interface Query {
             final String entityId
             );
 	
-	/**
-	 * @param client
-	 * @param cls
-	 * @param schema
-	 * @param entity
-	 * @param entityId
-	 */
 	static <T> T getEntity(final Client client, final Class<T> cls, final String schema, final String entity, final String entityId) {
 		return client.request(
     			target -> target.path(Naming.Query.Client.ENTITY).path(schema).path(entity).path(entityId), 
@@ -74,13 +56,6 @@ public interface Query {
     			.get(cls);
 	}
 	
-	/**
-	 * @param client
-	 * @param schema
-	 * @param entity
-	 * @param entityId
-	 * @return
-	 */
 	static Response getEntity(final Client client, final String schema, final String entity, final String entityId) {
 		return client.request(
     			target -> target.path(Naming.Query.Client.ENTITY).path(schema).path(entity).path(entityId), 
@@ -89,12 +64,6 @@ public interface Query {
 				.get();
 	}
 	
-	/**
-	 * @param tenant
-	 * @param schema
-	 * @param entity
-	 * @return
-	 */
 	@HEAD
 	@Path("entity/{schema}/{entity}")
     Response countEntity(
@@ -110,12 +79,6 @@ public interface Query {
             final String entity
             );
 	
-	/**
-	 * @param client
-	 * @param schema
-	 * @param entity
-	 * @return
-	 */
 	static Integer countEntity(final Client client, final String schema, final String entity) {
 		final String count = client.request(
     			target -> target.path(Naming.Query.Client.ENTITY).path(schema).path(entity), 
@@ -126,11 +89,6 @@ public interface Query {
 		return Integer.parseInt(count);
 	}
 	
-	/**
-	 * @param tenant
-	 * @param entityIds
-	 * @return
-	 */
 	@PATCH
     @Path(Naming.Query.Client.ENTITY)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -140,25 +98,11 @@ public interface Query {
     		final String tenant,
     		final List<EntityId> entityIds);
     
-    /**
-     * @param client
-     * @param entityIds
-     * @return
-     */
     static Response fetchEntities(final Client client, final List<EntityId> entityIds) {
     	return client.request(target -> target.path(Naming.Query.Client.ENTITY), req -> req.accept(MediaType.APPLICATION_JSON))
     			.method(HttpMethod.PATCH, Entity.json(entityIds));
     }
 	
-	/**
-	 * @param tenant
-	 * @param schema
-	 * @param paths
-	 * @param firstResult
-	 * @param maxResults
-	 * @param context
-	 * @param sort
-	 */
 	@GET
     @Path("query/{schema}/{criteria: .+}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -180,15 +124,6 @@ public interface Query {
     		final List<String> sort
             ) throws Exception;
     
-    /**
-     * @param client
-     * @param schema
-     * @param type
-     * @param paths
-     * @param firstResult
-     * @param maxResults
-     * @param sort
-     */
     static <T extends Object> List<T> executeQuery(
     		final Client client,
     		final String schema,
@@ -207,14 +142,6 @@ public interface Query {
     			.get(type);
     }
     
-    /**
-     * @param client
-     * @param schema
-     * @param paths
-     * @param firstResult
-     * @param maxResults
-     * @param sort
-     */
     static Response executeQuery(
     		final Client client,
     		final String schema,
@@ -231,13 +158,6 @@ public interface Query {
     			.get();
     }
     
-    /**
-     * @param tenant
-     * @param schema
-     * @param paths
-     * @param context
-     * @return
-     */
     @HEAD
     @Path("query/{schema}/{criteria: .+}")
 	Response executeCountQuery(
@@ -252,12 +172,6 @@ public interface Query {
             final SecurityContext context
             ) throws Exception;
     
-    /**
-     * @param client
-     * @param schema
-     * @param paths
-     * @return
-     */
     static Integer executeCountQuery(
     		final Client client,
     		final String schema,

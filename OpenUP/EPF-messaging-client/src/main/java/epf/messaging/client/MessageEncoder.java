@@ -1,35 +1,22 @@
 package epf.messaging.client;
 
 import java.util.logging.Logger;
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
-import javax.json.bind.JsonbConfig;
-import javax.websocket.EncodeException;
-import javax.websocket.Encoder;
-import javax.websocket.EndpointConfig;
-import epf.util.json.Adapter;
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbBuilder;
+import jakarta.json.bind.JsonbConfig;
+import jakarta.websocket.EncodeException;
+import jakarta.websocket.Encoder;
+import jakarta.websocket.EndpointConfig;
+import epf.util.json.ext.Adapter;
 import epf.util.logging.LogManager;
 
-/**
- * @author PC
- *
- */
 public class MessageEncoder implements Encoder.Text<Object> {
 	
-	/**
-	 * 
-	 */
 	private static final Logger LOGGER = LogManager.getLogger(MessageEncoder.class.getName());
 	
-	/**
-	 * 
-	 */
 	private transient final Jsonb jsonb = JsonbBuilder.create(new JsonbConfig().withAdapters(new Adapter()));
 	
-	/**
-	 * 
-	 */
-	private transient final epf.util.json.Encoder encoder = new epf.util.json.Encoder();
+	private transient final epf.util.json.ext.Encoder encoder = new epf.util.json.ext.Encoder();
 
 	@Override
 	public void init(final EndpointConfig config) {

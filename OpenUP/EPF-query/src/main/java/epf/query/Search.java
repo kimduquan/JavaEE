@@ -23,41 +23,19 @@ import epf.query.client.EntityId;
 import epf.query.internal.SchemaCache;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
-/**
- * 
- */
 @ApplicationScoped
 public class Search {
 	
-	/**
-	 *
-	 */
 	private static final String FULLTEXT_SEARCH = "SELECT * FROM FTL_SEARCH_DATA(?, ?, ?) WHERE SCHEMA LIKE ?;";
 	
-	/**
-	 *
-	 */
 	private static final String FULLTEXT_SEARCH_COUNT = "SELECT COUNT(*) FROM FTL_SEARCH_DATA(?, ?, ?) WHERE SCHEMA LIKE ?;";
 	
-	/**
-	 *
-	 */
 	@PersistenceContext(unitName = "EPF-query")
 	transient EntityManager manager;
 	
-	/**
-	 *
-	 */
 	@Inject @Readiness
 	transient SchemaCache schemaCache;
 
-	/**
-	 * @param tenant
-	 * @param text
-	 * @param firstResult
-	 * @param maxResults
-	 * @return
-	 */
 	@GET
     @Produces(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
@@ -78,11 +56,6 @@ public class Search {
 		return Response.ok(entities).build();
 	}
 
-	/**
-	 * @param tenant
-	 * @param text
-	 * @return
-	 */
 	@HEAD
 	@RunOnVirtualThread
     public Response count(
@@ -95,10 +68,6 @@ public class Search {
 		return Response.ok().header(Naming.Query.Client.ENTITY_COUNT, count).build();
 	}
 	
-	/**
-	 * @param obj
-	 * @return
-	 */
 	private EntityId toEntityId(final Object obj) {
 		final Object[] data = (Object[]) obj;
 		final String table = String.valueOf(data[1]);
@@ -132,14 +101,6 @@ public class Search {
 		return entityId;
 	}
 	
-	/**
-	 * @param query
-	 * @param tenant
-	 * @param text
-	 * @param maxResults
-	 * @param firstResult
-	 * @return
-	 */
 	private Query createSearchQuery(final String query, final String tenant, final String text, final int maxResults, final int firstResult) {
 		final String filter = tenant == null ? "%" : "%_" + tenant;
 		return manager.createNativeQuery(query)

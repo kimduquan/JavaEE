@@ -8,14 +8,12 @@ import epf.workflow.schema.TransitionDefinition;
 import epf.workflow.schema.adapter.BooleanOrEndDefinitionAdapter;
 import epf.workflow.schema.adapter.StringOrTransitionDefinitionAdapter;
 import jakarta.nosql.Column;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Map;
-import org.eclipse.jnosql.mapping.MappedSuperclass;
+import jakarta.nosql.MappedSuperclass;
+import org.eclipse.microprofile.graphql.Description;
 
-/**
- * @author PC
- *
- */
 @MappedSuperclass
 public class SwitchStateConditions implements Serializable {
 
@@ -24,27 +22,23 @@ public class SwitchStateConditions implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	/**
-	 * 
-	 */
+	@NotNull
 	@Column
+	@Description("Data condition name. Must follow the Serverless Workflow Naming Convention")
 	private String name;
-	/**
-	 * 
-	 */
+	
 	@Column
+	@Description("Transition to another state if condition is true")
 	@JsonbTypeAdapter(value = StringOrTransitionDefinitionAdapter.class)
 	private StringOrObject<TransitionDefinition> transition;
-	/**
-	 * 
-	 */
+	
 	@Column
+	@Description("End workflow execution if condition is true")
 	@JsonbTypeAdapter(value = BooleanOrEndDefinitionAdapter.class)
 	private BooleanOrObject<EndDefinition> end;
-	/**
-	 * 
-	 */
+	
 	@Column
+	@Description("Metadata information")
 	private Map<String, String> metadata;
 	
 	public String getName() {

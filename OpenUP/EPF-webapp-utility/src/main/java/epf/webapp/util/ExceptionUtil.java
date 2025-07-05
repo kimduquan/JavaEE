@@ -1,17 +1,10 @@
 package epf.webapp.util;
 
-import javax.faces.context.ExceptionHandler;
-import javax.faces.context.ExceptionHandlerFactory;
+import jakarta.faces.context.ExceptionHandler;
+import jakarta.faces.context.ExceptionHandlerFactory;
 
-/**
- * @author PC
- *
- */
 public class ExceptionUtil extends ExceptionHandlerFactory {
 	
-	/**
-	 * @param factory
-	 */
 	public ExceptionUtil(final ExceptionHandlerFactory factory) {
 		super(factory);
 	}

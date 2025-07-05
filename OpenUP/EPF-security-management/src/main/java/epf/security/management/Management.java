@@ -12,18 +12,18 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.security.enterprise.CallerPrincipal;
-import javax.security.enterprise.credential.Password;
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.ForbiddenException;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.security.enterprise.CallerPrincipal;
+import jakarta.security.enterprise.credential.Password;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.ForbiddenException;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.naming.Naming;
@@ -36,47 +36,26 @@ import epf.util.io.FileUtil;
 import epf.util.logging.LogManager;
 import epf.util.security.KeyUtil;
 
-/**
- * 
- */
 @Path(Naming.SECURITY)
 @RolesAllowed(Naming.EPF)
 @ApplicationScoped
 public class Management implements epf.security.client.Management {
 	
-	/**
-	 *
-	 */
 	private transient static final Logger LOGGER = LogManager.getLogger(Management.class.getName());
 	
-	/**
-     * 
-     */
-    private transient PrivateKey privateKey;
+	private transient PrivateKey privateKey;
 	
-	/**
-     * 
-     */
-    @Inject
+	@Inject
     @ConfigProperty(name = Naming.Security.JWT.DECRYPTOR_KEY_LOCATION)
     transient String privateKeyLocation;
     
-    /**
-     * 
-     */
     @Inject
     @ConfigProperty(name = Naming.WebApp.WEB_APP_URL)
     transient URL webappUrl;
 	
-	/**
-     * 
-     */
-    @Inject
+	@Inject
     transient ManagementIdentityStore identityStore;
     
-    /**
-     * 
-     */
     @PostConstruct
     protected void postConstruct() {
     	try {

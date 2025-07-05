@@ -1,53 +1,32 @@
 package epf.webapp.security.view;
 
 import java.io.Serializable;
-import javax.enterprise.context.Conversation;
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.security.enterprise.SecurityContext;
+import jakarta.enterprise.context.Conversation;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.security.enterprise.SecurityContext;
 import epf.util.StringUtil;
 import epf.webapp.internal.TokenPrincipal;
 import epf.webapp.naming.Naming;
 import epf.webapp.security.auth.core.AuthFlowConversation;
 
-/**
- * 
- */
 @ViewScoped
 @Named(Naming.Security.Auth.AUTH_VIEW)
 public class SecurityAuthPage implements Serializable {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1L;
 	
-	/**
-	 *
-	 */
 	private String url;
 	
-	/**
-	 * 
-	 */
 	private String credential;
 
-	/**
-	 * 
-	 */
 	@Inject
 	private transient SecurityContext context;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	private transient Conversation conversation;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	private AuthFlowConversation authFlow;
 
@@ -67,10 +46,6 @@ public class SecurityAuthPage implements Serializable {
 		this.credential = credential;
 	}
 
-	/**
-	 * @return
-	 * @throws Exception
-	 */
 	public String authenticate() throws Exception {
 		if(conversation.isTransient()) {
 			if(url != null && context.getCallerPrincipal() != null) {

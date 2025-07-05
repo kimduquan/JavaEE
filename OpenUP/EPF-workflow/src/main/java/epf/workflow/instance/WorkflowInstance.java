@@ -19,26 +19,14 @@ import epf.workflow.model.WorkflowState;
 import epf.workflow.schema.SubFlowRefDefinition;
 import epf.workflow.schema.WorkflowDefinition;
 
-/**
- * 
- */
 @ApplicationScoped
 @Readiness
 public class WorkflowInstance implements HealthCheck {
 	
-	/**
-	 * 
-	 */
 	private static final String KEY_FORMAT = "%s?version=%s";
 
-	/**
-	 * 
-	 */
 	private transient Cache<String, WorkflowDefinition> workflowDefinitionCache;
 	
-	/**
-	 * 
-	 */
 	private transient Cache<String, Instance> workflowCache;
 
 	@Override
@@ -57,27 +45,14 @@ public class WorkflowInstance implements HealthCheck {
 		return HealthCheckResponse.down("epf-workflow-cache");
 	}
 	
-	/**
-	 * @param workflow
-	 * @return
-	 */
 	public WorkflowDefinition get(final String workflow) {
 		return workflowDefinitionCache.get(workflow);
 	}
 	
-	/**
-	 * @param workflow
-	 * @param version
-	 * @return
-	 */
 	public WorkflowDefinition get(final String workflow, final String version) {
 		return workflowDefinitionCache.get(String.format(KEY_FORMAT, workflow, version));
 	}
 	
-	/**
-	 * @param workflow
-	 * @param workflowDefinition
-	 */
 	public void put(final String workflow, final WorkflowDefinition workflowDefinition) {
 		workflowDefinitionCache.put(workflow, workflowDefinition);
 	}
@@ -104,43 +79,22 @@ public class WorkflowInstance implements HealthCheck {
 		return workflowDefinition.orElseThrow(NotFoundException::new);
 	}
 	
-	/**
-	 * @param workflow
-	 * @param version
-	 * @param workflowDefinition
-	 */
 	public void put(final String workflow, final String version, final WorkflowDefinition workflowDefinition) {
 		workflowDefinitionCache.put(String.format(KEY_FORMAT, workflow, version), workflowDefinition);
 	}
 	
-	/**
-	 * @param instance
-	 * @param workflowInstance
-	 */
 	public void putInstance(final URI instance, final Instance workflowInstance) {
 		workflowCache.put(instance.toString(), workflowInstance);
 	}
 	
-	/**
-	 * @param instance
-	 * @param workflowInstance
-	 */
 	public void replaceInstance(final URI instance, final Instance workflowInstance) {
 		workflowCache.replace(instance.toString(), workflowInstance);
 	}
 	
-	/**
-	 * @param instance
-	 * @return
-	 */
 	public Instance getInstance(final URI instance) {
 		return workflowCache.get(instance.toString());
 	}
 	
-	/**
-	 * @param instance
-	 * @return
-	 */
 	public Instance removeInstance(final URI instance) {
 		return workflowCache.getAndRemove(instance.toString());
 	}

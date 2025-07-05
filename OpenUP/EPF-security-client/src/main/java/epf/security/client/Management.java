@@ -1,36 +1,27 @@
 package epf.security.client;
 
 import java.util.List;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Form;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.FormParam;
+import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.Form;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 import epf.client.util.Client;
 import epf.naming.Naming;
 
-/**
- * 
- */
 @Path(Naming.SECURITY)
 public interface Management {
 	
-    /**
-     * @param email
-     * @param password
-     * @return
-     * @throws Exception
-     */
     @Path(Naming.Security.CREDENTIAL)
     @POST
     @Produces(MediaType.TEXT_PLAIN)
@@ -53,13 +44,6 @@ public interface Management {
             final List<String> forwardedHost
     		) throws Exception;
     
-    /**
-     * @param client
-     * @param email
-     * @param password
-     * @return
-     * @throws Exception
-     */
     static Response createCredential(final Client client, final String email, final String password, final String firstName, final String lastName) throws Exception {
     	return client.request(
     			target -> target.path(Naming.Security.CREDENTIAL), 
@@ -74,22 +58,12 @@ public interface Management {
     					);
     }
     
-    /**
-     * @param context
-     * @return
-     * @throws Exception
-     */
     @Path(Naming.Security.CREDENTIAL)
     @PUT
     Response activeCredential(
     		@Context 
     		final SecurityContext context) throws Exception;
     
-    /**
-     * @param client
-     * @return
-     * @throws Exception
-     */
     static Response activeCredential(final Client client) throws Exception {
     	return client.request(
     			target -> target.path(Naming.Security.CREDENTIAL), 
@@ -98,10 +72,6 @@ public interface Management {
     			.put(null);
     }
 
-    /**
-     * @param email
-     * @return
-     */
     @Path(Naming.Security.Credential.PASSWORD)
     @POST
     @Produces(MediaType.TEXT_PLAIN)
@@ -113,11 +83,6 @@ public interface Management {
     		@HeaderParam(Naming.Gateway.Headers.X_FORWARDED_HOST)
             final List<String> forwardedHost) throws Exception;
     
-    /**
-     * @param client
-     * @param email
-     * @return
-     */
     static Response resetPassword(final Client client, final String email) {
     	return client
     			.request(
@@ -127,12 +92,6 @@ public interface Management {
     			.post(Entity.form(new Form().param(Naming.Security.Claims.EMAIL, email)));
     }
     
-    /**
-     * @param password
-     * @param context
-     * @return
-     * @throws Exception
-     */
     @Path(Naming.Security.Credential.PASSWORD)
     @PUT
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -142,11 +101,6 @@ public interface Management {
     		@Context 
     		final SecurityContext context) throws Exception;
     
-    /**
-     * @param client
-     * @param password
-     * @return
-     */
     static Response setPassword(final Client client, final String password) {
     	return client
     			.request(

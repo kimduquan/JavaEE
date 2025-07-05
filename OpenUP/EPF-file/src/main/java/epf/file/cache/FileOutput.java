@@ -6,19 +6,10 @@ import java.nio.MappedByteBuffer;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.StreamingOutput;
 
-/**
- * 
- */
 public class FileOutput implements StreamingOutput {
 	
-	/**
-	 *
-	 */
 	private transient final MappedByteBuffer buffer;
 	
-	/**
-	 * @param buffer
-	 */
 	public FileOutput(final MappedByteBuffer buffer) {
 		this.buffer = buffer;
 		

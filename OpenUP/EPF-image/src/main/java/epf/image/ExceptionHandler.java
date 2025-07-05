@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.image;
 
 import java.io.Serializable;
@@ -10,40 +5,24 @@ import java.io.StreamCorruptedException;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.InvalidPathException;
 import java.nio.file.NoSuchFileException;
-import javax.validation.ValidationException;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
-
+import jakarta.validation.ValidationException;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.ResponseBuilder;
+import jakarta.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.ext.Provider;
 import epf.util.EPFException;
 
-/**
- *
- * @author FOXCONN
- */
 @Provider
 public class ExceptionHandler implements ExceptionMapper<Exception>, Serializable {
 
-    /**
-    * 
-    */
     private static final long serialVersionUID = 1L;
 
-    /**
-     *
-     */
     @Override
     public Response toResponse(final Exception exception) {
         return handle(exception);
     }
     
-    /**
-     * @param failure
-     * @param builder
-     * @return
-     */
     protected static boolean map(final Throwable failure, final Response.ResponseBuilder builder){
         Response.StatusType status = Response.Status.INTERNAL_SERVER_ERROR;
         boolean mapped = true;
@@ -81,10 +60,6 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
         return mapped;
     }
     
-    /**
-     * @param failure
-     * @return
-     */
     protected static Response handle(final Throwable failure){
     	final ResponseBuilder builder = Response.serverError();
         if(failure != null && !map(failure, builder)){

@@ -1,14 +1,25 @@
 package epf.webapp.persistence;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.faces.annotation.FacesConfig;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.faces.annotation.FacesConfig;
+import jakarta.security.enterprise.authentication.mechanism.http.OpenIdAuthenticationMechanismDefinition;
+import jakarta.security.enterprise.authentication.mechanism.http.openid.LogoutDefinition;
 
-/**
- * @author PC
- *
- */
 @ApplicationScoped
 @FacesConfig
+@OpenIdAuthenticationMechanismDefinition(
+		providerURI = "${config.providerURI}",
+		clientId = "${config.clientId}",
+		clientSecret = "${config.clientSecret}",
+		logout = @LogoutDefinition(
+					notifyProvider = true,
+					accessTokenExpiry = true,
+					identityTokenExpiry = true
+				),
+		useSession = true,
+		redirectToOriginalResource = false,
+		tokenAutoRefresh = true
+		)
 public class WebApp {
 	
 }

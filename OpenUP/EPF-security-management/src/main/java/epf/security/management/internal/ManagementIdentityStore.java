@@ -4,35 +4,25 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.security.enterprise.CallerPrincipal;
-import javax.transaction.Transactional;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Persistence;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
+import jakarta.security.enterprise.CallerPrincipal;
+import jakarta.transaction.Transactional;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.naming.Naming;
 import epf.security.internal.JPAPrincipal;
 import epf.security.util.Credential;
 
-/**
- * @author PC
- *
- */
 @ApplicationScoped
 public class ManagementIdentityStore {
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient ManagedExecutor executor;
 	
-	/**
-	 * 
-	 */
 	@PersistenceContext(unitName = Naming.Security.Internal.SECURITY_MANAGEMENT_UNIT_NAME)
 	transient EntityManager manager;
 

@@ -2,17 +2,17 @@ package epf.webapp.security.auth.view;
 
 import java.io.Serializable;
 import java.util.Base64;
-import javax.enterprise.context.Conversation;
-import javax.faces.context.ExternalContext;
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.security.enterprise.AuthenticationStatus;
-import javax.security.enterprise.SecurityContext;
-import javax.security.enterprise.authentication.mechanism.http.AuthenticationParameters;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.Response.Status;
+import jakarta.enterprise.context.Conversation;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.security.enterprise.AuthenticationStatus;
+import jakarta.security.enterprise.SecurityContext;
+import jakarta.security.enterprise.authentication.mechanism.http.AuthenticationParameters;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.core.Response.Status;
 import epf.security.auth.core.AuthError;
 import epf.security.auth.core.AuthRequest;
 import epf.security.auth.core.AuthResponse;
@@ -33,81 +33,41 @@ import epf.webapp.security.auth.core.CodeFlow;
 import epf.webapp.security.auth.core.Flow;
 import epf.webapp.security.auth.core.ImplicitFlow;
 
-/**
- * @author PC
- *
- */
 @ViewScoped
 @Named(Naming.Security.AUTH)
 public class AuthPage implements AuthView, Serializable {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 */
 	@Inject
 	private transient SecurityContext context;
 	
-	/**
-	 * 
-	 */
 	@Inject
     private transient ExternalContext externalContext;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	private transient HttpServletRequest request;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	private transient SecurityAuth securityAuth;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	private transient Conversation conversation;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	private AuthFlowConversation authFlow;
 
-	/**
-	 * 
-	 */
 	@Inject
 	private CodeFlow codeFlow;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	private ImplicitFlow implicitFlow;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	private AuthParams authParams;
 	
-	/**
-	 *
-	 */
 	private String url;
 	
-	/**
-	 * 
-	 */
 	private String provider = "";
 
 	public String getUrl() {
@@ -126,10 +86,6 @@ public class AuthPage implements AuthView, Serializable {
 		this.provider = provider;
 	}
 	
-	/**
-	 * @param flow
-	 * @return
-	 */
 	private String buildAuthRequestState() {
 		final String csrfToken = request.getParameter("javax.faces.Token");
 		if(conversation.isTransient()) {
@@ -138,11 +94,6 @@ public class AuthPage implements AuthView, Serializable {
 		return conversation.getId() + System.lineSeparator() + csrfToken;
 	}
 	
-	/**
-	 * @param sessionId
-	 * @return
-	 * @throws Exception
-	 */
 	private String buildAuthRequestNonce(final String sessionId) throws Exception {
 		return SecurityUtil.hash(sessionId, Base64.getMimeEncoder());
 	}
@@ -181,11 +132,6 @@ public class AuthPage implements AuthView, Serializable {
 		return "";
 	}
 	
-	/**
-	 * @param request
-	 * @return
-	 * @throws Exception 
-	 */
 	private String authenticateCodeFlow(final HttpServletRequest request, final String sessionId) throws Exception {
 		final String error = request.getParameter("error");
 		if(error == null) {
@@ -220,11 +166,6 @@ public class AuthPage implements AuthView, Serializable {
 		return "";
 	}
 	
-	/**
-	 * @param request
-	 * @return
-	 * @throws Exception 
-	 */
 	private String authenticateImplicitFlow(final HttpServletRequest request, final String sessionId) throws Exception {
 		final String error = request.getParameter("error");
 		if(error == null) {
@@ -258,10 +199,6 @@ public class AuthPage implements AuthView, Serializable {
 		return "";
 	}
 	
-	/**
-	 * @return
-	 * @throws Exception 
-	 */
 	public String authenticate() throws Exception {
 		if(!conversation.isTransient()) {
 			final String sessionId = externalContext.getSessionId(false);
@@ -277,10 +214,6 @@ public class AuthPage implements AuthView, Serializable {
 		return "";
 	}
 	
-	/**
-	 * @return
-	 * @throws Exception
-	 */
 	public String login() throws Exception {
 		if(epf.naming.Naming.Security.Auth.GOOGLE.equals(provider)) {
 			return loginWithGoogle();

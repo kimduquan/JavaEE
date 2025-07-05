@@ -2,26 +2,19 @@ package epf.rules.admin;
 
 import java.io.InputStream;
 import java.util.HashMap;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import javax.rules.admin.RuleExecutionSet;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.health.Readiness;
 import epf.naming.Naming;
 
-/**
- * @author PC
- *
- */
 @Path(Naming.Rules.RULES_ADMIN)
 @ApplicationScoped
 public class Admin implements epf.rules.client.admin.Admin {
 	
-	/**
-	 * 
-	 */
 	@Inject @Readiness
 	private transient Administrator administrator;
 

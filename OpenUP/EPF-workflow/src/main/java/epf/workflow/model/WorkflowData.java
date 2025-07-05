@@ -10,21 +10,12 @@ import epf.util.json.ext.JsonUtil;
 import epf.util.logging.LogManager;
 import jakarta.json.JsonValue;
 
-/**
- * @author PC
- *
- */
 public class WorkflowData implements Externalizable {
 	
 	private transient static final Logger LOGGER = LogManager.getLogger(WorkflowData.class.getName());
 	
-	/**
-	 * 
-	 */
 	private JsonValue input = JsonValue.NULL;
-	/**
-	 * 
-	 */
+	
 	private JsonValue output = JsonValue.NULL;
 	
 	public JsonValue getInput() {

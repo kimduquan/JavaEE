@@ -26,17 +26,8 @@ import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.json.bind.JsonbConfig;
 
-/**
- * @author PC
- *
- */
 public interface JsonUtil {
 
-	/**
-	 * @param object
-	 * @return
-	 * @throws Exception 
-	 */
 	static JsonObject toJsonObject(final Object object) throws Exception {
 		try(StringWriter writer = new StringWriter()){
 			try(Jsonb jsonb = JsonbBuilder.create()){
@@ -46,11 +37,6 @@ public interface JsonUtil {
 		}
 	}
 	
-	/**
-	 * @param object
-	 * @return
-	 * @throws Exception
-	 */
 	static JsonValue toJsonValue(final Object object) throws Exception {
 		if(object != null) {
 			try(StringWriter writer = new StringWriter()){
@@ -63,12 +49,6 @@ public interface JsonUtil {
 		return JsonValue.NULL;
 	}
 	
-	/**
-	 * @param <T>
-	 * @param e
-	 * @return
-	 * @throws Exception
-	 */
 	static <T extends Enum<T>> JsonValue toJsonEnum(final Enum<T> e) throws Exception {
 		try(StringWriter writer = new StringWriter()){
 			try(Jsonb jsonb = JsonbBuilder.create()){
@@ -78,12 +58,6 @@ public interface JsonUtil {
 		}
 	}
 	
-	/**
-	 * @param <T>
-	 * @param cls
-	 * @param value
-	 * @return
-	 */
 	static <T extends Enum<T>> T asEnum(final Class<T> cls, final JsonValue value) {
 		final String name = ((JsonString)value).getString();
 		for(T e : cls.getEnumConstants()) {
@@ -94,22 +68,10 @@ public interface JsonUtil {
 		return null;
 	}
 	
-	/**
-	 * @param <T>
-	 * @param cls
-	 * @param value
-	 * @return
-	 * @throws Exception
-	 */
 	static <T> T asObject(final Class<T> cls, final JsonValue value) throws Exception {
 		return fromJson(value.toString(), cls);
 	}
 	
-	/**
-	 * @param collection
-	 * @return
-	 * @throws Exception 
-	 */
 	static JsonArray toJsonArray(final Collection<?> collection) throws Exception {
 		final JsonArrayBuilder builder = Json.createArrayBuilder();
 		for(Object object : collection) {
@@ -118,12 +80,6 @@ public interface JsonUtil {
 		return builder.build();
 	}
 	
-	/**
-	 * @param <T>
-	 * @param array
-	 * @return
-	 * @throws Exception
-	 */
 	static <T> JsonArray toJsonArray(final T[] array) throws Exception {
 		final JsonArrayBuilder builder = Json.createArrayBuilder();
 		for(T object : array) {
@@ -132,125 +88,74 @@ public interface JsonUtil {
 		return builder.build();
 	}
 	
-	/**
-	 * @return
-	 */
 	static JsonArray emptyArray() {
 		return Json.createArrayBuilder().build();
 	}
 	
-	/**
-	 * @return
-	 */
 	static JsonObject empty() {
 		return Json.createObjectBuilder().build();
 	}
 	
-	/**
-	 * @param object
-	 * @return
-	 * @throws Exception 
-	 */
 	static String toString(final Object object) throws Exception {
 		try(Jsonb jsonb = JsonbBuilder.create()){
 			return jsonb.toJson(object);
 		}
 	}
 	
-	/**
-	 * @param input
-	 * @return
-	 */
 	static JsonArray readArray(final InputStream input) {
 		try(JsonReader jsonReader = Json.createReader(input)){
 			return jsonReader.readArray();
 		}
 	}
 	
-	/**
-	 * @param input
-	 * @return
-	 */
 	static JsonObject readObject(final InputStream input) {
 		try(JsonReader jsonReader = Json.createReader(input)){
 			return jsonReader.readObject();
 		}
 	}
 	
-	/**
-	 * @param reader
-	 * @return
-	 */
 	static JsonArray readArray(final Reader reader) {
 		try(JsonReader jsonReader = Json.createReader(reader)){
 			return jsonReader.readArray();
 		}
 	}
 	
-	/**
-	 * @param reader
-	 * @return
-	 */
 	static JsonObject readObject(final Reader reader) {
 		try(JsonReader jsonReader = Json.createReader(reader)){
 			return jsonReader.readObject();
 		}
 	}
 	
-	/**
-	 * @param input
-	 * @return
-	 */
 	static JsonArray readArray(final String input) {
 		try(StringReader reader = new StringReader(input)){
 			return readArray(reader);
 		}
 	}
 	
-	/**
-	 * @param input
-	 * @return
-	 */
 	static JsonObject readObject(final String input) {
 		try(StringReader reader = new StringReader(input)){
 			return readObject(reader);
 		}
 	}
 	
-	/**
-	 * @param input
-	 * @return
-	 */
 	static JsonValue readValue(final String input) {
 		try(StringReader reader = new StringReader(input)){
 			return readValue(reader);
 		}
 	}
 	
-	/**
-	 * @param input
-	 * @return
-	 */
 	static JsonValue readValue(final InputStream input) {
 		try(JsonReader jsonReader = Json.createReader(input)){
 			return jsonReader.readValue();
 		}
 	}
 	
-	/**
-	 * @param reader
-	 * @return
-	 */
 	static JsonValue readValue(final Reader reader) {
 		try(JsonReader jsonReader = Json.createReader(reader)){
 			return jsonReader.readValue();
 		}
 	}
 	
-	/**
-	 * @param value
-	 * @return
-	 */
 	static String toString(final JsonValue value) {
 		String string = null;
 		if(value instanceof JsonString) {
@@ -262,12 +167,6 @@ public interface JsonUtil {
 		return string;
 	}
 	
-	/**
-	 * @param object
-	 * @param attribute
-	 * @param def
-	 * @return
-	 */
 	static String getString(final JsonObject object, final String attribute, final String def) {
 		final JsonValue value = object.get(attribute);
 		String string = def;
@@ -287,66 +186,34 @@ public interface JsonUtil {
 		return string;
 	}
 	
-	/**
-	 * @param source
-	 * @param target
-	 * @return
-	 * @throws Exception
-	 */
 	static JsonPatch createDiff(final Object source, final Object target) throws Exception {
 		return Json.createDiff(toJsonObject(source), toJsonObject(target));
 	}
 	
-	/**
-	 * @param <T>
-	 * @param input
-	 * @param cls
-	 * @return
-	 * @throws Exception
-	 */
 	static <T> T fromJson(final InputStream input, final Class<T> cls) throws Exception {
 		try(Jsonb jsonb = JsonbBuilder.create()){
 			return jsonb.fromJson(input, cls);
 		}
 	}
 	
-	/**
-	 * @param <T>
-	 * @param input
-	 * @param cls
-	 * @return
-	 * @throws Exception
-	 */
 	static <T> T fromJson(final String input, final Class<T> cls) throws Exception {
 		try(Jsonb jsonb = JsonbBuilder.create()){
 			return jsonb.fromJson(input, cls);
 		}
 	}
 	
-	/**
-	 * @param map
-	 * @param jsonObject
-	 */
 	static void asMap(final Map<String, Object> map, final JsonObject jsonObject) {
 		for(Entry<String, JsonValue> entry : jsonObject.entrySet()) {
 			map.put(entry.getKey(), asValue(entry.getValue()));
 		}
 	}
 	
-	/**
-	 * @param jsonObject
-	 * @return
-	 */
 	static Map<String, Object> asMap(final JsonObject jsonObject) {
 		final Map<String, Object> map = new HashMap<>();
 		asMap(map, jsonObject);
 		return map;
 	}
 	
-	/**
-	 * @param jsonValue
-	 * @return
-	 */
 	static Object asValue(final JsonValue jsonValue) {
 		if(jsonValue != null) {
 			switch(jsonValue.getValueType()) {
@@ -375,34 +242,17 @@ public interface JsonUtil {
 		return null;
 	}
 	
-	/**
-	 * @param jsonArray
-	 * @return
-	 */
 	static List<Object> asList(final JsonArray jsonArray) {
 		final List<Object> list = new ArrayList<>();
 		jsonArray.forEach(jsonValue -> list.add(asValue(jsonValue)));
 		return list;
 	}
 	
-	/**
-	 * @param <T>
-	 * @param array
-	 * @return
-	 * @throws Exception 
-	 */
 	static <T> List<Object> toList(final T[] array) throws Exception {
 		final JsonArray jsonArray = toJsonArray(array);
 		return asList(jsonArray);
 	}
 	
-	/**
-	 * @param <T>
-	 * @param map
-	 * @param cls
-	 * @return
-	 * @throws Exception
-	 */
 	static <T> T fromMap(final Map<?, ?> map, final Class<T> cls) throws Exception {
 		Objects.requireNonNull(map, "Map");
 		Objects.requireNonNull(cls, "Class");
@@ -412,14 +262,6 @@ public interface JsonUtil {
 		}
 	}
 	
-	/**
-	 * @param <T>
-	 * @param map
-	 * @param cls
-	 * @param config
-	 * @return
-	 * @throws Exception
-	 */
 	static <T> T fromMap(final Map<?, ?> map, final Class<T> cls, final JsonbConfig config) throws Exception {
 		Objects.requireNonNull(map, "Map");
 		Objects.requireNonNull(cls, "Class");
@@ -430,13 +272,6 @@ public interface JsonUtil {
 		}
 	}
 	
-	/**
-	 * @param <T>
-	 * @param list
-	 * @param cls
-	 * @return
-	 * @throws Exception
-	 */
 	static <T> List<T> fromLisṭ̣(final List<?> list, final Class<T> cls) throws Exception{
 		Objects.requireNonNull(list, "List");
 		Objects.requireNonNull(cls, "Class");
@@ -454,13 +289,6 @@ public interface JsonUtil {
 		return result;
 	}
 	
-	/**
-	 * @param <T>
-	 * @param list
-	 * @param convert
-	 * @return
-	 * @throws Exception
-	 */
 	static <T> List<T> fromLisṭ̣(final List<?> list, final Function<Map<?, ?>, T> convert) throws Exception{
 		Objects.requireNonNull(list, "List");
 		Objects.requireNonNull(convert, "Function");
@@ -478,12 +306,6 @@ public interface JsonUtil {
 		return result;
 	}
 	
-	/**
-	 * @param <T>
-	 * @param obj
-	 * @return
-	 * @throws Exception
-	 */
 	static <T> Map<String, Object> toMap(final T obj) throws Exception {
 		Objects.requireNonNull(obj, "Object");
 		final Map<String, Object> map = new HashMap<>();
@@ -491,20 +313,10 @@ public interface JsonUtil {
 		return map;
 	}
 	
-	/**
-	 * @param source
-	 * @param target
-	 * @return
-	 * @throws Exception
-	 */
 	static JsonMergePatch createMergeDiff(final Map<?, ?> source, final Map<?, ?> target) throws Exception{
 		return Json.createMergeDiff(toJsonValue(source), toJsonValue(target));
 	}
 	
-	/**
-	 * @param clazz
-	 * @return
-	 */
 	static boolean isPrimitive(final Class<?> clazz) {
 		return clazz.isAssignableFrom(String.class) || clazz.isAssignableFrom(Boolean.class) || clazz.isAssignableFrom(Number.class);
 	}

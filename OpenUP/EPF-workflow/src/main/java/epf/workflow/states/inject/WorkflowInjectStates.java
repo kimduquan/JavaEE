@@ -8,15 +8,9 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.json.JsonValue;
 
-/**
- * 
- */
 @ApplicationScoped
 public class WorkflowInjectStates {
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient DataMerging dataMerging;
 

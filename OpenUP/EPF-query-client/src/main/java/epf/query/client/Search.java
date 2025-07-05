@@ -1,33 +1,22 @@
 package epf.query.client;
 
 import java.util.List;
-import javax.ws.rs.GET;
-import javax.ws.rs.HEAD;
-import javax.ws.rs.MatrixParam;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HEAD;
+import jakarta.ws.rs.MatrixParam;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import epf.client.util.Client;
 import epf.naming.Naming;
 
-/**
- * @author PC
- *
- */
 @Path(Naming.Query.SEARCH)
 public interface Search {
 	
-	/**
-     * @param tenant
-     * @param text
-     * @param firstResult
-     * @param maxResults
-     * @return
-     */
-    @GET
+	@GET
     @Produces(MediaType.APPLICATION_JSON)
     Response search(
     		@MatrixParam(Naming.Management.TENANT)
@@ -39,13 +28,6 @@ public interface Search {
             @QueryParam(Naming.Query.Client.MAX)
     		final Integer maxResults);
     
-    /**
-     * @param client
-     * @param text
-     * @param firstResult
-     * @param maxResults
-     * @return
-     */
     static List<EntityId> search(
     		final Client client,
     		final String text, 
@@ -58,11 +40,6 @@ public interface Search {
     			.get(new GenericType<List<EntityId>>() {});
     }
 	
-	/**
-	 * @param tenant
-	 * @param text
-	 * @return
-	 */
 	@HEAD
 	Response count(
     		@MatrixParam(Naming.Management.TENANT)
@@ -70,11 +47,6 @@ public interface Search {
 			@QueryParam(Naming.Query.Client.TEXT)
 			final String text);
     
-    /**
-     * @param client
-     * @param text
-     * @return
-     */
     static Integer count(final Client client, final String text) {
     	return Integer.parseInt(client.request(target -> target.path(Naming.Query.SEARCH).queryParam(Naming.Query.Client.TEXT, text), req -> req).head().getHeaderString(Naming.Query.Client.ENTITY_COUNT));
     }

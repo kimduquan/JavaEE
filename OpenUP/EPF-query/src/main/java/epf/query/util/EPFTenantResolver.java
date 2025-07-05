@@ -1,34 +1,20 @@
 package epf.query.util;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import epf.schema.utility.Request;
-import epf.schema.utility.TenantUtil;
-import io.quarkus.hibernate.orm.PersistenceUnitExtension;
+import epf.management.util.TenantUtil;
 import io.quarkus.hibernate.orm.runtime.tenant.TenantResolver;
 
-/**
- * @author PC
- *
- */
-@PersistenceUnitExtension(epf.query.Naming.QUERY_UNIT_NAME)
 @ApplicationScoped
 public class EPFTenantResolver implements TenantResolver {
-	
-	/**
-	 * 
-	 */
-	@Inject
-    Request request;
 
 	@Override
 	public String getDefaultTenantId() {
-		return "Public".toUpperCase();
+		return TenantUtil.getDefaultTenantId();
 	}
 
 	@Override
 	public String resolveTenantId() {
-		String tenantId = TenantUtil.getTenantId(request.getSchema(), request.getTenant());
+		String tenantId = TenantUtil.getTenantId();
 		if(tenantId == null) {
 			tenantId = getDefaultTenantId();
 		}

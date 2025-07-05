@@ -18,35 +18,17 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 import jakarta.ws.rs.core.UriInfo;
 
-/**
- * 
- */
 @Path(Naming.LANG)
 @ApplicationScoped
 @RolesAllowed({Naming.Security.DEFAULT_ROLE, Naming.EPF})
 public class Lang {
 	
-	/**
-     * 
-     */
-    @Inject
+	@Inject
     transient Application request;
     
-    /**
-     * 
-     */
     @Inject
     transient JsonWebToken jwt;
     
-    /**
-     * @param context
-     * @param headers
-     * @param uriInfo
-     * @param req
-     * @param body
-     * @return
-     * @throws Exception
-     */
     @Path(Naming.PERSISTENCE)
     @POST
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
@@ -60,15 +42,6 @@ public class Lang {
     	return request.buildRequest(Naming.LANG, jwt, headers, uriInfo, req, body);
     }
     
-    /**
-     * @param context
-     * @param headers
-     * @param uriInfo
-     * @param req
-     * @param body
-     * @return
-     * @throws Exception
-     */
     @POST
 	@Consumes(MediaType.TEXT_PLAIN)
     @RunOnVirtualThread

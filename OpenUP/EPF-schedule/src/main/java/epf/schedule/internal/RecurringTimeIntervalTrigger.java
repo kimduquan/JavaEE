@@ -3,25 +3,15 @@ package epf.schedule.internal;
 import java.time.Instant;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
-import javax.enterprise.concurrent.LastExecution;
-import javax.enterprise.concurrent.Trigger;
+import jakarta.enterprise.concurrent.LastExecution;
+import jakarta.enterprise.concurrent.Trigger;
 import epf.schedule.schema.RecurringTimeInterval;
 import epf.schedule.schema.TimeInterval;
 
-/**
- * @author PC
- *
- */
 public class RecurringTimeIntervalTrigger implements Trigger {
 	
-	/**
-	 * 
-	 */
 	private final RecurringTimeInterval recurringTimeInterval;
 	
-	/**
-	 * 
-	 */
 	private final AtomicInteger numberOfRepetitions = new AtomicInteger();
 	
 	public RecurringTimeIntervalTrigger(final RecurringTimeInterval recurringTimeInterval) {
@@ -32,8 +22,7 @@ public class RecurringTimeIntervalTrigger implements Trigger {
 	public Date getNextRunTime(final LastExecution lastExecutionInfo, final Date taskScheduledTime) {
 		Date nextRunTime = Date.from(Instant.now());
 		if(recurringTimeInterval.getTimeInterval() != null && recurringTimeInterval.getTimeInterval().getDuration() != null) {
-			final Instant now = Instant.now();
-			recurringTimeInterval.getTimeInterval().getDuration().addTo(now);
+			final Instant now = (Instant) recurringTimeInterval.getTimeInterval().getDuration().addTo(Instant.now());
 			nextRunTime = Date.from(now);
 		}
 		numberOfRepetitions.incrementAndGet();

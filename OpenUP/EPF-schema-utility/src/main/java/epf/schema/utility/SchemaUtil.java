@@ -11,46 +11,20 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-/**
- * @author PC
- *
- */
 public class SchemaUtil {
 
-	/**
-	 * 
-	 */
 	private transient final Map<String, Optional<Field>> entityIdFields = new ConcurrentHashMap<>();
 	
-	/**
-	 * 
-	 */
 	private transient final Map<String, Optional<String>> entityNames = new ConcurrentHashMap<>();
 	
-	/**
-	 * 
-	 */
 	private transient final Map<String, Optional<String>> entitySchemas = new ConcurrentHashMap<>();
 	
-	/**
-	 * 
-	 */
 	private transient final Map<String, Class<?>> entityClasses = new ConcurrentHashMap<>();
 	
-	/**
-	 *
-	 */
 	private transient final Map<String, String> entityTables = new ConcurrentHashMap<>();
 	
-	/**
-	 *
-	 */
 	private transient final Map<String, Map<String, String>> entityColumnFields = new ConcurrentHashMap<>();
 	
-	/**
-	 * @param cls
-	 * @return
-	 */
 	private Optional<Field> computeEntityIdField(final Class<?> cls) {
 		final Optional<Field> idField = Stream.of(cls.getDeclaredFields())
 				.filter(field -> field.isAnnotationPresent(Id.class))
@@ -59,10 +33,6 @@ public class SchemaUtil {
 		return idField;
 	}
 	
-	/**
-	 * @param cls
-	 * @return
-	 */
 	private Optional<String> computeEntityName(final Class<?> cls) {
 		Optional<String> name = Optional.empty();
 		if(cls.isAnnotationPresent(Entity.class)) {
@@ -71,10 +41,6 @@ public class SchemaUtil {
 		return name;
 	}
 	
-	/**
-	 * @param cls
-	 * @return
-	 */
 	private Optional<String> computeEntitySchema(final Class<?> cls){
 		Optional<String> name = Optional.empty();
 		if(cls.isAnnotationPresent(Entity.class)) {
@@ -83,10 +49,6 @@ public class SchemaUtil {
 		return name;
 	}
 	
-	/**
-	 * @param cls
-	 * @return
-	 */
 	private Optional<Table> computeEntityTable(final Class<?> cls) {
 		Optional<Table> table = Optional.empty();
 		if(cls.isAnnotationPresent(Table.class)) {
@@ -95,9 +57,6 @@ public class SchemaUtil {
 		return table;
 	}
 	
-	/**
-	 * @param classes
-	 */
 	public SchemaUtil(final List<Class<?>> classes) {
 		classes.forEach(entityClass -> entitySchemas.put(entityClass.getName(), computeEntitySchema(entityClass)));
 		classes.forEach(entityClass -> {
@@ -123,9 +82,6 @@ public class SchemaUtil {
 		classes.forEach(entityClass -> entityIdFields.put(entityClass.getName(), computeEntityIdField(entityClass)));
 	}
 	
-	/**
-	 * 
-	 */
 	public void clear() {
 		entityIdFields.clear();
 		entityClasses.clear();
@@ -135,18 +91,10 @@ public class SchemaUtil {
 		entityColumnFields.clear();
 	}
 	
-	/**
-	 * @param cls
-	 * @return
-	 */
 	public Optional<Field> getEntityIdField(final Class<?> cls) {
 		return entityIdFields.computeIfAbsent(cls.getName(), name -> computeEntityIdField(cls));
 	}
 	
-	/**
-	 * @param cls
-	 * @return
-	 */
 	public Optional<String> getEntityName(final Class<?> cls) {
 		return entityNames.computeIfAbsent(cls.getName(), name -> {
 			final Optional<String> entityName = computeEntityName(cls);
@@ -157,34 +105,18 @@ public class SchemaUtil {
 		});
 	}
 	
-	/**
-	 * @param cls
-	 * @return
-	 */
 	public Optional<String> getEntitySchema(final Class<?> cls){
 		return entitySchemas.computeIfAbsent(cls.getName(), key -> computeEntitySchema(cls));
 	}
 	
-	/**
-	 * @param entityTable
-	 * @return
-	 */
 	public Optional<String> getEntityName(final String entityTable){
 		return Optional.ofNullable(entityTables.get(entityTable));
 	}
 	
-	/**
-	 * @param entityName
-	 * @return
-	 */
 	public Map<String, String> getEntityColumnFields(final String entityName){
 		return entityColumnFields.get(entityName);
 	}
 	
-	/**
-	 * @param entityName
-	 * @return
-	 */
 	public Class<?> getEntityClass(final String entityName){
 		return entityClasses.get(entityName);
 	}

@@ -3,24 +3,12 @@ package epf.cache.util;
 import java.util.List;
 import java.util.Map;
 
-/**
- * 
- */
 public class CacheLoad<K, V> {
 	
-	/**
-	 * 
-	 */
 	private String tenant;
 
-	/**
-	 *
-	 */
 	private List<K> keys;
 	
-	/**
-	 *
-	 */
 	private Map<K, V> entries;
 	
 	public List<K> getKeys() {

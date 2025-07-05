@@ -3,15 +3,9 @@ package epf.messaging.schema;
 import jakarta.nosql.Column;
 import jakarta.nosql.Entity;
 
-/**
- * 
- */
 @Entity
 public class ByteMessage extends Message {
 
-	/**
-	 * 
-	 */
 	@Column
 	private byte[] bytes;
 

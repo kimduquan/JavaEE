@@ -1,12 +1,8 @@
 package epf.nosql.schema.util;
 
 import java.util.UUID;
-import org.eclipse.jnosql.mapping.AttributeConverter;
+import jakarta.nosql.AttributeConverter;
 
-/**
- * @author PC
- *
- */
 public class UUIDAttributeConverter implements AttributeConverter<String, UUID> {
 
 	@Override

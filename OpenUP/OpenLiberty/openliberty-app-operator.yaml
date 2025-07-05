@@ -322,10 +322,10 @@ spec:
         - name: WATCH_NAMESPACE
           value: default
         - name: RELATED_IMAGE_LIBERTY_SAMPLE_APP
-          value: icr.io/appcafe/open-liberty/samples/getting-started@sha256:fd04ce5a5870387a379b54da5c47d0338c5f4a1254611d2418f1f959d018ba7e
+          value: icr.io/appcafe/open-liberty/samples/getting-started@sha256:1ac4699f934128ed62da43b3720120d469e930458355152e547a574bb7b70c07
         - name: RELATED_IMAGE_OPEN_LIBERTY_OPERATOR
-          value: icr.io/appcafe/open-liberty-operator@sha256:8fbffa5e81c4d773c7d6832b8eb0457d852a6f9f125b1a2fefff5fa8030fe11a
-        image: icr.io/appcafe/open-liberty-operator@sha256:8fbffa5e81c4d773c7d6832b8eb0457d852a6f9f125b1a2fefff5fa8030fe11a
+          value: icr.io/appcafe/open-liberty-operator@sha256:8454c16ff1359878b9e3a39bcaa63658b18ddfb8505d46be4e5ee5c1fda3c54a
+        image: icr.io/appcafe/open-liberty-operator@sha256:8454c16ff1359878b9e3a39bcaa63658b18ddfb8505d46be4e5ee5c1fda3c54a
         livenessProbe:
           failureThreshold: 3
           httpGet:
@@ -362,10 +362,14 @@ spec:
           privileged: false
           readOnlyRootFilesystem: true
           runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
       hostIPC: false
       hostNetwork: false
       hostPID: false
       securityContext:
         runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
       serviceAccountName: olo-controller-manager
       terminationGracePeriodSeconds: 10

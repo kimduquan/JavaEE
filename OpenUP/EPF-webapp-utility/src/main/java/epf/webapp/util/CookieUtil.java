@@ -3,30 +3,18 @@ package epf.webapp.util;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
-import javax.faces.context.ExternalContext;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.faces.context.ExternalContext;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 
-/**
- * 
- */
 public interface CookieUtil {
 
-	/**
-	 * @param request
-	 * @param name
-	 * @return
-	 */
 	static Stream<Cookie> getCookie(final HttpServletRequest request, final String name){
 		final Cookie[] cookies = request.getCookies() != null ? request.getCookies() : new Cookie[0];
 		return Stream.of(cookies)
 				.filter(cookie -> name.equals(cookie.getName()));
 	}
 	
-	/**
-	 * @param context
-	 * @param cookie
-	 */
 	static void deleteCookie(final ExternalContext context, final Cookie cookie) {
 		cookie.setMaxAge(0);
 		final Map<String, Object> map = new HashMap<String, Object>();

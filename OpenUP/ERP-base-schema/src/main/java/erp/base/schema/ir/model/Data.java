@@ -4,69 +4,58 @@ import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 
-/**
- * 
- */
 @Entity
 @Table(name = "ir_model_data")
 @Description("Model Data")
 public class Data {
+	
+	@Id
+	private int id;
 
-	/**
-	 * 
-	 */
 	@Column(nullable = false)
 	@NotNull
 	@Description("External Identifier")
 	private String name;
 	
-	/**
-	 * 
-	 */
-	@Column
+	@Transient
 	@Description("Complete ID")
 	private String complete_name;
 	
-	/**
-	 * 
-	 */
 	@Column(nullable = false)
 	@NotNull
 	@Description("Model Name")
 	private String model;
 	
-	/**
-	 * 
-	 */
 	@Column(nullable = false)
 	@NotNull
 	@DefaultValue("")
 	private String module = "";
 	
-	/**
-	 * 
-	 */
 	@Column
 	@Description("Record ID")
-	private String res_id;
+	private Integer res_id;
 	
-	/**
-	 * 
-	 */
 	@Column
 	@DefaultValue("false")
 	@Description("Non Updatable")
 	private Boolean noupdate = false;
 	
-	/**
-	 * 
-	 */
-	@Column(updatable = false)
+	@Transient
 	@Description("Reference")
 	private String reference;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public String getName() {
 		return name;
@@ -100,11 +89,11 @@ public class Data {
 		this.module = module;
 	}
 
-	public String getRes_id() {
+	public Integer getRes_id() {
 		return res_id;
 	}
 
-	public void setRes_id(String res_id) {
+	public void setRes_id(Integer res_id) {
 		this.res_id = res_id;
 	}
 

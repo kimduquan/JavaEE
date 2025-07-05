@@ -1,0 +1,29 @@
+<web-app version="6.0"
+         xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+	<security-constraint>
+		<web-resource-collection>
+		    <web-resource-name>EPF-webapp-v2</web-resource-name>
+		    <url-pattern>/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+		    <role-name>Any_Role</role-name>
+		</auth-constraint>
+	</security-constraint>
+	<servlet>
+	    <servlet-name>Faces Servlet</servlet-name>
+	    <servlet-class>jakarta.faces.webapp.FacesServlet</servlet-class>
+	    <load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+	    <servlet-name>Faces Servlet</servlet-name>
+	    <url-pattern>*.html</url-pattern>
+	</servlet-mapping>
+	<security-role>
+		<role-name>Any_Role</role-name>
+	</security-role>
+	<welcome-file-list>
+		<welcome-file>iframe.html</welcome-file>
+	</welcome-file-list>
+</web-app>

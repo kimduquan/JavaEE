@@ -6,10 +6,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.security.enterprise.identitystore.CredentialValidationResult;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.security.enterprise.identitystore.CredentialValidationResult;
 import org.eclipse.microprofile.jwt.Claims;
 import org.jose4j.jwt.JwtClaims;
 import epf.naming.Naming;
@@ -17,32 +17,16 @@ import epf.security.auth.util.JwtUtil;
 import epf.util.logging.LogManager;
 import epf.util.security.KeyUtil;
 
-/**
- *
- * @author FOXCONN
- */
 @ApplicationScoped
 public class TokenIdentityStore {
 	
-	/**
-	 *
-	 */
 	private transient static final Logger LOGGER = LogManager.getLogger(TokenIdentityStore.class.getName());
     
-	/**
-	 * 
-	 */
 	private transient final JwtUtil jwtUtil = new JwtUtil();
 	
-	/**
-	 * 
-	 */
 	@Inject
 	private transient ConfigUtil config;
 	
-	/**
-	 * 
-	 */
 	@PostConstruct
 	protected void postConstruct() {
 		try {
@@ -56,11 +40,6 @@ public class TokenIdentityStore {
 		}
 	}
     
-    /**
-     * @param credential
-     * @return
-     * @throws Exception
-     */
     public CredentialValidationResult validate(final TokenCredential credential) throws Exception {
     	final JwtClaims claims = jwtUtil.process(credential.getToken());
     	final Set<String> groups = new HashSet<>(claims.getStringListClaimValue(Claims.groups.name()));
@@ -68,10 +47,6 @@ public class TokenIdentityStore {
     	return new CredentialValidationResult(principal, groups);
     }
     
-	/**
-	* @param validationResult
-	* @return
-	*/
 	public Set<String> getCallerGroups(final CredentialValidationResult validationResult){
         return validationResult.getCallerGroups();
     }

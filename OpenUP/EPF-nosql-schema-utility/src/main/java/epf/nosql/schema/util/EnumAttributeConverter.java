@@ -1,28 +1,14 @@
 package epf.nosql.schema.util;
 
-import org.eclipse.jnosql.mapping.AttributeConverter;
 import epf.util.EnumUtil;
+import jakarta.nosql.AttributeConverter;
 
-/**
- * @author PC
- *
- */
 public class EnumAttributeConverter<T extends Enum<T>> implements AttributeConverter<Enum<T>, String> {
 	
-	/**
-	 * 
-	 */
 	private final Class<T> cls;
 	
-	/**
-	 * 
-	 */
 	private final boolean caseSensitive;
 	
-	/**
-	 * @param cls
-	 * @param caseSensitive
-	 */
 	public EnumAttributeConverter(final Class<T> cls, final boolean caseSensitive) {
 		this.cls = cls;
 		this.caseSensitive = caseSensitive;

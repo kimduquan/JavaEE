@@ -3,94 +3,78 @@ package erp.base.schema.ir;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
-import erp.base.schema.ir.model.Model;
-import erp.base.schema.res.groups.Groups;
-import jakarta.persistence.CollectionTable;
+import erp.base.schema.res.Groups;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 
-/**
- * 
- */
 @Entity
 @Table(name = "ir_rule")
 @Description("Record Rule")
 public class Rule {
+	
+	@Id
+	private int id;
 
-	/**
-	 * 
-	 */
 	@Column
 	private String name;
 	
-	/**
-	 * 
-	 */
 	@Column
 	@DefaultValue("true")
 	private Boolean active = true;
 	
-	/**
-	 * 
-	 */
-	@Column(nullable = false)
-	@ManyToOne(targetEntity = Model.class)
+	@Transient
+	private Integer model_id;
+	
+	@ManyToOne(targetEntity = Model.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "model_id", nullable = false)
 	@NotNull
 	@Description("Model")
-	private String model_id;
+	private Model model;
 	
-	/**
-	 * 
-	 */
-	@Column
 	@ManyToMany(targetEntity = Groups.class)
-	@ElementCollection(targetClass = Groups.class)
-	@CollectionTable(name = "res_groups")
-	private List<String> groups;
+	@JoinTable(name = "rule_group_rel", joinColumns = {@JoinColumn(name = "rule_group_id")}, inverseJoinColumns = {@JoinColumn(name = "group_id")})
+	private List<Groups> groups;
 	
-	/**
-	 * 
-	 */
 	@Column
 	@Description("Domain")
 	private String domain_force;
 	
-	/**
-	 * 
-	 */
 	@Column
 	@DefaultValue("true")
 	@Description("Read")
 	private Boolean perm_read = true;
 	
-	/**
-	 * 
-	 */
 	@Column
 	@DefaultValue("true")
 	@Description("Write")
 	private Boolean perm_write = true;
 	
-	/**
-	 * 
-	 */
 	@Column
 	@DefaultValue("true")
 	@Description("Create")
 	private Boolean perm_create = true;
 	
-	/**
-	 * 
-	 */
 	@Column
 	@DefaultValue("true")
 	@Description("Delete")
 	private Boolean perm_unlink = true;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public String getName() {
 		return name;
@@ -108,19 +92,27 @@ public class Rule {
 		this.active = active;
 	}
 
-	public String getModel_id() {
+	public Integer getModel_id() {
 		return model_id;
 	}
 
-	public void setModel_id(String model_id) {
+	public void setModel_id(Integer model_id) {
 		this.model_id = model_id;
 	}
 
-	public List<String> getGroups() {
+	public Model getModel() {
+		return model;
+	}
+
+	public void setModel(Model model) {
+		this.model = model;
+	}
+
+	public List<Groups> getGroups() {
 		return groups;
 	}
 
-	public void setGroups(List<String> groups) {
+	public void setGroups(List<Groups> groups) {
 		this.groups = groups;
 	}
 

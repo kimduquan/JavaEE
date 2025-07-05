@@ -3,34 +3,16 @@ package epf.mail.client;
 import java.util.List;
 import java.util.Map;
 
-/**
- * 
- */
 public class MessagePart {
 	
-	/**
-	 *
-	 */
 	private Map<String, String> headers;
 	
-	/**
-	 *
-	 */
 	private List<String> headerLines;
 
-	/**
-	 *
-	 */
 	private String description;
 	
-	/**
-	 *
-	 */
 	private String text;
 	
-	/**
-	 *
-	 */
 	private MessageMultipart content;
 
 	public Map<String, String> getHeaders() {

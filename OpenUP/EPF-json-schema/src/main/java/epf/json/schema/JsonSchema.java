@@ -1,47 +1,17 @@
 package epf.json.schema;
 
-/**
- * @author PC
- *
- */
 public class JsonSchema extends JsonObject {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	/**
-	 * 
-	 */
+	
 	private String schema;
-	/**
-	 * 
-	 */
 	private String id;
-	/**
-	 * 
-	 */
 	private String title;
-	/**
-	 * 
-	 */
 	private String description;
-	/**
-	 * 
-	 */
 	private Object[] examples;
-	/**
-	 * 
-	 */
-	private boolean readOnly;
-	/**
-	 * 
-	 */
-	private boolean writeOnly;
-	/**
-	 * 
-	 */
-	private boolean deprecated;
+	private Boolean readOnly;
+	private Boolean writeOnly;
+	private Boolean deprecated;
 	
 	public String getTitle() {
 		return title;
@@ -61,22 +31,22 @@ public class JsonSchema extends JsonObject {
 	public void setExamples(final Object[] examples) {
 		this.examples = examples;
 	}
-	public boolean isReadOnly() {
+	public Boolean isReadOnly() {
 		return readOnly;
 	}
-	public void setReadOnly(final boolean readOnly) {
+	public void setReadOnly(final Boolean readOnly) {
 		this.readOnly = readOnly;
 	}
-	public boolean isWriteOnly() {
+	public Boolean isWriteOnly() {
 		return writeOnly;
 	}
-	public void setWriteOnly(final boolean writeOnly) {
+	public void setWriteOnly(final Boolean writeOnly) {
 		this.writeOnly = writeOnly;
 	}
-	public boolean isDeprecated() {
+	public Boolean isDeprecated() {
 		return deprecated;
 	}
-	public void setDeprecated(final boolean deprecated) {
+	public void setDeprecated(final Boolean deprecated) {
 		this.deprecated = deprecated;
 	}
 	public String getSchema() {

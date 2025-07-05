@@ -34,28 +34,16 @@ import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
-/**
- * 
- */
 @ApplicationScoped
 public class WorkflowStates {
 	
-	/**
-	 * 
-	 */
 	@Inject
 	@Readiness
 	transient WorkflowInstance workflowInstance;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient WorkflowEvents workflowEvents;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient ActionDataFilters actionDataFilters;
 	
@@ -153,7 +141,7 @@ public class WorkflowStates {
 			batch.add(value);
 			index++;
 		}
-		final Link batchLink = Internal.batchLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), state);
+		final Link batchLink = Internal.batchLink(workflowDefinition.getName(), Optional.ofNullable(workflowDefinition.getVersion()), state);
 		final LinkBuilder builder = new LinkBuilder();
 		final JsonArray batchesArray = batches.build();
 		final Iterator<JsonValue> batchIt = batchesArray.iterator();
@@ -171,14 +159,14 @@ public class WorkflowStates {
 	public ResponseBuilder transition(final ResponseBuilder response, final WorkflowDefinition workflowDefinition, final Either<String, TransitionDefinition> transition, final URI instance, final WorkflowData workflowData) throws Exception {
 		if(transition.isLeft()) {
 			final String nextState = transition.getLeft();
-			return transitionLink(response, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), nextState, false);
+			return transitionLink(response, workflowDefinition.getName(), Optional.ofNullable(workflowDefinition.getVersion()), nextState, false);
 		}
 		else if(transition.isRight()) {
 			final TransitionDefinition transitionDef = transition.getRight();
 			if(transitionDef.getProduceEvents() != null) {
 				workflowEvents.produceEvents(response, workflowDefinition, transitionDef.getProduceEvents(), instance, workflowData);
 			}
-			return transitionLink(response, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), transitionDef.getNextState(), transitionDef.isCompensate());
+			return transitionLink(response, workflowDefinition.getName(), Optional.ofNullable(workflowDefinition.getVersion()), transitionDef.getNextState(), transitionDef.isCompensate());
 		}
 		throw new BadRequestException();
 	}

@@ -1,27 +1,13 @@
 package epf.security.auth.core;
 
-/**
- * @author PC
- *
- */
 public class TokenErrorResponse extends Exception {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 */
 	private String error;
-	/**
-	 * 
-	 */
+	
 	private String error_description;
-	/**
-	 * 
-	 */
+	
 	private String error_uri;
 	
 	public String getError() {

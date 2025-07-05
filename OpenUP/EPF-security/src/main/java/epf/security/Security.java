@@ -17,19 +17,19 @@ import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import javax.crypto.SecretKey;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.security.enterprise.credential.Password;
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.NotAuthorizedException;
-import javax.ws.rs.Path;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.security.enterprise.credential.Password;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.NotAuthorizedException;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
@@ -59,150 +59,80 @@ import epf.util.security.KeyStoreUtil;
 import epf.util.security.KeyUtil;
 import epf.util.security.SecurityUtil;
 
-/**
- *
- * @author FOXCONN
- */
 @Path(Naming.SECURITY)
 @ApplicationScoped
 @Readiness
 public class Security implements epf.security.client.Security, epf.security.client.otp.OTPSecurity, Serializable, HealthCheck {
     
-    /**
-    * 
-    */
     private static final long serialVersionUID = 1L;
     
-    /**
-     * 
-     */
     private static transient final Logger LOGGER = LogManager.getLogger(Security.class.getName());
     
-    /**
-     * 
-     */
     private transient PrivateKey privateKey;
     
-    /**
-     * 
-     */
     private transient SecretKey secretKey;
     
-	/**
-	 *
-	 */
 	private transient KeyStore trustStore;
 	
-	/**
-	 *
-	 */
 	private transient ClientBuilder builder;
     
-    /**
-     *
-     */
     private transient final Map<String, Provider> authProviders = new ConcurrentHashMap<>();
     
-    /**
-     * 
-     */
     @Inject
     transient OTPSessionStore otpSessionStore;
     
-    /**
-     * 
-     */
     @Inject
     @ConfigProperty(name = Naming.Security.JWT.DECRYPTOR_KEY_LOCATION)
     transient String privateKeyLocation;
     
-    /**
-     * 
-     */
     @Inject
     @ConfigProperty(name = Names.ISSUER)
     transient String issuer;
     
-    /**
-     * 
-     */
     @Inject
     @ConfigProperty(name = Naming.Security.JWT.EXPIRE_DURATION)
     transient String expireDuration;
     
-    /**
-     * 
-     */
     @ConfigProperty(name = Naming.Security.Auth.CLIENT_SECRET_KEY)
 	@Inject
 	transient String clientSecretKey;
     
-    /**
-     * 
-     */
     @ConfigProperty(name = Naming.Security.Auth.GOOGLE_PROVIDER)
 	@Inject
 	transient String googleDiscoveryUrl;
     
-    /**
-     * 
-     */
     @ConfigProperty(name = Naming.Security.Auth.GOOGLE_CLIENT_ID)
 	@Inject
 	transient String googleClientId;
     
-    /**
-     * 
-     */
     @ConfigProperty(name = Naming.Security.Auth.GOOGLE_CLIENT_SECRET)
 	@Inject
 	transient String googleClientSecret;
     
-    /**
-     * 
-     */
     @ConfigProperty(name = Naming.Security.Auth.FACEBOOK_PROVIDER)
 	@Inject
 	transient String facebookDiscoveryUrl;
     
-    /**
-     * 
-     */
     @ConfigProperty(name = Naming.Security.Auth.FACEBOOK_CLIENT_ID)
 	@Inject
 	transient String facebookClientId;
     
-    /**
-     * 
-     */
     @ConfigProperty(name = Naming.Security.Auth.FACEBOOK_CLIENT_SECRET)
 	@Inject
 	transient String facebookClientSecret;
     
-    /**
-     * 
-     */
     @Inject
     @Readiness
     transient JPAIdentityStore identityStore;
     
-    /**
-     * 
-     */
     @Inject
     @Readiness
     transient JPAPrincipalStore principalStore;
     
-    /**
-     * 
-     */
     @Inject
     @Readiness
     transient TokenCache tokenCache;
     
-    /**
-     * 
-     */
     @PostConstruct
     void postConstruct() {
         try {
@@ -223,11 +153,6 @@ public class Security implements epf.security.client.Security, epf.security.clie
         }
     }
     
-    /**
-     * @param username
-     * @param url
-     * @return
-     */
     Token newToken(final String name, final Set<String> groups, final Set<String> audience, final Map<String, Object> claims, final String duration) {
     	final long now = Instant.now().getEpochSecond();
     	final Token token = new Token();
@@ -242,10 +167,6 @@ public class Security implements epf.security.client.Security, epf.security.clie
     	return token;
     }
     
-    /**
-     * @param jsonWebToken
-     * @return
-     */
     Token newToken(final JsonWebToken jsonWebToken, final Set<String> groups, final Set<String> audience, final Map<String, Object> claims, final String duration) {
     	final long now = Instant.now().getEpochSecond();
 		final Token token = TokenUtil.from(jsonWebToken);

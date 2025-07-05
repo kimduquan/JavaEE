@@ -4,12 +4,8 @@ import epf.json.schema.JsonSchema;
 import epf.nosql.schema.StringOrObject;
 import jakarta.nosql.Column;
 import java.io.Serializable;
-import org.eclipse.jnosql.mapping.Embeddable;
+import jakarta.nosql.Embeddable;
 
-/**
- * @author PC
- *
- */
 @Embeddable
 public class DataSchema implements Serializable {
 

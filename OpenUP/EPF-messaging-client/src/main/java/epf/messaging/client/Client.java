@@ -1,36 +1,20 @@
 package epf.messaging.client;
 
 import java.util.function.Consumer;
-import javax.websocket.ClientEndpoint;
-import javax.websocket.OnError;
-import javax.websocket.OnMessage;
-import javax.websocket.Session;
+import jakarta.websocket.ClientEndpoint;
+import jakarta.websocket.OnError;
+import jakarta.websocket.OnMessage;
+import jakarta.websocket.Session;
 
-/**
- * @author PC
- *
- */
 @ClientEndpoint(decoders = {MessageDecoder.class}, encoders = {MessageEncoder.class})
 public class Client implements AutoCloseable {
 
-	/**
-	 * 
-	 */
 	private transient Session session;
 
-	/**
-	 * 
-	 */
 	private transient Consumer<? super Object> messageConsumer;
 	
-	/**
-	 * 
-	 */
 	private transient Consumer<? super Throwable> errorConsumer;
 	
-	/**
-	 * 
-	 */
 	protected Client() {
 		super();
 	}
@@ -48,10 +32,6 @@ public class Client implements AutoCloseable {
 		session.close();
 	}
 	
-	/**
-	 * @param message
-	 * @param session
-	 */
 	@OnMessage
     public void onMessage(final Object message, final Session session) {
 		if(messageConsumer != null) {
@@ -59,10 +39,6 @@ public class Client implements AutoCloseable {
 		}
 	}
 	
-	/**
-	 * @param session
-	 * @param throwable
-	 */
 	@OnError
 	public void onError(final Session session, final Throwable throwable) {
 		if(errorConsumer != null) {
@@ -70,16 +46,10 @@ public class Client implements AutoCloseable {
 		}
 	}
 	
-	/**
-	 * @param errorConsumer
-	 */
 	public void onError(final Consumer<? super Throwable> errorConsumer) {
 		this.errorConsumer = errorConsumer;
 	}
 	
-	/**
-	 * @param messageConsumer
-	 */
 	public void onMessage(final Consumer<? super Object> messageConsumer) {
 		this.messageConsumer = messageConsumer;
 	}

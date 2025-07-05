@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.client.util;
 
 import java.io.IOException;
@@ -12,47 +9,27 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-/**
- * @author PC
- *
- */
 public class EntityOutputTest {
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@Before
 	public void setUp() throws Exception {
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@After
 	public void tearDown() throws Exception {
 	}
 
-	/**
-	 * Test method for {@link epf.client.util.EntityOutput#EntityOutput(java.io.InputStream)}.
-	 */
 	@Test
 	public void testEntityOutput() {
 		InputStream mockInputStream = Mockito.mock(InputStream.class);
 		new EntityOutput(mockInputStream);
 	}
 	
-	/**
-	 * Test method for {@link epf.client.util.EntityOutput#EntityOutput(java.io.InputStream)}.
-	 */
 	@Test(expected = NullPointerException.class)
 	public void testEntityOutput_NullInput() {
 		new EntityOutput(null);
 	}
 
-	/**
-	 * Test method for {@link epf.client.util.EntityOutput#write(java.io.OutputStream)}.
-	 * @throws Exception 
-	 */
 	@Test
 	public void testWrite() throws Exception {
 		Path input = Files.createTempFile("EntityOutput", ".input");
@@ -63,10 +40,6 @@ public class EntityOutputTest {
 		out.toFile().delete();
 	}
 
-	/**
-	 * Test method for {@link epf.client.util.EntityOutput#write(java.io.OutputStream)}.
-	 * @throws Exception 
-	 */
 	@Test(expected = IOException.class)
 	public void testWrite_ReadonlyOutput() throws Exception {
 		Path input = Files.createTempFile("EntityOutput", ".input");

@@ -3,7 +3,6 @@ package epf.workflow.compensation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import epf.workflow.client.Internal;
 import epf.workflow.model.Instance;
 import epf.workflow.model.WorkflowState;
@@ -20,9 +19,6 @@ import epf.workflow.util.ResponseBuilder;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.core.Link;
 
-/**
- * 
- */
 @ApplicationScoped
 public class WorkflowCompensation {
 	
@@ -37,11 +33,9 @@ public class WorkflowCompensation {
 				final OperationState operationState = (OperationState) state;
 				compensatedBy = operationState.getCompensatedBy();
 				break;
-			case Switch:
+			case switch_:
 				final SwitchState switchState = (SwitchState) state;
 				compensatedBy = switchState.getCompensatedBy();
-				break;
-			case sleep:
 				break;
 			case parallel:
 				final ParallelState parallelState = (ParallelState) state;

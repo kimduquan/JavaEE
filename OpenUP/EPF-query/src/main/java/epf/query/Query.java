@@ -9,7 +9,6 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HEAD;
-import jakarta.ws.rs.MatrixParam;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.Path;
@@ -23,6 +22,8 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
 import jakarta.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.health.Readiness;
+import org.eclipse.microprofile.jwt.JsonWebToken;
+import epf.management.util.TenantUtil;
 import epf.naming.Naming;
 import epf.naming.Naming.Query.Client;
 import epf.query.client.EntityId;
@@ -30,61 +31,32 @@ import epf.query.internal.EntityCache;
 import epf.query.internal.QueryCache;
 import epf.query.persistence.QueryPersistence;
 import epf.query.util.LinkUtil;
-import epf.schema.utility.Request;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
-/**
- * @author PC
- *
- */
 @ApplicationScoped
 @Path(Naming.QUERY)
 public class Query {
 
-	/**
-	 * 
-	 */
 	@Inject @Readiness
 	transient EntityCache entityCache;
 	
-	/**
-	 * 
-	 */
 	@Inject @Readiness
 	transient QueryCache queryCache;
 	
-	/**
-	 * 
-	 */
 	@Inject @Readiness
 	transient QueryPersistence persistence;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient Search search;
 	
-	/**
-	 * 
-	 */
 	@Inject
-	Request request;
+	transient JsonWebToken jwt;
 	
-	/**
-	 * @param tenant
-	 * @param schema
-	 * @param entity
-	 * @param entityId
-	 * @return
-	 */
 	@GET
     @Path(Naming.Query.Client.ENTITY_PATH)
 	@Produces(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
     public Response getEntity(
-    		@MatrixParam(Naming.Management.TENANT)
-    		final String tenant,
     		@PathParam(Naming.Query.Client.SCHEMA)
             @NotNull
             @NotBlank
@@ -98,24 +70,15 @@ public class Query {
             @NotBlank
             final String entityId
             ) {
-		request.setSchema(schema);
-		request.setTenant(tenant);
-		final Optional<Object> entity = entityCache.getEntity(name, entityId);
+		final String tenant = TenantUtil.getTenantId(jwt);
+		final Optional<Object> entity = entityCache.getEntity(tenant, schema, name, entityId);
 		return Response.ok(entity.orElseThrow(NotFoundException::new)).build();
 	}
 
-	/**
-	 * @param tenant
-	 * @param schema
-	 * @param entity
-	 * @return
-	 */
 	@HEAD
 	@Path("entity/{schema}/{entity}")
 	@RunOnVirtualThread
     public Response countEntity(
-    		@MatrixParam(Naming.Management.TENANT)
-    		final String tenant,
     		@PathParam(Naming.Query.Client.SCHEMA)
             @NotNull
             @NotBlank
@@ -125,33 +88,19 @@ public class Query {
             @NotBlank
             final String entity
             ) {
-		request.setSchema(schema);
-		request.setTenant(tenant);
-		final Optional<Integer> count = queryCache.countEntity(entity);
+		final String tenant = TenantUtil.getTenantId(jwt);
+		final Optional<Integer> count = queryCache.countEntity(tenant, schema, entity);
 		if(count.isPresent()) {
 			return Response.ok().header(Client.ENTITY_COUNT, count.get()).build();
 		}
 		throw new NotFoundException();
 	}
 
-	/**
-	 * @param tenant
-	 * @param schema
-	 * @param paths
-	 * @param firstResult
-	 * @param maxResults
-	 * @param context
-	 * @param sort
-	 * @return
-	 * @throws Exception
-	 */
 	@GET
     @Path("query/{schema}/{criteria: .+}")
     @Produces(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
 	public Response executeQuery(
-    		@MatrixParam(Naming.Management.TENANT)
-    		final String tenant,
     		@PathParam(Naming.Query.Client.SCHEMA)
             @NotBlank
             final String schema,
@@ -166,29 +115,18 @@ public class Query {
             @QueryParam(Naming.Query.Client.SORT)
     		final List<String> sort
             ) throws Exception {
-		request.setSchema(schema);
-		request.setTenant(tenant);
 		if(!paths.isEmpty()) {
-			final List<?> resultList = persistence.executeQuery(paths, firstResult, maxResults, context, sort);
+			final String tenant = TenantUtil.getTenantId(jwt);
+			final List<?> resultList = persistence.executeQuery(tenant, paths, firstResult, maxResults, context, sort);
 			return Response.ok(resultList).header(Client.ENTITY_COUNT, resultList.size()).build();
 		}
 		throw new NotFoundException();
 	}
 
-	/**
-	 * @param tenant
-	 * @param schema
-	 * @param paths
-	 * @param context
-	 * @return
-	 * @throws Exception
-	 */
 	@HEAD
     @Path("query/{schema}/{criteria: .+}")
 	@RunOnVirtualThread
 	public Response executeCountQuery(
-    		@MatrixParam(Naming.Management.TENANT)
-    		final String tenant,
     		@PathParam(Naming.Query.Client.SCHEMA)
             @NotBlank
             final String schema,
@@ -197,39 +135,28 @@ public class Query {
             @Context
             final SecurityContext context
             ) throws Exception {
-		request.setSchema(schema);
-		request.setTenant(tenant);
 		if(!paths.isEmpty()) {
-			final Object count = persistence.executeCountQuery(paths, context);
+			final String tenant = TenantUtil.getTenantId(jwt);
+			final Object count = persistence.executeCountQuery(tenant, paths, context);
 	    	return Response.ok().header(Client.ENTITY_COUNT, count).build();
 		}
 		throw new NotFoundException();
 	}
 
-	/**
-	 * @param tenant
-	 * @param entityIds
-	 * @return
-	 */
 	@PATCH
     @Path(Naming.Query.Client.ENTITY)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
     public Response fetchEntities(
-    		@MatrixParam(Naming.Management.TENANT)
-    		final String tenant,
     		final List<EntityId> entityIds) {
-		request.setTenant(tenant);
-		final List<Object> entities = entityCache.getEntities(entityIds);
+		final String tenant = TenantUtil.getTenantId(jwt);
+		final List<Object> entities = entityCache.getEntities(tenant, entityIds);
 		ResponseBuilder response = Response.ok(entities).header(Client.ENTITY_COUNT, entities.size());
 		response = LinkUtil.links(response, "", entityIds);
 		return response.build();
 	}
 	
-	/**
-	 * @return
-	 */
 	@Path(Naming.Query.SEARCH)
 	public Search getSearch() {
 		return search;

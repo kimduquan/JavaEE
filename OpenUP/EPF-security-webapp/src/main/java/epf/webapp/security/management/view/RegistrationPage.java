@@ -2,12 +2,12 @@ package epf.webapp.security.management.view;
 
 import java.io.Serializable;
 import java.security.PrivateKey;
-import javax.faces.context.ExternalContext;
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import epf.client.util.Client;
 import epf.security.client.Management;
 import epf.security.client.Security;

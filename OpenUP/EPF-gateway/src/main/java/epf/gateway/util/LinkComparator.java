@@ -3,10 +3,6 @@ package epf.gateway.util;
 import java.util.Comparator;
 import jakarta.ws.rs.core.Link;
 
-/**
- * @author PC
- *
- */
 public class LinkComparator implements Comparator<Link> {
 
 	@Override

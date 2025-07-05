@@ -1,11 +1,7 @@
 package epf.workflow.error;
 
-import epf.workflow.schema.WorkflowError;
+import epf.workflow.schema.error.ErrorReference;
 
-/**
- * @author PC
- *
- */
 public class WorkflowException extends Exception {
 
 	/**
@@ -13,20 +9,14 @@ public class WorkflowException extends Exception {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 */
-	private final WorkflowError workflowError;
+	private final ErrorReference workflowError;
 	
-	/**
-	 * @param workflowError
-	 */
-	public WorkflowException(final WorkflowError workflowError) {
-		super(workflowError.getDescription());
+	public WorkflowException(final ErrorReference workflowError) {
+		super();
 		this.workflowError = workflowError;
 	}
 
-	public WorkflowError getWorkflowError() {
+	public ErrorReference getWorkflowError() {
 		return workflowError;
 	}
 }

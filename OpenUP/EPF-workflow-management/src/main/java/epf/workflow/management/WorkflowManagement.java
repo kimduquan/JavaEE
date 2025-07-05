@@ -22,35 +22,22 @@ import epf.workflow.management.internal.WorkflowPersistence;
 import epf.workflow.schema.WorkflowDefinition;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
-/**
- * @author PC
- *
- */
 @ApplicationScoped
 @Path(Naming.Workflow.WORKFLOW_MANAGEMENT)
 public class WorkflowManagement implements Management {
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient WorkflowPersistence persistence;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	@Readiness
 	transient WorkflowCache cache;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient Validator validator;
 	
 	private ResponseBuilder getWorkflowLink(final WorkflowDefinition workflowDefinition) {
-		final Link link = Management.getWorkflowLink(0, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()));
+		final Link link = Management.getWorkflowLink(0, workflowDefinition.getName(), Optional.ofNullable(workflowDefinition.getVersion()));
 		return Response.ok().links(link);
 	}
 	
@@ -86,10 +73,10 @@ public class WorkflowManagement implements Management {
 		}
 		final WorkflowDefinition newWorkflowDefinition = persistence.persist(workflowDefinition);
 		if(workflowDefinition.getVersion() != null) {
-			cache.put(newWorkflowDefinition.getId(), workflowDefinition.getVersion(), workflowDefinition);
+			cache.put(newWorkflowDefinition.getName(), workflowDefinition.getVersion(), workflowDefinition);
 		}
 		else {
-			cache.put(newWorkflowDefinition.getId(), workflowDefinition);
+			cache.put(newWorkflowDefinition.getName(), workflowDefinition);
 		}
 		return getWorkflowLink(newWorkflowDefinition).build();
 	}

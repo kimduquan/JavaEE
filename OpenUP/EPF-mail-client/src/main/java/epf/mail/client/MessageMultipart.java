@@ -2,14 +2,8 @@ package epf.mail.client;
 
 import java.util.List;
 
-/**
- * 
- */
 public class MessageMultipart extends MessagePart {
 
-	/**
-	 *
-	 */
 	private List<MessageBodyPart> bodyParts;
 
 	public List<MessageBodyPart> getBodyParts() {

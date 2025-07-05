@@ -7,41 +7,25 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Function;
-import javax.annotation.PreDestroy;
-import javax.enterprise.context.ApplicationScoped;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
+import jakarta.annotation.PreDestroy;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
 import epf.client.util.ClientBuilderUtil;
 
-/**
- *
- * @author FOXCONN
- */
 @ApplicationScoped
 public class ClientQueue implements ClientBuilderUtil {
 
-	/**
-	 * 
-	 */
 	private transient final Map<String, Queue<Client>> clients;
     
-    /**
-     * 
-     */
     public ClientQueue() {
         clients = new ConcurrentHashMap<>();
     }
 	
-	/**
-	 * @return the clients
-	 */
 	protected Map<String, Queue<Client>> getClients() {
 		return clients;
 	}
     
-    /**
-     * 
-     */
     @PreDestroy
     public void close(){
         clients.forEach((name, queue) -> {
@@ -51,11 +35,6 @@ public class ClientQueue implements ClientBuilderUtil {
         clients.clear();
     }
     
-    /**
-     * @param uri
-     * @param buildClient
-     * @return
-     */
     public Client poll(final URI uri, final Function<ClientBuilder, ClientBuilder> buildClient){
     	Objects.requireNonNull(uri);
     	final Queue<Client> pool = clients.computeIfAbsent(
@@ -82,10 +61,6 @@ public class ClientQueue implements ClientBuilderUtil {
         return pool.poll();
     }
     
-    /**
-     * @param uri
-     * @param client
-     */
     public void add(final URI uri, final Client client){
     	Objects.requireNonNull(uri);
     	Objects.requireNonNull(client);

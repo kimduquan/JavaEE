@@ -2,10 +2,6 @@ package epf.security.util;
 
 import java.util.Comparator;
 
-/**
- * @author PC
- *
- */
 public class CredentialComparator implements Comparator<Credential> {
 
 	@Override

@@ -14,41 +14,18 @@ import epf.file.client.FileEvent;
 import epf.util.concurrent.ext.Emitter;
 import epf.util.logging.LogManager;
 
-/**
- * 
- */
 public class FileWatch implements Runnable, Closeable {
 	
-	/**
-	 *
-	 */
 	private transient static final Logger LOGGER = LogManager.getLogger(FileWatch.class.getName());
 	
-	/**
-	 * 
-	 */
 	private transient final Emitter<FileEvent> emitter;
 	
-	/**
-	 * 
-	 */
 	private transient final Path path;
 	
-	/**
-	 * 
-	 */
 	private transient final WatchService watchService;
 	
-	/**
-	 * 
-	 */
 	private transient ScheduledFuture<?> result;
 	
-	/**
-	 * @param path
-	 * @param watchService
-	 * @param emitter
-	 */
 	public FileWatch(final Path path, final WatchService watchService, final Emitter<FileEvent> emitter) {
 		this.emitter = emitter;
 		this.path = path;

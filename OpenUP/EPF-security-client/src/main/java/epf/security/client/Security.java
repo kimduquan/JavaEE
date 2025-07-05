@@ -4,62 +4,42 @@ import java.net.URL;
 import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.HttpMethod;
-import javax.ws.rs.MatrixParam;
-import javax.ws.rs.PATCH;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Form;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.FormParam;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.HttpMethod;
+import jakarta.ws.rs.MatrixParam;
+import jakarta.ws.rs.PATCH;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.Form;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedHashMap;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.security.schema.Token;
 
-/**
- *
- * @author FOXCONN
- */
 @Path(Naming.SECURITY)
 public interface Security {
-    /**
-     * 
-     */
-    String TOKEN_ID_FORMAT = "%s-%s-%s";
-    /**
-     * 
-     */
-    String HEADER_FORMAT = "Bearer %s";
     
-    /**
-     * 
-     */
+	String TOKEN_ID_FORMAT = "%s-%s-%s";
+    
+	String HEADER_FORMAT = "Bearer %s";
+    
     String URL = "url";
     
-    /**
-     * @param username
-     * @param password
-     * @param url
-     * @param tenant
-     * @param forwardedHost
-     * @return
-     * @throws Exception
-     */
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
@@ -80,13 +60,6 @@ public interface Security {
             final List<String> forwardedHost
     ) throws Exception;
     
-    /**
-     * @param client
-     * @param username
-     * @param passwordHash
-     * @param url
-     * @return
-     */
     static String login(
     		final Client client,
     		final String username, 
@@ -101,21 +74,12 @@ public interface Security {
     			.post(Entity.form(form), String.class);
     }
     
-    /**
-     * @param context
-     * @return
-     * @throws Exception
-     */
     @DELETE
     @Produces(MediaType.TEXT_PLAIN)
     String logOut(
     		@Context
             final SecurityContext context) throws Exception;
     
-    /**
-     * @param client
-     * @return
-     */
     static String logOut(final Client client) {
     	return client.request(
     			target -> target, 
@@ -124,12 +88,6 @@ public interface Security {
     			.delete(String.class);
     }
     
-    /**
-     * @param tenant
-     * @param context
-     * @return
-     * @throws Exception
-     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     Token authenticate(
@@ -138,10 +96,6 @@ public interface Security {
             @Context
             final SecurityContext context) throws Exception;
     
-    /**
-     * @param client
-     * @return
-     */
     static Token authenticate(final Client client) {
     	return client.request(
     			target -> target, 
@@ -150,12 +104,6 @@ public interface Security {
     			.get(Token.class);
     }
     
-    /**
-     * @param password
-     * @param context
-     * @return
-     * @throws Exception
-     */
     @PATCH
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     CompletionStage<Response> update(
@@ -167,11 +115,6 @@ public interface Security {
             final SecurityContext context
     		) throws Exception;
     
-    /**
-     * @param client
-     * @param password
-     * @return
-     */
     static Response update(final Client client, final String password) {
     	final Form form = new Form();
     	return client.request(
@@ -182,13 +125,6 @@ public interface Security {
     	.invoke();
     }
     
-    /**
-     * @param context
-     * @param forwardedHost
-     * @param duration
-     * @return
-     * @throws Exception
-     */
     @PUT
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
@@ -200,11 +136,6 @@ public interface Security {
             @FormParam("duration")
             final String duration) throws Exception;
     
-    /**
-     * @param client
-     * @param duration
-     * @return
-     */
     static String revoke(final Client client, final Duration duration) {
     	final Form form = new Form();
     	if(duration != null) {
@@ -216,15 +147,6 @@ public interface Security {
     			.put(Entity.form(form), String.class);
     }
 
-    /**
-     * @param provider
-     * @param session
-     * @param token
-     * @param url
-     * @param tenant
-     * @param forwardedHost
-     * @throws Exception
-     */
     @Path(Naming.Security.AUTH)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -243,14 +165,6 @@ public interface Security {
             @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_HOST)
             final List<String> forwardedHost) throws Exception;
     
-    /**
-     * @param client
-     * @param provider
-     * @param session
-     * @param token
-     * @param url
-     * @return
-     */
     static Token authenticateIDToken(
     		final Client client, 
     		final String provider, 
@@ -265,22 +179,12 @@ public interface Security {
     			.readEntity(Token.class);
     }
     
-    /**
-     * @param context
-     * @return
-     * @throws Exception
-     */
     @Path(Naming.Security.PRINCIPAL)
     @POST
     Response createPrincipal(
     		@Context 
     		final SecurityContext context) throws Exception;
     
-    /**
-     * @param client
-     * @return
-     * @throws Exception
-     */
     static Response createPrincipal(final Client client) throws Exception {
     	return client.request(
     			target -> target.path(Naming.Security.PRINCIPAL), 

@@ -23,22 +23,10 @@ import jakarta.ws.rs.sse.SseEventSource;
 import epf.naming.Naming;
 import epf.util.StringUtil;
 
-/**
- * @author PC
- *
- */
 public interface RequestUtil {
 	
-	/**
-	 * 
-	 */
 	String LRA_HTTP_HEADER_PREFIX = "Long-Running-Action";
 	
-	/**
-	 * @param webTarget
-	 * @param segment
-	 * @return
-	 */
 	static WebTarget buildMatrixParameters(WebTarget webTarget, final PathSegment segment) {
 		final MultivaluedMap<String, String> matrixParams = segment.getMatrixParameters();
         if(matrixParams != null){
@@ -56,11 +44,6 @@ public interface RequestUtil {
 		return webTarget;
 	}
 	
-	/**
-	 * @param webTarget
-	 * @param uriInfo
-	 * @return
-	 */
 	static WebTarget buildQueryParameters(WebTarget webTarget, final UriInfo uriInfo) {
 		final MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();        
         if(queryParams != null){
@@ -78,12 +61,6 @@ public interface RequestUtil {
         return webTarget;
 	}
     
-    /**
-     * @param webTarget
-     * @param uriInfo
-     * @param jwt
-     * @return
-     */
     static WebTarget buildTarget(
     		WebTarget webTarget,
     		final UriInfo uriInfo){
@@ -97,11 +74,6 @@ public interface RequestUtil {
         return webTarget;
     }
     
-    /**
-     * @param webTarget
-     * @param segments
-     * @return
-     */
     static WebTarget buildTarget(
     		WebTarget webTarget,
     		final List<PathSegment> segments) {
@@ -118,12 +90,6 @@ public interface RequestUtil {
     	return webTarget;
     }
     
-    /**
-     * @param input
-     * @param headers
-     * @param targetUrl
-     * @return
-     */
     static Builder buildHeaders(final Builder input, final HttpHeaders headers, final URI targetUrl, final boolean buildForwardedHeaders){
     	Builder builder = input;
     	final MultivaluedMap<String, String> requestHeaders = headers.getRequestHeaders();
@@ -148,13 +114,6 @@ public interface RequestUtil {
         return builder;
     }
     
-    /**
-     * @param builder
-     * @param host
-     * @param headers
-     * @param targetUrl
-     * @return
-     */
     static Builder buildForwardedHeaders(Builder builder, final Optional<Object> host, final HttpHeaders headers, final URI targetUrl) {
     	builder = builder.header(HttpHeaders.HOST, targetUrl.getAuthority());
         final List<String> forwardedHost = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_HOST);
@@ -166,11 +125,6 @@ public interface RequestUtil {
         return builder;
     }
     
-    /**
-     * @param builder
-     * @param response
-     * @return
-     */
     static Builder buildLRAHeaders(Builder builder, final Response response) {
     	for(final Entry<String, List<Object>> entry : response.getHeaders().entrySet()) {
 			if(entry.getKey().startsWith(LRA_HTTP_HEADER_PREFIX)) {
@@ -180,13 +134,6 @@ public interface RequestUtil {
     	return builder;
     }
     
-    /**
-     * @param invoker
-     * @param method
-     * @param type
-     * @param body
-     * @return
-     */
     static Response buildInvoke(
     		final Builder invoker,
     		final String method, 
@@ -198,18 +145,10 @@ public interface RequestUtil {
     	return invoker.method(method, Entity.entity(body, type));
     }
     
-    /**
-     * @param builder
-     * @return
-     */
     static SseEventSource.Builder buildSource(final SseEventSource.Builder builder){
     	return builder;
     }
     
-    /**
-     * @param uriInfo
-     * @return
-     */
     static Optional<String> getTenant(final UriInfo uriInfo){
     	return Optional.ofNullable(uriInfo.getPathSegments().get(0).getMatrixParameters().getFirst(Naming.Management.TENANT));
     }

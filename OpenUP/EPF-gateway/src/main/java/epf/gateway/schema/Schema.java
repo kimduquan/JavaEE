@@ -17,34 +17,17 @@ import epf.gateway.Application;
 import epf.naming.Naming;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
-/**
- * @author PC
- *
- */
 @Path(Naming.SCHEMA)
 @ApplicationScoped
 @RolesAllowed(Naming.Security.DEFAULT_ROLE)
 public class Schema {
     
-    /**
-     * 
-     */
     @Inject
     transient Application request;
     
-    /**
-     * 
-     */
     @Inject
     transient JsonWebToken jwt;
     
-    /**
-     * @param headers
-     * @param uriInfo
-     * @param req
-     * @return
-     * @throws Exception 
-     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
@@ -56,13 +39,6 @@ public class Schema {
 		return request.buildRequest(Naming.SCHEMA, jwt, headers, uriInfo, req, null);
     }
     
-    /**
-     * @param headers
-     * @param uriInfo
-     * @param req
-     * @return
-     * @throws Exception 
-     */
     @GET
     @Path("embeddable")
     @Produces(MediaType.APPLICATION_JSON)

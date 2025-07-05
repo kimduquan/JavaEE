@@ -1,1 +1,0 @@
-helm install neo4j oci://registry-1.docker.io/bitnamicharts/neo4j -f values.yaml

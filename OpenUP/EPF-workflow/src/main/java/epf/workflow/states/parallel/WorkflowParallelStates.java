@@ -16,15 +16,9 @@ import jakarta.json.Json;
 import jakarta.json.JsonArrayBuilder;
 import jakarta.ws.rs.core.Link;
 
-/**
- * 
- */
 @ApplicationScoped
 public class WorkflowParallelStates {
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient WorkflowStates workflowStates;
 	

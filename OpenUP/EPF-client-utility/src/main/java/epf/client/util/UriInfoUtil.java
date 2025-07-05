@@ -2,62 +2,31 @@ package epf.client.util;
 
 import java.net.URI;
 import java.util.List;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.PathSegment;
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.MultivaluedHashMap;
+import jakarta.ws.rs.core.PathSegment;
+import jakarta.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.UriInfo;
 import java.util.ArrayList;
 
-/**
- * @author PC
- *
- */
 public class UriInfoUtil implements UriInfo {
 	
-	/**
-	 * 
-	 */
 	private String path;
 	
-	/**
-	 * 
-	 */
 	private List<PathSegment> pathSegments;
 	
-	/**
-	 * 
-	 */
 	private URI requestUri;
 	
-	/**
-	 * 
-	 */
 	private URI absolutePath;
 	
-	/**
-	 * 
-	 */
 	private URI baseUri;
 	
-	/**
-	 * 
-	 */
 	private MultivaluedMap<String, String> pathParameters;
 	
-	/**
-	 * 
-	 */
 	private MultivaluedMap<String, String> queryParameters;
 	
-	/**
-	 * 
-	 */
 	private List<String> matchedURIs;
 	
-	/**
-	 * 
-	 */
 	private List<Object> matchedResources;
 
 	@Override
@@ -155,10 +124,6 @@ public class UriInfoUtil implements UriInfo {
 		return baseUri.relativize(uri);
 	}
 	
-	/**
-	 * @param uriInfo
-	 * @return
-	 */
 	public static UriInfo clone(final UriInfo uriInfo) {
 		final UriInfoUtil newUriInfo = new UriInfoUtil();
 		newUriInfo.absolutePath = uriInfo.getAbsolutePath();

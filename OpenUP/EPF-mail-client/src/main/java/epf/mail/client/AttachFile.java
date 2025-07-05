@@ -1,8 +1,5 @@
 package epf.mail.client;
 
-/**
- * 
- */
 public class AttachFile {
 
 	private String file;

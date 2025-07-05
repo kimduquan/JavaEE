@@ -20,26 +20,12 @@ import epf.naming.Naming;
 import epf.security.schema.Token;
 import epf.util.EPFException;
 
-/**
- * @author PC
- *
- */
 public class TokenBuilder {
 	
-	/**
-	 * 
-	 */
 	private transient final Token token;
 	
-	/**
-	 * 
-	 */
 	private transient final PrivateKey privateKey;
 	
-	/**
-	 * @param token
-	 * @param privateKey
-	 */
 	public TokenBuilder(final Token token, final PrivateKey privateKey) {
 		Objects.requireNonNull(token, "Token");
 		Objects.requireNonNull(privateKey, "PrivateKey");
@@ -47,10 +33,6 @@ public class TokenBuilder {
 		this.privateKey = privateKey;
 	}
 
-	/**
-	 * @return
-	 * @throws Exception
-	 */
 	public Token build() {
 		final JwtClaims claims = new JwtClaims();
 		claims.setAudience(token.getAudience().stream().collect(Collectors.toList()));
@@ -82,10 +64,7 @@ public class TokenBuilder {
 		return token;
 	}
 	
-	/**
-     * @return
-     */
-    public static Set<String> buildAudience(
+	public static Set<String> buildAudience(
             final URL url,
             final List<String> forwardedHost,
             final Optional<String> tenant){
@@ -97,11 +76,6 @@ public class TokenBuilder {
 		return audience;
     }
     
-    /**
-     * @param claims
-     * @param tenant
-     * @return
-     */
     public static Map<String, Object> buildClaims(final Map<String, Object> claims, final Optional<String> tenant){
     	final Map<String, Object> newClaims = new HashMap<>(claims);
     	if(tenant.isPresent()) {

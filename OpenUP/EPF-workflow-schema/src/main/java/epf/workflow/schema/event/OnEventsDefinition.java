@@ -4,14 +4,12 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.nosql.Column;
 import java.io.Serializable;
 import java.util.List;
-import org.eclipse.jnosql.mapping.Embeddable;
+import jakarta.nosql.Embeddable;
+import org.eclipse.microprofile.graphql.DefaultValue;
+import org.eclipse.microprofile.graphql.Description;
 import epf.workflow.schema.action.ActionDefinition;
 import epf.workflow.schema.action.Mode;
 
-/**
- * @author PC
- *
- */
 @Embeddable
 public class OnEventsDefinition implements Serializable {
 
@@ -20,29 +18,22 @@ public class OnEventsDefinition implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 */
 	@NotNull
 	@Column
+	@Description("References one or more unique event names in the defined workflow events")
 	private List<String> eventRefs;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Specifies how actions are to be performed (in sequence or in parallel).")
+	@DefaultValue("sequential")
 	private Mode actionMode = Mode.sequential;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Actions to be performed")
 	private List<ActionDefinition> actions;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Event data filter definition")
 	private EventDataFilter eventDataFilter;
 
 	public List<String> getEventRefs() {

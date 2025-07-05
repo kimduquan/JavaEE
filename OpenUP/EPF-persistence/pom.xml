@@ -27,6 +27,10 @@
       <artifactId>quarkus-smallrye-context-propagation</artifactId>
     </dependency>
     <dependency>
+	    <groupId>io.quarkus</groupId>
+	    <artifactId>quarkus-smallrye-jwt</artifactId>
+	</dependency>
+    <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-rest-jackson</artifactId>
     </dependency>
@@ -66,16 +70,18 @@
 		<groupId>io.quarkus</groupId>
 		<artifactId>quarkus-container-image-jib</artifactId>
 	</dependency>
-	
-	<!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast -->
 	<dependency>
-		<groupId>com.hazelcast</groupId>
-		<artifactId>hazelcast</artifactId>
+		<groupId>io.quarkiverse.helm</groupId>
+		<artifactId>quarkus-helm</artifactId>
 	</dependency>
-	<!-- https://mvnrepository.com/artifact/javax.cache/cache-api -->
 	<dependency>
-		<groupId>javax.cache</groupId>
-		<artifactId>cache-api</artifactId>
+	    <groupId>io.quarkiverse.jnosql</groupId>
+	    <artifactId>quarkus-jnosql-keyvalue-redis</artifactId>
+	</dependency>
+	
+	<dependency>
+	    <groupId>redis.clients</groupId>
+	    <artifactId>jedis</artifactId>
 	</dependency>
 	
 	<dependency>
@@ -116,6 +122,11 @@
 	<dependency>
 		<groupId>openup</groupId>
 		<artifactId>EPF-schema-utility</artifactId>
+		<version>${project.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>openup</groupId>
+		<artifactId>EPF-management-utility</artifactId>
 		<version>${project.version}</version>
 	</dependency>
 	<dependency>

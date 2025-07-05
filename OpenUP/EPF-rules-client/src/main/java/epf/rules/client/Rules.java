@@ -1,34 +1,24 @@
 package epf.rules.client;
 
 import java.io.InputStream;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.HttpMethod;
-import javax.ws.rs.PATCH;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HttpMethod;
+import jakarta.ws.rs.PATCH;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import epf.client.util.Client;
 import epf.naming.Naming;
 
-/**
- * @author PC
- *
- */
 @Path(Naming.RULES)
 public interface Rules {
 
-	/**
-	 * @param ruleSet
-	 * @param input
-	 * @return
-	 * @throws Exception
-	 */
 	@POST
 	@Path("{ruleSet}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -39,13 +29,6 @@ public interface Rules {
 			final InputStream input
 			) throws Exception;
 	
-	/**
-	 * @param client
-	 * @param ruleSet
-	 * @param input
-	 * @return
-	 * @throws Exception
-	 */
 	static Response executeRules(
 			final Client client, 
 			final String ruleSet,
@@ -59,11 +42,6 @@ public interface Rules {
 				.post(Entity.entity(input, MediaType.APPLICATION_JSON));
 	}
 	
-	/**
-	 * @param ruleSet
-	 * @return
-	 * @throws Exception
-	 */
 	@PUT
 	@Path("{ruleSet}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -72,12 +50,6 @@ public interface Rules {
 			final String ruleSet
 			) throws Exception;
 	
-	/**
-	 * @param client
-	 * @param ruleSet
-	 * @return
-	 * @throws Exception
-	 */
 	static Response executeRules(
 			final Client client, 
 			final String ruleSet) throws Exception{
@@ -89,11 +61,6 @@ public interface Rules {
 				.put(Entity.json(null));
 	}
 	
-	/**
-	 * @param ruleSet
-	 * @param input
-	 * @throws Exception
-	 */
 	@PATCH
 	@Path("{ruleSet}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -102,12 +69,6 @@ public interface Rules {
 			final String ruleSet,
 			final InputStream input) throws Exception;
 	
-	/**
-	 * @param client
-	 * @param ruleSet
-	 * @param input
-	 * @return
-	 */
 	static Response addObject(
 			final Client client, 
 			final String ruleSet, 
@@ -120,17 +81,10 @@ public interface Rules {
 				.method(HttpMethod.PATCH, Entity.entity(input, MediaType.APPLICATION_JSON));
 	}
 	
-	/**
-	 * @return
-	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	Response getRegistrations() throws Exception;
 	
-	/**
-	 * @param client
-	 * @return
-	 */
 	static Response getRegistrations(final Client client) {
 		return client
 				.request(

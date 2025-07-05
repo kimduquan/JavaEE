@@ -2,93 +2,75 @@ package erp.base.schema.res;
 
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
-import erp.base.schema.res.country.Country;
 import erp.base.schema.res.country.State;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 
-/**
- * 
- */
 @Entity
 @Table(name = "res_bank")
 @Description("Bank")
 public class Bank {
+	
+	@Id
+	private int id;
 
-	/**
-	 * 
-	 */
 	@Column(nullable = false)
 	@NotNull
 	private String name;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private String street;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private String street2;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private String zip;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private String city;
 	
-	/**
-	 * 
-	 */
-	@Column
-	@ManyToOne(targetEntity = State.class)
+	@ManyToOne(targetEntity = State.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "state")
 	@Description("Fed. State")
-	private String state;
+	private State state;
 	
-	/**
-	 * 
-	 */
-	@Column
-	@ManyToOne(targetEntity = Country.class)
-	private String country;
+	@ManyToOne(targetEntity = Country.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "country")
+	private Country country;
 	
-	/**
-	 * 
-	 */
+	@Transient
+	@Description("Country Code")
+	private String country_code;
+	
 	@Column
 	private String email;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private String phone;
 	
-	/**
-	 * 
-	 */
 	@Column
 	@DefaultValue("true")
 	private Boolean active = true;
 	
-	/**
-	 * 
-	 */
 	@Column
 	@Description("Bank Identifier Code")
 	private String bic;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public String getName() {
 		return name;
@@ -130,20 +112,28 @@ public class Bank {
 		this.city = city;
 	}
 
-	public String getState() {
+	public State getState() {
 		return state;
 	}
 
-	public void setState(String state) {
+	public void setState(State state) {
 		this.state = state;
 	}
 
-	public String getCountry() {
+	public Country getCountry() {
 		return country;
 	}
 
-	public void setCountry(String country) {
+	public void setCountry(Country country) {
 		this.country = country;
+	}
+
+	public String getCountry_code() {
+		return country_code;
+	}
+
+	public void setCountry_code(String country_code) {
+		this.country_code = country_code;
 	}
 
 	public String getEmail() {

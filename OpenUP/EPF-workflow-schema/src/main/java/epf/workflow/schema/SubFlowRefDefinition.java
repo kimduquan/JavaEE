@@ -4,12 +4,10 @@ import jakarta.validation.constraints.NotNull;
 import epf.workflow.schema.function.Invoke;
 import jakarta.nosql.Column;
 import java.io.Serializable;
-import org.eclipse.jnosql.mapping.Embeddable;
+import jakarta.nosql.Embeddable;
+import org.eclipse.microprofile.graphql.DefaultValue;
+import org.eclipse.microprofile.graphql.Description;
 
-/**
- * @author PC
- *
- */
 @Embeddable
 public class SubFlowRefDefinition implements Serializable {
 
@@ -18,30 +16,24 @@ public class SubFlowRefDefinition implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 */
 	@NotNull
 	@Column
+	@Description("Sub-workflow unique name")
 	private String workflowId;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Sub-workflow version")
 	private String version;
 	
-	/**
-	 * 
-	 */
 	@Column
+	@Description("Specifies if the subflow should be invoked sync or async.")
+	@DefaultValue("sync")
 	private Invoke invoke = Invoke.sync;
 	
-	/**
-	 * 
-	 */
 	@Column
-	private OnParentComplete onParentComplete = OnParentComplete.Terminate;
+	@Description("If invoke is async, specifies if subflow execution should terminate or continue when parent workflow completes.")
+	@DefaultValue("terminate")
+	private OnParentComplete onParentComplete = OnParentComplete.terminate;
 
 	public String getWorkflowId() {
 		return workflowId;

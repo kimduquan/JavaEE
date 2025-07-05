@@ -1,20 +1,29 @@
 package erp.base.schema.ir;
 
+import java.util.Date;
 import org.eclipse.microprofile.graphql.Description;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
-/**
- * 
- */
 @Entity
 @Table(name = "ir_logging")
 @Description("Logging")
 public class Logging {
+	
+	public enum Type {
+		@Description("Client")
+		client,
+		@Description("Server")
+		server
+	}
+	
+	@Id
+	private int id;
 
 	@Column(updatable = false)
 	@Description("Created by")
@@ -22,7 +31,7 @@ public class Logging {
 	
 	@Column(updatable = false)
 	@Description("Created on")
-	private String create_date;
+	private Date create_date;
 	
 	@Column(updatable = false)
 	@Description("Last Updated by")
@@ -30,7 +39,7 @@ public class Logging {
 	
 	@Column(updatable = false)
 	@Description("Last Updated on")
-	private Integer write_date;
+	private Date write_date;
 	
 	@Column(nullable = false)
 	@NotNull
@@ -39,7 +48,7 @@ public class Logging {
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	@NotNull
-	private String type;
+	private Type type;
 	
 	@Column
 	@Description("Database Name")
@@ -65,6 +74,14 @@ public class Logging {
 	@NotNull
 	private String line;
 
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public Integer getCreate_uid() {
 		return create_uid;
 	}
@@ -73,11 +90,11 @@ public class Logging {
 		this.create_uid = create_uid;
 	}
 
-	public String getCreate_date() {
+	public Date getCreate_date() {
 		return create_date;
 	}
 
-	public void setCreate_date(String create_date) {
+	public void setCreate_date(Date create_date) {
 		this.create_date = create_date;
 	}
 
@@ -89,11 +106,11 @@ public class Logging {
 		this.write_uid = write_uid;
 	}
 
-	public Integer getWrite_date() {
+	public Date getWrite_date() {
 		return write_date;
 	}
 
-	public void setWrite_date(Integer write_date) {
+	public void setWrite_date(Date write_date) {
 		this.write_date = write_date;
 	}
 
@@ -105,11 +122,11 @@ public class Logging {
 		this.name = name;
 	}
 
-	public String getType() {
+	public Type getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(Type type) {
 		this.type = type;
 	}
 

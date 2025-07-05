@@ -3,83 +3,51 @@ package epf.event.schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.nosql.Column;
+import jakarta.nosql.Convert;
 import jakarta.nosql.Entity;
+import epf.nosql.schema.util.UUIDAttributeConverter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import org.eclipse.jnosql.mapping.Convert;
-
 import epf.naming.Naming.Event.Schema;
-import epf.nosql.schema.util.UUIDAttributeConverter;
 import jakarta.nosql.Id;
 
-/**
- * @author PC
- *
- */
 @Entity
 public class Event {
 
-	/**
-	 * 
-	 */
 	@Id(Schema.ID)
 	@Convert(UUIDAttributeConverter.class)
 	@NotNull
 	@NotBlank
 	private String id;
 	
-	/**
-	 * 
-	 */
 	@Column
 	@NotNull
 	@NotBlank
 	private String source;
 	
-	/**
-	 * 
-	 */
 	@Column
 	@NotNull
 	@NotBlank
 	private String specVersion = "1.0";
 	
-	/**
-	 * 
-	 */
 	@Column
 	@NotNull
 	@NotBlank
 	private String type;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private String dataContentType;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private String dataSchema;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private String subject;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private String time;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private Object data;
 
@@ -155,11 +123,6 @@ public class Event {
 		this.data = data;
 	}
 	
-	/**
-	 * @param map
-	 * @param ext
-	 * @return
-	 */
 	public static Event event(final Map<String, Object> map, final Map<String, Object> ext) {
 		Objects.requireNonNull(map, "Map");
 		final Event event = new Event();
@@ -200,10 +163,6 @@ public class Event {
 		return event;
 	}
 	
-	/**
-	 * @param ext
-	 * @return
-	 */
 	public Map<String, Object> toMap(final Map<String, Object> ext){
 		final Map<String, Object> map = new HashMap<>();
 		if(data != null) {

@@ -15,30 +15,14 @@ import jakarta.json.JsonValue;
 import epf.util.json.ext.JsonUtil;
 import epf.util.logging.LogManager;
 
-/**
- * @author PC
- *
- */
 public class JsonELResolver extends MapELResolver {
 	
-	/**
-	 * 
-	 */
 	private static transient final Logger LOGGER = LogManager.getLogger(JsonELResolver.class.getName());
 	
-	/**
-	 * 
-	 */
 	public static final String LENGTH = "length";
 	
-	/**
-	 * 
-	 */
 	private final JsonValue data;
 	
-	/**
-	 * @param data
-	 */
 	public JsonELResolver(final JsonValue data) {
 		this.data = data;
 	}
@@ -256,9 +240,6 @@ public class JsonELResolver extends MapELResolver {
 		return null;
 	}
 	
-	/**
-	 * @param elProcessor
-	 */
 	public void defineBean(final ELProcessor elProcessor) {
 		switch(data.getValueType()) {
 			case ARRAY:

@@ -1,34 +1,17 @@
 package epf.security.auth.core;
 
-/**
- * @author PC
- *
- */
 public class AuthRequest {
 
-	/**
-	 * 
-	 */
 	private String scope;
-	/**
-	 * 
-	 */
+	
 	private String response_type;
-	/**
-	 * 
-	 */
+	
 	private String client_id;
-	/**
-	 * 
-	 */
+	
 	private String redirect_uri;
-	/**
-	 * 
-	 */
+	
 	private String state;
-	/**
-	 * 
-	 */
+	
 	private String nonce;
 	
 	public String getScope() {

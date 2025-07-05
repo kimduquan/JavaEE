@@ -3,174 +3,156 @@ package erp.base.schema.ir.ui;
 import java.util.List;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
-import erp.base.schema.ir.model.Model;
-import erp.base.schema.res.groups.Groups;
-import erp.base.schema.ir.model.Data;
-import jakarta.persistence.CollectionTable;
+import erp.base.schema.res.Groups;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 
-/**
- * 
- */
 @Entity
 @Table(name = "ir_ui_view")
 @Description("View")
 public class View {
 	
-	/**
-	 * 
-	 */
+	public enum ViewType {
+		@Description("List")
+		list,
+		@Description("Form")
+        form,
+        @Description("Graph")
+        graph,
+        @Description("Pivot")
+        pivot,
+        @Description("Calendar")
+        calendar,
+        @Description("Kanban")
+        kanban,
+        @Description("Search")
+        search,
+        @Description("QWeb")
+        qweb
+	}
+	
+	public enum ViewInheritanceMode {
+		@Description("Base view")
+		primary,
+		@Description("Extension View")
+		extension
+	}
+	
+	@Id
+	private int id;
+	
 	@Column(nullable = false)
 	@NotNull
 	@Description("View Name")
 	private String name;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private String model;
 	
-	/**
-	 * 
-	 */
 	@Column
 	private String key;
 	
-	/**
-	 * 
-	 */
 	@Column(nullable = false)
 	@NotNull
 	@DefaultValue("16")
 	@Description("Sequence")
 	private Integer priority = 16;
 	
-	/**
-	 * 
-	 */
 	@Column
 	@Enumerated(EnumType.STRING)
 	@Description("View Type")
-	private String type;
+	private ViewType type;
 	
-	/**
-	 * 
-	 */
-	@Column
+	@Transient
 	@Description("View Architecture")
 	private String arch;
 	
-	/**
-	 * 
-	 */
-	@Column
+	@Transient
 	@Description("Base View Architecture")
 	private String arch_base;
 	
-	/**
-	 * 
-	 */
 	@Column
 	@Description("Arch Blob")
 	private String arch_db;
 	
-	/**
-	 * 
-	 */
 	@Column
 	@Description("Arch Filename")
 	private String arch_fs;
 	
-	/**
-	 * 
-	 */
 	@Column
 	@Description("Modified Architecture")
 	private Boolean arch_updated;
 	
-	/**
-	 * 
-	 */
 	@Column
 	@Description("Previous View Architecture")
 	private String arch_prev;
 	
-	/**
-	 * 
-	 */
-	@Column
-	@ManyToOne(targetEntity = View.class)
+	@Transient
+	private Integer inherit_id;
+
+	@ManyToOne(targetEntity = View.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "inherit_id", referencedColumnName = "id")
 	@Description("Inherited View")
-	private String inherit_id;
+	private View inherit;
 	
-	/**
-	 * 
-	 */
-	@Column
+	@Transient
+	private List<Integer> inherit_children_ids;
+
 	@OneToMany(targetEntity = View.class)
-	@ElementCollection(targetClass = View.class)
-	@CollectionTable(name = "ir_ui_view")
+	@JoinColumn(name = "inherit_id", referencedColumnName = "id")
 	@Description("Views which inherit from this one")
-	private List<String> inherit_children_ids;
+	private List<View> inherit_childrens;
 	
-	/**
-	 * 
-	 */
-	@Column
-	@ManyToOne(targetEntity = Data.class)
+	@Transient
 	@Description("Model Data")
-	private String model_data_id;
+	private Integer model_data_id;
 	
-	/**
-	 * 
-	 */
-	@Column
+	@Transient
 	@Description("External ID")
 	private String xml_id;
 	
-	/**
-	 * 
-	 */
-	@Column
-	@ManyToMany(targetEntity = Groups.class)
-	@ElementCollection(targetClass = Groups.class)
-	@CollectionTable(name = "res_groups")
-	@Description("Groups")
-	private List<String> groups_id;
+	@Transient
+	private List<Integer> groups_id;
 	
-	/**
-	 * 
-	 */
+	@ManyToMany(targetEntity = Groups.class)
+	@JoinTable(name = "ir_ui_view_group_rel", joinColumns = {@JoinColumn(name = "view_id")}, inverseJoinColumns = {@JoinColumn(name = "group_id")})
+	@Description("Groups")
+	private List<Groups> groups;
+	
 	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
 	@NotNull
 	@DefaultValue("primary")
 	@Description("View inheritance mode")
-	private String mode = "primary";
+	private ViewInheritanceMode mode = ViewInheritanceMode.primary;
 	
-	/**
-	 * 
-	 */
 	@Column
 	@DefaultValue("true")
 	private Boolean active = true;
 	
-	/**
-	 * 
-	 */
-	@Column
-	@ManyToOne(targetEntity = Model.class)
+	@Transient
 	@Description("Model of the view")
-	private String model_id;
+	private Integer model_id;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public String getName() {
 		return name;
@@ -204,11 +186,11 @@ public class View {
 		this.priority = priority;
 	}
 
-	public String getType() {
+	public ViewType getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(ViewType type) {
 		this.type = type;
 	}
 
@@ -260,27 +242,43 @@ public class View {
 		this.arch_prev = arch_prev;
 	}
 
-	public String getInherit_id() {
+	public Integer getInherit_id() {
 		return inherit_id;
 	}
 
-	public void setInherit_id(String inherit_id) {
+	public void setInherit_id(Integer inherit_id) {
 		this.inherit_id = inherit_id;
 	}
 
-	public List<String> getInherit_children_ids() {
+	public View getInherit() {
+		return inherit;
+	}
+
+	public void setInherit(View inherit) {
+		this.inherit = inherit;
+	}
+
+	public List<Integer> getInherit_children_ids() {
 		return inherit_children_ids;
 	}
 
-	public void setInherit_children_ids(List<String> inherit_children_ids) {
+	public void setInherit_children_ids(List<Integer> inherit_children_ids) {
 		this.inherit_children_ids = inherit_children_ids;
 	}
 
-	public String getModel_data_id() {
+	public List<View> getInherit_childrens() {
+		return inherit_childrens;
+	}
+
+	public void setInherit_childrens(List<View> inherit_childrens) {
+		this.inherit_childrens = inherit_childrens;
+	}
+
+	public Integer getModel_data_id() {
 		return model_data_id;
 	}
 
-	public void setModel_data_id(String model_data_id) {
+	public void setModel_data_id(Integer model_data_id) {
 		this.model_data_id = model_data_id;
 	}
 
@@ -292,19 +290,27 @@ public class View {
 		this.xml_id = xml_id;
 	}
 
-	public List<String> getGroups_id() {
+	public List<Integer> getGroups_id() {
 		return groups_id;
 	}
 
-	public void setGroups_id(List<String> groups_id) {
+	public void setGroups_id(List<Integer> groups_id) {
 		this.groups_id = groups_id;
 	}
 
-	public String getMode() {
+	public List<Groups> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(List<Groups> groups) {
+		this.groups = groups;
+	}
+
+	public ViewInheritanceMode getMode() {
 		return mode;
 	}
 
-	public void setMode(String mode) {
+	public void setMode(ViewInheritanceMode mode) {
 		this.mode = mode;
 	}
 
@@ -316,11 +322,11 @@ public class View {
 		this.active = active;
 	}
 
-	public String getModel_id() {
+	public Integer getModel_id() {
 		return model_id;
 	}
 
-	public void setModel_id(String model_id) {
+	public void setModel_id(Integer model_id) {
 		this.model_id = model_id;
 	}
 }
