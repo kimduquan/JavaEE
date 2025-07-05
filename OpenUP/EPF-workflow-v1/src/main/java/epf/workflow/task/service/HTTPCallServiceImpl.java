@@ -1,4 +1,4 @@
-package epf.workflow.service;
+package epf.workflow.task.service;
 
 import java.net.URI;
 import epf.workflow.schema.Error;

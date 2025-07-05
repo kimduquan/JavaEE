@@ -1,4 +1,4 @@
-package epf.workflow.service;
+package epf.workflow.task.service;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;

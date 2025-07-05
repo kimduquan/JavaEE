@@ -1,4 +1,4 @@
-package epf.workflow.service;
+package epf.workflow.task.service;
 
 import epf.workflow.schema.AsyncAPI;
 import epf.workflow.schema.Error;
