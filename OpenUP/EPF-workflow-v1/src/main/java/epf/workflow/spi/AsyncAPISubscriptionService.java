@@ -1,6 +1,6 @@
 package epf.workflow.spi;
 
-import epf.workflow.task.schema.AsyncAPISubscription;
+import epf.workflow.task.call.schema.AsyncAPISubscription;
 
 public interface AsyncAPISubscriptionService {
 

@@ -2,7 +2,7 @@ package epf.workflow.spi;
 
 import epf.workflow.schema.Error;
 import epf.workflow.schema.RuntimeExpressionArguments;
-import epf.workflow.task.schema.CallTask;
+import epf.workflow.task.call.schema.CallTask;
 
 public interface CallService {
 

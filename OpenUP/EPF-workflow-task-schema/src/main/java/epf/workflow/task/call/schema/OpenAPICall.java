@@ -1,4 +1,4 @@
-package epf.workflow.task.schema;
+package epf.workflow.task.call.schema;
 
 public class OpenAPICall extends Call<OpenAPI> {
 

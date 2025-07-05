@@ -1,6 +1,6 @@
 package epf.workflow.spi;
 
-import epf.workflow.task.schema.AsyncAPIInboundMessage;
+import epf.workflow.task.call.schema.AsyncAPIInboundMessage;
 
 public interface AsyncAPIInboundMessageService {
 

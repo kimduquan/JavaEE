@@ -1,4 +1,4 @@
-package epf.workflow.task.schema;
+package epf.workflow.task.call.schema;
 
 import java.util.Map;
 import org.eclipse.microprofile.graphql.DefaultValue;

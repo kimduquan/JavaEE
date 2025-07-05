@@ -1,4 +1,4 @@
-package epf.workflow.task.schema;
+package epf.workflow.task.run.schema;
 
 import org.eclipse.microprofile.graphql.Description;
 import epf.workflow.schema.ContainerProcess;

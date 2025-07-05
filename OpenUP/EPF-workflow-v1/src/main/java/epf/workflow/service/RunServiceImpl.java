@@ -10,7 +10,7 @@ import epf.workflow.spi.ScriptProcessService;
 import epf.workflow.spi.ShellProcessService;
 import epf.workflow.spi.TimeoutService;
 import epf.workflow.spi.WorkflowProcessService;
-import epf.workflow.task.schema.RunTask;
+import epf.workflow.task.run.schema.RunTask;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 

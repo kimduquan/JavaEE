@@ -1,4 +1,4 @@
-package epf.workflow.task.schema;
+package epf.workflow.task.call.schema;
 
 import org.eclipse.microprofile.graphql.Description;
 import jakarta.json.bind.annotation.JsonbSubtype;
