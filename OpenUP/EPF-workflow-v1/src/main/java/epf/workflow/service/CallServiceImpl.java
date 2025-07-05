@@ -1,21 +1,21 @@
 package epf.workflow.service;
 
 import epf.workflow.schema.AsyncAPI;
-import epf.workflow.schema.AsyncAPICall;
 import epf.workflow.schema.Error;
 import epf.workflow.schema.HTTP;
-import epf.workflow.schema.HTTPCall;
 import epf.workflow.schema.OpenAPI;
-import epf.workflow.schema.OpenAPICall;
 import epf.workflow.schema.RuntimeExpressionArguments;
 import epf.workflow.schema.gRPC;
-import epf.workflow.schema.gRPCCall;
 import epf.workflow.spi.AsyncAPICallService;
 import epf.workflow.spi.CallService;
 import epf.workflow.spi.HTTPCallService;
 import epf.workflow.spi.OpenAPICallService;
 import epf.workflow.spi.gRPCCallService;
+import epf.workflow.task.schema.AsyncAPICall;
 import epf.workflow.task.schema.CallTask;
+import epf.workflow.task.schema.HTTPCall;
+import epf.workflow.task.schema.OpenAPICall;
+import epf.workflow.task.schema.gRPCCall;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
