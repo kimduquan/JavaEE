@@ -20,12 +20,12 @@ import epf.workflow.schema.WorkflowDefinitionReference;
 import epf.workflow.schema.WorkflowDescriptor;
 import epf.workflow.schema.util.Either;
 import epf.workflow.schema.WorkflowUtil;
-import epf.workflow.spi.DoService;
 import epf.workflow.spi.InputService;
 import epf.workflow.spi.RuntimeExpressionsService;
 import epf.workflow.spi.UseService;
 import epf.workflow.spi.WorkflowLifecycleEventsService;
 import epf.workflow.spi.WorkflowService;
+import epf.workflow.task.spi.DoService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
