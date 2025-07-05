@@ -3,7 +3,7 @@ package epf.workflow.task.service;
 import java.net.URI;
 import epf.workflow.schema.Error;
 import epf.workflow.schema.HTTP;
-import epf.workflow.spi.HTTPCallService;
+import epf.workflow.task.spi.HTTPCallService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;

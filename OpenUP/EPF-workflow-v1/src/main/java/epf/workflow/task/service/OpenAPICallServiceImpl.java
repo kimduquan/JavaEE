@@ -6,7 +6,7 @@ import epf.util.json.ext.JsonUtil;
 import epf.workflow.schema.Error;
 import epf.workflow.schema.OpenAPI;
 import epf.workflow.schema.RuntimeError;
-import epf.workflow.spi.OpenAPICallService;
+import epf.workflow.task.spi.OpenAPICallService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 

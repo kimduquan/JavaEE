@@ -3,7 +3,7 @@ package epf.workflow.task.service;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import epf.workflow.schema.AsyncAPI;
-import epf.workflow.spi.AsyncAPICallService;
+import epf.workflow.task.spi.AsyncAPICallService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 

@@ -6,7 +6,7 @@ import epf.util.json.ext.JsonUtil;
 import epf.workflow.schema.Error;
 import epf.workflow.schema.RuntimeError;
 import epf.workflow.schema.gRPC;
-import epf.workflow.spi.gRPCCallService;
+import epf.workflow.task.spi.gRPCCallService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
