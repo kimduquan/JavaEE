@@ -1,4 +1,4 @@
-package epf.workflow.schema;
+package epf.workflow.task.schema;
 
 import java.util.Map;
 import org.eclipse.microprofile.graphql.Description;

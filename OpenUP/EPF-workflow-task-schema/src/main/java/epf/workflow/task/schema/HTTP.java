@@ -1,8 +1,9 @@
-package epf.workflow.schema;
+package epf.workflow.task.schema;
 
 import java.util.Map;
 import org.eclipse.microprofile.graphql.DefaultValue;
 import org.eclipse.microprofile.graphql.Description;
+import epf.workflow.schema.Endpoint;
 import epf.workflow.schema.util.Either;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

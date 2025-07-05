@@ -1,7 +1,9 @@
-package epf.workflow.schema;
+package epf.workflow.task.schema;
 
 import java.util.Map;
 import org.eclipse.microprofile.graphql.Description;
+import epf.workflow.schema.Authentication;
+import epf.workflow.schema.ExternalResource;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 

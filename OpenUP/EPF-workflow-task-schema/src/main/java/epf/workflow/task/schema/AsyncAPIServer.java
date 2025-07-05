@@ -1,4 +1,4 @@
-package epf.workflow.schema;
+package epf.workflow.task.schema;
 
 import org.eclipse.microprofile.graphql.Description;
 import jakarta.validation.constraints.NotBlank;

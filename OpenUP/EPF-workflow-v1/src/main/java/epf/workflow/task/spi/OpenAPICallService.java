@@ -1,7 +1,7 @@
 package epf.workflow.task.spi;
 
-import epf.workflow.schema.OpenAPI;
 import epf.workflow.schema.Error;
+import epf.workflow.task.schema.OpenAPI;
 
 public interface OpenAPICallService {
 
