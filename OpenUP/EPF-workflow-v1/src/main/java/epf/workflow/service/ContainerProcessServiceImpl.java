@@ -13,8 +13,8 @@ import epf.workflow.schema.Error;
 import epf.workflow.schema.ProcessResult;
 import epf.workflow.schema.RuntimeError;
 import epf.workflow.schema.RuntimeExpressionArguments;
-import epf.workflow.schema.util.DurationUtil;
-import epf.workflow.schema.util.WorkflowUtil;
+import epf.workflow.schema.DurationUtil;
+import epf.workflow.schema.WorkflowUtil;
 import epf.workflow.spi.ContainerProcessService;
 import jakarta.enterprise.context.ApplicationScoped;
 

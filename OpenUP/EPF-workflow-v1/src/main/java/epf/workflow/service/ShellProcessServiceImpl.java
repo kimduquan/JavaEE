@@ -2,7 +2,7 @@ package epf.workflow.service;
 
 import epf.workflow.schema.RuntimeError;
 import epf.workflow.schema.ShellProcess;
-import epf.workflow.schema.util.DurationUtil;
+import epf.workflow.schema.DurationUtil;
 import epf.workflow.spi.ShellProcessService;
 import java.nio.file.Files;
 import java.nio.file.Path;

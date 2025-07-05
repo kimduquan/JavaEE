@@ -1,4 +1,4 @@
-package epf.workflow.service;
+package epf.workflow.task.service;
 
 import java.net.URI;
 import java.time.Instant;
@@ -16,8 +16,8 @@ import epf.workflow.schema.RuntimeExpressionArguments;
 import epf.workflow.schema.Task;
 import epf.workflow.schema.TaskDescriptor;
 import epf.workflow.schema.ValidationError;
+import epf.workflow.schema.WorkflowUtil;
 import epf.workflow.schema.util.Either;
-import epf.workflow.schema.util.WorkflowUtil;
 import epf.workflow.spi.CallService;
 import epf.workflow.spi.DoService;
 import epf.workflow.spi.EmitService;

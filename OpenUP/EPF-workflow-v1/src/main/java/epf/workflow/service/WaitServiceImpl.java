@@ -4,7 +4,7 @@ import epf.workflow.schema.Duration;
 import epf.workflow.schema.Error;
 import epf.workflow.schema.RuntimeError;
 import epf.workflow.schema.RuntimeExpressionArguments;
-import epf.workflow.schema.util.DurationUtil;
+import epf.workflow.schema.DurationUtil;
 import epf.workflow.spi.WaitService;
 import epf.workflow.task.schema.WaitTask;
 import jakarta.enterprise.context.ApplicationScoped;
