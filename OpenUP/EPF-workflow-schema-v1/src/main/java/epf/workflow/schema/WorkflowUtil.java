@@ -1,9 +1,7 @@
-package epf.workflow.schema.util;
+package epf.workflow.schema;
 
 import java.util.Map;
 import epf.util.json.ext.JsonUtil;
-import epf.workflow.schema.Workflow;
-import epf.workflow.schema.WorkflowDescriptor;
 
 public interface WorkflowUtil {
 	

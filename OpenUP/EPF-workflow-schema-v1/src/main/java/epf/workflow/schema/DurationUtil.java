@@ -1,7 +1,6 @@
-package epf.workflow.schema.util;
+package epf.workflow.schema;
 
 import java.util.concurrent.TimeUnit;
-import epf.workflow.schema.Duration;
 
 public interface DurationUtil {
 	
