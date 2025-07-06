@@ -13,6 +13,7 @@ import epf.workflow.schema.Error;
 import epf.workflow.schema.RuntimeError;
 import epf.workflow.schema.RuntimeExpressionArguments;
 import epf.workflow.schema.DurationUtil;
+import epf.workflow.spi.ExtensionService;
 import epf.workflow.spi.TimeoutService;
 import epf.workflow.task.ForkService;
 import epf.workflow.task.TaskService;
@@ -31,13 +32,21 @@ public class ForkServiceImpl implements ForkService {
 	
 	@Inject
 	transient TimeoutService timeoutService;
+	
+	@Inject
+	transient ExtensionService extensionService;
 
 	@Override
 	public Object fork(final RuntimeExpressionArguments arguments, final ForkTask task, final AtomicReference<String> flowDirective) throws Error {
 		final List<Callable<Object>> branchTasks = new ArrayList<>();
 		task.getFork().getBranches().forEach((branchTaskName, branchTask) -> {
 			final URI branchURI = URI.create(arguments.getTask().getReference()).resolve(branchTaskName);
-			branchTasks.add(() -> taskService.start(arguments, branchTaskName, branchURI, branchTask, arguments.getInput(), flowDirective));
+			branchTasks.add(() -> {
+				Object output = extensionService.before(arguments, branchTaskName, branchURI, branchTask, arguments.getInput(), flowDirective);
+				output = taskService.start(arguments, branchTaskName, branchURI, branchTask, output, flowDirective);
+				output = extensionService.after(arguments, branchTaskName, branchURI, branchTask, output, flowDirective);
+				return output;
+			});
 		});
 		try {
 			Object taskOutput;

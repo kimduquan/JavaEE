@@ -4,12 +4,12 @@ import java.net.URI;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
-
 import epf.workflow.event.TaskLifecycleEventsService;
 import epf.workflow.schema.Error;
 import epf.workflow.schema.FlowDirective;
 import epf.workflow.schema.RuntimeExpressionArguments;
 import epf.workflow.schema.Task;
+import epf.workflow.spi.ExtensionService;
 import epf.workflow.spi.RuntimeExpressionsService;
 import epf.workflow.task.DoService;
 import epf.workflow.task.TaskService;
@@ -27,6 +27,9 @@ public class DoServiceImpl implements DoService {
 	
 	@Inject
 	transient TaskService taskService;
+	
+	@Inject
+	transient ExtensionService extensionService; 
 
 	@Override
 	public Object do_(final Map<String, Task> do_, final RuntimeExpressionArguments arguments, final URI parentURI, final AtomicReference<String> flowDirective) throws Error {
@@ -38,24 +41,28 @@ public class DoServiceImpl implements DoService {
 		Object taskInput = null;
 		String then = null;
 		while(taskIt.hasNext()) {
-			taskIndex++;
 			final Map.Entry<String, Task> entry = taskIt.next();
+			taskIndex++;
 			taskName = entry.getKey();
 			task = entry.getValue();
 			taskURI = parentURI.resolve("" + taskIndex).resolve(taskName);
+			taskInput = extensionService.before(arguments, taskName, taskURI, task, taskInput, flowDirective);
 			taskInput = taskService.start(arguments, taskName, taskURI, task, taskInput, flowDirective);
+			taskInput = extensionService.after(arguments, taskName, taskURI, task, taskInput, flowDirective);
 			then = task.getThen();
 			if(FlowDirective._continue.equals(then)) {
 				continue;
 			}
 			else if(FlowDirective.isString(then)) {
 				taskIndex++;
-				taskName = task.getThen();
-				task = arguments.getWorkflow().getDefinition().getUse().getFunctions().get(taskName);
-				final URI nextTaskURI = taskURI.resolve(taskName);
+				final String nextTaskName = task.getThen();
+				final Task nextTask = arguments.getWorkflow().getDefinition().getUse().getFunctions().get(nextTaskName);
+				final URI nextTaskURI = taskURI.resolve(nextTaskName);
 				flowDirective.set(null);
-				taskInput = taskService.start(arguments, taskName, nextTaskURI, task, taskInput, flowDirective);
-				then = task.getThen();
+				taskInput = extensionService.before(arguments, nextTaskName, nextTaskURI, nextTask, taskInput, flowDirective);
+				taskInput = taskService.start(arguments, nextTaskName, nextTaskURI, nextTask, taskInput, flowDirective);
+				taskInput = extensionService.after(arguments, nextTaskName, nextTaskURI, nextTask, taskInput, flowDirective);
+				then = nextTask.getThen();
 			}
 			else {
 				break;

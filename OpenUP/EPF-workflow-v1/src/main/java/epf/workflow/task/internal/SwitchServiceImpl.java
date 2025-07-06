@@ -8,6 +8,7 @@ import epf.workflow.schema.FlowDirective;
 import epf.workflow.schema.RuntimeExpressionArguments;
 import epf.workflow.schema.SwitchCase;
 import epf.workflow.schema.Task;
+import epf.workflow.spi.ExtensionService;
 import epf.workflow.spi.RuntimeExpressionsService;
 import epf.workflow.task.SwitchService;
 import epf.workflow.task.TaskService;
@@ -23,6 +24,9 @@ public class SwitchServiceImpl implements SwitchService {
 	
 	@Inject
 	transient TaskService taskService;
+	
+	@Inject
+	transient ExtensionService extensionService;
 
 	@Override
 	public Object _switch(final RuntimeExpressionArguments arguments, final SwitchTask task, final Object taskInput, final AtomicReference<String> flowDirective) throws Error {
@@ -52,7 +56,10 @@ public class SwitchServiceImpl implements SwitchService {
 			final Task caseTask = arguments.getWorkflow().getDefinition().getUse().getFunctions().get(caseTaskName);
 			final URI caseTaskURI = URI.create(arguments.getTask().getReference()).resolve(switchCaseName).resolve(caseTaskName);
 			flowDirective.set(null);
-			return taskService.start(arguments, caseTaskName, caseTaskURI, caseTask, taskInput, flowDirective);
+			Object output = extensionService.before(arguments, caseTaskName, caseTaskURI, caseTask, taskInput, flowDirective);
+			output = taskService.start(arguments, caseTaskName, caseTaskURI, caseTask, output, flowDirective);
+			output = extensionService.before(arguments, caseTaskName, caseTaskURI, caseTask, output, flowDirective);
+			return output;
 		}
 		return taskInput;
 	}

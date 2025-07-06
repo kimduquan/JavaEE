@@ -8,6 +8,7 @@ import epf.workflow.schema.Error;
 import epf.workflow.schema.FlowDirective;
 import epf.workflow.schema.RuntimeExpressionArguments;
 import epf.workflow.schema.Task;
+import epf.workflow.spi.ExtensionService;
 import epf.workflow.spi.RuntimeExpressionsService;
 import epf.workflow.task.DoService;
 import epf.workflow.task.ForService;
@@ -27,6 +28,9 @@ public class ForServiceImpl implements ForService {
 	
 	@Inject
 	transient TaskService taskService;
+	
+	@Inject
+	transient ExtensionService extensionService;
 
 	@Override
 	public Object _for(final RuntimeExpressionArguments arguments, final ForTask task, final Object taskInput, final AtomicReference<String> flowDirective) throws Error {
@@ -54,7 +58,9 @@ public class ForServiceImpl implements ForService {
 				final Task nextTask = arguments.getWorkflow().getDefinition().getUse().getFunctions().get(nextTaskName);
 				final URI nextTaskURI = taskURI.resolve(nextTaskName);
 				flowDirective.set(null);
-				output = taskService.start(arguments, nextTaskName, nextTaskURI, nextTask, taskInput, flowDirective);
+				output = extensionService.before(arguments, nextTaskName, nextTaskURI, nextTask, taskInput, flowDirective);
+				output = taskService.start(arguments, nextTaskName, nextTaskURI, nextTask, output, flowDirective);
+				output = extensionService.after(arguments, nextTaskName, nextTaskURI, nextTask, output, flowDirective);
 			}
 		}
 		arguments.setContext(parentContext);
