@@ -12,25 +12,14 @@ import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
-/**
- * 
- */
 @Command(name = Query.SEARCH)
 @RequestScoped
 @Function
 public class Search {
 
-	/**
-	 * 
-	 */
 	@RestClient
 	transient SearchClient search;
 	
-	/**
-	 * @param credential
-	 * @param text
-	 * @return
-	 */
 	@Command(name = "count")
 	public int count(
 			@ArgGroup(exclusive = true, multiplicity = "1")
@@ -43,13 +32,6 @@ public class Search {
 		}
 	}
 	
-	/**
-	 * @param credential
-	 * @param text
-	 * @param firstResult
-	 * @param maxResults
-	 * @return
-	 */
 	@Command(name = "fetch")
 	public String search(
 			@ArgGroup(exclusive = true, multiplicity = "1")

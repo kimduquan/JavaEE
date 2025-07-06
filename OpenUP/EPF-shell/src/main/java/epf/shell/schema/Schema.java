@@ -10,26 +10,14 @@ import org.eclipse.microprofile.rest.client.inject.RestClient;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 
-/**
- * @author PC
- *
- */
 @Command(name = Naming.SCHEMA)
 @RequestScoped
 @Function
 public class Schema {
 	
-	/**
-	 * 
-	 */
 	@RestClient
 	transient SchemaClient schema;
 	
-	/**
-	 * @param credential
-	 * @return
-	 * @throws Exception
-	 */
 	@Command(name = "entities")
 	public String getEntities(
 			@ArgGroup(exclusive = true, multiplicity = "1")

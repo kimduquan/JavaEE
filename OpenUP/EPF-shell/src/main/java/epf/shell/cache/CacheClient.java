@@ -9,18 +9,10 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import epf.naming.Naming;
 import epf.security.schema.Token;
 
-/**
- * @author PC
- *
- */
 @Path(Naming.FILE)
 @RegisterRestClient(configKey = Naming.Client.CLIENT_CONFIG)
 public interface CacheClient {
 	
-	/**
-	 * @param tokenId
-	 * @return
-	 */
 	@GET
     @Path("security")
 	@Produces(MediaType.APPLICATION_JSON)

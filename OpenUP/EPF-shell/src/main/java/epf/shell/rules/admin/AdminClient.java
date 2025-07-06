@@ -13,21 +13,10 @@ import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import epf.naming.Naming;
 
-/**
- * @author PC
- *
- */
 @Path(Naming.Rules.RULES_ADMIN)
 @RegisterRestClient(configKey = Naming.Client.CLIENT_CONFIG)
 public interface AdminClient {
 
-	/**
-	 * @param token
-	 * @param name
-	 * @param input
-	 * @return
-	 * @throws Exception
-	 */
 	@Path("{ruleSet}")
 	@PUT
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
@@ -39,12 +28,6 @@ public interface AdminClient {
 			final InputStream input
 			) throws Exception;
 	
-	/**
-	 * @param token
-	 * @param name
-	 * @return
-	 * @throws Exception
-	 */
 	@Path("{ruleSet}")
 	@DELETE
 	Response deregisterRuleExecutionSet(

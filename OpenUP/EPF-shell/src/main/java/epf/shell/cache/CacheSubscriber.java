@@ -5,26 +5,12 @@ import jakarta.ws.rs.sse.InboundSseEvent;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
-/**
- * @author PC
- *
- */
 public class CacheSubscriber implements Subscriber<InboundSseEvent> {
 	
-	/**
-	 * 
-	 */
 	private transient final PrintWriter out;
 	
-	/**
-	 * 
-	 */
 	private transient final PrintWriter err;
 	
-	/**
-	 * @param out
-	 * @param err
-	 */
 	public CacheSubscriber(final PrintWriter out, final PrintWriter err) {
 		this.out = out;
 		this.err = err;

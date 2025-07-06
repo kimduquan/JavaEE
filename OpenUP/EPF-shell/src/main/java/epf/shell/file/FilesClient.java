@@ -12,18 +12,9 @@ import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-/**
- * @author PC
- *
- */
 @Path("/")
 public interface FilesClient {
 
-	/**
-	 * @param token
-	 * @param input
-	 * @return
-	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
 	Response createFile(
@@ -32,10 +23,6 @@ public interface FilesClient {
 			final InputStream input
 			);
 	
-	/**
-	 * @param token
-	 * @return
-	 */
 	@GET
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     Response read(
@@ -43,10 +30,6 @@ public interface FilesClient {
     		final String token
     		);
 	
-	/**
-	 * @param token
-	 * @return
-	 */
 	@DELETE
     Response delete(
     		@HeaderParam(HttpHeaders.AUTHORIZATION)

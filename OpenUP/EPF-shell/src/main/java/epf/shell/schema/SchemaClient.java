@@ -10,18 +10,10 @@ import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import epf.naming.Naming;
 
-/**
- * @author PC
- *
- */
 @Path(Naming.SCHEMA)
 @RegisterRestClient(configKey = Naming.Client.CLIENT_CONFIG)
 public interface SchemaClient {
 
-	/**
-	 * @param token
-	 * @return
-	 */
 	@GET
     @Produces(MediaType.APPLICATION_JSON)
 	Response getEntities(
@@ -29,10 +21,6 @@ public interface SchemaClient {
     		final String token
     		);
 	
-	/**
-	 * @param token
-	 * @return
-	 */
 	@GET
     @Path("embeddable")
     @Produces(MediaType.APPLICATION_JSON)

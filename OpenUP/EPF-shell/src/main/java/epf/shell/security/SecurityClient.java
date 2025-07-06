@@ -18,21 +18,10 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import epf.naming.Naming;
 import epf.security.schema.Token;
 
-/**
- * @author PC
- *
- */
 @Path(Naming.SECURITY)
 @RegisterRestClient(configKey = Naming.Client.CLIENT_CONFIG)
 public interface SecurityClient {
 
-	/**
-	 * @param username
-	 * @param passwordHash
-	 * @param url
-	 * @return
-	 * @throws Exception
-	 */
 	@POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
@@ -45,30 +34,18 @@ public interface SecurityClient {
             final String url
     ) throws Exception;
 	
-	/**
-	 * @return
-	 * @throws Exception
-	 */
 	@DELETE
     @Produces(MediaType.TEXT_PLAIN)
     String logOut(
     		@HeaderParam(HttpHeaders.AUTHORIZATION)
     		final String token) throws Exception;
 	
-	/**
-	 * @return
-	 * @throws Exception
-	 */
 	@GET
     @Produces(MediaType.APPLICATION_JSON)
     Token authenticate(
     		@HeaderParam(HttpHeaders.AUTHORIZATION)
     		final String token) throws Exception;
 	
-	/**
-	 * @param password
-	 * @throws Exception
-	 */
 	@PATCH
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     void update(
@@ -78,10 +55,6 @@ public interface SecurityClient {
     		final String password
     		) throws Exception;
 	
-	/**
-	 * @return
-	 * @throws Exception
-	 */
 	@PUT
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)

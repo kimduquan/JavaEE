@@ -11,19 +11,10 @@ import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-/**
- * 
- */
 @Path(Naming.Workflow.WORKFLOW_MANAGEMENT)
 @RegisterRestClient(configKey = Naming.Client.CLIENT_CONFIG)
 public interface ManagementClient {
 
-	/**
-	 * @param token
-	 * @param input
-	 * @return
-	 * @throws Exception
-	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)

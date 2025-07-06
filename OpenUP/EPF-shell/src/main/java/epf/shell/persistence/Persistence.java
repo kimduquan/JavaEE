@@ -11,27 +11,14 @@ import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
-/**
- * @author PC
- *
- */
 @Command(name = Naming.PERSISTENCE)
 @RequestScoped
 @Function
 public class Persistence {
 	
-	/**
-	 * 
-	 */
 	@RestClient
 	transient PersistenceClient persistence;
 	
-	/**
-	 * @param credential
-	 * @param schema
-	 * @param entity
-	 * @param data
-	 */
 	@Command(name = "persist")
 	public String persist(
 			@ArgGroup(exclusive = true, multiplicity = "1")
@@ -48,13 +35,6 @@ public class Persistence {
 		}
 	}
 	
-	/**
-	 * @param credential
-	 * @param schema
-	 * @param entity
-	 * @param entityId
-	 * @param data
-	 */
 	@Command(name = "merge")
 	public String merge(
 			@ArgGroup(exclusive = true, multiplicity = "1")
@@ -73,13 +53,6 @@ public class Persistence {
 		}
 	}
 	
-	/**
-	 * @param credential
-	 * @param schema
-	 * @param entity
-	 * @param entityId
-	 * @throws Exception
-	 */
 	@Command(name = "remove")
 	public void remove(
 			@ArgGroup(exclusive = true, multiplicity = "1")

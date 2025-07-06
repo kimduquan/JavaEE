@@ -14,20 +14,10 @@ import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import epf.naming.Naming;
 
-/**
- * 
- */
 @Path(Naming.QUERY)
 @RegisterRestClient(configKey = Naming.Client.CLIENT_CONFIG)
 public interface QueryClient {
 	
-	/**
-	 * @param token
-	 * @param schema
-	 * @param entity
-	 * @param entityId
-	 * @return
-	 */
 	@GET
     @Path("entity/{schema}/{entity}/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -42,12 +32,6 @@ public interface QueryClient {
             final String entityId
             );
 	
-	/**
-	 * @param token
-	 * @param schema
-	 * @param entity
-	 * @return
-	 */
 	@HEAD
 	@Path("entity/{schema}/{entity}")
     Response countEntity(
@@ -59,11 +43,6 @@ public interface QueryClient {
             final String entity
             );
 	
-	/**
-	 * @param token
-	 * @param entityIds
-	 * @return
-	 */
 	@PATCH
     @Path(Naming.Query.Client.ENTITY)
     @Consumes(MediaType.APPLICATION_JSON)

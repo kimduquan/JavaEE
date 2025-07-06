@@ -19,39 +19,20 @@ import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
-/**
- * @author PC
- *
- */
 @Command(name = Naming.FILE)
 @RequestScoped
 @Function
 public class FileStore {
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient ClientUtil clientUtil;
 	
-	/**
-	 * @param path
-	 * @return
-	 * @throws Exception
-	 */
 	protected FilesClient buildClient(final Path path) throws Exception {
 		final URI baseUrl = new URI(clientUtil.getUrl(Naming.FILE) + "/" + PathUtil.toURI(path));
 		final FilesClient files = clientUtil.newClient(baseUrl, FilesClient.class);
 		return files;
 	}
 	
-	/**
-	 * @param token
-	 * @param file
-	 * @param path
-	 * @return
-	 * @throws Exception
-	 */
 	@Command(name = "create")
 	public String createFile(
 			@ArgGroup(exclusive = true, multiplicity = "1")
@@ -70,12 +51,6 @@ public class FileStore {
 		}
 	}
 	
-	/**
-	 * @param token
-	 * @param path
-	 * @param output
-	 * @throws Exception
-	 */
 	@Command(name = "read")
 	public void read(
 			@ArgGroup(exclusive = true, multiplicity = "1")
@@ -94,11 +69,6 @@ public class FileStore {
 		}
 	}
 	
-	/**
-	 * @param token
-	 * @param path
-	 * @throws Exception
-	 */
 	@Command(name = "delete")
 	public void delete(
 			@ArgGroup(exclusive = true, multiplicity = "1")

@@ -12,80 +12,43 @@ import epf.naming.Naming;
 import epf.util.logging.LogManager;
 import epf.util.security.KeyStoreUtil;
 
-/**
- * 
- */
 @ApplicationScoped
 public class SecurityUtil {
 	
-	/**
-	 *
-	 */
 	private transient static final Logger LOGGER = LogManager.getLogger(SecurityUtil.class.getName());
 
-	
-	/**
-	 *
-	 */
 	private transient KeyStore keyStore;
 	
-	/**
-	 *
-	 */
 	private transient KeyStore trustStore;
 	
-	/**
-	 *
-	 */
 	@ConfigProperty(name = Naming.Client.SSL_KEY_STORE)
 	@Inject
 	transient String keyStoreFile;
 	
-	/**
-	 *
-	 */
 	@ConfigProperty(name = Naming.Client.SSL_KEY_STORE_TYPE)
 	@Inject
 	transient String keyStoreType;
 	
-	/**
-	 *
-	 */
 	@ConfigProperty(name = Naming.Client.SSL_KEY_STORE_PASSWORD)
 	@Inject
 	transient String keyStorePassword;
 	
-	/**
-	 *
-	 */
 	@ConfigProperty(name = Naming.Client.SSL_KEY_PASSWORD)
 	@Inject
 	transient String keyPassword;
 	
-	/**
-	 *
-	 */
 	@ConfigProperty(name = Naming.Client.SSL_TRUST_STORE)
 	@Inject
 	transient String trustStoreFile;
 	
-	/**
-	 *
-	 */
 	@ConfigProperty(name = Naming.Client.SSL_TRUST_STORE_TYPE)
 	@Inject
 	transient String trustStoreType;
 	
-	/**
-	 *
-	 */
 	@ConfigProperty(name = Naming.Client.SSL_TRUST_STORE_PASSWORD)
 	@Inject
 	transient String trustStorePassword;
 	
-	/**
-	 * 
-	 */
 	@PostConstruct
 	protected void postConstruct() {
 		try {

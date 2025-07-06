@@ -3,9 +3,6 @@ package epf.shell.util.jdbc;
 import java.net.URL;
 import picocli.CommandLine.ITypeConverter;
 
-/**
- * 
- */
 public class URLTypeConverter implements ITypeConverter<URL> {
 
 	@Override

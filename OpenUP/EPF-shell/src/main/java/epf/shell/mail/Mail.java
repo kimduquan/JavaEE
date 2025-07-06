@@ -13,24 +13,14 @@ import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
-/**
- * 
- */
 @Command(name = Naming.MAIL)
 @RequestScoped
 @Function
 public class Mail {
 	
-	/**
-	 * 
-	 */
 	@RestClient
 	transient MailClient mail;
 	
-	/**
-	 * @throws Exception 
-	 * 
-	 */
 	@Command(name = "send")
 	public void send(
 			@ArgGroup(exclusive = true, multiplicity = "1")

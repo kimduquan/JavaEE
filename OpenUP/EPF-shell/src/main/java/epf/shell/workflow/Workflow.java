@@ -12,29 +12,14 @@ import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
-/**
- * @author PC
- *
- */
 @Command(name = Naming.WORKFLOW, subcommands = {Management.class})
 @RequestScoped
 @Function
 public class Workflow {
 	
-	/**
-	 * 
-	 */
 	@RestClient
 	transient WorkflowClient client;
 	
-	/**
-	 * @param credential
-	 * @param workflow
-	 * @param version
-	 * @param input
-	 * @return
-	 * @throws Exception
-	 */
 	@Command(name = "start")
 	public String start(
 			@ArgGroup(exclusive = true, multiplicity = "1")

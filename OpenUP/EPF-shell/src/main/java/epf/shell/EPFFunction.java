@@ -17,10 +17,6 @@ import io.quarkus.picocli.runtime.annotations.TopCommand;
 import picocli.CommandLine.Command;
 import jakarta.enterprise.context.ApplicationScoped;
 
-/**
- * @author PC
- *
- */
 @TopCommand
 @Command(name = "epf", subcommands = {Security.class, Persistence.class, Query.class, Search.class, Schema.class, FileStore.class, Rules.class, Utility.class, Image.class, Messaging.class, Health.class, Mail.class, Workflow.class})
 @ApplicationScoped

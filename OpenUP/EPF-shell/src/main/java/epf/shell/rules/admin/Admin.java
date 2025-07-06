@@ -13,27 +13,14 @@ import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
-/**
- * @author PC
- *
- */
 @Command(name = "admin")
 @RequestScoped
 @Function
 public class Admin {
 	
-	/**
-	 * 
-	 */
 	@RestClient
 	transient AdminClient admin;
 
-	/**
-	 * @param token
-	 * @param name
-	 * @param file
-	 * @throws Exception 
-	 */
 	@Command(name = "register")
 	public void registerRuleExecutionSet(
 			@ArgGroup(exclusive = true, multiplicity = "1")
@@ -51,11 +38,6 @@ public class Admin {
 		}
 	}
 	
-	/**
-	 * @param token
-	 * @param name
-	 * @throws Exception
-	 */
 	@Command(name = "de-register")
 	public void deregisterRuleExecutionSet(
 			@ArgGroup(exclusive = true, multiplicity = "1")

@@ -14,49 +14,24 @@ import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
-/**
- * @author PC
- *
- */
 @Command(name = Naming.SECURITY)
 @RequestScoped
 @Function
 public class Security {
 	
-	/**
-	 * 
-	 */
 	public static final String TOKEN_ARG = "--token";
-	/**
-	 * 
-	 */
 	public static final String TOKEN_DESC = "Token";
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient IdentityStore identityStore;
 	
-	/**
-	 * 
-	 */
 	@RestClient
 	transient SecurityClient security;
 	
-	/**
-	 * 
-	 */
 	@ConfigProperty(name = Naming.Shell.SHELL_URL)
 	@Inject
 	String shellUrl;
 
-	/**
-	 * @param user
-	 * @param password
-	 * @return
-	 * @throws Exception
-	 */
 	@Command(name = "login")
 	public String login(
 			@Option(names = {"-u", "--user"}, required = true, description = "User name")
@@ -70,11 +45,6 @@ public class Security {
 		return security.login(user, new String(password), shellUrl);
 	}
 	
-	/**
-	 * @param credential
-	 * @return
-	 * @throws Exception
-	 */
 	@Command(name = "logout")
 	public String logout(
 			@ArgGroup(exclusive = true, multiplicity = "1")
@@ -85,11 +55,6 @@ public class Security {
 		return security.logOut(credential.getAuthHeader());
 	}
 	
-	/**
-	 * @param token
-	 * @return
-	 * @throws Exception
-	 */
 	@Command(name = "auth")
 	public Token authenticate(
 			@Option(names = {"-t", TOKEN_ARG}, description = TOKEN_DESC) 
@@ -102,11 +67,6 @@ public class Security {
 		return authToken;
 	}
 	
-	/**
-	 * @param credential
-	 * @param password
-	 * @throws Exception
-	 */
 	@Command(name = "update")
 	public void update(
 			@ArgGroup(exclusive = true, multiplicity = "1")
@@ -118,11 +78,6 @@ public class Security {
 		security.update(credential.getAuthHeader(), new String(password));
 	}
 	
-	/**
-	 * @param credential
-	 * @return
-	 * @throws Exception
-	 */
 	@Command(name = "revoke")
 	public String revoke(
 			@ArgGroup(exclusive = true, multiplicity = "1")

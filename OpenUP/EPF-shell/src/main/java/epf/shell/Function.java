@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.shell;
 
 import static java.lang.annotation.ElementType.METHOD;
@@ -15,10 +12,6 @@ import jakarta.interceptor.InterceptorBinding;
 @Target({TYPE, METHOD})
 @Inherited
 @InterceptorBinding
-/**
- * @author PC
- *
- */
 public @interface Function {
 
 }

@@ -12,28 +12,14 @@ import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
-/**
- * @author PC
- *
- */
 @Command(name = Naming.RULES, subcommands = {Admin.class})
 @RequestScoped
 @Function
 public class Rules {
 	
-	/**
-	 * 
-	 */
 	@RestClient
 	transient RulesClient rules;
 	
-	/**
-	 * @param tokenArg
-	 * @param ruleSet
-	 * @param input
-	 * @return
-	 * @throws Exception
-	 */
 	@Command(name = "execute")
 	public String executeRules(
 			@ArgGroup(exclusive = true, multiplicity = "1")
@@ -49,12 +35,6 @@ public class Rules {
 		}
 	}
 	
-	/**
-	 * @param token
-	 * @param ruleSet
-	 * @param object
-	 * @throws Exception
-	 */
 	@Command(name = "add")
 	public void addObject(
 			@ArgGroup(exclusive = true, multiplicity = "1")
@@ -70,12 +50,6 @@ public class Rules {
 		}
 	}
 	
-	/**
-	 * @param token
-	 * @param ruleSet
-	 * @return
-	 * @throws Exception
-	 */
 	@Command(name = "execute-session")
 	public String executeRules(
 			@ArgGroup(exclusive = true, multiplicity = "1")
@@ -89,11 +63,6 @@ public class Rules {
 		}
 	}
 	
-	/**
-	 * @param token
-	 * @return
-	 * @throws Exception
-	 */
 	@Command(name = "registrations")
 	public String getRegistrations(
 			@ArgGroup(exclusive = true, multiplicity = "1")

@@ -15,36 +15,20 @@ import jakarta.websocket.Session;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 
-/**
- * 
- */
 @Command(name = Naming.LANG)
 @RequestScoped
 @Function
 public class Lang {
 
-	/**
-	 * 
-	 */
 	@Inject
 	transient ClientUtil clientUtil;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient StreamClient stream;
 	
-	/**
-	 * 
-	 */
 	@RestClient
 	transient LangClient lang;
 	
-	/**
-	 * @param credential
-	 * @throws Exception
-	 */
 	@Command(name = "send")
 	public void send(
 			@ArgGroup(exclusive = true, multiplicity = "1")

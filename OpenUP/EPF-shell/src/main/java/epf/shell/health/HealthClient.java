@@ -7,16 +7,9 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import epf.naming.Naming;
 
-/**
- * @author PC
- *
- */
 @Path(Naming.HEALTH)
 public interface HealthClient {
 
-	/**
-	 * @return
-	 */
 	@GET
 	@Path("ready")
 	@Produces(MediaType.APPLICATION_JSON)

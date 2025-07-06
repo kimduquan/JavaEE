@@ -10,37 +10,21 @@ import jakarta.websocket.OnMessage;
 import jakarta.websocket.Session;
 import epf.shell.SYSTEM;
 
-/**
- * 
- */
 @ClientEndpoint
 @ApplicationScoped
 public class MessagingClient {
 
-	/**
-	 * 
-	 */
 	@Inject @Named(SYSTEM.OUT)
 	transient PrintWriter out;
-	/**
-	 * 
-	 */
+	
 	@Inject @Named(SYSTEM.ERR)
 	transient PrintWriter err;
 	
-	/**
-	 * @param message
-	 * @param session
-	 */
 	@OnMessage
     public void onMessage(final String message, final Session session) {
 		out.println(message);
 	}
 	
-	/**
-	 * @param session
-	 * @param throwable
-	 */
 	@OnError
 	public void onError(final Session session, final Throwable throwable) {
 		throwable.printStackTrace(err);

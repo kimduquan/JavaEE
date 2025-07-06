@@ -11,27 +11,14 @@ import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
-/**
- * @author PC
- *
- */
 @Command(name = Naming.MANAGEMENT)
 @RequestScoped
 @Function
 public class Management {
 	
-	/**
-	 * 
-	 */
 	@RestClient
 	transient ManagementClient management;
 	
-	/**
-	 * @param credential
-	 * @param input
-	 * @return
-	 * @throws Exception
-	 */
 	@Command(name = "new")
 	public String newWorkflowDefinition(
 			@ArgGroup(exclusive = true, multiplicity = "1")

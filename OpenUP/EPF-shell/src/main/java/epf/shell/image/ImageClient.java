@@ -12,20 +12,10 @@ import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import epf.naming.Naming;
 
-/**
- * @author PC
- *
- */
 @Path(Naming.IMAGE)
 @RegisterRestClient(configKey = Naming.Client.CLIENT_CONFIG)
 public interface ImageClient {
 
-	/**
-	 * @param token
-	 * @param input
-	 * @return
-	 * @throws Exception
-	 */
 	@Path("contours")
 	@POST
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)

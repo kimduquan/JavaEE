@@ -16,43 +16,24 @@ import epf.util.ssl.SSLContextUtil;
 import io.undertow.websockets.DefaultWebSocketClientSslProvider;
 import picocli.CommandLine.Command;
 
-/**
- * @author PC
- *
- */
 @Command(name = Naming.MESSAGING)
 @RequestScoped
 @Function
 public class Messaging {
 	
-	/**
-	 *
-	 */
 	@ConfigProperty(name = Naming.Gateway.MESSAGING_URL)
 	@Inject
 	URI messagingUrl;
 	
-	/**
-	 * 
-	 */
 	@Inject @Named(SYSTEM.OUT)
 	transient PrintWriter out;
 	
-	/**
-	 * 
-	 */
 	@Inject @Named(SYSTEM.ERR)
 	transient PrintWriter err;
 	
-	/**
-	 *
-	 */
 	@Inject
 	transient SecurityUtil securityUtil;
 	
-	/**
-	 * 
-	 */
 	@PostConstruct
 	protected void postConstruct() {
 		try {

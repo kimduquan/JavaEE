@@ -8,15 +8,9 @@ import jakarta.inject.Named;
 import jakarta.websocket.OnMessage;
 import jakarta.websocket.Session;
 
-/**
- * 
- */
 @RequestScoped
 public class StreamClient {
 	
-	/**
-	 * 
-	 */
 	@Inject @Named(SYSTEM.OUT)
 	transient PrintWriter out;
 

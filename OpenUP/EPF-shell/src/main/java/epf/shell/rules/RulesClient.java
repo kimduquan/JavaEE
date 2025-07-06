@@ -15,21 +15,10 @@ import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import epf.naming.Naming;
 
-/**
- * @author PC
- *
- */
 @Path(Naming.RULES)
 @RegisterRestClient(configKey = Naming.Client.CLIENT_CONFIG)
 public interface RulesClient {
 
-	/**
-	 * @param token
-	 * @param ruleSet
-	 * @param input
-	 * @return
-	 * @throws Exception
-	 */
 	@POST
 	@Path("{ruleSet}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -42,12 +31,6 @@ public interface RulesClient {
 			final String input
 			) throws Exception;
 	
-	/**
-	 * @param token
-	 * @param ruleSet
-	 * @return
-	 * @throws Exception
-	 */
 	@PUT
 	@Path("{ruleSet}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -58,13 +41,6 @@ public interface RulesClient {
 			final String ruleSet
 			) throws Exception;
 	
-	/**
-	 * @param token
-	 * @param ruleSet
-	 * @param input
-	 * @return
-	 * @throws Exception
-	 */
 	@PATCH
 	@Path("{ruleSet}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -75,11 +51,6 @@ public interface RulesClient {
 			final String ruleSet,
 			final String input) throws Exception;
 	
-	/**
-	 * @param token
-	 * @return
-	 * @throws Exception
-	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	Response getRegistrations(

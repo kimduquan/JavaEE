@@ -14,22 +14,10 @@ import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import epf.naming.Naming;
 
-/**
- * @author PC
- *
- */
 @Path(Naming.PERSISTENCE)
 @RegisterRestClient(configKey = Naming.Client.CLIENT_CONFIG)
 public interface PersistenceClient {
 
-	/**
-	 * @param token
-	 * @param schema
-	 * @param entity
-	 * @param body
-	 * @return
-	 * @throws Exception
-	 */
 	@POST
     @Path("{schema}/{entity}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -44,14 +32,6 @@ public interface PersistenceClient {
             final String body
             ) throws Exception;
 	
-	/**
-	 * @param token
-	 * @param schema
-	 * @param entity
-	 * @param entityId
-	 * @param body
-	 * @throws Exception
-	 */
 	@PUT
     @Path("{schema}/{entity}/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -67,12 +47,6 @@ public interface PersistenceClient {
             final String body
             ) throws Exception;
 	
-	/**
-	 * @param token
-	 * @param schema
-	 * @param entity
-	 * @param entityId
-	 */
 	@DELETE
     @Path("{schema}/{entity}/{id}")
     void remove(

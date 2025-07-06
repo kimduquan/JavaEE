@@ -15,46 +15,24 @@ import epf.shell.util.jdbc.URLTypeConverter;
 import picocli.CommandLine;
 import picocli.CommandLine.IFactory;
 
-/**
- * @author PC
- *
- */
 @QuarkusMain
 @ApplicationScoped
 public class Shell implements QuarkusApplication {
 	
-	/**
-	 * 
-	 */
 	private transient CommandLine commandLine;
 	
-	/**
-	 * 
-	 */
 	private transient final PathTypeConverter pathConverter = new PathTypeConverter();
 	
-	/**
-	 * 
-	 */
 	private transient final URLTypeConverter urlConverter = new URLTypeConverter();
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient IFactory factory;
 	
-	/**
-	 * @return
-	 */
 	@Produces @Named(SYSTEM.OUT)
 	public PrintWriter getOutput() {
 		return commandLine.getOut();
 	}
 	
-	/**
-	 * @return
-	 */
 	@Produces @Named(SYSTEM.ERR)
 	public PrintWriter getError() {
 		return  commandLine.getErr();

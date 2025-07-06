@@ -14,26 +14,14 @@ import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
-/**
- * @author PC
- *
- */
 @Command(name = Naming.IMAGE)
 @RequestScoped
 @Function
 public class Image {
 	
-	/**
-	 * 
-	 */
 	@RestClient
 	transient ImageClient image;
 	
-	/**
-	 * @param credential
-	 * @param file
-	 * @throws Exception 
-	 */
 	@Command(name = "find-contours")
 	public void findContours(
 			@ArgGroup(exclusive = true, multiplicity = "1")

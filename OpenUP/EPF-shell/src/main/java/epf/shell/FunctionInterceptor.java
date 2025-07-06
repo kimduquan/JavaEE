@@ -14,32 +14,17 @@ import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.Interceptor;
 import jakarta.interceptor.InvocationContext;
 
-/**
- * @author PC
- *
- */
 @Function
 @Interceptor
 @Priority(value = Interceptor.Priority.APPLICATION)
 public class FunctionInterceptor {
 	
-	/**
-	 * 
-	 */
 	@Inject @Named(SYSTEM.OUT)
 	transient PrintWriter out;
 	
-	/**
-	 * 
-	 */
 	@Inject @Named(SYSTEM.ERR)
 	transient PrintWriter err;
 	
-	/**
-	 * @param context
-	 * @return
-	 * @throws Exception
-	 */
 	@AroundInvoke
 	public Object aroundInvoke(final InvocationContext context) throws Exception {
 		final String cls = context.getTarget().getClass().getName();
@@ -64,11 +49,6 @@ public class FunctionInterceptor {
 		}
 	}
 	
-	/**
-	 * @param result
-	 * @return
-	 * @throws Exception 
-	 */
 	protected String valueOf(final Object result) throws Exception {
 		String value;
 		if(result instanceof String || result instanceof JsonValue || result == null) {

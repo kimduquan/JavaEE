@@ -43,46 +43,24 @@ import picocli.CommandLine.Option;
 import java.sql.Connection;
 import java.sql.Statement;
 
-/**
- * @author PC
- *
- */
 @Command(name = "utility")
 @ApplicationScoped
 @Function
 public class Utility {
 	
-	/**
-	 * 
-	 */
 	private static final Logger LOGGER = LogManager.getLogger(Utility.class.getName());
 	
-	/**
-	 * 
-	 */
 	private transient Path tempDir;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	transient ClientUtil clientUtil;
 	
-	/**
-	 * 
-	 */
 	@Inject @Named(SYSTEM.OUT)
 	transient PrintWriter out;
 	
-	/**
-	 * 
-	 */
 	@Inject @Named(SYSTEM.ERR)
 	transient PrintWriter err;
 	
-	/**
-	 * 
-	 */
 	@PostConstruct
 	protected void postConstruct() {
 		try {
@@ -93,22 +71,11 @@ public class Utility {
 		}
 	}
 	
-	/**
-	 * 
-	 */
 	@PreDestroy
 	protected void preDestroy() {
 		tempDir.toFile().delete();
 	}
 
-	/**
-	 * @param dir
-	 * @param env
-	 * @param args
-	 * @return
-	 * @throws IOException
-	 * @throws InterruptedException
-	 */
 	@Command(name = "exec")
 	public int exec(
 			@Option(names = {"-dir", "--directory"}, description = "Working directory")
@@ -134,15 +101,6 @@ public class Utility {
 		return process.waitFor();
 	}
 	
-	/**
-	 * @param builder
-	 * @param accept
-	 * @param encoding
-	 * @param language
-	 * @param cookie
-	 * @param header
-	 * @return
-	 */
 	protected Builder buildRequest(
 			final Builder builder,
 			final String[] accept,
@@ -167,13 +125,6 @@ public class Utility {
 		return req;
 	}
 	
-	/**
-	 * @param builder
-	 * @param method
-	 * @param type
-	 * @param entity
-	 * @return
-	 */
 	protected Response buildEntity(
 			final Builder builder, 
 			final String method, 
@@ -216,10 +167,6 @@ public class Utility {
 		return reqEntity != null ? builder.method(method, reqEntity) : builder.method(method);
 	}
 	
-	/**
-	 * @param uri
-	 * @throws Exception
-	 */
 	@Command(name = "connect")
 	public void connectToServer(
 			@Option(names = {"-u", "--uri"}, required = true, description = "URI") 
@@ -239,11 +186,6 @@ public class Utility {
 		}
 	}
 	
-	/**
-	 * @param directory
-	 * @param file
-	 * @throws Exception
-	 */
 	@Command(name = "zip")
 	public void zip(
 			@Option(names = {"-d", "--dir"}, description = "Directory")
@@ -253,11 +195,6 @@ public class Utility {
 		ZipUtil.zip(directory, file);
 	}
 	
-	/**
-	 * @param file
-	 * @param directory
-	 * @throws Exception
-	 */
 	@Command(name = "un-zip")
 	public void unZip(
 			@Option(names = {"-f", "--file"}, description = "File")
@@ -268,12 +205,6 @@ public class Utility {
 		ZipUtil.unZip(file, directory);
 	}
 	
-	/**
-	 * @param algorithm
-	 * @param privateFile
-	 * @param publicFile
-	 * @throws Exception 
-	 */
 	@Command(name = "gen-keypair")
 	public void generateKeyPair(
 			@Option(names = {"-a", "--algorithm"}, description = "Algorithm", defaultValue = "RSA")
@@ -287,12 +218,6 @@ public class Utility {
 		KeyUtil.generateKeyPair(algorithm, keySize, privateFile, publicFile);
 	}
 	
-	/**
-	 * @param url
-	 * @param user
-	 * @param password
-	 * @throws Exception
-	 */
 	@Command(name = "jdbc")
 	public void getConnection(
 			@Option(names = {"-url", "--url"}, required = true, description = "URL")

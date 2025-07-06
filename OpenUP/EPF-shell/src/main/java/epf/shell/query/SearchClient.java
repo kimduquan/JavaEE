@@ -12,19 +12,10 @@ import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import epf.naming.Naming;
 
-/**
- * 
- */
 @Path(Naming.QUERY)
 @RegisterRestClient(configKey = Naming.Client.CLIENT_CONFIG)
 public interface SearchClient {
 	
-	/**
-	 * @param text
-	 * @param firstResult
-	 * @param maxResults
-	 * @return
-	 */
 	@GET
 	@Path(Naming.Query.SEARCH)
     @Produces(MediaType.APPLICATION_JSON)
@@ -38,10 +29,6 @@ public interface SearchClient {
             @QueryParam(Naming.Query.Client.MAX)
     		final Integer maxResults);
 	
-	/**
-	 * @param text
-	 * @return
-	 */
 	@HEAD
 	@Path(Naming.Query.SEARCH)
 	Response count(

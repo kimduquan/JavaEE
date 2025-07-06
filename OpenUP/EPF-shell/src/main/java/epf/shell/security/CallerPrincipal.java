@@ -12,10 +12,6 @@ import jakarta.validation.Payload;
 @Documented
 @Retention(RUNTIME)
 @Target(PARAMETER)
-/**
- * @author PC
- *
- */
 public @interface CallerPrincipal {
 	
 	String message() default "";

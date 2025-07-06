@@ -8,17 +8,10 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 
-/**
- * 
- */
 @Path(Naming.LANG)
 @RegisterRestClient(configKey = Naming.Client.CLIENT_CONFIG)
 public interface LangClient {
 
-	/**
-	 * @param id
-	 * @param text
-	 */
 	@Path(Naming.MESSAGING)
 	@POST
 	@Consumes(MediaType.TEXT_PLAIN)

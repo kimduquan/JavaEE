@@ -12,27 +12,14 @@ import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
-/**
- * 
- */
 @Command(name = Naming.QUERY)
 @RequestScoped
 @Function
 public class Query {
 
-	/**
-	 * 
-	 */
 	@RestClient
 	transient QueryClient query;
 	
-	/**
-	 * @param credential
-	 * @param schema
-	 * @param entity
-	 * @param entityId
-	 * @return
-	 */
 	@Command(name = "get")
 	public String getEntity(
 			@ArgGroup(exclusive = true, multiplicity = "1")
@@ -49,12 +36,6 @@ public class Query {
 		}
 	}
 	
-	/**
-	 * @param credential
-	 * @param schema
-	 * @param entity
-	 * @return
-	 */
 	@Command(name = "count")
 	public int countEntity(
 			@ArgGroup(exclusive = true, multiplicity = "1")
@@ -69,11 +50,6 @@ public class Query {
 		}
 	}
 	
-	/**
-	 * @param credential
-	 * @param entityIds
-	 * @return
-	 */
 	@Command(name = "fetch")
 	public String fetchEntities(
 			@ArgGroup(exclusive = true, multiplicity = "1")
