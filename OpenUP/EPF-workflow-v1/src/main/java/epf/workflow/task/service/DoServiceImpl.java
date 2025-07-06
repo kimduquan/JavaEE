@@ -50,7 +50,7 @@ public class DoServiceImpl implements DoService {
 			else if(FlowDirective.isString(then)) {
 				taskIndex++;
 				taskName = task.getThen();
-				task = arguments.getWorkflow().getDefinition().getDo_().get(taskName);
+				task = arguments.getWorkflow().getDefinition().getUse().getFunctions().get(taskName);
 				final URI nextTaskURI = taskURI.resolve(taskName);
 				flowDirective.set(null);
 				taskInput = taskService.start(arguments, taskName, nextTaskURI, task, taskInput, flowDirective);

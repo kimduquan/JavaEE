@@ -49,7 +49,7 @@ public class SwitchServiceImpl implements SwitchService {
 		}
 		if(switchCase != null && FlowDirective.isString(switchCase.getThen())) {
 			final String caseTaskName = switchCase.getThen();
-			final Task caseTask = arguments.getWorkflow().getDefinition().getDo_().get(caseTaskName);
+			final Task caseTask = arguments.getWorkflow().getDefinition().getUse().getFunctions().get(caseTaskName);
 			final URI caseTaskURI = URI.create(arguments.getTask().getReference()).resolve(switchCaseName).resolve(caseTaskName);
 			flowDirective.set(null);
 			return taskService.start(arguments, caseTaskName, caseTaskURI, caseTask, taskInput, flowDirective);

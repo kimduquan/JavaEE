@@ -51,7 +51,7 @@ public class ForServiceImpl implements ForService {
 			}
 			else if(flowDirective.get() != null) {
 				final String nextTaskName = flowDirective.get();
-				final Task nextTask = arguments.getWorkflow().getDefinition().getDo_().get(nextTaskName);
+				final Task nextTask = arguments.getWorkflow().getDefinition().getUse().getFunctions().get(nextTaskName);
 				final URI nextTaskURI = taskURI.resolve(nextTaskName);
 				flowDirective.set(null);
 				output = taskService.start(arguments, nextTaskName, nextTaskURI, nextTask, taskInput, flowDirective);
