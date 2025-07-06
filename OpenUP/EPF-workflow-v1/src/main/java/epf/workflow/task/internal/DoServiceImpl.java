@@ -47,9 +47,9 @@ public class DoServiceImpl implements DoService {
 			task = entry.getValue();
 			taskURI = parentURI.resolve("" + taskIndex).resolve(taskName);
 			output = arguments.getTask().getInput();
-			output = extensionService.before(arguments, taskName, taskURI, task, taskInput, flowDirective);
-			output = taskService.start(arguments, taskName, taskURI, task, taskInput, flowDirective);
-			output = extensionService.after(arguments, taskName, taskURI, task, taskInput, flowDirective);
+			output = extensionService.before(arguments, taskName, taskURI, task, output, flowDirective);
+			output = taskService.start(arguments, taskName, taskURI, task, output, flowDirective);
+			output = extensionService.after(arguments, taskName, taskURI, task, output, flowDirective);
 			then = task.getThen();
 			if(FlowDirective._continue.equals(then)) {
 				continue;
