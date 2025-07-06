@@ -42,7 +42,8 @@ public class ForkServiceImpl implements ForkService {
 		task.getFork().getBranches().forEach((branchTaskName, branchTask) -> {
 			final URI branchURI = URI.create(arguments.getTask().getReference()).resolve(branchTaskName);
 			branchTasks.add(() -> {
-				Object output = extensionService.before(arguments, branchTaskName, branchURI, branchTask, arguments.getInput(), flowDirective);
+				Object output = arguments.getTask().getInput();
+				output = extensionService.before(arguments, branchTaskName, branchURI, branchTask, output, flowDirective);
 				output = taskService.start(arguments, branchTaskName, branchURI, branchTask, output, flowDirective);
 				output = extensionService.after(arguments, branchTaskName, branchURI, branchTask, output, flowDirective);
 				return output;

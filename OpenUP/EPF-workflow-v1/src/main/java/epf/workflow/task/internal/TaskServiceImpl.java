@@ -4,7 +4,6 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicReference;
-
 import epf.workflow.event.TaskLifecycleEventsService;
 import epf.workflow.event.schema.TaskCompletedEvent;
 import epf.workflow.event.schema.TaskCreatedEvent;

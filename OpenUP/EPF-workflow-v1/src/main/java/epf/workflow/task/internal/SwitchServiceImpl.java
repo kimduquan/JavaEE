@@ -56,7 +56,8 @@ public class SwitchServiceImpl implements SwitchService {
 			final Task caseTask = arguments.getWorkflow().getDefinition().getUse().getFunctions().get(caseTaskName);
 			final URI caseTaskURI = URI.create(arguments.getTask().getReference()).resolve(switchCaseName).resolve(caseTaskName);
 			flowDirective.set(null);
-			Object output = extensionService.before(arguments, caseTaskName, caseTaskURI, caseTask, taskInput, flowDirective);
+			Object output = taskInput;
+			output = extensionService.before(arguments, caseTaskName, caseTaskURI, caseTask, output, flowDirective);
 			output = taskService.start(arguments, caseTaskName, caseTaskURI, caseTask, output, flowDirective);
 			output = extensionService.before(arguments, caseTaskName, caseTaskURI, caseTask, output, flowDirective);
 			return output;
