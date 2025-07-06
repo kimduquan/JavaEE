@@ -940,6 +940,7 @@
 		<module>EPF-management</module>
 		<module>EPF-security-auth</module>
 		<module>EPF-workflow</module>
+		<module>EPF-workflow-v1</module>
 		<module>EPF-workflow-management</module>
 		<module>EPF-event</module>
 		
@@ -959,6 +960,7 @@
 		
 		<module>EPF-schema</module>
 		<module>EPF-workflow-schema</module>
+		<module>EPF-workflow-schema-v1</module>
 		<module>EPF-workflow-task-schema</module>
 		<module>EPF-event-schema</module>
 		<module>EPF-messaging-schema</module>
