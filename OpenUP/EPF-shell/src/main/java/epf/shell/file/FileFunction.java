@@ -5,9 +5,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-
 import jakarta.ws.rs.core.Response;
 import epf.client.internal.ClientUtil;
 import epf.client.util.Client;
