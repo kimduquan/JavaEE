@@ -8,47 +8,25 @@ import jakarta.persistence.Embedded;
 import jakarta.validation.constraints.NotNull;
 import org.eclipse.microprofile.graphql.Type;
 
-/**
- * @author PC
- *
- */
 @Type
 @Embeddable
 public class Description implements Serializable {
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-     * 
-     */
-    @Column(name = "PURPOSE")
+	@Column(name = "PURPOSE")
     private JsonObject purpose;
 
-    /**
-     * 
-     */
     @Column(name = "RELATIONSHIPS")
     private JsonObject relationships;
 
-    /**
-     * 
-     */
     @Column(name = "DESCRIPTION")
     private JsonObject description;
 
-    /**
-     * 
-     */
     @Embedded
     @NotNull
     private Properties properties;
 
-    /**
-     * 
-     */
     @Column(name = "ALTERNATIVES")
     private JsonObject alternatives;
     

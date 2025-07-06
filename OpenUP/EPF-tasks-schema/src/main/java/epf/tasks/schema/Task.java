@@ -15,10 +15,6 @@ import epf.schema.utility.EPFEntity;
 import epf.tasks.schema.section.MoreInformation;
 import epf.tasks.schema.section.Relationships;
 
-/**
- *
- * @author FOXCONN
- */
 @Type(Tasks.TASK)
 @Schema(name = Tasks.TASK, title = "Task")
 @Entity(name = Tasks.TASK)
@@ -31,65 +27,35 @@ import epf.tasks.schema.section.Relationships;
 })
 public class Task extends EPFEntity {
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-     * 
-     */
-    @Column(name = "NAME")
+	@Column(name = "NAME")
     @Id
     @NotBlank
     private String name;
     
-    /**
-     * 
-     */
     @Column(name = "SUMMARY")
     private String summary;
     
-    /**
-     * 
-     */
     @Column(name = "PURPOSE")
     private JsonObject purpose;
     
-    /**
-     * 
-     */
     @Embedded
     @NotNull
     private Relationships relationships;
     
-    /**
-     * 
-     */
     @Column(name = "MAIN_DESCRIPTION")
     private JsonObject mainDescription;
     
-    /**
-     * 
-     */
     @Column(name = "STEPS")
     private JsonObject steps;
     
-    /**
-     * 
-     */
     @Column(name = "KEY_CONSIDERATIONS")
     private JsonObject keyConsiderations;
     
-    /**
-     * 
-     */
     @Column(name = "ALTERNATIVES")
     private JsonObject alternatives;
     
-    /**
-     * 
-     */
     @Embedded
     @NotNull
     private MoreInformation moreInformation;

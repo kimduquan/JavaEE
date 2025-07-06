@@ -6,21 +6,12 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import org.eclipse.microprofile.graphql.Type;
 
-/**
- * @author PC
- *
- */
 @Type
 @Embeddable
 public class WorkProductUsage implements Serializable {
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	/**
-     * 
-     */
+    private static final long serialVersionUID = 1L;
+	
     @Column(name = "WORK_PRODUCT_BREAKDOWN")
     private JsonObject workProductBreakdown;
 

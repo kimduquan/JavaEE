@@ -18,60 +18,35 @@ import epf.delivery_processes.schema.section.WorkProductUsage;
 import jakarta.persistence.Index;
 import jakarta.persistence.ManyToOne;
 
-/**
- *
- * @author FOXCONN
- */
 @Type(DeliveryProcesses.PHASE)
 @Schema(name = DeliveryProcesses.PHASE, title = "Phase")
 @Entity(name = DeliveryProcesses.PHASE)
 @Table(schema = DeliveryProcesses.SCHEMA, name = "PHASE", indexes = {@Index(columnList = "PARENT_ACTIVITIES")})
 public class Phase implements Serializable {
     
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-    /**
-     * 
-     */
     @Column(name = "NAME")
     @Id
     @NotBlank
     private String name;
 	
-    /**
-     * 
-     */
     @Embedded
     @NotNull
     private Description description;
 
-    /**
-     * 
-     */
     @Embedded
     @NotNull
     private WorkBreakdownStructure workBreakdownStructure;
 
-    /**
-     * 
-     */
     @Embedded
     @NotNull
     private TeamAllocation teamAllocation;
 
-    /**
-     * 
-     */
     @Embedded
     @NotNull
     private WorkProductUsage workProductUsage;
     
-    /**
-     * 
-     */
     @JoinColumn(name = "PARENT_ACTIVITIES")
     @ManyToOne
     private DeliveryProcess parentActivities;

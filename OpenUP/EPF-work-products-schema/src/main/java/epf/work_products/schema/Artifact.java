@@ -17,78 +17,44 @@ import epf.work_products.schema.section.MoreInformation;
 import epf.work_products.schema.section.Relationships;
 import epf.work_products.schema.section.Tailoring;
 
-/**
- *
- * @author FOXCONN
- */
 @Type(WorkProducts.ARTIFACT)
 @Schema(name = WorkProducts.ARTIFACT, title = "Artifact")
 @Entity(name = WorkProducts.ARTIFACT)
 @Table(schema = WorkProducts.SCHEMA, name = "ARTIFACT")
 public class Artifact extends EPFEntity {
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-     * 
-     */
-    @Column(name = "NAME")
+	@Column(name = "NAME")
     @Id
     @NotBlank
     private String name;
     
-    /**
-     * 
-     */
     @Column(name = "SUMMARY")
     private String summary;
     
-    /**
-     * 
-     */
     @Column(name = "PURPOSE")
     private JsonObject purpose;
     
-    /**
-     * 
-     */
     @Embedded
     @NotNull
     private Relationships relationships;
     
-    /**
-     * 
-     */
     @Embedded
     @NotNull
     private Description description;
     
-    /**
-     * 
-     */
     @Embedded
     @NotNull
     private Illustrations illustrations;
     
-    /**
-     * 
-     */
     @Column(name = "KEY_CONSIDERATIONS")
     private JsonObject keyConsiderations;
     
-    /**
-     * 
-     */
     @Embedded
     @NotNull
     private Tailoring tailoring;
     
-    /**
-     * 
-     */
     @Embedded
     @NotNull
     private MoreInformation moreInformation;

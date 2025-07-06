@@ -6,34 +6,18 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import org.eclipse.microprofile.graphql.Type;
 
-/**
- *
- * @author FOXCONN
- */
 @Type
 @Embeddable
 public class Illustrations implements Serializable {
     
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-     * 
-     */
-    @Column(name = "TEMPLATES")
+	@Column(name = "TEMPLATES")
     private JsonObject templates;
     
-    /**
-     * 
-     */
     @Column(name = "REPORTS")
     private JsonObject reports;
     
-    /**
-     * 
-     */
     @Column(name = "EXAMPLES")
     private JsonObject examples;
 

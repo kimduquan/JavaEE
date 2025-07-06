@@ -18,54 +18,32 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import jakarta.persistence.Index;
 import jakarta.persistence.ManyToOne;
 
-/**
- *
- * @author FOXCONN
- */
 @Type(DeliveryProcesses.ITERATION)
 @Schema(name = DeliveryProcesses.ITERATION, title = "Iteration")
 @Entity(name = DeliveryProcesses.ITERATION)
 @Table(schema = DeliveryProcesses.SCHEMA, name = "ITERATION", indexes = {@Index(columnList = "PARENT_ACTIVITIES")})
 public class Iteration implements Serializable {
     
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
     
-    /**
-     * 
-     */
     @Column(name = "NAME")
     @Id
     @NotBlank
     private String name;
     
-    /**
-     * 
-     */
     @OneToOne
     @MapsId
     @JoinColumn(name = "NAME")
     @NotNull
     private CapabilityPattern extend;
     
-    /**
-     * 
-     */
     @Column(name = "NUMBER")
     private Integer number;
     
-    /**
-     * 
-     */
     @JoinColumn(name = "PARENT_ACTIVITIES")
     @ManyToOne
     private Phase parentActivities;
     
-    /**
-     * 
-     */
     @ManyToMany
     @JoinTable(name = "ITERATION_ACTIVITIES",
             schema = DeliveryProcesses.SCHEMA,

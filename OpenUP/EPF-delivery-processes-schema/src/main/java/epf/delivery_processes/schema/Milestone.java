@@ -13,45 +13,26 @@ import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.delivery_processes.schema.section.Properties;
 
-/**
- *
- * @author FOXCONN
- */
 @Type(DeliveryProcesses.MILESTONE)
 @Schema(name = DeliveryProcesses.MILESTONE, title = "Milestone")
 @Entity(name = DeliveryProcesses.MILESTONE)
 @Table(schema = DeliveryProcesses.SCHEMA, name = "MILESTONE")
 public class Milestone implements Serializable {
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-     * 
-     */
-    @Column(name = "NAME")
+	@Column(name = "NAME")
     @Id
     @NotBlank
     private String name;
 	
-    /**
-     * 
-     */
     @JoinColumn(name = "PREDECESSOR")
     private Iteration predecessor;
 	
-    /**
-     * 
-     */
     @Embedded
     @NotNull
     private Properties properties;
     
-    /**
-     * 
-     */
     @Column(name = "REQUIRED_RESULTS")
     private Boolean requiredResults;
     

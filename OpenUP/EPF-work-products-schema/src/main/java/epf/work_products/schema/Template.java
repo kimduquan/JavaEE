@@ -10,38 +10,22 @@ import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.schema.utility.EPFEntity;
 
-/**
- *
- * @author FOXCONN
- */
 @Type(WorkProducts.TEMPLATE)
 @Schema(name = WorkProducts.TEMPLATE, title = "Template")
 @Entity(name = WorkProducts.TEMPLATE)
 @Table(schema = WorkProducts.SCHEMA, name = "TEMPLATE")
 public class Template extends EPFEntity {
 	
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-     * 
-     */
-    @Column(name = "NAME")
+	@Column(name = "NAME")
     @Id
     @NotBlank
     private String name;
     
-    /**
-     * 
-     */
     @Column(name = "SUMMARY")
     private String summary;
     
-    /**
-     * 
-     */
     @Column(name = "MAIN_DESCRIPTION")
     private JsonObject mainDescription;
     

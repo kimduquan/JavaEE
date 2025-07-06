@@ -1,29 +1,20 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf;
 
-import epf.schema.work_products.Artifact;
-import epf.schema.work_products.Domain;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import epf.work_products.schema.Artifact;
+import epf.work_products.schema.Domain;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
-/**
- *
- * @author FOXCONN
- */
-@Schema(title = "_Artifacts_")
+@Schema(title = "Artifacts")
 @Entity
-@Table(name = "_ARTIFACTS_", schema = "EPF")
+@Table(name = "ARTIFACTS", schema = "EPF")
 public class Artifacts {
 
     @Id

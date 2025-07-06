@@ -1,34 +1,15 @@
 package openup.architecture.schema.work_products;
 
-/**
- * @author PC
- *
- */
 public class Architecture_Notebook {
 	
-	/**
-	 * 
-	 */
 	private String purpose;
 	
-	/**
-	 * 
-	 */
 	private String responsible;
 	
-	/**
-	 * 
-	 */
 	private String modifiedBy;
 	
-	/**
-	 * 
-	 */
 	private String mainDescription;
 	
-	/**
-	 * 
-	 */
 	private String briefOutline;
 
 	public String getResponsible() {

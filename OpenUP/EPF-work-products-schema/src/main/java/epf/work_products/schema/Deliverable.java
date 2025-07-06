@@ -11,35 +11,21 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-
 import epf.schema.utility.EPFEntity;
 
-/**
- *
- * @author FOXCONN
- */
 @Type(WorkProducts.DELIVERABLE)
 @Schema(name = WorkProducts.DELIVERABLE, title = "Deliverable")
 @Entity(name = WorkProducts.DELIVERABLE)
 @Table(schema = WorkProducts.SCHEMA, name = "DELIVERABLE")
 public class Deliverable extends EPFEntity {
     
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-     * 
-     */
-    @Column(name = "NAME")
+	@Column(name = "NAME")
     @Id
     @NotBlank
     private String name;
     
-    /**
-     * 
-     */
     @OneToOne
     @MapsId
     @JoinColumn(name = "NAME")

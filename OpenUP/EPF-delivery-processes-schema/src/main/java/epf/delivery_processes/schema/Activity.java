@@ -17,47 +17,28 @@ import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.schema.utility.EPFEntity;
 
-/**
- *
- * @author FOXCONN
- */
 @Type(DeliveryProcesses.ACTIVITY)
 @Schema(name = DeliveryProcesses.ACTIVITY, title = "Activity")
 @Entity(name = DeliveryProcesses.ACTIVITY)
 @Table(schema = DeliveryProcesses.SCHEMA, name = "ACTIVITY")
 public class Activity extends EPFEntity {
     
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-     * 
-     */
-    @Column(name = "NAME")
+	@Column(name = "NAME")
     @Id
     @NotBlank
     private String name;
     
-    /**
-     * 
-     */
     @OneToOne
     @MapsId
     @JoinColumn(name = "NAME")
     @NotNull
     private CapabilityPattern extend;
     
-    /**
-     * 
-     */
     @JoinColumn(name = "PARENT_ACTIVITIES")
     private CapabilityPattern parentActivities;
     
-    /**
-     * 
-     */
     @ElementCollection
     @CollectionTable(
     		name = "ACTIVITY_TASKS",

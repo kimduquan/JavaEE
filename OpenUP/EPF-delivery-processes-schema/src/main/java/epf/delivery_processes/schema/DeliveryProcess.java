@@ -15,59 +15,34 @@ import epf.delivery_processes.schema.section.TeamAllocation;
 import epf.delivery_processes.schema.section.WorkBreakdownStructure;
 import epf.delivery_processes.schema.section.WorkProductUsage;
 
-/**
- *
- * @author FOXCONN
- */
 @Type(DeliveryProcesses.DELIVERY_PROCESS)
 @Schema(name = DeliveryProcesses.DELIVERY_PROCESS, title = "Delivery Process")
 @Entity(name = DeliveryProcesses.DELIVERY_PROCESS)
 @Table(schema = DeliveryProcesses.SCHEMA, name = "DELIVERY_PROCESS")
 public class DeliveryProcess implements Serializable {
 	
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-     * 
-     */
-    @Column(name = "NAME")
+	@Column(name = "NAME")
     @Id
     @NotBlank
     private String name;
     
-    /**
-     * 
-     */
     @Column(name = "SUMMARY")
     private String summary;
 	
-    /**
-     * 
-     */
     @Embedded
     @NotNull
     private Description description;
 
-    /**
-     * 
-     */
     @Embedded
     @NotNull
     private WorkBreakdownStructure workBreakdownStructure;
 
-    /**
-     * 
-     */
     @Embedded
     @NotNull
     private TeamAllocation teamAllocation;
 
-    /**
-     * 
-     */
     @Embedded
     @NotNull
     private WorkProductUsage workProductUsage;

@@ -1,19 +1,9 @@
 package openup.deployment.schema;
 
-/**
- * @author PC
- *
- */
 public class Product_Documentation {
 
-	/**
-	 * 
-	 */
 	private String responsiblep;
 	
-	/**
-	 * 
-	 */
 	private String modifiedBy;
 
 	public String getResponsiblep() {

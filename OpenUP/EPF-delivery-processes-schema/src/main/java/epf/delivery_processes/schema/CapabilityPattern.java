@@ -15,59 +15,34 @@ import epf.delivery_processes.schema.section.TeamAllocation;
 import epf.delivery_processes.schema.section.WorkBreakdownStructure;
 import epf.delivery_processes.schema.section.WorkProductUsage;
 
-/**
- *
- * @author FOXCONN
- */
 @Type(DeliveryProcesses.CAPABILITY_PATTERN)
 @Schema(name = DeliveryProcesses.CAPABILITY_PATTERN, title = "Capability Pattern")
 @Entity(name = DeliveryProcesses.CAPABILITY_PATTERN)
 @Table(schema = DeliveryProcesses.SCHEMA, name = "CAPABILITY_PATTERN")
 public class CapabilityPattern implements Serializable {
 	
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-     * 
-     */
-    @Column(name = "NAME")
+	@Column(name = "NAME")
     @Id
     @NotBlank
     private String name;
     
-    /**
-     * 
-     */
     @Column(name = "SUMMARY")
     private String summary;
 	
-    /**
-     * 
-     */
     @Embedded
     @NotNull
     private Description description;
 
-    /**
-     * 
-     */
     @Embedded
     @NotNull
     private WorkBreakdownStructure workBreakdownStructure;
 
-    /**
-     * 
-     */
     @Embedded
     @NotNull
     private TeamAllocation teamAllocation;
 
-    /**
-     * 
-     */
     @Embedded
     @NotNull
     private WorkProductUsage workProductUsage;

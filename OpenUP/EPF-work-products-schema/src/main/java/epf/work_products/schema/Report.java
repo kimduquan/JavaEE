@@ -8,24 +8,14 @@ import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.schema.utility.EPFEntity;
 
-/**
- * @author PC
- *
- */
 @Type(WorkProducts.REPORT)
 @Schema(name = WorkProducts.REPORT, title = "Report")
 @Entity(name = WorkProducts.REPORT)
 @Table(schema = WorkProducts.SCHEMA, name = "REPORT")
 public class Report extends EPFEntity {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
-	/**
-	 * 
-	 */
 	@Id
 	@Column(name = "NAME")
 	private String name;

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.delivery_processes.schema.section;
 
 import java.io.Serializable;
@@ -10,52 +5,27 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import org.eclipse.microprofile.graphql.Type;
 
-/**
- *
- * @author FOXCONN
- */
 @Type
 @Embeddable
 public class Properties implements Serializable {
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-     * 
-     */
-    @Column(name = "EVENT_DRIVEN")
+	@Column(name = "EVENT_DRIVEN")
     private Boolean eventDriven;
     
-    /**
-     * 
-     */
     @Column(name = "MULTIPLE_OCCURRENCES")
     private Boolean multipleOccurrences;
     
-    /**
-     * 
-     */
     @Column(name = "ONGOING")
     private Boolean ongoing;
     
-    /**
-     * 
-     */
     @Column(name = "OPTIONAL")
     private Boolean optional;
     
-    /**
-     * 
-     */
     @Column(name = "PLANNED")
     private Boolean planned;
     
-    /**
-     * 
-     */
     @Column(name = "REPEATABLE")
     private Boolean repeatable;
     

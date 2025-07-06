@@ -1,28 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf;
 
-import epf.schema.delivery_processes.DeliveryProcess;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import epf.delivery_processes.schema.DeliveryProcess;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
-/**
- *
- * @author FOXCONN
- */
-@Schema(title = "_Delivery_Processes_")
+@Schema(title = "Delivery_Processes")
 @Entity
-@Table(name = "_DELIVERY_PROCESSES_", schema = "EPF")
+@Table(name = "DELIVERY_PROCESSES", schema = "EPF")
 public class DeliveryProcesses {
 
     @Id

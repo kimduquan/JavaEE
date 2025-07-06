@@ -15,23 +15,13 @@ import jakarta.persistence.ManyToMany;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 
-/**
- *
- * @author FOXCONN
- */
 @Type
 @Embeddable
 public class Relationships implements Serializable {
     
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-     * 
-     */
-    @ManyToMany
+	@ManyToMany
     @JoinTable(
             name = "ARTIFACT_FULFILLED_SLOTS",
             schema = WorkProducts.SCHEMA,
@@ -44,15 +34,9 @@ public class Relationships implements Serializable {
     )
     private Set<WorkProductSlot> fulfilledSlots;
     
-    /**
-     * 
-     */
     @Column(name = "RESPONSIBLE")
     private String responsible;
     
-    /**
-     * 
-     */
     @ElementCollection
     @CollectionTable(
     		name = "ROLE_MODIFIES",

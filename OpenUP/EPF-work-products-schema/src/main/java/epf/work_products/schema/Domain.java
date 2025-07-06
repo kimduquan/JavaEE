@@ -15,38 +15,22 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.schema.utility.EPFEntity;
 import jakarta.persistence.Index;
 
-/**
- *
- * @author FOXCONN
- */
 @Type(WorkProducts.DOMAIN)
 @Schema(name = WorkProducts.DOMAIN, title = "Domain")
 @Entity(name = WorkProducts.DOMAIN)
 @Table(schema = WorkProducts.SCHEMA, name = "EPF_DOMAIN")
 public class Domain extends EPFEntity {
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-     * 
-     */
-    @Column(name = "NAME")
+	@Column(name = "NAME")
     @Id
     @NotBlank
     private String name;
     
-    /**
-     * 
-     */
     @Column(name = "SUMMARY")
     private String summary;
     
-    /**
-     * 
-     */
     @ManyToMany
     @JoinTable(
             name = "WORK_PRODUCTS",
