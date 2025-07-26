@@ -38,10 +38,10 @@ global:
     fullnameOverride: ""
     
     auth:
-      postgresPassword: ""
+      postgresPassword: "090323508"
       username: ""
       password: ""
-      database: ""
+      database: "epf"
       existingSecret: ""
       secretKeys:
         adminPasswordKey: ""
