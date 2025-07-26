@@ -122,7 +122,7 @@ image:
 dbUser:
   user: cassandra
   forcePassword: false
-  password: ""
+  password: "090323508"
   ## Use an existing secrets which already stores your password data.
   ## for backwards compatibility, existingSecret can be a simple string,
   ## referencing the secret by name.
@@ -160,7 +160,7 @@ cluster:
   name: scylladb
   seedCount: 1
   numTokens: 256
-  datacenter: dc1
+  datacenter: datacenter1
   rack: rack1
   endpointSnitch: SimpleSnitch
   ## eg:
@@ -351,7 +351,7 @@ containerSecurityContext:
 ## @param resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if resources is set (resources is recommended for production).
 ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
 ##
-resourcesPreset: "large"
+resourcesPreset: "micro"
 ## @param resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
 ## Example:
 ## resources:
@@ -586,7 +586,7 @@ jmxProxy:
   ## @param jmxProxy.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if jmxProxy.resources is set (jmxProxy.resources is recommended for production).
   ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
   ##
-  resourcesPreset: "micro"
+  resourcesPreset: "nano"
   ## @param jmxProxy.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
   ## Example:
   ## resources:
@@ -896,7 +896,7 @@ persistence:
   mountPath: /bitnami/scylladb
   ## @param persistence.size PVC Storage Request for Scylladb data volume
   ##
-  size: 8Gi
+  size: 1Gi
   commitLog:
     ## @param persistence.commitLog.storageClass PVC Storage Class for Scylladb Commit Log volume
     ## Storage class to use with SCYLLADB_COMMITLOG_DIR to reduce the concurrence for writing data and commit logs
@@ -916,7 +916,7 @@ persistence:
       - ReadWriteOnce
     ## @param persistence.commitLog.size PVC Storage Request for Scylladb data volume
     ##
-    size: 2Gi
+    size: 1Gi
     ## @param persistence.commitLog.mountPath The path the commit log volume will be mounted at. Unset by default. Set it to '/bitnami/scylladb/commitlog' to enable a separate commit log volume
     ##
     # mountPath: /bitnami/scylladb/commitlog
