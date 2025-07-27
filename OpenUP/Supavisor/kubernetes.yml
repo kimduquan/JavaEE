@@ -35,7 +35,7 @@ metadata:
     app.kubernetes.io/version: 1.0.0
   name: supavisor
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: supavisor
@@ -70,8 +70,12 @@ spec:
               name: transaction
               protocol: TCP
           readinessProbe:
-            tcpSocket:
+            httpGet:
+              path: /metrics
               port: 4000
+              scheme: HTTP
           startupProbe:
-            tcpSocket:
+            httpGet:
+              path: /metrics
               port: 4000
+              scheme: HTTP
