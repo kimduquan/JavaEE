@@ -69,13 +69,3 @@ spec:
             - containerPort: 6543
               name: transaction
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 4000
-              scheme: HTTP
-          readinessProbe:
-            httpGet:
-              path: /health
-              port: 4000
-              scheme: HTTP
