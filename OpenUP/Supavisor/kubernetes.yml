@@ -75,3 +75,6 @@ spec:
           startupProbe:
             tcpSocket:
               port: 4000
+          livenessProbe:
+            tcpSocket:
+              port: 6543
