@@ -70,12 +70,8 @@ spec:
               name: transaction
               protocol: TCP
           readinessProbe:
-            httpGet:
-              path: /metrics
+            tcpSocket:
               port: 4000
-              scheme: HTTP
           startupProbe:
-            httpGet:
-              path: /metrics
+            tcpSocket:
               port: 4000
-              scheme: HTTP
