@@ -50,7 +50,7 @@ spec:
       containers:
         - env:
             - name: DATABASE_URL
-              value: "ecto://postgres:postgres@postgresql.default.svc.cluster.local:5432/postgres"
+              value: "ecto://postgres:090323508@postgresql.default.svc.cluster.local:5432/postgres"
             - name: SECRET_KEY_BASE
               valueFrom:
                 secretKeyRef:
