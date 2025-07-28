@@ -1,0 +1,1 @@
+helm install vault oci://registry-1.docker.io/bitnamicharts/vault -f values-vault.yaml
