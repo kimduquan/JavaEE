@@ -471,7 +471,7 @@ labels: {}
 ## When `mongodb.architecture=replicaset`, the number of replicas is taken in account
 ## When `mongodb.architecture=standalone`, the number of replicas can only be 0 or 1 (value higher then 1 will not be taken in account)
 ##
-replicaCount: 2
+replicaCount: 1
 ## @param updateStrategy.type Strategy to use to replace existing MongoDB(&reg;) pods. When architecture=standalone and useStatefulSet=false,
 ## this parameter will be applied on a deployment object. In other case it will be applied on a statefulset object
 ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#update-strategies
@@ -1199,7 +1199,7 @@ passwordUpdateJob:
   ## @param passwordUpdateJob.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if passwordUpdateJob.resources is set (passwordUpdateJob.resources is recommended for production).
   ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
   ##
-  resourcesPreset: "micro"
+  resourcesPreset: "nano"
   ## @param passwordUpdateJob.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
   ## Example:
   ## resources:
@@ -1340,7 +1340,7 @@ persistence:
     - ReadWriteOnce
   ## @param persistence.size PVC Storage Request for MongoDB(&reg;) data volume
   ##
-  size: 8Gi
+  size: 1Gi
   ## @param persistence.annotations PVC annotations
   ##
   annotations: {}
@@ -1505,7 +1505,7 @@ backup:
         - ReadWriteOnce
       ## @param backup.cronjob.storage.size PVC Storage Request for the backup data volume
       ##
-      size: 8Gi
+      size: 1Gi
       ## @param backup.cronjob.storage.annotations PVC annotations
       ##
       annotations: {}
@@ -1881,7 +1881,7 @@ arbiter:
   ## @param arbiter.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if arbiter.resources is set (arbiter.resources is recommended for production).
   ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
   ##
-  resourcesPreset: "small"
+  resourcesPreset: "nano"
   ## @param arbiter.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
   ## Example:
   ## resources:
@@ -2224,7 +2224,7 @@ hidden:
   ## @param hidden.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if hidden.resources is set (hidden.resources is recommended for production).
   ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
   ##
-  resourcesPreset: "micro"
+  resourcesPreset: "nano"
   ## @param hidden.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
   ## Example:
   ## resources:
@@ -2374,7 +2374,7 @@ hidden:
       - ReadWriteOnce
     ## @param hidden.persistence.size PVC Storage Request for hidden node data volume
     ##
-    size: 8Gi
+    size: 1Gi
     ## @param hidden.persistence.annotations PVC annotations
     ##
     annotations: {}
