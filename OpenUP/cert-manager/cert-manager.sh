@@ -1,0 +1,1 @@
+helm install cert-manager oci://REGISTRY_NAME/REPOSITORY_NAME/cert-manager -f values-cert-manager.yaml
