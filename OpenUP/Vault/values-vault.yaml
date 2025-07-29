@@ -943,7 +943,9 @@ csiProvider:
   terminationGracePeriodSeconds: ""
   ## @param csiProvider.extraVolumes Optionally specify extra list of additional volumes for the Vault CSI Provider pod(s)
   ##
-  extraVolumes: []
+  extraVolumes:
+    - name: tmp-agent
+      emptyDir: {}
   ## @param csiProvider.sidecars Add additional sidecar containers to the Vault CSI Provider pod(s)
   ## e.g:
   ## sidecars:
@@ -1276,7 +1278,9 @@ csiProvider:
     extraEnvVarsSecret: ""
     ## @param csiProvider.agent.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the CSI Provider container(s)
     ##
-    extraVolumeMounts: []
+    extraVolumeMounts:
+      - name: tmp-agent
+        mountPath: /tmp
   ## @section Vault CSI Provider RBAC Parameters
   ##
 
