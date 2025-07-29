@@ -1,1 +1,1 @@
-helm install cert-manager oci://REGISTRY_NAME/REPOSITORY_NAME/cert-manager -f values-cert-manager.yaml
+helm install cert-manager oci://registry-1.docker.io/bitnamicharts/cert-manager -f values-cert-manager.yaml
