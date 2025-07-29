@@ -713,7 +713,7 @@ server:
     ## If set to "-", storageClassName: "", which disables dynamic provisioning
     ## If undefined (the default) or set to null, no storageClassName spec is set, choosing the default provisioner
     ##
-    storageClass: "hostpath"
+    storageClass: ""
     ## @param server.persistence.accessModes [array] Persistent Volume access modes
     ##
     accessModes:
@@ -815,7 +815,7 @@ csiProvider:
   ## @param csiProvider.enabled Enable Vault CSI Provider
   ## (NOTE: This is disabled in upstream Vault chart because it requires plugins in the K8s cluster)
   ##
-  enabled: false
+  enabled: true
   ## Bitnami Vault CSI Provider image
   ## ref: https://hub.docker.com/r/bitnami/vault-csi-provider/tags/
   ## @param csiProvider.image.registry [default: REGISTRY_NAME] Vault CSI Provider image registry
@@ -1319,7 +1319,7 @@ csiProvider:
 injector:
   ## @param injector.enabled Enable Vault Kubernetes Injector
   ##
-  enabled: true
+  enabled: false
   ## Bitnami Vault Kubernetes Injector image
   ## ref: https://hub.docker.com/r/bitnami/vault-k8s/tags/
   ## @param injector.image.registry [default: REGISTRY_NAME] Vault Kubernetes Injector image registry
