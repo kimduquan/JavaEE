@@ -845,7 +845,7 @@ csiProvider:
     pullSecrets: []
     ## Enable debug mode
     ##
-    debug: false
+    debug: true
   ## @param csiProvider.config [string] Vault CSI Provider configuration (evaluated as a template)
   ##
   config: |
@@ -946,6 +946,8 @@ csiProvider:
   extraVolumes:
     - name: tmp-agent
       emptyDir: {}
+    - name: tmp-provider
+      emptyDir: {}
   ## @param csiProvider.sidecars Add additional sidecar containers to the Vault CSI Provider pod(s)
   ## e.g:
   ## sidecars:
@@ -1042,7 +1044,7 @@ csiProvider:
     ## @param csiProvider.provider.livenessProbe.successThreshold Success threshold for livenessProbe
     ##
     livenessProbe:
-      enabled: true
+      enabled: false
       initialDelaySeconds: 5
       periodSeconds: 10
       timeoutSeconds: 5
@@ -1056,7 +1058,7 @@ csiProvider:
     ## @param csiProvider.provider.readinessProbe.successThreshold Success threshold for readinessProbe
     ##
     readinessProbe:
-      enabled: true
+      enabled: false
       initialDelaySeconds: 5
       periodSeconds: 10
       timeoutSeconds: 5
@@ -1168,7 +1170,7 @@ csiProvider:
     ## @param csiProvider.agent.livenessProbe.successThreshold Success threshold for livenessProbe
     ##
     livenessProbe:
-      enabled: true
+      enabled: false
       initialDelaySeconds: 5
       periodSeconds: 10
       timeoutSeconds: 5
@@ -1182,7 +1184,7 @@ csiProvider:
     ## @param csiProvider.agent.readinessProbe.successThreshold Success threshold for readinessProbe
     ##
     readinessProbe:
-      enabled: true
+      enabled: false
       initialDelaySeconds: 5
       periodSeconds: 10
       timeoutSeconds: 5
@@ -1281,6 +1283,8 @@ csiProvider:
     extraVolumeMounts:
       - name: tmp-agent
         mountPath: /tmp
+      - name: tmp-provider
+        mountPath: /provider
   ## @section Vault CSI Provider RBAC Parameters
   ##
 
@@ -1371,7 +1375,7 @@ injector:
   ## @param injector.livenessProbe.successThreshold Success threshold for livenessProbe
   ##
   livenessProbe:
-    enabled: true
+    enabled: false
     initialDelaySeconds: 5
     periodSeconds: 10
     timeoutSeconds: 5
@@ -1385,7 +1389,7 @@ injector:
   ## @param injector.readinessProbe.successThreshold Success threshold for readinessProbe
   ##
   readinessProbe:
-    enabled: true
+    enabled: false
     initialDelaySeconds: 5
     periodSeconds: 10
     timeoutSeconds: 5
