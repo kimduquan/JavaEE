@@ -12,12 +12,12 @@ import epf.util.json.ext.Encoder;
 @ApplicationScoped
 public class TransactionCache {
 	
+	@Inject
+	transient KeyValueTemplate cache;
+	
 	private transient final Encoder encoder = new Encoder();
 	
 	private transient final Decoder decoder = new Decoder();
-	
-	@Inject
-	private KeyValueTemplate cache;
 
 	public void put(final EntityTransaction transaction) throws Exception {
 		Objects.requireNonNull(transaction, "EntityTransaction");
