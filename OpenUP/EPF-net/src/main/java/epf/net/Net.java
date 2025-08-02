@@ -6,7 +6,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
 import epf.net.schema.URL;
 import epf.util.StringUtil;
-import epf.util.json.JsonUtil;
+import epf.util.json.ext.JsonUtil;
 import epf.function.net.ShortenUrlFunction;
 import epf.function.persistence.PersistFunction;
 import epf.function.LinkFunction;
@@ -14,9 +14,8 @@ import epf.naming.Naming;
 
 @Path(Naming.NET)
 @ApplicationScoped
-public class Net implements epf.net.client.Net {
+public class Net {
 
-	@Override
 	public Response rewriteUrl(final java.net.URL rawUrl) throws Exception {
 		final URL url = new URL();
 		url.setAuthority(rawUrl.getAuthority());
@@ -38,7 +37,6 @@ public class Net implements epf.net.client.Net {
 		return Response.ok(url).links(LinkFunction.toLinks(persistFunc, shortenFunc)).build();
 	}
 
-	@Override
 	public String shortenUrl(final InputStream body) throws Exception {
 		final URL url = JsonUtil.fromJson(body, URL.class);
 		return StringUtil.toShortString(url.getId());
