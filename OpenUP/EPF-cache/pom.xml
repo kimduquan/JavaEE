@@ -38,15 +38,6 @@
 		<groupId>io.quarkiverse.helm</groupId>
 		<artifactId>quarkus-helm</artifactId>
 	</dependency>
-
-	<dependency>
-		<groupId>com.hazelcast</groupId>
-		<artifactId>hazelcast</artifactId>
-	</dependency>
-	<dependency>
-	    <groupId>javax.cache</groupId>
-	    <artifactId>cache-api</artifactId>
-	</dependency>
 		
 	<dependency>
         <groupId>openup</groupId>
