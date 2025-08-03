@@ -65,17 +65,20 @@ spec:
                   name: supavisor
                   key: SECRET_KEY_BASE
             - name: VAULT_ENC_KEY
-              value: "12345678901234567890123456789032"
+              valueFrom:
+                secretKeyRef:
+                  name: supavisor
+                  key: VAULT_ENC_KEY
             - name: API_JWT_SECRET
               valueFrom:
                 secretKeyRef:
                   name: supavisor
-                  key: SECRET_KEY_BASE
+                  key: API_JWT_SECRET
             - name: METRICS_JWT_SECRET
               valueFrom:
                 secretKeyRef:
                   name: supavisor
-                  key: SECRET_KEY_BASE
+                  key: METRICS_JWT_SECRET
             - name: REGION
               value: "local"
             - name: ERL_AFLAGS
