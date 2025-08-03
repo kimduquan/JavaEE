@@ -65,10 +65,7 @@ spec:
                   name: supavisor
                   key: SECRET_KEY_BASE
             - name: VAULT_ENC_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: supavisor
-                  key: SECRET_KEY_BASE
+              value: "12345678901234567890123456789032"
             - name: API_JWT_SECRET
               valueFrom:
                 secretKeyRef:
