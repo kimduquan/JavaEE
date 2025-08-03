@@ -14,9 +14,9 @@ spec:
       protocol: TCP
       targetPort: 4000
     - name: session
-      port: 5432
+      port: 5452
       protocol: TCP
-      targetPort: 5432
+      targetPort: 5452
     - name: transaction
       port: 6543
       protocol: TCP
