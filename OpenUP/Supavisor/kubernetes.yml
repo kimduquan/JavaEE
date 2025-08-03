@@ -56,6 +56,11 @@ spec:
                 secretKeyRef:
                   name: supavisor
                   key: SECRET_KEY_BASE
+            - name: API_JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: supavisor
+                  key: SECRET_KEY_BASE
           image: supabase/supavisor:2.1.8
           imagePullPolicy: IfNotPresent
           name: supavisor
