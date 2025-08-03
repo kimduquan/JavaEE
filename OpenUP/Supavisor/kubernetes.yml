@@ -83,7 +83,7 @@ spec:
               value: "local"
             - name: ERL_AFLAGS
               value: -proto_dist inet_tcp
-          image: supabase/supavisor:2.1.8
+          image: supabase/supavisor:2.6.0
           imagePullPolicy: IfNotPresent
           name: supavisor
           command: ["/bin/sh", "-c", "/app/bin/migrate && /app/bin/server"]
@@ -91,7 +91,7 @@ spec:
             - containerPort: 4000
               name: api
               protocol: TCP
-            - containerPort: 5432
+            - containerPort: 5452
               name: session
               protocol: TCP
             - containerPort: 6543
