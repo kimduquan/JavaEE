@@ -49,9 +49,22 @@ spec:
     spec:
       containers:
         - env:
+            - name: PORT
+              value: 4000
+            - name: PROXY_PORT_SESSION
+              value: 5452
+            - name: PROXY_PORT_TRANSACTION
+              value: 6543
             - name: DATABASE_URL
               value: "ecto://postgres:090323508@postgresql.default.svc.cluster.local:5432/postgres"
+            - name: CLUSTER_POSTGRES
+              value: "true"
             - name: SECRET_KEY_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: supavisor
+                  key: SECRET_KEY_BASE
+            - name: VAULT_ENC_KEY
               valueFrom:
                 secretKeyRef:
                   name: supavisor
@@ -61,9 +74,19 @@ spec:
                 secretKeyRef:
                   name: supavisor
                   key: SECRET_KEY_BASE
+            - name: METRICS_JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: supavisor
+                  key: SECRET_KEY_BASE
+            - name: REGION
+              value: "local"
+            - name: ERL_AFLAGS
+              value: -proto_dist inet_tcp
           image: supabase/supavisor:2.1.8
           imagePullPolicy: IfNotPresent
           name: supavisor
+          command: ["/bin/sh", "-c", "/app/bin/migrate && /app/bin/server"]
           ports:
             - containerPort: 4000
               name: api
