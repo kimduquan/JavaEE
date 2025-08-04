@@ -1,12 +1,14 @@
 package epf.persistence.internal;
 
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.management.util.TenantUtil;
+import io.quarkus.hibernate.orm.PersistenceUnitExtension;
 import io.quarkus.hibernate.orm.runtime.tenant.TenantResolver;
 
-@ApplicationScoped
+@RequestScoped
+@PersistenceUnitExtension
 public class EntityTenantResolver implements TenantResolver {
 	
 	@Inject
