@@ -111,7 +111,7 @@ server:
     pullSecrets: []
     ## Enable debug mode
     ##
-    debug: false
+    debug: true
   ## @param server.replicaCount Number of Vault Server replicas to deploy
   ##
   replicaCount: 1
@@ -184,7 +184,7 @@ server:
   ## @param server.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if server.resources is set (server.resources is recommended for production).
   ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
   ##
-  resourcesPreset: "nano"
+  ## resourcesPreset: "nano"
   ## @param server.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
   ## Example:
   ## resources:
@@ -195,7 +195,13 @@ server:
   ##     cpu: 3
   ##     memory: 1024Mi
   ##
-  resources: {}
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 75m
+      memory: 192Mi
   ## Configure Pods Security Context
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
   ## @param server.podSecurityContext.enabled Enabled Vault Server pods' Security Context
@@ -1092,7 +1098,7 @@ csiProvider:
     ## @param csiProvider.provider.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if csiProvider.provider.resources is set (csiProvider.provider.resources is recommended for production).
     ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
     ##
-    resourcesPreset: "nano"
+    ## resourcesPreset: "nano"
     ## @param csiProvider.provider.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
     ## Example:
     ## resources:
@@ -1103,7 +1109,13 @@ csiProvider:
     ##     cpu: 3
     ##     memory: 1024Mi
     ##
-    resources: {}
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        cpu: 75m
+        memory: 192Mi
     ## Configure Container Security Context
     ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
     ## @param csiProvider.provider.containerSecurityContext.enabled Enabled containers' Security Context
@@ -1244,7 +1256,7 @@ csiProvider:
     ## @param csiProvider.agent.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if csiProvider.agent.resources is set (csiProvider.agent.resources is recommended for production).
     ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
     ##
-    resourcesPreset: "nano"
+    ## resourcesPreset: "nano"
     ## @param csiProvider.agent.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
     ## Example:
     ## resources:
@@ -1255,7 +1267,13 @@ csiProvider:
     ##     cpu: 3
     ##     memory: 1024Mi
     ##
-    resources: {}
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        cpu: 75m
+        memory: 192Mi
     ## @param csiProvider.agent.command Override default container command (useful when using custom images)
     ##
     command: []
