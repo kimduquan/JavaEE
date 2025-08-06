@@ -43,10 +43,10 @@ public class EntityTenantConnectionResolver implements TenantConnectionResolver 
 	int connectionPoolSize;
 	
 	@Inject
-	TransactionManager transactionManager;
+	transient TransactionManager transactionManager;
 	
 	@Inject
-    TransactionSynchronizationRegistry transactionSynchronizationRegistry;
+    transient TransactionSynchronizationRegistry transactionSynchronizationRegistry;
 
 	@Override
 	public ConnectionProvider resolve(final String tenantId) {
