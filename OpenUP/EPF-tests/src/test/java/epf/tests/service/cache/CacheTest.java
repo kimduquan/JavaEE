@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.tests.service.cache;
 
 import java.net.URI;
@@ -12,7 +9,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
 import epf.client.cache.Cache;
 import epf.client.persistence.Entities;
 import epf.schema.EPF;
@@ -27,10 +23,6 @@ import epf.tests.service.RegistryUtil;
 import epf.tests.service.SecurityUtil;
 import epf.util.client.Client;
 
-/**
- * @author PC
- *
- */
 public class CacheTest {
 	
 	static URI cacheUrl;
@@ -39,9 +31,6 @@ public class CacheTest {
 	static String token;
 	Client client;
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		cacheUrl = RegistryUtil.lookup("cache", null);
@@ -51,27 +40,18 @@ public class CacheTest {
 		persistenceClient.authorization(token);
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		persistenceClient.close();
 		SecurityUtil.logOut(null, token);
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@Before
 	public void setUp() throws Exception {
 		client = ClientUtil.newClient(cacheUrl);
 		client.authorization(token);
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@After
 	public void tearDown() throws Exception {
 		client.close();

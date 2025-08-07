@@ -28,10 +28,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 
-/**
- *
- * @author FOXCONN
- */
 public class PersistenceTest {
 	
 	@Rule

@@ -20,10 +20,6 @@ import epf.tests.client.ClientUtil;
 import epf.tests.security.SecurityUtil;
 import epf.client.gateway.GatewayUtil;
 
-/**
- * @author PC
- *
- */
 public class SchemaTest {
 	
 	@Rule
@@ -33,36 +29,24 @@ public class SchemaTest {
     private static String token;
     private Client client;
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		schemaUrl = GatewayUtil.get(Naming.SCHEMA);
     	token = SecurityUtil.login();
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		SecurityUtil.logOut(token);
 		ClientUtil.afterClass();
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@Before
 	public void setUp() throws Exception {
 		client = ClientUtil.newClient(schemaUrl);
     	client.authorization(token.toCharArray());
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@After
 	public void tearDown() throws Exception {
 		client.close();

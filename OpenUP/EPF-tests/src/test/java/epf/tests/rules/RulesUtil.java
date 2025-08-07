@@ -16,10 +16,6 @@ import epf.util.json.Adapter;
 import epf.util.json.Decoder;
 import epf.util.json.Encoder;
 
-/**
- * @author PC
- *
- */
 public class RulesUtil {
 
 	public static void registerRuleExecutionSet(String token, Path ruleFile, String ruleSet) throws Exception {

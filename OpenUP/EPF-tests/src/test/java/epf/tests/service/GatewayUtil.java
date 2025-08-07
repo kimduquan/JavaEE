@@ -1,16 +1,9 @@
-/**
- * 
- */
 package epf.tests.service;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import epf.client.gateway.Gateway;
 
-/**
- * @author PC
- *
- */
 public class GatewayUtil {
 
 	private static URI gatewayUrl;

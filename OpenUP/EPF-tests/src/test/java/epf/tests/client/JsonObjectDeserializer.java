@@ -1,8 +1,4 @@
-<<<<<<< HEAD:OpenUP/EPF-tests/src/test/java/epf/tests/JsonObjectDeserializer.java
-package epf.tests;
-=======
 package epf.tests.client;
->>>>>>> remotes/origin/micro:OpenUP/EPF-tests/src/test/java/epf/tests/client/JsonObjectDeserializer.java
 
 import java.io.IOException;
 import javax.json.JsonObject;

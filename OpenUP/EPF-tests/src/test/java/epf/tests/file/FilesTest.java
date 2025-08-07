@@ -32,10 +32,6 @@ import epf.naming.Naming;
 import epf.tests.client.ClientUtil;
 import epf.tests.security.SecurityUtil;
 
-/**
- * @author PC
- *
- */
 public class FilesTest {
 	
 	@Rule
@@ -49,9 +45,6 @@ public class FilesTest {
 	private Client client;
 	private Path tempFile;
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		credential = SecurityUtil.peekCredential();
@@ -73,9 +66,6 @@ public class FilesTest {
 		}
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		SecurityUtil.logOut(token);
@@ -85,9 +75,6 @@ public class FilesTest {
 		tempDir.toFile().delete();
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@Before
 	public void setUp() throws Exception {
 		client = ClientUtil.newClient(filesUrl);
@@ -96,9 +83,6 @@ public class FilesTest {
     	Files.write(tempFile, Arrays.asList("this is a test"));
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@After
 	public void tearDown() throws Exception {
 		client.close();

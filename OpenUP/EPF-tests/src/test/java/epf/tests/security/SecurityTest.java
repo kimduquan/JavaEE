@@ -25,10 +25,6 @@ import epf.security.schema.Token;
 import epf.tests.client.ClientUtil;
 import epf.client.gateway.GatewayUtil;
 
-/**
- *
- * @author FOXCONN
- */
 public class SecurityTest {
 	
 	@Rule

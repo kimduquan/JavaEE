@@ -6,10 +6,6 @@ import epf.naming.Naming;
 import epf.persistence.client.Entities;
 import epf.tests.client.ClientUtil;
 
-/**
- * @author PC
- *
- */
 public class PersistenceUtil {
 
 	public static <T> T persist(

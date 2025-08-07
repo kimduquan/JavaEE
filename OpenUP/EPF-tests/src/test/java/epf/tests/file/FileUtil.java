@@ -10,10 +10,6 @@ import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.tests.client.ClientUtil;
 
-/**
- * @author PC
- *
- */
 public class FileUtil {
 	
 	public static String createFile(String token, Path file, Path path) throws Exception {

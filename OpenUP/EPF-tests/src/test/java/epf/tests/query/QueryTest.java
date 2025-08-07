@@ -28,10 +28,6 @@ import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.query.client.Query;
 
-/**
- * @author PC
- *
- */
 public class QueryTest {
 	
 	@Rule
@@ -41,36 +37,24 @@ public class QueryTest {
 	static String token;
 	Client client;
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		queryUrl = GatewayUtil.get(Naming.QUERY);
 		token = SecurityUtil.login();
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		SecurityUtil.logOut(token);
 		ClientUtil.afterClass();
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@Before
 	public void setUp() throws Exception {
 		client = ClientUtil.newClient(queryUrl);
 		client.authorization(token.toCharArray());
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@After
 	public void tearDown() throws Exception {
 		client.close();

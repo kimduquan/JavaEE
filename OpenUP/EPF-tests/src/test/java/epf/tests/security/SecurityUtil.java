@@ -13,10 +13,6 @@ import java.util.AbstractMap;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-/**
- *
- * @author FOXCONN
- */
 public class SecurityUtil {
     
 	private static final Queue<Entry<String, String>> credentials = new ConcurrentLinkedQueue<>();

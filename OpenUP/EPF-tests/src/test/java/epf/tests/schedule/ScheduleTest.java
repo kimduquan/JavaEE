@@ -17,10 +17,6 @@ import epf.tests.client.ClientUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.config.ConfigUtil;
 
-/**
- * @author PC
- *
- */
 public class ScheduleTest {
 	
 	@Rule
@@ -32,9 +28,6 @@ public class ScheduleTest {
 	static epf.util.websocket.Client shell;
 	static Queue<String> messages;
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		scheduleUrl = ConfigUtil.getURI(Naming.Schedule.SCHEDULE_URL);
@@ -49,9 +42,6 @@ public class ScheduleTest {
 		shell.onMessage((message, session) -> messages.add(message));
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		client.close();
@@ -61,17 +51,11 @@ public class ScheduleTest {
 		ClientUtil.afterClass();
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@Before
 	public void setUp() throws Exception {
 		messages.clear();
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@After
 	public void tearDown() throws Exception {
 		messages.clear();

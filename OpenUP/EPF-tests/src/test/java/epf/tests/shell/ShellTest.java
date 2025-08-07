@@ -42,10 +42,6 @@ import epf.work_products.schema.section.MoreInformation;
 import epf.work_products.schema.section.Relationships;
 import epf.work_products.schema.section.Tailoring;
 
-/**
- * @author PC
- *
- */
 public class ShellTest {
 	
 	@Rule
@@ -64,9 +60,6 @@ public class ShellTest {
 	Path in;
 	Path err;
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		workingDir = ShellUtil.getShellPath().toRealPath();
@@ -89,9 +82,6 @@ public class ShellTest {
 		Files.delete(out);
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		ProcessBuilder builder = new ProcessBuilder();
@@ -102,9 +92,6 @@ public class ShellTest {
 		ClientUtil.afterClass();
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@Before
 	public void setUp() throws Exception {
 		in = Files.createTempFile(tempDir, "in", "in");
@@ -117,9 +104,6 @@ public class ShellTest {
 		builder.redirectOutput(out.toFile());
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@After
 	public void tearDown() throws Exception {
 		if(process != null) {

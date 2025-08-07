@@ -4,10 +4,6 @@ import java.time.Duration;
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 
-/**
- * @author PC
- *
- */
 public class TestUtil {
 
 	public static void waitUntil(Predicate<? extends Object> predicate, Duration duration) throws InterruptedException {

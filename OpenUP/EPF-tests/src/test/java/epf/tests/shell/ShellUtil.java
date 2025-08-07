@@ -17,25 +17,12 @@ import epf.naming.Naming;
 import epf.security.schema.Token;
 import epf.tests.TestUtil;
 
-/**
- * @author PC
- *
- */
 public class ShellUtil {
 	
-	/**
-	 * 
-	 */
 	private static final String RUNNER = System.getProperty(Naming.Shell.SHELL_RUNNER);
 	
-	/**
-	 * 
-	 */
 	private static Path shellPath;
 
-	/**
-	 * @return
-	 */
 	public static Path getShellPath() {
 		if(shellPath == null) {
 			shellPath = PathUtil.of(System.getProperty(Naming.Shell.SHELL_PATH));
@@ -43,12 +30,6 @@ public class ShellUtil {
 		return shellPath;
 	}
 	
-	/**
-	 * @param builder
-	 * @return
-	 * @throws InterruptedException
-	 * @throws IOException
-	 */
 	public static Process waitFor(final ProcessBuilder builder) throws InterruptedException, IOException {
 		System.out.println(String.join(" ", builder.command()));
 		final Process process = builder.start();
@@ -57,14 +38,6 @@ public class ShellUtil {
 		return process;
 	}
 	
-	/**
-	 * @param builder
-	 * @param in
-	 * @param inputs
-	 * @return
-	 * @throws InterruptedException
-	 * @throws IOException
-	 */
 	public static Process waitFor(final ProcessBuilder builder, final Path in, final String...inputs) throws InterruptedException, IOException {
 		System.out.println(String.join(" ", builder.command()));
 		final Process process = builder.start();
@@ -99,20 +72,10 @@ public class ShellUtil {
 		process.destroyForcibly();
 	}
 	
-	/**
-	 * @param path
-	 * @return
-	 * @throws Exception
-	 */
 	public static List<String> getOutput(final Path path) throws Exception{
 		return Files.readAllLines(path);
 	}
 	
-	/**
-	 * @param builder
-	 * @param command
-	 * @return
-	 */
 	static ProcessBuilder command(final ProcessBuilder builder, final String...command) {
 		final List<String> cmd = new ArrayList<>();
 		cmd.add(RUNNER);
