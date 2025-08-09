@@ -403,7 +403,11 @@ customReadinessProbe:
     scheme: HTTPS
 ## @param customStartupProbe Custom Startup probes for Keycloak
 ##
-customStartupProbe: {}
+customStartupProbe: 
+  httpGet:
+    path: /realms/master
+    port: 8443
+    scheme: HTTPS
 
 ## @section Keycloak StatefulSet parameters
 
