@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: "nginx"
   rules:
-    - host: touching-pika-enabled.ngrok-free.app
+    - host: chipmunk-capable-prawn.ngrok-free.app
       http:
         paths:
           - path: /
