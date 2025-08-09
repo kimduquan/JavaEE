@@ -370,6 +370,10 @@ livenessProbe:
 ##
 readinessProbe:
   enabled: true
+  httpGet:
+    path: /realms/master
+    port: 8443
+    scheme: HTTPS
   initialDelaySeconds: 30
   periodSeconds: 10
   timeoutSeconds: 1
