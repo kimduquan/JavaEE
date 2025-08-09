@@ -19,3 +19,13 @@ spec:
                 name: keycloak
                 port:
                   number: 443
+    - host: localhost
+      http:
+        paths:
+          - path: /auth
+            pathType: Prefix
+            backend:
+              service:
+                name: keycloak
+                port:
+                  number: 443
