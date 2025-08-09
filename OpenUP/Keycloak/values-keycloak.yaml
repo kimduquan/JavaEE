@@ -406,10 +406,8 @@ customReadinessProbe:
 ## @param customStartupProbe Custom Startup probes for Keycloak
 ##
 customStartupProbe: 
-  httpGet:
-    path: /q/health/started
+  tcpSocket:
     port: 8443
-    scheme: HTTPS
   initialDelaySeconds: 60
   periodSeconds: 5
   timeoutSeconds: 1
