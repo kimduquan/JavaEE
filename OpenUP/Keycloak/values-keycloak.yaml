@@ -265,6 +265,8 @@ extraEnvVars:
     value: "true"
   - name: KC_TRACING_ENABLED
     value: "true"
+  - name: KC_HTTP_ENABLED
+    value: "true"
 ## @param extraEnvVarsCM Name of existing ConfigMap containing extra env vars
 ##
 extraEnvVarsCM: ""
