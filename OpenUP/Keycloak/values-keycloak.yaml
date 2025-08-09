@@ -408,7 +408,7 @@ customReadinessProbe:
 customStartupProbe: 
   tcpSocket:
     port: 8443
-  initialDelaySeconds: 60
+  initialDelaySeconds: 120
   periodSeconds: 5
   timeoutSeconds: 1
   failureThreshold: 10
