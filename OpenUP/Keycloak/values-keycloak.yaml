@@ -393,14 +393,14 @@ startupProbe:
 ##
 customLivenessProbe: 
   httpGet:
-    path: /q/health/live
+    path: /realms/master
     port: 8443
     scheme: HTTPS
 ## @param customReadinessProbe Custom Readiness probes Keycloak
 ##
 customReadinessProbe: 
   httpGet:
-    path: /q/health/ready
+    path: /realms/master
     port: 8443
     scheme: HTTPS
 ## @param customStartupProbe Custom Startup probes for Keycloak
