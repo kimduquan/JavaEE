@@ -12,7 +12,7 @@ spec:
     - host: chipmunk-capable-prawn.ngrok-free.app
       http:
         paths:
-          - path: /
+          - path: /auth
             pathType: Prefix
             backend:
               service:
