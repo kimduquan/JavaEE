@@ -682,7 +682,7 @@ ingress:
   ## @param ingress.extraHosts An array with additional hostname(s) to be covered with the ingress record
   ## e.g:
   extraHosts:
-    - name: host.docker.internal
+    - name: touching-pika-enabled.ngrok-free.app
       path: /auth
   ##
   ## extraHosts: []
