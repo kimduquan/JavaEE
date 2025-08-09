@@ -593,7 +593,7 @@ ingress:
   extraHosts:
     - name: chipmunk-capable-prawn.ngrok-free.app
       path: /
-    - name: localhost
+    - name: "*.localhost"
       path: /
   ## @param ingress.extraPaths [array] An array with additional arbitrary paths that may need to be added to the ingress under the main host
   ## e.g:
