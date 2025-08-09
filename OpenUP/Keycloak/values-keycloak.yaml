@@ -370,7 +370,7 @@ livenessProbe:
 ##
 readinessProbe:
   enabled: true
-  initialDelaySeconds: 30
+  initialDelaySeconds: 60
   periodSeconds: 10
   timeoutSeconds: 1
   failureThreshold: 3
@@ -384,7 +384,7 @@ readinessProbe:
 ##
 startupProbe:
   enabled: true
-  initialDelaySeconds: 30
+  initialDelaySeconds: 60
   periodSeconds: 5
   timeoutSeconds: 1
   failureThreshold: 10
@@ -392,20 +392,22 @@ startupProbe:
 ## @param customLivenessProbe Custom Liveness probes for Keycloak
 ##
 customLivenessProbe: 
-  tcpSocket:
+  httpGet:
+    path: /q/health/live
     port: 8443
+    scheme: HTTPS
 ## @param customReadinessProbe Custom Readiness probes Keycloak
 ##
 customReadinessProbe: 
   httpGet:
-    path: /realms/master
+    path: /q/health/ready
     port: 8443
     scheme: HTTPS
 ## @param customStartupProbe Custom Startup probes for Keycloak
 ##
 customStartupProbe: 
   httpGet:
-    path: /realms/master
+    path: /q/health/started
     port: 8443
     scheme: HTTPS
 
