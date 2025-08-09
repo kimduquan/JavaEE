@@ -394,21 +394,21 @@ startupProbe:
 ##
 customLivenessProbe: 
   httpGet:
-    path: /health/live
+    path: /auth/health/live
     port: 9000
     scheme: HTTPS
 ## @param customReadinessProbe Custom Readiness probes Keycloak
 ##
 customReadinessProbe: 
   httpGet:
-    path: /health/ready
+    path: /auth/health/ready
     port: 9000
     scheme: HTTPS
 ## @param customStartupProbe Custom Startup probes for Keycloak
 ##
 customStartupProbe: 
   httpGet:
-    path: /health
+    path: /auth/health
     port: 9000
     scheme: HTTPS
   initialDelaySeconds: 130
@@ -683,7 +683,7 @@ ingress:
   ## e.g:
   extraHosts:
     - name: host.docker.internal
-      path: /
+      path: /auth
   ##
   ## extraHosts: []
   ## @param ingress.extraPaths Any additional arbitrary paths that may need to be added to the ingress under the main host.
