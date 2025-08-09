@@ -1,1 +1,1 @@
-helm upgrade postgresql oci://registry-1.docker.io/bitnamicharts/postgresql -f values-postgresql.yaml
+helm install postgresql oci://registry-1.docker.io/bitnamicharts/postgresql -f values-postgresql.yaml
