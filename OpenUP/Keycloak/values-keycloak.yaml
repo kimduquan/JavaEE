@@ -196,7 +196,7 @@ proxyHeaders: ""
 hostnameStrict: true
 ## @param httpRelativePath Set the path relative to '/' for serving resources
 ##
-httpRelativePath: "/"
+httpRelativePath: "/auth"
 ## Keycloak cache configuration
 ## ref: https://www.keycloak.org/server/caching
 ## @param cache.enabled Switch to enable or disable the Keycloak distributed cache for kubernetes.
@@ -274,7 +274,6 @@ extraEnvVarsSecret: ""
 ## @param containerPorts.management Keycloak management container port
 ##
 containerPorts:
-  http: 8080
   https: 8443
   management: 9000
 ## @param extraContainerPorts Optionally specify extra list of additional ports for Keycloak container
@@ -566,7 +565,6 @@ service:
   ## @param service.ports.https Keycloak service HTTPS port
   ##
   ports:
-    http: 80
     https: 443
   ## Node ports to expose
   ## @param service.nodePorts.http Node port for HTTP
