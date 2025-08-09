@@ -188,7 +188,7 @@ trustedCertsExistingSecret: ""
 adminRealm: "master"
 ## @param proxyHeaders Set Keycloak proxy headers
 ##
-proxyHeaders: "xforwarded"
+proxyHeaders: ""
 ## @param hostnameStrict Disables dynamically resolving the hostname from request headers (ignored if ingress.enabled is false).
 ## Should always be set to true in production, unless your reverse proxy overwrites the Host header.
 ## If enabled, the ingress.hostname option needs to be specified.
