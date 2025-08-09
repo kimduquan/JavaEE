@@ -265,8 +265,10 @@ extraEnvVars:
     value: "true"
   - name: KC_TRACING_ENABLED
     value: "true"
-  - name: KC_HTTP_ENABLED
-    value: "true"
+  - name: KC_TRACING_ENDPOINT
+    value: "https://0.0.0.0:4317"
+  ##- name: KC_HTTP_ENABLED
+  ##  value: "true"
 ## @param extraEnvVarsCM Name of existing ConfigMap containing extra env vars
 ##
 extraEnvVarsCM: ""
@@ -400,21 +402,21 @@ startupProbe:
 customLivenessProbe: 
   httpGet:
     path: /health/live
-    port: 8443
+    port: 9000
     scheme: HTTPS
 ## @param customReadinessProbe Custom Readiness probes Keycloak
 ##
 customReadinessProbe: 
   httpGet:
     path: /health/ready
-    port: 8443
+    port: 9000
     scheme: HTTPS
 ## @param customStartupProbe Custom Startup probes for Keycloak
 ##
 customStartupProbe: 
   httpGet:
     path: /health
-    port: 8443
+    port: 9000
     scheme: HTTPS
   initialDelaySeconds: 120
 
