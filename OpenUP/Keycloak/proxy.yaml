@@ -11,7 +11,7 @@ spec:
     - host: touching-pika-enabled.ngrok-free.app
       http:
         paths:
-          - path: /auth
+          - path: /
             pathType: Prefix
             backend:
               service:
