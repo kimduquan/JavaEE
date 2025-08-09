@@ -681,11 +681,11 @@ ingress:
   selfSigned: true
   ## @param ingress.extraHosts An array with additional hostname(s) to be covered with the ingress record
   ## e.g:
-  extraHosts:
-    - name: touching-pika-enabled.ngrok-free.app
-      path: /auth
+  ## extraHosts:
+  ##   - name: touching-pika-enabled.ngrok-free.app
+  ##     path: /auth
   ##
-  ## extraHosts: []
+  extraHosts: []
   ## @param ingress.extraPaths Any additional arbitrary paths that may need to be added to the ingress under the main host.
   ## For example: The ALB ingress controller requires a special rule for handling SSL redirection.
   ## extraPaths:
