@@ -260,7 +260,11 @@ args: []
 ##   - name: FOO
 ##     value: "bar"
 ##
-extraEnvVars: []
+extraEnvVars:
+  - name: KC_HEALTH_ENABLED
+    value: "true"
+  - name: KC_HTTP_ENABLED
+    value: "true"
 ## @param extraEnvVarsCM Name of existing ConfigMap containing extra env vars
 ##
 extraEnvVarsCM: ""
