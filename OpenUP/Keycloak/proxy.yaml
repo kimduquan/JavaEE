@@ -6,9 +6,11 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      proxy_set_header HOST "$arg_org.$host";
-      proxy_set_header X-Forwarded-Host "$arg_org.$host";
+    nginx.ingress.kubernetes.io/configuration-snippet: 
+      set $new_host "$arg_org.$best_http_host";
+      proxy_set_header HOST $new_host;
+      proxy_set_header X-Forwarded-Host $new_host;
+      proxy_set_header X-Original-Forwarded-Host $new_host;
 
 spec:
   ingressClassName: "nginx"
