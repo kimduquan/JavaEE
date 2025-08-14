@@ -1,5 +1,5 @@
 kubectl delete secret oidc
-kubectl create secret generic oidc --from-literal=OIDC_CLIENT_SECRET='1RNTL4iPbFcFg2oB8WqXhEZVYhXx2zQL' --from-literal=OIDC_CLIENT_ID='account'
+kubectl create secret generic oidc --from-literal=OIDC_CLIENT_SECRET='rFgV3pE34zstgrRsI6oGCptnoapVkXu2' --from-literal=OIDC_CLIENT_ID='account'
 kubectl delete cm oidc
 kubectl create cm oidc --from-literal=OIDC_PROVIDER_URI='https://chipmunk-capable-prawn.ngrok-free.app/auth/realms/EPF-dev/.well-known/openid-configuration'
 helm install wildfly oci://registry-1.docker.io/bitnamicharts/wildfly -f values-wildfly.yaml
