@@ -186,7 +186,7 @@ customStartupProbe: {}
 ## @param resourcesPreset Set neo4j container resources according to one common preset (allowed values: none, nano, small, medium, large, xlarge, 2xlarge). This is ignored if resources is set (resources is recommended for production).
 ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
 ##
-resourcesPreset: "small"
+resourcesPreset: "nano"
 ## @param resources Set neo4j container requests and limits for different resources like CPU or memory (essential for production workloads)
 ## Example:
 ## resources:
@@ -242,7 +242,7 @@ containerSecurityContext:
 ## @param auth.existingSecret Name of a secret containing the neo4j password. Password must be stored under the 'password' key.
 ##
 auth:
-  password: ""
+  password: "123456"
   existingSecret: ""
 
 tls:
@@ -465,7 +465,7 @@ autoscaling:
 service:
   ## @param service.type neo4j service type
   ##
-  type: LoadBalancer
+  type: ClusterIP
   ## @param service.ports.bolt neo4j service bolt port
   ## @param service.ports.http neo4j service HTTP port
   ## @param service.ports.https neo4j service HTTPS port
@@ -723,7 +723,7 @@ persistence:
     - ReadWriteOnce
   ## @param persistence.size Size of data volume
   ##
-  size: 8Gi
+  size: 1Gi
   ## @param persistence.existingClaim The name of an existing PVC to use for persistence
   ##
   existingClaim: ""
