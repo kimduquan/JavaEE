@@ -186,7 +186,7 @@ customStartupProbe: {}
 ## @param resourcesPreset Set neo4j container resources according to one common preset (allowed values: none, nano, small, medium, large, xlarge, 2xlarge). This is ignored if resources is set (resources is recommended for production).
 ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
 ##
-resourcesPreset: "nano"
+## resourcesPreset: "nano"
 ## @param resources Set neo4j container requests and limits for different resources like CPU or memory (essential for production workloads)
 ## Example:
 ## resources:
@@ -197,7 +197,13 @@ resourcesPreset: "nano"
 ##     cpu: 3
 ##     memory: 1024Mi
 ##
-resources: {}
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 250m
+    memory: 256Mi
 ## Configure Pods Security Context
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
 ## @param podSecurityContext.enabled Enable neo4j pods' Security Context
