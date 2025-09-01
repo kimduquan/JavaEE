@@ -25,13 +25,9 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-smallrye-health</artifactId>
     </dependency>
-    <dependency>
-	    <groupId>com.hazelcast</groupId>
-	    <artifactId>quarkus-hazelcast-client</artifactId>
-	</dependency>
 	<dependency>
 		<groupId>io.quarkiverse.jnosql</groupId>
-		<artifactId>quarkus-jnosql-document-mongodb</artifactId>
+		<artifactId>quarkus-jnosql-mongodb</artifactId>
 	</dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -51,13 +47,17 @@
 	</dependency>
 	
 	<dependency>
+		<groupId>javax.cache</groupId>
+		<artifactId>cache-api</artifactId>
+	</dependency>
+	<dependency>
 	    <groupId>org.eclipse.jnosql.mapping</groupId>
 	    <artifactId>jnosql-mapping-reflection</artifactId>
 	</dependency>
 	<dependency>
 		<groupId>com.hazelcast</groupId>
 		<artifactId>hazelcast</artifactId>
-		<version>5.2.5</version>
+		<version>5.5.0</version>
 	</dependency>
 	
 	<dependency>
