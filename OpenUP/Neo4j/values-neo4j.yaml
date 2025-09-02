@@ -138,7 +138,7 @@ extraContainerPorts: []
 ## @param livenessProbe.successThreshold Success threshold for livenessProbe
 ##
 livenessProbe:
-  enabled: true
+  enabled: false
   initialDelaySeconds: 10
   periodSeconds: 5
   timeoutSeconds: 10
