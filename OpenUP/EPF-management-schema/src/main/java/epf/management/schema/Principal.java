@@ -1,4 +1,4 @@
-package epf.webapp.view;
+package epf.management.schema;
 
 public class Principal {
 	
