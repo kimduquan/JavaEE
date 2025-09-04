@@ -5,22 +5,18 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import javax.sql.DataSource;
 
-public class RemoteDataSourceObject extends RemoteCommonDataSourceObject implements RemoteDataSource {
+public class RemoteDataSourceObject<U extends DataSource, V extends RemoteDataSource> extends RemoteCommonDataSourceObject<U, V> implements RemoteDataSource {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private final DataSource dataSource;
-	private final RemoteDataSource _dataSource;
 	private final RemoteWrapper wrapper;
 
-	public RemoteDataSourceObject(final DataSource dataSource, final RemoteDataSource _dataSource) throws RemoteException {
+	public RemoteDataSourceObject(final U dataSource, final V _dataSource) throws RemoteException {
 		super(dataSource, _dataSource);
-		this.dataSource = dataSource;
-		this._dataSource = _dataSource;
-		wrapper = new RemoteWrapperObject(dataSource, _dataSource);
+		wrapper = new RemoteWrapperObject<U, V>(dataSource, _dataSource);
 	}
 
 	@Override
@@ -56,13 +52,12 @@ public class RemoteDataSourceObject extends RemoteCommonDataSourceObject impleme
 	}
 
 	@Override
-	public Connection _getConnection() throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		return null;
+	public RemoteConnection _getConnection() throws RemoteException, SQLException {
+		return new RemoteConnectionObject<>(object.getConnection(), null);
 	}
 
 	@Override
-	public Connection _getConnection(final String username, final String password) throws RemoteException, SQLException {
-		return dataSource.getConnection();
+	public RemoteConnection _getConnection(final String username, final String password) throws RemoteException, SQLException {
+		return new RemoteConnectionObject<>(object.getConnection(username, password), null);
 	}
 }

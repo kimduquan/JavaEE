@@ -20,26 +20,21 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
-public class RemoteConnectionObject extends RemoteWrapperObject implements RemoteConnection {
+public class RemoteConnectionObject<U extends Connection, V extends RemoteConnection> extends RemoteWrapperObject<U, V> implements RemoteConnection {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	final Connection connection;
-	final RemoteConnection _connection;
 
-	public RemoteConnectionObject(final Connection connection, final RemoteConnection _connection) throws RemoteException {
+	public RemoteConnectionObject(final U connection, final V _connection) throws RemoteException {
 		super(connection, _connection);
-		this.connection = connection;
-		this._connection = _connection;
 	}
 
 	@Override
 	public Statement createStatement() throws SQLException {
 		try {
-			return _connection._createStatement();
+			return _object._createStatement();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -49,7 +44,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public PreparedStatement prepareStatement(String sql) throws SQLException {
 		try {
-			return _connection._prepareStatement(sql);
+			return _object._prepareStatement(sql);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -59,7 +54,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public CallableStatement prepareCall(String sql) throws SQLException {
 		try {
-			return _connection._prepareCall(sql);
+			return _object._prepareCall(sql);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -69,7 +64,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public String nativeSQL(String sql) throws SQLException {
 		try {
-			return _connection._nativeSQL(sql);
+			return _object._nativeSQL(sql);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -79,7 +74,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public void setAutoCommit(boolean autoCommit) throws SQLException {
 		try {
-			_connection._setAutoCommit(autoCommit);
+			_object._setAutoCommit(autoCommit);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -89,7 +84,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public boolean getAutoCommit() throws SQLException {
 		try {
-			return _connection._getAutoCommit();
+			return _object._getAutoCommit();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -99,7 +94,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public void commit() throws SQLException {
 		try {
-			_connection._commit();
+			_object._commit();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -109,7 +104,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public void rollback() throws SQLException {
 		try {
-			_connection._rollback();
+			_object._rollback();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -119,7 +114,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public void close() throws SQLException {
 		try {
-			_connection._close();
+			_object._close();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -129,7 +124,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public boolean isClosed() throws SQLException {
 		try {
-			return _connection._isClosed();
+			return _object._isClosed();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -139,7 +134,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public DatabaseMetaData getMetaData() throws SQLException {
 		try {
-			return _connection._getMetaData();
+			return _object._getMetaData();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -149,7 +144,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public void setReadOnly(boolean readOnly) throws SQLException {
 		try {
-			_connection._setReadOnly(readOnly);
+			_object._setReadOnly(readOnly);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -159,7 +154,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public boolean isReadOnly() throws SQLException {
 		try {
-			return _connection._isReadOnly();
+			return _object._isReadOnly();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -169,7 +164,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public void setCatalog(String catalog) throws SQLException {
 		try {
-			_connection._setCatalog(catalog);
+			_object._setCatalog(catalog);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -179,7 +174,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public String getCatalog() throws SQLException {
 		try {
-			return _connection._getCatalog();
+			return _object._getCatalog();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -189,7 +184,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public void setTransactionIsolation(int level) throws SQLException {
 		try {
-			_connection._setTransactionIsolation(level);
+			_object._setTransactionIsolation(level);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -199,7 +194,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public int getTransactionIsolation() throws SQLException {
 		try {
-			return _connection._getTransactionIsolation();
+			return _object._getTransactionIsolation();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -209,7 +204,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public SQLWarning getWarnings() throws SQLException {
 		try {
-			return _connection._getWarnings();
+			return _object._getWarnings();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -219,7 +214,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public void clearWarnings() throws SQLException {
 		try {
-			_connection._clearWarnings();
+			_object._clearWarnings();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -229,7 +224,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
 		try {
-			return _connection._createStatement(resultSetType, resultSetConcurrency);
+			return _object._createStatement(resultSetType, resultSetConcurrency);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -239,7 +234,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
 		try {
-			return _connection._prepareStatement(sql, resultSetType, resultSetConcurrency);
+			return _object._prepareStatement(sql, resultSetType, resultSetConcurrency);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -249,7 +244,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
 		try {
-			return _connection._prepareCall(sql, resultSetType, resultSetConcurrency);
+			return _object._prepareCall(sql, resultSetType, resultSetConcurrency);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -259,7 +254,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public Map<String, Class<?>> getTypeMap() throws SQLException {
 		try {
-			return _connection._getTypeMap();
+			return _object._getTypeMap();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -269,7 +264,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public void setTypeMap(Map<String, Class<?>> map) throws SQLException {
 		try {
-			_connection._setTypeMap(map);
+			_object._setTypeMap(map);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -279,7 +274,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public void setHoldability(int holdability) throws SQLException {
 		try {
-			_connection._setHoldability(holdability);
+			_object._setHoldability(holdability);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -289,7 +284,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public int getHoldability() throws SQLException {
 		try {
-			return _connection._getHoldability();
+			return _object._getHoldability();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -299,7 +294,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public Savepoint setSavepoint() throws SQLException {
 		try {
-			return _connection._setSavepoint();
+			return _object._setSavepoint();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -309,7 +304,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public Savepoint setSavepoint(String name) throws SQLException {
 		try {
-			return _connection._setSavepoint(name);
+			return _object._setSavepoint(name);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -319,7 +314,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public void rollback(Savepoint savepoint) throws SQLException {
 		try {
-			_connection._rollback(savepoint);
+			_object._rollback(savepoint);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -329,7 +324,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public void releaseSavepoint(Savepoint savepoint) throws SQLException {
 		try {
-			_connection._releaseSavepoint(savepoint);
+			_object._releaseSavepoint(savepoint);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -340,7 +335,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	public Statement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability)
 			throws SQLException {
 		try {
-			return _connection._createStatement(resultSetType, resultSetConcurrency, resultSetHoldability);
+			return _object._createStatement(resultSetType, resultSetConcurrency, resultSetHoldability);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -351,7 +346,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency,
 			int resultSetHoldability) throws SQLException {
 		try {
-			return _connection._prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
+			return _object._prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -362,7 +357,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency,
 			int resultSetHoldability) throws SQLException {
 		try {
-			return _connection._prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
+			return _object._prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -372,7 +367,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public PreparedStatement prepareStatement(String sql, int autoGeneratedKeys) throws SQLException {
 		try {
-			return _connection._prepareStatement(sql, autoGeneratedKeys);
+			return _object._prepareStatement(sql, autoGeneratedKeys);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -382,7 +377,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public PreparedStatement prepareStatement(String sql, int[] columnIndexes) throws SQLException {
 		try {
-			return _connection._prepareStatement(sql, columnIndexes);
+			return _object._prepareStatement(sql, columnIndexes);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -392,7 +387,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public PreparedStatement prepareStatement(String sql, String[] columnNames) throws SQLException {
 		try {
-			return _connection._prepareStatement(sql, columnNames);
+			return _object._prepareStatement(sql, columnNames);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -402,7 +397,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public Clob createClob() throws SQLException {
 		try {
-			return _connection._createClob();
+			return _object._createClob();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -412,7 +407,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public Blob createBlob() throws SQLException {
 		try {
-			return _connection._createBlob();
+			return _object._createBlob();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -422,7 +417,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public NClob createNClob() throws SQLException {
 		try {
-			return _connection._createNClob();
+			return _object._createNClob();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -432,7 +427,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public SQLXML createSQLXML() throws SQLException {
 		try {
-			return _connection._createSQLXML();
+			return _object._createSQLXML();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -442,7 +437,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public boolean isValid(int timeout) throws SQLException {
 		try {
-			return _connection._isValid(timeout);
+			return _object._isValid(timeout);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -452,7 +447,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public void setClientInfo(String name, String value) throws SQLClientInfoException {
 		try {
-			_connection._setClientInfo(name, value);
+			_object._setClientInfo(name, value);
 		}
 		catch(RemoteException ex) {
 			throw new SQLClientInfoException();
@@ -462,7 +457,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public void setClientInfo(Properties properties) throws SQLClientInfoException {
 		try {
-			_connection._setClientInfo(properties);
+			_object._setClientInfo(properties);
 		}
 		catch(RemoteException ex) {
 			throw new SQLClientInfoException();
@@ -472,7 +467,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public String getClientInfo(String name) throws SQLException {
 		try {
-			return _connection._getClientInfo(name);
+			return _object._getClientInfo(name);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -482,7 +477,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public Properties getClientInfo() throws SQLException {
 		try {
-			return _connection._getClientInfo();
+			return _object._getClientInfo();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -492,7 +487,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public Array createArrayOf(String typeName, Object[] elements) throws SQLException {
 		try {
-			return _connection._createArrayOf(typeName, elements);
+			return _object._createArrayOf(typeName, elements);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -502,7 +497,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public Struct createStruct(String typeName, Object[] attributes) throws SQLException {
 		try {
-			return _connection._createStruct(typeName, attributes);
+			return _object._createStruct(typeName, attributes);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -512,7 +507,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public void setSchema(String schema) throws SQLException {
 		try {
-			_connection._setSchema(schema);
+			_object._setSchema(schema);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -522,7 +517,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public String getSchema() throws SQLException {
 		try {
-			return _connection._getSchema();
+			return _object._getSchema();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -532,7 +527,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public void abort(Executor executor) throws SQLException {
 		try {
-			_connection._abort(executor);
+			_object._abort(executor);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -542,7 +537,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException {
 		try {
-			_connection._setNetworkTimeout(executor, milliseconds);
+			_object._setNetworkTimeout(executor, milliseconds);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -552,7 +547,7 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	@Override
 	public int getNetworkTimeout() throws SQLException {
 		try {
-			return _connection._getNetworkTimeout();
+			return _object._getNetworkTimeout();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -561,13 +556,13 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 
 	@Override
 	public RemoteStatement _createStatement() throws RemoteException, SQLException {
-		return new RemoteStatementObject(connection.createStatement(), null);
+		return new RemoteStatementObject<>(object.createStatement(), null);
 	}
 
 	@Override
-	public PreparedStatement _prepareStatement(String sql) throws RemoteException, SQLException {
+	public RemotePreparedStatement _prepareStatement(String sql) throws RemoteException, SQLException {
 		try {
-			return _connection._prepareStatement(sql);
+			return new RemotePreparedStatementObject<>(object.prepareStatement(sql), null);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -575,9 +570,9 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 	}
 
 	@Override
-	public CallableStatement _prepareCall(String sql) throws RemoteException, SQLException {
+	public RemoteCallableStatement _prepareCall(String sql) throws RemoteException, SQLException {
 		try {
-			return _connection._prepareCall(sql);
+			return new RemoteCallableStatementObject<>(object.prepareCall(sql), null);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -586,301 +581,252 @@ public class RemoteConnectionObject extends RemoteWrapperObject implements Remot
 
 	@Override
 	public String _nativeSQL(String sql) throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return object.nativeSQL(sql);
 	}
 
 	@Override
 	public void _setAutoCommit(boolean autoCommit) throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		
+		object.setAutoCommit(autoCommit);
 	}
 
 	@Override
 	public boolean _getAutoCommit() throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		return object.getAutoCommit();
 	}
 
 	@Override
 	public void _commit() throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		
+		object.commit();
 	}
 
 	@Override
 	public void _rollback() throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		
+		object.rollback();
 	}
 
 	@Override
 	public void _close() throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		
+		object.close();
 	}
 
 	@Override
 	public boolean _isClosed() throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		return object.isClosed();
 	}
 
 	@Override
-	public DatabaseMetaData _getMetaData() throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
+	public RemoteDatabaseMetaData _getMetaData() throws RemoteException, SQLException {
 		return null;
 	}
 
 	@Override
 	public void _setReadOnly(boolean readOnly) throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		
+		object.setReadOnly(readOnly);
 	}
 
 	@Override
 	public boolean _isReadOnly() throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		return object.isReadOnly();
 	}
 
 	@Override
 	public void _setCatalog(String catalog) throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		
+		object.setCatalog(catalog);
 	}
 
 	@Override
 	public String _getCatalog() throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return object.getCatalog();
 	}
 
 	@Override
 	public void _setTransactionIsolation(int level) throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		
+		object.setTransactionIsolation(level);
 	}
 
 	@Override
 	public int _getTransactionIsolation() throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		return object.getTransactionIsolation();
 	}
 
 	@Override
 	public SQLWarning _getWarnings() throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return object.getWarnings();
 	}
 
 	@Override
 	public void _clearWarnings() throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		
+		object.clearWarnings();
 	}
 
 	@Override
-	public Statement _createStatement(int resultSetType, int resultSetConcurrency)
+	public RemoteStatement _createStatement(int resultSetType, int resultSetConcurrency)
 			throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return new RemoteStatementObject<>(object.createStatement(resultSetType, resultSetConcurrency), null);
 	}
 
 	@Override
-	public PreparedStatement _prepareStatement(String sql, int resultSetType, int resultSetConcurrency)
+	public RemotePreparedStatement _prepareStatement(String sql, int resultSetType, int resultSetConcurrency)
 			throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return new RemotePreparedStatementObject<>(object.prepareStatement(sql, resultSetType, resultSetConcurrency), null);
 	}
 
 	@Override
-	public CallableStatement _prepareCall(String sql, int resultSetType, int resultSetConcurrency)
+	public RemoteCallableStatement _prepareCall(String sql, int resultSetType, int resultSetConcurrency)
 			throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return new RemoteCallableStatementObject<>(object.prepareCall(sql, resultSetType, resultSetConcurrency), null);
 	}
 
 	@Override
 	public Map<String, Class<?>> _getTypeMap() throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return object.getTypeMap();
 	}
 
 	@Override
 	public void _setTypeMap(Map<String, Class<?>> map) throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		
+		object.setTypeMap(map);
 	}
 
 	@Override
 	public void _setHoldability(int holdability) throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		
+		object.setHoldability(holdability);
 	}
 
 	@Override
 	public int _getHoldability() throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		return object.getHoldability();
 	}
 
 	@Override
-	public Savepoint _setSavepoint() throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		return null;
+	public RemoteSavepoint _setSavepoint() throws RemoteException, SQLException {
+		return new RemoteSavepointObject<>(object.setSavepoint(), null);
 	}
 
 	@Override
-	public Savepoint _setSavepoint(String name) throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		return null;
+	public RemoteSavepoint _setSavepoint(String name) throws RemoteException, SQLException {
+		return new RemoteSavepointObject<>(object.setSavepoint(name), null);
 	}
 
 	@Override
 	public void _rollback(Savepoint savepoint) throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		
+		object.rollback();
 	}
 
 	@Override
 	public void _releaseSavepoint(Savepoint savepoint) throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		
+		object.releaseSavepoint(savepoint);
 	}
 
 	@Override
-	public Statement _createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability)
+	public RemoteStatement _createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability)
 			throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return new RemoteStatementObject<>(object.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability), null);
 	}
 
 	@Override
-	public PreparedStatement _prepareStatement(String sql, int resultSetType, int resultSetConcurrency,
+	public RemotePreparedStatement _prepareStatement(String sql, int resultSetType, int resultSetConcurrency,
 			int resultSetHoldability) throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return new RemotePreparedStatementObject<>(object.prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability), null);
 	}
 
 	@Override
-	public CallableStatement _prepareCall(String sql, int resultSetType, int resultSetConcurrency,
+	public RemoteCallableStatement _prepareCall(String sql, int resultSetType, int resultSetConcurrency,
 			int resultSetHoldability) throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
+		return new RemoteCallableStatementObject<>(object.prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability), null);
+	}
+
+	@Override
+	public RemotePreparedStatement _prepareStatement(String sql, int autoGeneratedKeys) throws RemoteException, SQLException {
+		return new RemotePreparedStatementObject<>(object.prepareStatement(sql, autoGeneratedKeys), null);
+	}
+
+	@Override
+	public RemotePreparedStatement _prepareStatement(String sql, int[] columnIndexes) throws RemoteException, SQLException {
+		return new RemotePreparedStatementObject<>(object.prepareStatement(sql, columnIndexes), null);
+	}
+
+	@Override
+	public RemotePreparedStatement _prepareStatement(String sql, String[] columnNames) throws RemoteException, SQLException {
+		return new RemotePreparedStatementObject<>(object.prepareStatement(sql, columnNames), null);
+	}
+
+	@Override
+	public RemoteClob _createClob() throws RemoteException, SQLException {
 		return null;
 	}
 
 	@Override
-	public PreparedStatement _prepareStatement(String sql, int autoGeneratedKeys) throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
+	public RemoteBlob _createBlob() throws RemoteException, SQLException {
 		return null;
 	}
 
 	@Override
-	public PreparedStatement _prepareStatement(String sql, int[] columnIndexes) throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
+	public RemoteNClob _createNClob() throws RemoteException, SQLException {
 		return null;
 	}
 
 	@Override
-	public PreparedStatement _prepareStatement(String sql, String[] columnNames) throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Clob _createClob() throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Blob _createBlob() throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public NClob _createNClob() throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public SQLXML _createSQLXML() throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
+	public RemoteSQLXML _createSQLXML() throws RemoteException, SQLException {
 		return null;
 	}
 
 	@Override
 	public boolean _isValid(int timeout) throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		return object.isValid(timeout);
 	}
 
 	@Override
 	public void _setClientInfo(String name, String value) throws RemoteException, SQLClientInfoException {
-		// TODO Auto-generated method stub
-		
+		object.setClientInfo(name, value);
 	}
 
 	@Override
 	public void _setClientInfo(Properties properties) throws RemoteException, SQLClientInfoException {
-		// TODO Auto-generated method stub
-		
+		object.setClientInfo(properties);
 	}
 
 	@Override
 	public String _getClientInfo(String name) throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return object.getClientInfo(name);
 	}
 
 	@Override
 	public Properties _getClientInfo() throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
+		return object.getClientInfo();
+	}
+
+	@Override
+	public RemoteArray _createArrayOf(String typeName, Object[] elements) throws RemoteException, SQLException {
 		return null;
 	}
 
 	@Override
-	public Array _createArrayOf(String typeName, Object[] elements) throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Struct _createStruct(String typeName, Object[] attributes) throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
+	public RemoteStruct _createStruct(String typeName, Object[] attributes) throws RemoteException, SQLException {
 		return null;
 	}
 
 	@Override
 	public void _setSchema(String schema) throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		
+		object.setSchema(schema);
 	}
 
 	@Override
 	public String _getSchema() throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return object.getSchema();
 	}
 
 	@Override
 	public void _abort(Executor executor) throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		
+		object.abort(executor);
 	}
 
 	@Override
 	public void _setNetworkTimeout(Executor executor, int milliseconds) throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		
+		object.setNetworkTimeout(executor, milliseconds);
 	}
 
 	@Override
 	public int _getNetworkTimeout() throws RemoteException, SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		return object.getNetworkTimeout();
 	}
 }

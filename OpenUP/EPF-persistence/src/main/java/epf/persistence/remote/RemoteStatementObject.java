@@ -7,26 +7,21 @@ import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
 
-public class RemoteStatementObject extends RemoteWrapperObject implements RemoteStatement {
+public class RemoteStatementObject<U extends Statement, V extends RemoteStatement> extends RemoteWrapperObject<U, V> implements RemoteStatement {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private final Statement statement;
-	private final RemoteStatement _statement;
-	
-	public RemoteStatementObject(final Statement statement, final RemoteStatement _statement) throws RemoteException {
+	public RemoteStatementObject(final U statement, final V _statement) throws RemoteException {
 		super(statement, _statement);
-		this.statement = statement;
-		this._statement = _statement;
 	}
 
 	@Override
 	public ResultSet executeQuery(String sql) throws SQLException {
 		try {
-			return _statement._executeQuery(sql);
+			return _object._executeQuery(sql);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -36,7 +31,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public int executeUpdate(String sql) throws SQLException {
 		try {
-			return _statement._executeUpdate(sql);
+			return _object._executeUpdate(sql);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -46,7 +41,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public void close() throws SQLException {
 		try {
-			_statement._close();
+			_object._close();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -56,7 +51,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public int getMaxFieldSize() throws SQLException {
 		try {
-			return _statement._getMaxFieldSize();
+			return _object._getMaxFieldSize();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -66,7 +61,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public void setMaxFieldSize(int max) throws SQLException {
 		try {
-			_statement._setMaxFieldSize(max);
+			_object._setMaxFieldSize(max);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -76,7 +71,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public int getMaxRows() throws SQLException {
 		try {
-			return _statement._getMaxRows();
+			return _object._getMaxRows();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -86,7 +81,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public void setMaxRows(int max) throws SQLException {
 		try {
-			_statement._setMaxRows(max);
+			_object._setMaxRows(max);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -96,7 +91,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public void setEscapeProcessing(boolean enable) throws SQLException {
 		try {
-			_statement._setEscapeProcessing(enable);
+			_object._setEscapeProcessing(enable);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -106,7 +101,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public int getQueryTimeout() throws SQLException {
 		try {
-			return _statement._getQueryTimeout();
+			return _object._getQueryTimeout();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -116,7 +111,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public void setQueryTimeout(int seconds) throws SQLException {
 		try {
-			_statement._setQueryTimeout(seconds);
+			_object._setQueryTimeout(seconds);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -126,7 +121,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public void cancel() throws SQLException {
 		try {
-			_statement._cancel();
+			_object._cancel();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -136,7 +131,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public SQLWarning getWarnings() throws SQLException {
 		try {
-			return _statement._getWarnings();
+			return _object._getWarnings();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -146,7 +141,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public void clearWarnings() throws SQLException {
 		try {
-			_statement._clearWarnings();
+			_object._clearWarnings();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -156,7 +151,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public void setCursorName(String name) throws SQLException {
 		try {
-			_statement._setCursorName(name);
+			_object._setCursorName(name);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -166,7 +161,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public boolean execute(String sql) throws SQLException {
 		try {
-			return _statement._execute(sql);
+			return _object._execute(sql);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -176,7 +171,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public ResultSet getResultSet() throws SQLException {
 		try {
-			return _statement._getResultSet();
+			return _object._getResultSet();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -186,7 +181,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public int getUpdateCount() throws SQLException {
 		try {
-			return _statement._getUpdateCount();
+			return _object._getUpdateCount();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -196,7 +191,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public boolean getMoreResults() throws SQLException {
 		try {
-			return _statement._getMoreResults();
+			return _object._getMoreResults();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -206,7 +201,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public void setFetchDirection(int direction) throws SQLException {
 		try {
-			_statement._setFetchDirection(direction);
+			_object._setFetchDirection(direction);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -216,7 +211,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public int getFetchDirection() throws SQLException {
 		try {
-			return _statement._getFetchDirection();
+			return _object._getFetchDirection();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -226,7 +221,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public void setFetchSize(int rows) throws SQLException {
 		try {
-			_statement._setFetchSize(rows);
+			_object._setFetchSize(rows);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -236,7 +231,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public int getFetchSize() throws SQLException {
 		try {
-			return _statement._getFetchSize();
+			return _object._getFetchSize();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -246,7 +241,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public int getResultSetConcurrency() throws SQLException {
 		try {
-			return _statement._getResultSetConcurrency();
+			return _object._getResultSetConcurrency();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -256,7 +251,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public int getResultSetType() throws SQLException {
 		try {
-			return _statement._getResultSetType();
+			return _object._getResultSetType();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -266,7 +261,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public void addBatch(String sql) throws SQLException {
 		try {
-			_statement._addBatch(sql);
+			_object._addBatch(sql);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -276,7 +271,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public void clearBatch() throws SQLException {
 		try {
-			_statement._clearBatch();
+			_object._clearBatch();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -286,7 +281,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public int[] executeBatch() throws SQLException {
 		try {
-			return _statement._executeBatch();
+			return _object._executeBatch();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -296,7 +291,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public Connection getConnection() throws SQLException {
 		try {
-			return _statement._getConnection();
+			return _object._getConnection();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -306,7 +301,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public boolean getMoreResults(int current) throws SQLException {
 		try {
-			return _statement._getMoreResults(current);
+			return _object._getMoreResults(current);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -316,7 +311,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public ResultSet getGeneratedKeys() throws SQLException {
 		try {
-			return _statement._getGeneratedKeys();
+			return _object._getGeneratedKeys();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -326,7 +321,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public int executeUpdate(String sql, int autoGeneratedKeys) throws SQLException {
 		try {
-			return _statement._executeUpdate(sql, autoGeneratedKeys);
+			return _object._executeUpdate(sql, autoGeneratedKeys);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -336,7 +331,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public int executeUpdate(String sql, int[] columnIndexes) throws SQLException {
 		try {
-			return _statement._executeUpdate(sql, columnIndexes);
+			return _object._executeUpdate(sql, columnIndexes);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -346,7 +341,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public int executeUpdate(String sql, String[] columnNames) throws SQLException {
 		try {
-			return _statement._executeUpdate(sql, columnNames);
+			return _object._executeUpdate(sql, columnNames);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -356,7 +351,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public boolean execute(String sql, int autoGeneratedKeys) throws SQLException {
 		try {
-			return _statement._execute(sql, autoGeneratedKeys);
+			return _object._execute(sql, autoGeneratedKeys);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -366,7 +361,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public boolean execute(String sql, int[] columnIndexes) throws SQLException {
 		try {
-			return _statement._execute(sql, columnIndexes);
+			return _object._execute(sql, columnIndexes);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -376,7 +371,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public boolean execute(String sql, String[] columnNames) throws SQLException {
 		try {
-			return _statement._execute(sql, columnNames);
+			return _object._execute(sql, columnNames);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -386,7 +381,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public int getResultSetHoldability() throws SQLException {
 		try {
-			return _statement._getResultSetHoldability();
+			return _object._getResultSetHoldability();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -396,7 +391,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public boolean isClosed() throws SQLException {
 		try {
-			return _statement._isClosed();
+			return _object._isClosed();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -406,7 +401,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public void setPoolable(boolean poolable) throws SQLException {
 		try {
-			_statement._setPoolable(poolable);
+			_object._setPoolable(poolable);
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -416,7 +411,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public boolean isPoolable() throws SQLException {
 		try {
-			return _statement._isPoolable();
+			return _object._isPoolable();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -426,7 +421,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public void closeOnCompletion() throws SQLException {
 		try {
-			_statement._closeOnCompletion();
+			_object._closeOnCompletion();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -436,7 +431,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 	@Override
 	public boolean isCloseOnCompletion() throws SQLException {
 		try {
-			return _statement._isCloseOnCompletion();
+			return _object._isCloseOnCompletion();
 		}
 		catch(RemoteException ex) {
 			throw new SQLException();
@@ -445,7 +440,7 @@ public class RemoteStatementObject extends RemoteWrapperObject implements Remote
 
 	@Override
 	public RemoteResultSet _executeQuery(String sql) throws RemoteException, SQLException {
-		return null;
+		return new RemoteResultSetObject<>(object.executeQuery(sql), null);
 	}
 
 	@Override
