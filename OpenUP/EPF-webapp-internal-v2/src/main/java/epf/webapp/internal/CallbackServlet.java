@@ -17,6 +17,8 @@ public abstract class CallbackServlet extends HttpServlet {
     protected void doGet(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
     	final OpenIdContext context = getContext();
         if (context != null) {
+        	final ManagementClient management = getManagement();
+        	management.authenticate();
         	final Optional<String> originalRequest = context.getStoredValue(request, response, OpenIdConstant.ORIGINAL_REQUEST);
         	final String originalRequestString = originalRequest.get();
             response.sendRedirect(originalRequestString);
@@ -24,4 +26,6 @@ public abstract class CallbackServlet extends HttpServlet {
     }
     
     protected abstract OpenIdContext getContext();
+    
+    protected abstract ManagementClient getManagement();
 }

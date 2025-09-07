@@ -12,5 +12,15 @@
     <packaging>jar</packaging>
     
     <dependencies>
+    	<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-management-schema</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-naming</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>
