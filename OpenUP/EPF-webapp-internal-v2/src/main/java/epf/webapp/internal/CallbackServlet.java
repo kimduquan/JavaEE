@@ -1,7 +1,9 @@
 package epf.webapp.internal;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.Optional;
+import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdConstant;
 import jakarta.security.enterprise.identitystore.openid.OpenIdContext;
 import jakarta.servlet.ServletException;
@@ -26,6 +28,9 @@ public abstract class CallbackServlet extends HttpServlet {
     }
     
     protected abstract OpenIdContext getContext();
+    protected abstract String getGatewayUrl();
     
-    protected abstract ManagementClient getManagement();
+    protected ManagementClient getManagement() {
+    	return RestClientBuilder.newBuilder().baseUri(URI.create(getGatewayUrl())).build(ManagementClient.class);
+    }
 }

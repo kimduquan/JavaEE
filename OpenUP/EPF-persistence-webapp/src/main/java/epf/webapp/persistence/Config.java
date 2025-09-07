@@ -1,12 +1,13 @@
 package epf.webapp.persistence;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import epf.naming.Naming;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 @ApplicationScoped
-@Named("config")
+@Named(Naming.CONFIG)
 public class Config {
 
 	@Inject
@@ -20,6 +21,10 @@ public class Config {
 	@Inject
     @ConfigProperty(name = "oidc.client.secret")
 	private String clientSecret;
+	
+	@Inject
+    @ConfigProperty(name = Naming.Gateway.GATEWAY_URL)
+	private String gatewayUrl;
 
 	public String getProviderURI() {
 		return providerURI;
@@ -31,5 +36,9 @@ public class Config {
 
 	public String getClientSecret() {
 		return clientSecret;
+	}
+
+	public String getGatewayUrl() {
+		return gatewayUrl;
 	}
 }
