@@ -31,6 +31,6 @@ public abstract class CallbackServlet extends HttpServlet {
     protected abstract String getGatewayUrl();
     
     protected ManagementClient getManagement() {
-    	return RestClientBuilder.newBuilder().baseUri(URI.create(getGatewayUrl())).build(ManagementClient.class);
+    	return RestClientBuilder.newBuilder().baseUri(URI.create(getGatewayUrl())).register(AuthFilter.class).build(ManagementClient.class);
     }
 }

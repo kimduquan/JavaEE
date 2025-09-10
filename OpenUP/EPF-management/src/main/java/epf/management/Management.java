@@ -1,5 +1,6 @@
 package epf.management;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -13,9 +14,9 @@ import io.smallrye.common.annotation.RunOnVirtualThread;
 
 @Path(Naming.MANAGEMENT)
 @ApplicationScoped
+@RolesAllowed(Naming.Security.DEFAULT_ROLE)
 public class Management {
 	
-	@Path("")
 	@GET
 	@RunOnVirtualThread
 	public Principal authenticate(@Context final SecurityContext security) throws Exception {
