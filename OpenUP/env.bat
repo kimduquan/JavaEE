@@ -14,6 +14,3 @@ set PATH=%MAVEN_HOME%;%PATH%
 set OIDC_CLIENT_ID=account
 set OIDC_CLIENT_SECRET=4GFBcFZ0lrJVHUBWz2nGh1w5VWhOXePV
 set OIDC_PROVIDER_URI=http://host.docker.internal/realms/EPF-dev/.well-known/openid-configuration
-set MP_JWT_VERIFY_PUBLICKEY_LOCATION=http://host.docker.internal/realms/EPF-dev/protocol/openid-connect/certs
-set MP_JWT_VERIFY_AUDIENCES=http://gateway.docker.internal
-set MP_JWT_VERIFY_ISSUER=http://host.docker.internal/realms/EPF-dev

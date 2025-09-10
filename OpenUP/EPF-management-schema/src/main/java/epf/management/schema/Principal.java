@@ -15,9 +15,9 @@ public class Principal {
 	private String birthdate;
 	private String zoneinfo;
 	private String locale;
-	private String updatedAt;
+	private Long updatedAt;
 	private String email;
-	private String emailVerified;
+	private Boolean emailVerified;
 	private String address;
 	private String phoneNumber;
 	private String phoneNumberVerified;
@@ -101,10 +101,10 @@ public class Principal {
 	public void setLocale(String locale) {
 		this.locale = locale;
 	}
-	public String getUpdatedAt() {
+	public Long getUpdatedAt() {
 		return updatedAt;
 	}
-	public void setUpdatedAt(String updatedAt) {
+	public void setUpdatedAt(Long updatedAt) {
 		this.updatedAt = updatedAt;
 	}
 	public String getEmail() {
@@ -113,10 +113,10 @@ public class Principal {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public String getEmailVerified() {
+	public Boolean getEmailVerified() {
 		return emailVerified;
 	}
-	public void setEmailVerified(String emailVerified) {
+	public void setEmailVerified(Boolean emailVerified) {
 		this.emailVerified = emailVerified;
 	}
 	public String getAddress() {

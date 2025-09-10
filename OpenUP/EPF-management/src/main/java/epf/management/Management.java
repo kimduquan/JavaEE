@@ -24,7 +24,7 @@ public class Management {
 		principal.setAddress((String) jwt.claim(Claims.address).orElse(null));
 		principal.setBirthdate((String) jwt.claim(Claims.birthdate).orElse(null));
 		principal.setEmail((String) jwt.claim(Claims.email).orElse(null));
-		principal.setEmailVerified((String) jwt.claim(Claims.email_verified).orElse(null));
+		principal.setEmailVerified((Boolean) jwt.claim(Claims.email_verified).orElse(null));
 		principal.setFamilyName((String) jwt.claim(Claims.family_name).orElse(null));
 		principal.setGender((String) jwt.claim(Claims.gender).orElse(null));
 		principal.setGivenName((String) jwt.claim(Claims.given_name).orElse(null));
@@ -38,7 +38,7 @@ public class Management {
 		principal.setPreferredUsername((String) jwt.claim(Claims.preferred_username).orElse(null));
 		principal.setProfile(null);
 		principal.setSubject(jwt.getSubject());
-		principal.setUpdatedAt((String) jwt.claim(Claims.updated_at).orElse(null));
+		principal.setUpdatedAt((Long) jwt.claim(Claims.updated_at).orElse(null));
 		principal.setWebsite(null);
 		principal.setZoneinfo((String) jwt.claim(Claims.zoneinfo).orElse(null));
 		return principal;
