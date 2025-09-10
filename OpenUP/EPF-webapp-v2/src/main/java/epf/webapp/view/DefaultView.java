@@ -27,7 +27,7 @@ public class DefaultView implements Serializable {
 		principal.setAddress(claims.getAddress().orElse(null));
 		principal.setBirthdate(claims.getBirthdate().orElse(null));
 		principal.setEmail(claims.getEmail().orElse(null));
-		principal.setEmailVerified(claims.getEmailVerified().orElse(null));
+		//principal.setEmailVerified(claims.getEmailVerified().orElse(null));
 		principal.setFamilyName(claims.getFamilyName().orElse(null));
 		principal.setGender(claims.getGender().orElse(null));
 		principal.setGivenName(claims.getGivenName().orElse(null));
@@ -40,7 +40,7 @@ public class DefaultView implements Serializable {
 		principal.setPicture(claims.getPicture().orElse(null));
 		principal.setPreferredUsername(claims.getPreferredUsername().orElse(null));
 		principal.setProfile(claims.getProfile().orElse(null));
-		principal.setUpdatedAt(claims.getUpdatedAt().orElse(null));
+		//principal.setUpdatedAt(claims.getUpdatedAt().orElse(null));
 		principal.setWebsite(claims.getWebsite().orElse(null));
 		principal.setZoneinfo(claims.getZoneinfo().orElse(null));
 		return principal;
