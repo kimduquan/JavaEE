@@ -12,6 +12,13 @@
          <role-name>Any_Role</role-name>
      </auth-constraint>
   </security-constraint>
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>Logout</web-resource-name>
+        <url-pattern>/Logout</url-pattern>
+        <http-method>GET</http-method>
+      </web-resource-collection>
+  </security-constraint>
   <servlet>
     <servlet-name>Faces Servlet</servlet-name>
     <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>

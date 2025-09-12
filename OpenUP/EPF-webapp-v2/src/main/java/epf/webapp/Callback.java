@@ -1,7 +1,6 @@
-package epf.webapp.util;
+package epf.webapp;
 
 import epf.naming.Naming;
-import epf.webapp.Config;
 import epf.webapp.internal.CallbackServlet;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
