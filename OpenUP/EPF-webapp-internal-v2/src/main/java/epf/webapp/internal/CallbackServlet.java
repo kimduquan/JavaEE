@@ -2,8 +2,10 @@ package epf.webapp.internal;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URL;
 import java.util.Optional;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
+import epf.management.schema.Principal;
 import jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdConstant;
 import jakarta.security.enterprise.identitystore.openid.OpenIdContext;
 import jakarta.servlet.ServletException;
@@ -20,10 +22,20 @@ public abstract class CallbackServlet extends HttpServlet {
     	final OpenIdContext context = getContext();
         if (context != null) {
         	final ManagementClient management = getManagement();
-        	management.authenticate();
+        	final Principal principal = management.authenticate();
         	final Optional<String> originalRequest = context.getStoredValue(request, response, OpenIdConstant.ORIGINAL_REQUEST);
         	final String originalRequestString = originalRequest.get();
-            response.sendRedirect(originalRequestString);
+        	final URL originalRequestUrl = URI.create(originalRequestString).toURL();
+        	String redirectUrl = originalRequestString;
+        	if(originalRequestUrl.getQuery() != null) {
+        		if(!originalRequestUrl.getQuery().contains("lang=")) {
+        			redirectUrl = redirectUrl + "&lang=" + principal.getLocale();
+        		}
+        	}
+        	else {
+        		redirectUrl = redirectUrl + "?lang=" + principal.getLocale();
+        	}
+            response.sendRedirect(redirectUrl);
         }
     }
     
