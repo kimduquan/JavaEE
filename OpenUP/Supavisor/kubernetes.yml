@@ -83,7 +83,7 @@ spec:
               value: "local"
             - name: ERL_AFLAGS
               value: -proto_dist inet_tcp
-          image: supabase/supavisor:2.6.2
+          image: supabase/supavisor:2.7.0
           imagePullPolicy: IfNotPresent
           name: supavisor
           command: ["/bin/sh", "-c", "/app/bin/migrate && /app/bin/server"]
