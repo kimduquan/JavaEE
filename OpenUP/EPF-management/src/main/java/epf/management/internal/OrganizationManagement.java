@@ -41,9 +41,12 @@ public class OrganizationManagement {
 	
 	@RestClient
 	transient AdminClient adminClient;
+	
+	@Inject
+	transient PersistenceManagement persistenceManagement;
 
 	@CacheResult(cacheName = Naming.Management.ORGANIZATION_MANAGEMENT)
-	public Organization createPrincipalOrganization(@CacheKey final String tokenId, final Principal principal) throws Exception {
+	public Organization createOrganization(@CacheKey final String tokenId, final Principal principal) throws Exception {
 		
 		final ClientCredential credential = new ClientCredential();
 		credential.setClient_id(clientId);
@@ -70,6 +73,8 @@ public class OrganizationManagement {
 		final Organization organization = new Organization();
 		organization.setId(id);
 		organization.setName(name);
+		
+		persistenceManagement.createPersistence(organization, principal);
 		return organization;
 	}
 	

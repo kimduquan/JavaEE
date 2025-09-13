@@ -54,7 +54,7 @@ public class Management {
 			principal.setOrganization(organizationClaim.get());
 		}
 		else {
-			final Organization organization = organizationManagement.createPrincipalOrganization(jwt.getTokenID(), principal);
+			final Organization organization = organizationManagement.createOrganization(jwt.getTokenID(), principal);
 			principal.setOrganization(organization);
 		}
 		return principal;
