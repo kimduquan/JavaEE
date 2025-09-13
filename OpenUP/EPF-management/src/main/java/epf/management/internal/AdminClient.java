@@ -3,6 +3,7 @@ package epf.management.internal;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import epf.management.keycloak.auth.schema.TokenInfo;
 import epf.management.keycloak.schema.Organization;
+import jakarta.ws.rs.ClientErrorException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
@@ -11,6 +12,8 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -19,10 +22,15 @@ public interface AdminClient {
 
 	@POST
 	@Path("organizations")
-	Organization createOrganization(@HeaderParam(HttpHeaders.AUTHORIZATION) final String authorization, final Organization organization) throws Exception;
+	Response createOrganization(@HeaderParam(HttpHeaders.AUTHORIZATION) final String authorization, final Organization organization) throws Exception;
 	
-	default Organization createOrganization(final TokenInfo token, final Organization organization) throws Exception {
-		return createOrganization(token.getToken_type() + " " + token.getAccess_token(), organization);
+	default String createOrganization(final TokenInfo token, final Organization organization) throws Exception {
+		final Response response = createOrganization(token.getToken_type() + " " + token.getAccess_token(), organization);
+		response.bufferEntity();
+		if(Status.OK.getStatusCode() == response.getStatus()) {
+			return response.getHeaderString(HttpHeaders.LOCATION);
+		}
+		throw new ClientErrorException(response.getStatus());
 	}
 	
 	@POST

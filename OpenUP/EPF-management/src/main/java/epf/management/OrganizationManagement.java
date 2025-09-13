@@ -63,14 +63,15 @@ public class OrganizationManagement {
 		keycloakOrg.setDomains(new ArrayList<>());
 		keycloakOrg.getDomains().add(domain);
 		
-		keycloakOrg = adminClient.createOrganization(token, keycloakOrg);
+		final String location = adminClient.createOrganization(token, keycloakOrg);
+		final String id = location.substring(location.lastIndexOf('/') + 1);
 		
 		final String userId = principal.getSubject();
-		adminClient.addMember(token, keycloakOrg.getId(), userId);
+		adminClient.addMember(token, id, userId);
 		
 		final Organization organization = new Organization();
-		organization.setId(keycloakOrg.getId());
-		organization.setName(keycloakOrg.getName());
+		organization.setId(id);
+		organization.setName(name);
 		return organization;
 	}
 	
