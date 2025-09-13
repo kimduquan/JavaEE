@@ -46,6 +46,8 @@ import epf.gateway.util.RequestUtil;
 import epf.gateway.util.ResponseUtil;
 import epf.gateway.util.StreamClient;
 import epf.gateway.util.Streaming;
+import epf.management.schema.Organization;
+import epf.management.util.OrganizationUtil;
 import epf.naming.Naming;
 import epf.util.io.InputStreamUtil;
 import epf.util.logging.LogManager;
@@ -103,6 +105,16 @@ public class Application {
 		});
     }
     
+    private Optional<String> getOrganizationId(final JsonWebToken jwt) throws Exception {
+    	if(jwt != null) {
+        	final Optional<Organization> organization = OrganizationUtil.getOrganization(jwt);
+        	if(organization.isPresent()) {
+        		return Optional.of(organization.get().getId());
+        	}
+    	}
+    	return Optional.empty();
+    }
+    
     public Response buildRequest(
     		final String service,
     		final JsonWebToken jwt,
@@ -114,15 +126,16 @@ public class Application {
     		throw new NotAuthorizedException(Response.status(Status.UNAUTHORIZED));
     	}
     	final URI serviceUrl = registry.lookup(service).orElseThrow(NotFoundException::new);
+    	final Optional<String> organizationId = getOrganizationId(jwt);
     	final Client client = ClientBuilder.newClient();
-    	final RequestBuilder builder = new RequestBuilder(client, serviceUrl, req.getMethod(), headers, uriInfo, body, true);
+    	final RequestBuilder builder = new RequestBuilder(client, serviceUrl, req.getMethod(), headers, uriInfo, body, true, organizationId);
     	Response response = builder.build();
     	final Optional<Object> entity = HATEOAS.readEntity(response);
     	if(isSuccessful(response)) {
         	final Link self = HATEOAS.selfLink(uriInfo, req, service);
         	final boolean isPartial = isPartial(response);
         	final MediaType mediaType = response.getMediaType();
-        	response = buildLinkRequests(client, response, entity, mediaType, headers, self, isPartial);
+        	response = buildLinkRequests(client, response, entity, mediaType, headers, self, isPartial, organizationId);
     	}
     	response = ResponseUtil.buildResponse(response, entity, uriInfo.getBaseUri());
     	client.close();
@@ -228,7 +241,7 @@ public class Application {
 		}
     }
     
-    private Response buildLinkRequests(final Client client, final Response response, final Optional<Object> entity, final MediaType mediaType, final HttpHeaders headers, final Link self, final boolean isPartial) throws Exception {
+    private Response buildLinkRequests(final Client client, final Response response, final Optional<Object> entity, final MediaType mediaType, final HttpHeaders headers, final Link self, final boolean isPartial, final Optional<String> organizationId) throws Exception {
     	Response prevLinkResponse = response;
     	Optional<Object> prevLinkEntity = entity;
     	MediaType prevMediaType = mediaType;
@@ -264,7 +277,7 @@ public class Application {
     				streams.put(volatile_.get(), linkStream);
     			}
     			else {
-        			Response linkResponse = HATEOAS.buildLinkRequest(client, serviceUrl, headers, prevLinkResponse, prevLinkEntity, prevMediaType, targetLink);
+        			Response linkResponse = HATEOAS.buildLinkRequest(client, serviceUrl, headers, prevLinkResponse, prevLinkEntity, prevMediaType, targetLink, organizationId);
         			if(isSuccessful(linkResponse)) {
         				final boolean isPartialLink = isPartial(linkResponse);
         				if(HATEOAS.hasEntity(link)) {
@@ -272,7 +285,7 @@ public class Application {
             				prevMediaType = linkResponse.getMediaType();
         				}
         				
-        				linkResponse = buildLinkRequests(client, linkResponse, prevLinkEntity, prevMediaType, headers, targetLink, isPartialLink);
+        				linkResponse = buildLinkRequests(client, linkResponse, prevLinkEntity, prevMediaType, headers, targetLink, isPartialLink, organizationId);
         				
         				if(isSuccessful(linkResponse)) {
                 			linkResponses.add(linkResponse);

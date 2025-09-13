@@ -90,7 +90,7 @@ public interface RequestUtil {
     	return webTarget;
     }
     
-    static Builder buildHeaders(final Builder input, final HttpHeaders headers, final URI targetUrl, final boolean buildForwardedHeaders){
+    static Builder buildHeaders(final Builder input, final HttpHeaders headers, final URI targetUrl, final boolean buildForwardedHeaders, final Optional<String> organizationId){
     	Builder builder = input;
     	final MultivaluedMap<String, String> requestHeaders = headers.getRequestHeaders();
         final MultivaluedHashMap<String, Object> forwardHeaders = new MultivaluedHashMap<String, Object>(requestHeaders);
@@ -110,6 +110,9 @@ public interface RequestUtil {
         }
         if(buildForwardedHeaders) {
             builder = buildForwardedHeaders(builder, host, headers, targetUrl);
+        }
+        if(organizationId.isPresent()) {
+        	builder = builder.header(Naming.Management.ORGANIZATION, organizationId.get());
         }
         return builder;
     }

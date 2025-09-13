@@ -23,7 +23,7 @@ public class OrganizationManagement {
 	String organizationDomain;
 	
 	@RestClient
-	transient KeycloakAdminClient keycloak;
+	transient KeycloakAdminClient keycloakAdmin;
 
 	@CacheResult(cacheName = Naming.Management.ORGANIZATION_MANAGEMENT)
 	public Organization createPrincipalOrganization(@CacheKey final String tokenId, final Principal principal) throws Exception {
@@ -38,7 +38,10 @@ public class OrganizationManagement {
 		keycloakOrg.setDomains(new ArrayList<>());
 		keycloakOrg.getDomains().add(domain);
 		
-		keycloakOrg = keycloak.createOrganization(keycloakOrg);
+		keycloakOrg = keycloakAdmin.createOrganization(keycloakOrg);
+		
+		final String userId = principal.getSubject();
+		keycloakAdmin.addMember(keycloakOrg.getId(), userId);
 		
 		final Organization organization = new Organization();
 		organization.setId(keycloakOrg.getId());

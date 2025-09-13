@@ -31,7 +31,8 @@ public interface HATEOAS {
     		final Response response,
     		final Optional<Object> entity,
     		final MediaType mediaType,
-    		final Link link
+    		final Link link,
+    		final Optional<String> organizationId
     		) {
     	Objects.requireNonNull(client, "Client");
     	Objects.requireNonNull(serviceUrl, "URI");
@@ -41,7 +42,7 @@ public interface HATEOAS {
     	final URI targetUrl = serviceUrl.resolve(link.getUri());
 		final WebTarget target = client.target(targetUrl);
 		Invocation.Builder builder = target.request();
-		builder = RequestUtil.buildHeaders(builder, headers, targetUrl, true);
+		builder = RequestUtil.buildHeaders(builder, headers, targetUrl, true, organizationId);
 		builder = RequestUtil.buildLRAHeaders(builder, response);
 		switch(link.getType()) {
 			case HttpMethod.GET:
@@ -70,7 +71,8 @@ public interface HATEOAS {
     		final Response response,
     		final Object entity,
     		final MediaType mediaType,
-    		final Link link
+    		final Link link,
+    		final Optional<String> organizationId
     		) {
     	Objects.requireNonNull(client, "Client");
     	Objects.requireNonNull(serviceUrl, "URI");
@@ -80,7 +82,7 @@ public interface HATEOAS {
     	final URI targetUrl = serviceUrl.resolve(link.getUri());
 		final WebTarget target = client.target(targetUrl);
 		Invocation.Builder builder = target.request();
-		builder = RequestUtil.buildHeaders(builder, headers, targetUrl, true);
+		builder = RequestUtil.buildHeaders(builder, headers, targetUrl, true, organizationId);
 		builder = RequestUtil.buildLRAHeaders(builder, response);
 		switch(link.getType()) {
 			case HttpMethod.GET:
