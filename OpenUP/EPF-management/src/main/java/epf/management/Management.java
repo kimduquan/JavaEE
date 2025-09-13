@@ -2,12 +2,18 @@ package epf.management;
 
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.SecurityContext;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonValue;
+import java.util.Map.Entry;
+import java.util.Optional;
 import org.eclipse.microprofile.jwt.Claims;
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import epf.management.schema.Organization;
 import epf.management.schema.Principal;
 import epf.naming.Naming;
 import io.smallrye.common.annotation.RunOnVirtualThread;
@@ -16,6 +22,9 @@ import io.smallrye.common.annotation.RunOnVirtualThread;
 @ApplicationScoped
 @RolesAllowed(Naming.Security.DEFAULT_ROLE)
 public class Management {
+	
+	@Inject
+	transient OrganizationManagement organizationManagement;
 	
 	@GET
 	@RunOnVirtualThread
@@ -42,6 +51,20 @@ public class Management {
 		principal.setUpdatedAt((Long) jwt.claim(Claims.updated_at).orElse(null));
 		principal.setWebsite(null);
 		principal.setZoneinfo((String) jwt.claim(Claims.zoneinfo).orElse(null));
+		final Optional<?> organizationClaim = jwt.claim(Naming.Management.ORGANIZATION);
+		if(organizationClaim.isPresent()) {
+			final Organization organization = new Organization();
+			final JsonObject organizationValue = (JsonObject) organizationClaim.get();
+			for(Entry<String, JsonValue> organizationEntry : organizationValue.entrySet()) {
+				organization.setName(organizationEntry.getKey());
+				organization.setId(organizationEntry.getValue().asJsonObject().getString("id"));
+			}
+			principal.setOrganization(organization);
+		}
+		else {
+			final Organization organization = organizationManagement.getPrincipalOrganization(jwt.getTokenID(), principal);
+			principal.setOrganization(organization);
+		}
 		return principal;
 	}
 }

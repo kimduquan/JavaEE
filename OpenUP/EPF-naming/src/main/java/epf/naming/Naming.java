@@ -505,6 +505,16 @@ public interface Naming {
 		String TENANT = "tenant";
 		
 		/**
+		 * 
+		 */
+		String ORGANIZATION = "organization";
+		
+		/**
+		 * 
+		 */
+		String ORGANIZATION_MANAGEMENT = "epf_management_organization";
+		
+		/**
 		 *
 		 */
 		String MANAGEMENT_TENANT = "epf.management.tenant";

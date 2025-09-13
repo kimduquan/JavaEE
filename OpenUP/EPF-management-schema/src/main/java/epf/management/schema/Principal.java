@@ -22,6 +22,7 @@ public class Principal {
 	private String phoneNumber;
 	private String phoneNumberVerified;
 	private String website;
+	private Organization organization;
 	
 	public String getSubject() {
 		return subject;
@@ -142,5 +143,11 @@ public class Principal {
 	}
 	public void setWebsite(String website) {
 		this.website = website;
+	}
+	public Organization getOrganization() {
+		return organization;
+	}
+	public void setOrganization(Organization organization) {
+		this.organization = organization;
 	}
 }
