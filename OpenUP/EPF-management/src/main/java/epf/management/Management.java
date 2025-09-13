@@ -7,13 +7,9 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.SecurityContext;
-import jakarta.json.JsonObject;
-import jakarta.json.JsonValue;
-import java.util.Map.Entry;
 import java.util.Optional;
 import org.eclipse.microprofile.jwt.Claims;
 import org.eclipse.microprofile.jwt.JsonWebToken;
-import epf.management.util.OrganizationUtil;
 import epf.management.schema.Organization;
 import epf.management.schema.Principal;
 import epf.naming.Naming;
@@ -52,7 +48,7 @@ public class Management {
 		principal.setUpdatedAt((Long) jwt.claim(Claims.updated_at).orElse(null));
 		principal.setWebsite(null);
 		principal.setZoneinfo((String) jwt.claim(Claims.zoneinfo).orElse(null));
-		final Optional<Organization> organizationClaim = OrganizationUtil.getOrganization(jwt);
+		final Optional<Organization> organizationClaim = organizationManagement.getOrganization(jwt);
 		if(organizationClaim.isPresent()) {
 			principal.setOrganization(organizationClaim.get());
 		}

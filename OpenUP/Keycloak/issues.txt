@@ -1,3 +1,5 @@
 keycloak 401 Unauthorized on "Manage Account"
 	=> Adding "manage-account", "manage-account-links" and "view-groups" roles to account-console-dedicated
 https://github.com/keycloak/keycloak/issues/34771
+
+https://www.keycloak.org/docs/latest/server_development/index.html#admin-rest-api

@@ -46,7 +46,6 @@ import epf.gateway.util.RequestUtil;
 import epf.gateway.util.ResponseUtil;
 import epf.gateway.util.StreamClient;
 import epf.gateway.util.Streaming;
-import epf.management.schema.Organization;
 import epf.management.util.OrganizationUtil;
 import epf.naming.Naming;
 import epf.util.io.InputStreamUtil;
@@ -105,16 +104,6 @@ public class Application {
 		});
     }
     
-    private Optional<String> getOrganizationId(final JsonWebToken jwt) throws Exception {
-    	if(jwt != null) {
-        	final Optional<Organization> organization = OrganizationUtil.getOrganization(jwt);
-        	if(organization.isPresent()) {
-        		return Optional.of(organization.get().getId());
-        	}
-    	}
-    	return Optional.empty();
-    }
-    
     public Response buildRequest(
     		final String service,
     		final JsonWebToken jwt,
@@ -126,7 +115,7 @@ public class Application {
     		throw new NotAuthorizedException(Response.status(Status.UNAUTHORIZED));
     	}
     	final URI serviceUrl = registry.lookup(service).orElseThrow(NotFoundException::new);
-    	final Optional<String> organizationId = getOrganizationId(jwt);
+    	final Optional<String> organizationId = OrganizationUtil.getOrganizationId(jwt);
     	final Client client = ClientBuilder.newClient();
     	final RequestBuilder builder = new RequestBuilder(client, serviceUrl, req.getMethod(), headers, uriInfo, body, true, organizationId);
     	Response response = builder.build();

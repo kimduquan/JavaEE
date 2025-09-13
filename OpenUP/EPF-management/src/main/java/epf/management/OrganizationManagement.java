@@ -3,9 +3,15 @@ package epf.management;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Optional;
+import java.util.Map.Entry;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
-import epf.management.internal.KeycloakAdminClient;
+import epf.management.internal.AdminClient;
+import epf.management.internal.AuthClient;
+import epf.management.keycloak.auth.schema.ClientCredential;
+import epf.management.keycloak.auth.schema.TokenInfo;
 import epf.management.keycloak.schema.Domain;
 import epf.management.schema.Organization;
 import epf.management.schema.Principal;
@@ -14,6 +20,8 @@ import io.quarkus.cache.CacheKey;
 import io.quarkus.cache.CacheResult;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonValue;
 
 @ApplicationScoped
 public class OrganizationManagement {
@@ -22,11 +30,28 @@ public class OrganizationManagement {
 	@ConfigProperty(name = Naming.Management.ORGANIZATION_DOMAIN)
 	String organizationDomain;
 	
+	@Inject
+	@ConfigProperty(name = "epf.management.auth.client.id")
+	String clientId;
+	
+	@Inject
+	@ConfigProperty(name = "epf.management.auth.client.secret")
+	String clientSecret;
+	
 	@RestClient
-	transient KeycloakAdminClient keycloakAdmin;
+	transient AuthClient authClient;
+	
+	@RestClient
+	transient AdminClient adminClient;
 
 	@CacheResult(cacheName = Naming.Management.ORGANIZATION_MANAGEMENT)
 	public Organization createPrincipalOrganization(@CacheKey final String tokenId, final Principal principal) throws Exception {
+		
+		final ClientCredential credential = new ClientCredential();
+		credential.setClient_id(clientId);
+		credential.setClient_secret(clientSecret);
+		final TokenInfo token = authClient.getToken(credential);
+		
 		epf.management.keycloak.schema.Organization keycloakOrg = new epf.management.keycloak.schema.Organization();
 		
 		final String name = Base64.getEncoder().withoutPadding().encodeToString(principal.getEmail().getBytes(StandardCharsets.UTF_8));
@@ -38,14 +63,28 @@ public class OrganizationManagement {
 		keycloakOrg.setDomains(new ArrayList<>());
 		keycloakOrg.getDomains().add(domain);
 		
-		keycloakOrg = keycloakAdmin.createOrganization(keycloakOrg);
+		keycloakOrg = adminClient.createOrganization(token, keycloakOrg);
 		
 		final String userId = principal.getSubject();
-		keycloakAdmin.addMember(keycloakOrg.getId(), userId);
+		adminClient.addMember(token, keycloakOrg.getId(), userId);
 		
 		final Organization organization = new Organization();
 		organization.setId(keycloakOrg.getId());
 		organization.setName(keycloakOrg.getName());
 		return organization;
+	}
+	
+	public Optional<Organization> getOrganization(final JsonWebToken jwt) throws Exception {
+		final Optional<?> organizationClaim = jwt.claim(Naming.Management.ORGANIZATION);
+		if(organizationClaim.isPresent()) {
+			final Organization organization = new Organization();
+			final JsonObject organizationValue = (JsonObject) organizationClaim.get();
+			for(Entry<String, JsonValue> organizationEntry : organizationValue.entrySet()) {
+				organization.setName(organizationEntry.getKey());
+				organization.setId(organizationEntry.getValue().asJsonObject().getString("id"));
+			}
+			return Optional.of(organization);
+		}
+		return Optional.empty();
 	}
 }

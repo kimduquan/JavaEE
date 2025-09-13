@@ -512,7 +512,7 @@ public interface Naming {
 		/**
 		 * 
 		 */
-		String ORGANIZATION_MANAGEMENT = "epf_management_organization";
+		String ORGANIZATION_MANAGEMENT = "epf-management-organization";
 		
 		/**
 		 *
