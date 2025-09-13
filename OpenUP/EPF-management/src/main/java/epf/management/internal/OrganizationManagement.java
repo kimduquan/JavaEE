@@ -1,4 +1,4 @@
-package epf.management;
+package epf.management.internal;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -8,12 +8,10 @@ import java.util.Map.Entry;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
-import epf.management.internal.AdminClient;
-import epf.management.internal.AuthClient;
-import epf.management.keycloak.auth.schema.ClientCredential;
-import epf.management.keycloak.auth.schema.TokenInfo;
-import epf.management.keycloak.schema.Domain;
+import epf.management.admin.schema.Domain;
 import epf.management.schema.Organization;
+import epf.management.auth.schema.ClientCredential;
+import epf.management.auth.schema.TokenInfo;
 import epf.management.schema.Principal;
 import epf.naming.Naming;
 import io.quarkus.cache.CacheKey;
@@ -52,7 +50,7 @@ public class OrganizationManagement {
 		credential.setClient_secret(clientSecret);
 		final TokenInfo token = authClient.getToken(credential);
 		
-		epf.management.keycloak.schema.Organization keycloakOrg = new epf.management.keycloak.schema.Organization();
+		epf.management.admin.schema.Organization keycloakOrg = new epf.management.admin.schema.Organization();
 		
 		final String name = Base64.getEncoder().withoutPadding().encodeToString(principal.getEmail().getBytes(StandardCharsets.UTF_8));
 		keycloakOrg.setName(name);

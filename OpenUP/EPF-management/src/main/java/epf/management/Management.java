@@ -11,6 +11,7 @@ import java.util.Optional;
 import org.eclipse.microprofile.jwt.Claims;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.management.schema.Organization;
+import epf.management.internal.OrganizationManagement;
 import epf.management.schema.Principal;
 import epf.naming.Naming;
 import io.smallrye.common.annotation.RunOnVirtualThread;

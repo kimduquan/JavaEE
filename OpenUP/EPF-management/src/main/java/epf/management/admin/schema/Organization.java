@@ -1,4 +1,4 @@
-package epf.management.keycloak.schema;
+package epf.management.admin.schema;
 
 import java.util.List;
 import java.util.Map;

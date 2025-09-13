@@ -1,4 +1,4 @@
-package epf.management.keycloak.schema;
+package epf.management.admin.schema;
 
 public class Domain {
 

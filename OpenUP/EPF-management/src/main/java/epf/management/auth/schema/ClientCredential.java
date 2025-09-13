@@ -1,4 +1,4 @@
-package epf.management.keycloak.auth.schema;
+package epf.management.auth.schema;
 
 public class ClientCredential {
 	

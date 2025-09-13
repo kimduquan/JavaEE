@@ -1,8 +1,8 @@
 package epf.management.internal;
 
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
-import epf.management.keycloak.auth.schema.TokenInfo;
-import epf.management.keycloak.schema.Organization;
+import epf.management.admin.schema.Organization;
+import epf.management.auth.schema.TokenInfo;
 import jakarta.ws.rs.ClientErrorException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.HeaderParam;
