@@ -13,6 +13,12 @@
 		<dependency>
 		    <groupId>org.eclipse.microprofile.jwt</groupId>
 		    <artifactId>microprofile-jwt-auth-api</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+		<dependency>
+		    <groupId>jakarta.json</groupId>
+		    <artifactId>jakarta.json-api</artifactId>
+		    <scope>provided</scope>
 		</dependency>
 		
 		<dependency>
@@ -20,5 +26,10 @@
 			<artifactId>EPF-naming</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+	        <groupId>openup</groupId>
+	        <artifactId>EPF-management-schema</artifactId>
+	        <version>${project.version}</version>
+	    </dependency>
     </dependencies>
 </project>

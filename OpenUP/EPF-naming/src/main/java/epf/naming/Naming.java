@@ -518,6 +518,11 @@ public interface Naming {
 		 *
 		 */
 		String MANAGEMENT_TENANT = "epf.management.tenant";
+		
+		/**
+		 * 
+		 */
+		String ORGANIZATION_DOMAIN = "epf.management.organization.domain";
 	}
 	
 	/**

@@ -23,6 +23,14 @@
 		<artifactId>quarkus-rest</artifactId>
 	</dependency>
 	<dependency>
+		<groupId>io.quarkus</groupId>
+		<artifactId>quarkus-rest-client-jsonb</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>io.quarkus</groupId>
+		<artifactId>quarkus-rest-client</artifactId>
+	</dependency>
+	<dependency>
 	    <groupId>io.quarkus</groupId>
 	    <artifactId>quarkus-smallrye-jwt</artifactId>
 	</dependency>
@@ -60,6 +68,11 @@
     <dependency>
         <groupId>openup</groupId>
         <artifactId>EPF-management-schema</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>openup</groupId>
+        <artifactId>EPF-management-utility</artifactId>
         <version>${project.version}</version>
     </dependency>
   </dependencies>

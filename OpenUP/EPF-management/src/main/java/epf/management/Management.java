@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import org.eclipse.microprofile.jwt.Claims;
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import epf.management.util.OrganizationUtil;
 import epf.management.schema.Organization;
 import epf.management.schema.Principal;
 import epf.naming.Naming;
@@ -51,18 +52,12 @@ public class Management {
 		principal.setUpdatedAt((Long) jwt.claim(Claims.updated_at).orElse(null));
 		principal.setWebsite(null);
 		principal.setZoneinfo((String) jwt.claim(Claims.zoneinfo).orElse(null));
-		final Optional<?> organizationClaim = jwt.claim(Naming.Management.ORGANIZATION);
+		final Optional<Organization> organizationClaim = OrganizationUtil.getOrganization(jwt);
 		if(organizationClaim.isPresent()) {
-			final Organization organization = new Organization();
-			final JsonObject organizationValue = (JsonObject) organizationClaim.get();
-			for(Entry<String, JsonValue> organizationEntry : organizationValue.entrySet()) {
-				organization.setName(organizationEntry.getKey());
-				organization.setId(organizationEntry.getValue().asJsonObject().getString("id"));
-			}
-			principal.setOrganization(organization);
+			principal.setOrganization(organizationClaim.get());
 		}
 		else {
-			final Organization organization = organizationManagement.getPrincipalOrganization(jwt.getTokenID(), principal);
+			final Organization organization = organizationManagement.createPrincipalOrganization(jwt.getTokenID(), principal);
 			principal.setOrganization(organization);
 		}
 		return principal;
