@@ -13,7 +13,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 public abstract class CallbackServlet extends HttpServlet {
 
@@ -39,10 +38,7 @@ public abstract class CallbackServlet extends HttpServlet {
         	}
         	final boolean isFirstTimeLogin = context.getAccessToken().getClaim(Naming.Management.ORGANIZATION) == null;
         	if(isFirstTimeLogin) {
-        		final HttpSession session = request.getSession(false);
-        		if(session != null) {
-        			session.invalidate();
-        		}
+        		request.logout();
         	}
             response.sendRedirect(redirectUrl);
         }
