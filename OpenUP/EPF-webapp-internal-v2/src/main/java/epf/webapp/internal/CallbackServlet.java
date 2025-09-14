@@ -39,6 +39,7 @@ public abstract class CallbackServlet extends HttpServlet {
         	final boolean isFirstTimeLogin = context.getAccessToken().getClaim(Naming.Management.ORGANIZATION) == null;
         	if(isFirstTimeLogin) {
         		request.logout();
+        		return;
         	}
             response.sendRedirect(redirectUrl);
         }
