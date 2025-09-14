@@ -1,24 +1,19 @@
 package epf.query.util;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import epf.management.util.TenantUtil;
-import io.quarkus.hibernate.orm.runtime.tenant.TenantResolver;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import org.eclipse.microprofile.jwt.JsonWebToken;
+import epf.management.util.OrganizationTenantResolver;
 
-@ApplicationScoped
-public class EPFTenantResolver implements TenantResolver {
+@RequestScoped
+public class EPFTenantResolver extends OrganizationTenantResolver {
+	
+	@Inject
+    JsonWebToken jwt;
 
 	@Override
-	public String getDefaultTenantId() {
-		return TenantUtil.getDefaultTenantId();
+	protected JsonWebToken getToken() {
+		return jwt;
 	}
-
-	@Override
-	public String resolveTenantId() {
-		String tenantId = TenantUtil.getTenantId();
-		if(tenantId == null) {
-			tenantId = getDefaultTenantId();
-		}
-		return tenantId.toUpperCase();
-	}
-
+	
 }

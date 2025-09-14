@@ -4,6 +4,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
+
+import epf.management.util.OrganizationUtil;
 import io.agroal.api.AgroalDataSource;
 import io.agroal.api.configuration.AgroalConnectionPoolConfiguration.TransactionRequirement;
 import io.agroal.api.configuration.AgroalDataSourceConfiguration;
@@ -27,19 +29,11 @@ public class EntityTenantConnectionResolver implements TenantConnectionResolver 
 	private final Map<String, QuarkusConnectionProvider> connectionProviders = new ConcurrentHashMap<>();
 	
 	@Inject
-    @ConfigProperty(name = "datasource.username")
-	String userName;
-	
-	@Inject
-    @ConfigProperty(name = "datasource.password")
-	String password;
-	
-	@Inject
-    @ConfigProperty(name = "datasource.jdbc.url.format")
+    @ConfigProperty(name = "epf.datasource.jdbc.url.format")
 	String format;
 	
 	@Inject
-    @ConfigProperty(name = "datasource.connection.pool.size")
+    @ConfigProperty(name = "epf.datasource.connection.pool.size")
 	int connectionPoolSize;
 	
 	@Inject
@@ -50,15 +44,18 @@ public class EntityTenantConnectionResolver implements TenantConnectionResolver 
 
 	@Override
 	public ConnectionProvider resolve(final String tenantId) {
-		return connectionProviders.computeIfAbsent(tenantId, tenant -> {
-			final String jdbcUrl = String.format(format, tenant);
+		return connectionProviders.computeIfAbsent(tenantId, orgnanizationId -> {
+			final String database = OrganizationUtil.getDefaultPersistenceDatabase(orgnanizationId);
+			final String userName = OrganizationUtil.getDefaultPersistenceUserName(orgnanizationId);
+			final String password = OrganizationUtil.getDefaultPersistencePassword(orgnanizationId);
+			final String jdbcUrl = String.format(format, database);
 			final AgroalDataSourceConfigurationSupplier supplier = new AgroalDataSourceConfigurationSupplier();
 			supplier.connectionPoolConfiguration()
 			.maxSize(connectionPoolSize)
 			.transactionIntegration(new NarayanaTransactionIntegration(transactionManager, transactionSynchronizationRegistry))
 			.transactionRequirement(TransactionRequirement.STRICT)
 			.connectionFactoryConfiguration()
-			.credential(new NamePrincipal(userName + "." + tenant))
+			.credential(new NamePrincipal(userName + "." + orgnanizationId))
 			.credential(new SimplePassword(password))
 			.jdbcUrl(jdbcUrl);
 			final AgroalDataSourceConfiguration config = supplier.get();

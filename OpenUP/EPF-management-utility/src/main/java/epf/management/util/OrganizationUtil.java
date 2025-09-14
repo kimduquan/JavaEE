@@ -1,5 +1,7 @@
 package epf.management.util;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Optional;
 import java.util.Map.Entry;
 import org.eclipse.microprofile.jwt.JsonWebToken;
@@ -9,7 +11,7 @@ import jakarta.json.JsonValue;
 
 public interface OrganizationUtil {
 	
-	static Optional<String> getOrganizationId(final JsonWebToken jwt) throws Exception {
+	static Optional<String> getOrganizationId(final JsonWebToken jwt) {
 		String organizationId = null;
 		final Optional<?> organizationClaim = jwt.claim(Naming.Management.ORGANIZATION);
 		if(organizationClaim.isPresent()) {
@@ -19,5 +21,17 @@ public interface OrganizationUtil {
 			}
 		}
 		return Optional.ofNullable(organizationId);
+	}
+	
+	static String getDefaultPersistenceDatabase(final String organizationId) {
+		return organizationId;
+	}
+	
+	static String getDefaultPersistenceUserName(final String organizationId) {
+		return Base64.getEncoder().withoutPadding().encodeToString(organizationId.getBytes(StandardCharsets.UTF_8));
+	}
+	
+	static String getDefaultPersistencePassword(final String organizationId) {
+		return Base64.getEncoder().withoutPadding().encodeToString(organizationId.getBytes(StandardCharsets.UTF_8));
 	}
 }

@@ -14,6 +14,7 @@ import epf.management.persistence.schema.UpdatePersistenceTenantInfo;
 import epf.management.schema.Organization;
 import epf.management.schema.Principal;
 import epf.management.security.util.SecurityUtil;
+import epf.management.util.OrganizationUtil;
 import epf.naming.Naming;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -44,9 +45,9 @@ public class PersistenceManagement {
 	transient PersistenceClient persistenceClient;
 
 	public void createPersistence(final Organization organization, final Principal principal) throws Exception {
-		final String databaseName = organization.getId();
-		final String userName = organization.getId();
-		final String password = Base64.getEncoder().withoutPadding().encodeToString(organization.getId().getBytes(StandardCharsets.UTF_8));
+		final String databaseName = OrganizationUtil.getDefaultPersistenceDatabase(organization.getId());
+		final String userName = OrganizationUtil.getDefaultPersistenceUserName(organization.getId());
+		final String password = OrganizationUtil.getDefaultPersistencePassword(organization.getId());
 		
 		try(Connection connection = managementDataSource.getConnection()) {
 			try(Statement statement = connection.createStatement()){

@@ -10,9 +10,6 @@
   </parent>
   <artifactId>EPF-persistence</artifactId>
   <name>Eclipse Process Framework Persistence</name>
-  <properties>
-    <maven.compiler.release>21</maven.compiler.release>
-  </properties>
   <dependencies>
     <dependency>
       <groupId>io.quarkus</groupId>
