@@ -6,12 +6,14 @@ import java.net.URL;
 import java.util.Optional;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import epf.management.schema.Principal;
+import epf.naming.Naming;
 import jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdConstant;
 import jakarta.security.enterprise.identitystore.openid.OpenIdContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 public abstract class CallbackServlet extends HttpServlet {
 
@@ -34,6 +36,13 @@ public abstract class CallbackServlet extends HttpServlet {
         	}
         	else {
         		redirectUrl = redirectUrl + "?lang=" + principal.getLocale();
+        	}
+        	final boolean isFirstTimeLogin = context.getAccessToken().getClaim(Naming.Management.ORGANIZATION) == null;
+        	if(isFirstTimeLogin) {
+        		final HttpSession session = request.getSession(false);
+        		if(session != null) {
+        			session.invalidate();
+        		}
         	}
             response.sendRedirect(redirectUrl);
         }

@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
-
 import epf.management.util.OrganizationUtil;
 import io.agroal.api.AgroalDataSource;
 import io.agroal.api.configuration.AgroalConnectionPoolConfiguration.TransactionRequirement;

@@ -5,10 +5,11 @@ import jakarta.inject.Inject;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.management.util.OrganizationTenantResolver;
 import io.quarkus.hibernate.orm.PersistenceUnitExtension;
+import io.quarkus.hibernate.orm.runtime.tenant.TenantResolver;
 
 @RequestScoped
 @PersistenceUnitExtension
-public class EntityTenantResolver extends OrganizationTenantResolver {
+public class EntityTenantResolver extends OrganizationTenantResolver implements TenantResolver {
 	
 	@Inject
     JsonWebToken jwt;
