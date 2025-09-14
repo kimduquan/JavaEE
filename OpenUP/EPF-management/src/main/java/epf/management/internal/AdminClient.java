@@ -3,6 +3,7 @@ package epf.management.internal;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import epf.management.admin.schema.Organization;
 import epf.management.auth.schema.TokenInfo;
+import epf.naming.Naming;
 import jakarta.ws.rs.ClientErrorException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.HeaderParam;
@@ -17,7 +18,7 @@ import jakarta.ws.rs.core.Response.Status;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@RegisterRestClient(configKey = "epf-management-admin")
+@RegisterRestClient(configKey = Naming.Management.Internal.MANAGEMENT_ADMIN)
 public interface AdminClient {
 
 	@POST

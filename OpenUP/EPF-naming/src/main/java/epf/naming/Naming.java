@@ -542,7 +542,37 @@ public interface Naming {
 			/**
 			 * 
 			 */
+			String MANAGEMENT_AUTH = "epf-management-auth";
+			
+			/**
+			 * 
+			 */
+			String MANAGEMENT_ADMIN = "epf-management-admin";
+			
+			/**
+			 * 
+			 */
+			String PERSISTENCE_MANAGEMENT = "epf-persistence-management";
+			
+			/**
+			 * 
+			 */
+			String PERSISTENCE_MANAGEMENT_SECURITY_SECRET = "epf-management-persistence-secret";
+			
+			/**
+			 * 
+			 */
 			String PERSISTENCE_TEMPLATE = "epf.management.persistence.template";
+			
+			/**
+			 * 
+			 */
+			String PERSISTENCE_DATASOURCE_HOST = "epf.management.persistence.datasource.host";
+			
+			/**
+			 * 
+			 */
+			String PERSISTENCE_DATASOURCE_PORT = "epf.management.persistence.datasource.port";
 		}
 	}
 	
