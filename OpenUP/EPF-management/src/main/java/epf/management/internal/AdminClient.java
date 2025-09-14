@@ -28,7 +28,7 @@ public interface AdminClient {
 	default String createOrganization(final TokenInfo token, final Organization organization) throws Exception {
 		final Response response = createOrganization(token.getToken_type() + " " + token.getAccess_token(), organization);
 		response.bufferEntity();
-		if(Status.OK.getStatusCode() == response.getStatus()) {
+		if(Status.CREATED.getStatusCode() == response.getStatus()) {
 			return response.getHeaderString(HttpHeaders.LOCATION);
 		}
 		throw new ClientErrorException(response.getStatus());

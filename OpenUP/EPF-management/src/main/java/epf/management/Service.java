@@ -1,5 +1,7 @@
 package epf.management;
 
+import org.eclipse.microprofile.auth.LoginConfig;
+import epf.naming.Naming;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.Consumes;
@@ -9,6 +11,7 @@ import jakarta.ws.rs.core.MediaType;
 
 @ApplicationScoped
 @ApplicationPath("/")
+@LoginConfig(authMethod = "MP-JWT", realmName = Naming.EPF)
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class Service extends Application {

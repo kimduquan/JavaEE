@@ -18,13 +18,13 @@ import io.smallrye.common.annotation.RunOnVirtualThread;
 
 @Path(Naming.MANAGEMENT)
 @ApplicationScoped
-@RolesAllowed(Naming.Security.DEFAULT_ROLE)
 public class Management {
 	
 	@Inject
 	transient OrganizationManagement organizationManagement;
 	
 	@GET
+	@RolesAllowed(Naming.Security.DEFAULT_ROLE)
 	@RunOnVirtualThread
 	public Principal authenticate(@Context final SecurityContext security) throws Exception {
 		final Principal principal = new Principal();

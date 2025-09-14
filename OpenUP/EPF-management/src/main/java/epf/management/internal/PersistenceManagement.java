@@ -10,6 +10,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import epf.management.persistence.schema.PersistenceTenant;
 import epf.management.persistence.schema.PersistenceUser;
+import epf.management.persistence.schema.UpdatePersistenceTenantInfo;
 import epf.management.schema.Organization;
 import epf.management.schema.Principal;
 import epf.management.security.util.SecurityUtil;
@@ -49,8 +50,10 @@ public class PersistenceManagement {
 		
 		try(Connection connection = managementDataSource.getConnection()) {
 			try(Statement statement = connection.createStatement()){
-				statement.execute("CREATE USER '" + userName + "' WITH PASSWORD '" + password + "';");
-				statement.execute("CREATE DATABASE '" + databaseName + "' OWNER '" + userName + "' TEMPLATE " + databaseTemplate + ";");
+				final String createUserSql = "CREATE USER \"" + userName + "\" WITH PASSWORD '" + password + "';";
+				statement.execute(createUserSql);
+				final String createDatabaseSql = "CREATE DATABASE \"" + databaseName + "\" OWNER \"" + userName + "\" TEMPLATE " + databaseTemplate + ";";
+				statement.execute(createDatabaseSql);
 			}
 		}
 		
@@ -71,9 +74,12 @@ public class PersistenceManagement {
 		
 		persistenceTenant.getUsers().add(persistenceUser);
 		
+		final UpdatePersistenceTenantInfo updateInfo = new UpdatePersistenceTenantInfo();
+		updateInfo.setTenant(persistenceTenant);
+		
 		final String securityToken = SecurityUtil.generateToken(persistenceClientSecert);
 		final String authorization = "Bearer " + securityToken;
 		
-		persistenceClient.createOrUpdateTenant(authorization, organization.getId(), persistenceTenant);
+		persistenceClient.createOrUpdateTenant(authorization, organization.getId(), updateInfo);
 	}
 }

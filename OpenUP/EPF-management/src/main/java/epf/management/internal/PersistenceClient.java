@@ -2,6 +2,7 @@ package epf.management.internal;
 
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import epf.management.persistence.schema.PersistenceTenant;
+import epf.management.persistence.schema.UpdatePersistenceTenantInfo;
 import epf.naming.Naming;
 import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.PUT;
@@ -19,5 +20,5 @@ public interface PersistenceClient {
 			final String authorization, 
 			@PathParam("external_id")
 			final String external_id, 
-			final PersistenceTenant tenant) throws Exception;
+			final UpdatePersistenceTenantInfo updateInfo) throws Exception;
 }
