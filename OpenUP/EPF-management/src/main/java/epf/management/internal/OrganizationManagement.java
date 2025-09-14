@@ -29,11 +29,11 @@ public class OrganizationManagement {
 	String organizationDomain;
 	
 	@Inject
-	@ConfigProperty(name = "epf.management.auth.client.id")
+	@ConfigProperty(name = Naming.Management.Internal.AUTH_CLIENT_ID)
 	String clientId;
 	
 	@Inject
-	@ConfigProperty(name = "epf.management.auth.client.secret")
+	@ConfigProperty(name = Naming.Management.Internal.AUTH_CLIENT_SECRET)
 	String clientSecret;
 	
 	@RestClient

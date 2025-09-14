@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import epf.management.schema.Organization;
 import epf.management.schema.Principal;
+import epf.naming.Naming;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -15,7 +16,7 @@ import jakarta.inject.Inject;
 public class PersistenceManagement {
 	
 	@Inject
-	@ConfigProperty(name = "epf.management.persistence.template")
+	@ConfigProperty(name = Naming.Management.Internal.PERSISTENCE_TEMPLATE)
 	private String databaseTemplate;
 	
 	@Inject

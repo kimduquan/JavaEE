@@ -523,6 +523,27 @@ public interface Naming {
 		 * 
 		 */
 		String ORGANIZATION_DOMAIN = "epf.management.organization.domain";
+		
+		/**
+		 * 
+		 */
+		interface Internal {
+			
+			/**
+			 * 
+			 */
+			String AUTH_CLIENT_ID = "epf.management.auth.client.id";
+			
+			/**
+			 * 
+			 */
+			String AUTH_CLIENT_SECRET = "epf.management.auth.client.secret";
+			
+			/**
+			 * 
+			 */
+			String PERSISTENCE_TEMPLATE = "epf.management.persistence.template";
+		}
 	}
 	
 	/**
