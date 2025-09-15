@@ -15,8 +15,23 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public abstract class CallbackServlet extends HttpServlet {
-
+	
     private static final long serialVersionUID = 1L;
+    
+    private String buildLogoutUrl(final OpenIdContext context, final Optional<String> originalRequest) {
+    	final String endSessionEndpoint = context.getProviderMetadata().getString(OpenIdConstant.END_SESSION_ENDPOINT);
+		final String idTokenHint = context.getIdentityToken().getToken();
+		String postLogoutRedirectUri = null;
+		if(originalRequest.isPresent()) {
+			postLogoutRedirectUri = originalRequest.get();
+		}
+		final StringBuilder logoutUrl = new StringBuilder();
+		logoutUrl.append(endSessionEndpoint).append('?').append(OpenIdConstant.ID_TOKEN_HINT).append('=').append(idTokenHint);
+		if(postLogoutRedirectUri != null) {
+			logoutUrl.append('&').append(OpenIdConstant.POST_LOGOUT_REDIRECT_URI).append('=').append(postLogoutRedirectUri);
+		}
+		return logoutUrl.toString();
+    }
 
     @Override
     protected void doGet(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
@@ -24,24 +39,26 @@ public abstract class CallbackServlet extends HttpServlet {
         if (context != null) {
         	final ManagementClient management = getManagement();
         	final Principal principal = management.authenticate();
+        	final boolean isFirstTimeLogin = context.getAccessToken().getClaim(Naming.Management.ORGANIZATION) == null;
         	final Optional<String> originalRequest = context.getStoredValue(request, response, OpenIdConstant.ORIGINAL_REQUEST);
-        	final String originalRequestString = originalRequest.get();
-        	final URL originalRequestUrl = URI.create(originalRequestString).toURL();
-        	String redirectUrl = originalRequestString;
-        	if(originalRequestUrl.getQuery() != null) {
-        		if(!originalRequestUrl.getQuery().contains("lang=")) {
-        			redirectUrl = redirectUrl + "&lang=" + principal.getLocale();
-        		}
+        	if(isFirstTimeLogin) {
+        		final String logoutUrl = this.buildLogoutUrl(context, originalRequest);
+        		response.sendRedirect(logoutUrl);
         	}
         	else {
-        		redirectUrl = redirectUrl + "?lang=" + principal.getLocale();
+            	final String originalRequestString = originalRequest.get();
+            	final URL originalRequestUrl = URI.create(originalRequestString).toURL();
+            	String redirectUrl = originalRequestString;
+            	if(originalRequestUrl.getQuery() != null) {
+            		if(!originalRequestUrl.getQuery().contains("lang=")) {
+            			redirectUrl = redirectUrl + "&lang=" + principal.getLocale();
+            		}
+            	}
+            	else {
+            		redirectUrl = redirectUrl + "?lang=" + principal.getLocale();
+            	}
+                response.sendRedirect(redirectUrl);
         	}
-        	final boolean isFirstTimeLogin = context.getAccessToken().getClaim(Naming.Management.ORGANIZATION) == null;
-        	if(isFirstTimeLogin) {
-        		request.logout();
-        		return;
-        	}
-            response.sendRedirect(redirectUrl);
         }
     }
     
