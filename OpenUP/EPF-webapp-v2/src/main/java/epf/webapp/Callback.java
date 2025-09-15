@@ -18,6 +18,9 @@ public class Callback extends CallbackServlet {
 	
 	@Inject
     private OpenIdContext context;
+	
+	@Inject
+	private Session session;
 
 	@Override
 	protected OpenIdContext getContext() {
@@ -27,5 +30,10 @@ public class Callback extends CallbackServlet {
 	@Override
 	protected String getGatewayUrl() {
 		return config.getGatewayUrl();
+	}
+
+	@Override
+	protected epf.management.schema.Session getSession() {
+		return session;
 	}
 }

@@ -1,6 +1,13 @@
 package epf.management.schema;
 
-public class Principal {
+import java.io.Serializable;
+
+public class Principal implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	
 	private String subject;
 	private String name;
@@ -22,7 +29,6 @@ public class Principal {
 	private String phoneNumber;
 	private String phoneNumberVerified;
 	private String website;
-	private Organization organization;
 	
 	public String getSubject() {
 		return subject;
@@ -143,11 +149,5 @@ public class Principal {
 	}
 	public void setWebsite(String website) {
 		this.website = website;
-	}
-	public Organization getOrganization() {
-		return organization;
-	}
-	public void setOrganization(Organization organization) {
-		this.organization = organization;
 	}
 }

@@ -1,6 +1,6 @@
 package epf.webapp.internal;
 
-import epf.management.schema.Principal;
+import epf.management.schema.Session;
 import epf.naming.Naming;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -12,5 +12,5 @@ public interface ManagementClient {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	Principal authenticate();
+	Session authenticate();
 }

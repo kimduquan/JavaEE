@@ -13,6 +13,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.management.schema.Organization;
 import epf.management.internal.OrganizationManagement;
 import epf.management.schema.Principal;
+import epf.management.schema.Session;
 import epf.naming.Naming;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
@@ -26,7 +27,7 @@ public class Management {
 	@GET
 	@RolesAllowed(Naming.Security.DEFAULT_ROLE)
 	@RunOnVirtualThread
-	public Principal authenticate(@Context final SecurityContext security) throws Exception {
+	public Session authenticate(@Context final SecurityContext security) throws Exception {
 		final Principal principal = new Principal();
 		final JsonWebToken jwt = (JsonWebToken) security.getUserPrincipal();
 		principal.setAddress((String) jwt.claim(Claims.address).orElse(null));
@@ -49,14 +50,19 @@ public class Management {
 		principal.setUpdatedAt((Long) jwt.claim(Claims.updated_at).orElse(null));
 		principal.setWebsite(null);
 		principal.setZoneinfo((String) jwt.claim(Claims.zoneinfo).orElse(null));
+		
+		Organization organization = null;
 		final Optional<Organization> organizationClaim = organizationManagement.getOrganization(jwt);
 		if(organizationClaim.isPresent()) {
-			principal.setOrganization(organizationClaim.get());
+			organization = organizationClaim.get();
 		}
 		else {
-			final Organization organization = organizationManagement.createOrganization(jwt.getTokenID(), principal);
-			principal.setOrganization(organization);
+			organization = organizationManagement.createOrganization(jwt.getTokenID(), principal);
 		}
-		return principal;
+		
+		final Session session = new Session();
+		session.setPrincipal(principal);
+		session.setOrganization(organization);
+		return session;
 	}
 }

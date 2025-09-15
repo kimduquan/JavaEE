@@ -1367,6 +1367,14 @@ public interface Naming {
 	    	 */
 	    	String LOGIN = "/login";
 	    }
+	    
+	    interface View {
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String DEFAULT_VIEW = "default_view";
+	    }
 	}
 	
 	/**

@@ -1,12 +1,13 @@
 package epf.webapp.internal;
 
 import java.io.IOException;
+import epf.management.schema.Session;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-public class LogoutServlet extends HttpServlet {
+public abstract class LogoutServlet extends HttpServlet {
 
 	/**
 	 * 
@@ -15,6 +16,10 @@ public class LogoutServlet extends HttpServlet {
 
 	@Override
     protected void doGet(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
+		getSession().setOrganization(null);
+		getSession().setPrincipal(null);
 		request.logout();
 	}
+	
+	protected abstract Session getSession();
 }

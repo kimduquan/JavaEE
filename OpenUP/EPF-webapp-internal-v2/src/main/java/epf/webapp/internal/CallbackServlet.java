@@ -5,7 +5,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Optional;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
-import epf.management.schema.Principal;
+import epf.management.schema.Session;
 import epf.naming.Naming;
 import jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdConstant;
 import jakarta.security.enterprise.identitystore.openid.OpenIdContext;
@@ -38,24 +38,27 @@ public abstract class CallbackServlet extends HttpServlet {
     	final OpenIdContext context = getContext();
         if (context != null) {
         	final ManagementClient management = getManagement();
-        	final Principal principal = management.authenticate();
+        	final Session session = management.authenticate();
         	final boolean isFirstTimeLogin = context.getAccessToken().getClaim(Naming.Management.ORGANIZATION) == null;
         	final Optional<String> originalRequest = context.getStoredValue(request, response, OpenIdConstant.ORIGINAL_REQUEST);
         	if(isFirstTimeLogin) {
-        		final String logoutUrl = this.buildLogoutUrl(context, originalRequest);
+        		final String logoutUrl = buildLogoutUrl(context, originalRequest);
         		response.sendRedirect(logoutUrl);
         	}
         	else {
+        		getSession().setOrganization(session.getOrganization());
+        		getSession().setPrincipal(session.getPrincipal());
             	final String originalRequestString = originalRequest.get();
             	final URL originalRequestUrl = URI.create(originalRequestString).toURL();
             	String redirectUrl = originalRequestString;
+            	final String locale = session.getPrincipal().getLocale();
             	if(originalRequestUrl.getQuery() != null) {
             		if(!originalRequestUrl.getQuery().contains("lang=")) {
-            			redirectUrl = redirectUrl + "&lang=" + principal.getLocale();
+            			redirectUrl = redirectUrl + "&lang=" + locale;
             		}
             	}
             	else {
-            		redirectUrl = redirectUrl + "?lang=" + principal.getLocale();
+            		redirectUrl = redirectUrl + "?lang=" + locale;
             	}
                 response.sendRedirect(redirectUrl);
         	}
@@ -64,6 +67,7 @@ public abstract class CallbackServlet extends HttpServlet {
     
     protected abstract OpenIdContext getContext();
     protected abstract String getGatewayUrl();
+    protected abstract Session getSession();
     
     protected ManagementClient getManagement() {
     	return RestClientBuilder.newBuilder().baseUri(URI.create(getGatewayUrl())).register(AuthFilter.class).build(ManagementClient.class);
