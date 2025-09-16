@@ -1,22 +1,14 @@
 package epf.webapp.workflow;
 
+import epf.naming.Naming;
 import epf.webapp.internal.LogoutServlet;
-import jakarta.inject.Inject;
 import jakarta.servlet.annotation.WebServlet;
 
-@WebServlet("/Logout")
+@WebServlet(Naming.WebApp.Internal.LOGOUT)
 public class Logout extends LogoutServlet {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	@Inject
-	private Session session;
-
-	@Override
-	protected epf.management.schema.Session getSession() {
-		return session;
-	}
 }

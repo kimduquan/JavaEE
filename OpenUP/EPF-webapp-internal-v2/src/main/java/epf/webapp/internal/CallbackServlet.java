@@ -46,6 +46,8 @@ public abstract class CallbackServlet extends HttpServlet {
         		response.sendRedirect(logoutUrl);
         	}
         	else {
+        		session.getPrincipal().setPicture(context.getClaims().getPicture().orElse(null));
+        		session.getPrincipal().setProfile(context.getClaims().getProfile().orElse(null));
         		getSession().setOrganization(session.getOrganization());
         		getSession().setPrincipal(session.getPrincipal());
             	final String originalRequestString = originalRequest.get();

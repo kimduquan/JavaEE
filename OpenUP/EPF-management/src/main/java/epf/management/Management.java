@@ -43,12 +43,9 @@ public class Management {
 		principal.setNickname((String) jwt.claim(Claims.nickname).orElse(null));
 		principal.setPhoneNumber((String) jwt.claim(Claims.phone_number).orElse(null));
 		principal.setPhoneNumberVerified((String) jwt.claim(Claims.phone_number_verified).orElse(null));
-		principal.setPicture(null);
 		principal.setPreferredUsername((String) jwt.claim(Claims.preferred_username).orElse(null));
-		principal.setProfile(null);
 		principal.setSubject(jwt.getSubject());
 		principal.setUpdatedAt((Long) jwt.claim(Claims.updated_at).orElse(null));
-		principal.setWebsite(null);
 		principal.setZoneinfo((String) jwt.claim(Claims.zoneinfo).orElse(null));
 		
 		Organization organization = null;

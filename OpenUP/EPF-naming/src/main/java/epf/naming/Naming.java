@@ -1344,6 +1344,20 @@ public interface Naming {
 	     */
 	    String SECURITY_WEB_APP_URL = "epf.security.webapp.url";
 	    
+	    interface Internal {
+		    
+		    /**
+		     * 
+		     */
+		    String CALLBACK = "/Callback";
+		    
+		    /**
+		     * 
+		     */
+		    String LOGOUT = "/Logout";
+	    	
+	    }
+	    
 	    /**
 	     * @author PC
 	     *
