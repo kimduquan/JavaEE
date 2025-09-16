@@ -9,9 +9,6 @@
   </parent>
   <artifactId>EPF-workflow-management</artifactId>
   <name>Eclipse Process Framework Workflow Management</name>
-  <properties>
-    <maven.compiler.release>21</maven.compiler.release>
-  </properties>
   <dependencies>
     <dependency>
       <groupId>io.quarkus</groupId>

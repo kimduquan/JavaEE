@@ -11,9 +11,6 @@
   <groupId>openup</groupId>
   <artifactId>EPF-registry</artifactId>
   <name>Eclipse Process Framework Registry</name>
-  <properties>
-    <maven.compiler.release>21</maven.compiler.release>
-  </properties>
   <dependencies>
   	<dependency>
       <groupId>io.quarkus</groupId>
