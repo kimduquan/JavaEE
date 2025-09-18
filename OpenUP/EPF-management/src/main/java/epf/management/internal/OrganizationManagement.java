@@ -12,6 +12,8 @@ import epf.management.admin.schema.Domain;
 import epf.management.schema.Organization;
 import epf.management.auth.schema.ClientCredential;
 import epf.management.auth.schema.TokenInfo;
+import epf.management.external.AdminClient;
+import epf.management.external.AuthClient;
 import epf.management.schema.Principal;
 import epf.naming.Naming;
 import io.quarkus.cache.CacheKey;

@@ -10,9 +10,6 @@
   </parent>
   <artifactId>EPF-management</artifactId>
   <name>Eclipse Process Framework Management</name>
-  <properties>
-    <maven.compiler.release>21</maven.compiler.release>
-  </properties>
   <dependencies>
     <dependency>
 		<groupId>io.quarkus</groupId>

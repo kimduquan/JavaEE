@@ -22,7 +22,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.MatrixParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
@@ -88,8 +87,6 @@ public class Persistence {
     @LRA(LRA.Type.NESTED)
     @RunOnVirtualThread
     public Response persist(
-    		@MatrixParam(Naming.Management.TENANT)
-    		final String tenant,
     		@PathParam(Naming.Persistence.Client.SCHEMA)
             @NotBlank
             final String schema,
@@ -148,8 +145,6 @@ public class Persistence {
     @LRA(LRA.Type.NESTED)
     @RunOnVirtualThread
     public Response merge(
-    		@MatrixParam(Naming.Management.TENANT)
-    		final String tenant,
     		@PathParam(Naming.Persistence.Client.SCHEMA)
             @NotBlank
             final String schema,
@@ -222,8 +217,6 @@ public class Persistence {
     @LRA(LRA.Type.NESTED)
     @RunOnVirtualThread
     public Response remove(
-    		@MatrixParam(Naming.Management.TENANT)
-    		final String tenant,
     		@PathParam(Naming.Persistence.Client.SCHEMA)
             @NotBlank
             final String schema,

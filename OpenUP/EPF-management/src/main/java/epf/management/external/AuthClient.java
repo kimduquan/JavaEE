@@ -1,4 +1,4 @@
-package epf.management.internal;
+package epf.management.external;
 
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import epf.management.auth.schema.ClientCredential;

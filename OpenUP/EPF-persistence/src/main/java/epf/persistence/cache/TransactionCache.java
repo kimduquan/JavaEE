@@ -1,10 +1,8 @@
 package epf.persistence.cache;
 
 import java.util.Objects;
-import java.util.Optional;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import org.eclipse.jnosql.mapping.keyvalue.KeyValueTemplate;
 import epf.persistence.internal.EntityTransaction;
 import epf.util.json.ext.Decoder;
 import epf.util.json.ext.Encoder;
@@ -13,7 +11,7 @@ import epf.util.json.ext.Encoder;
 public class TransactionCache {
 	
 	@Inject
-	transient KeyValueTemplate cache;
+	transient Cache cache;
 	
 	private transient final Encoder encoder = new Encoder();
 	
@@ -22,18 +20,18 @@ public class TransactionCache {
 	public void put(final EntityTransaction transaction) throws Exception {
 		Objects.requireNonNull(transaction, "EntityTransaction");
 		Objects.requireNonNull(transaction.getId(), "EntityTransaction.Id");
-		final CacheEntry value = new CacheEntry();
-		value.setKey(transaction.getId());
-		value.setValue(encoder.encode(transaction));
-		cache.put(value);
+		final String key = transaction.getId();
+		final String value = encoder.encode(transaction);
+		cache.put(key, value);
 	}
 	
 	public EntityTransaction remove(final String id) throws Exception {
 		Objects.requireNonNull(id, "String");
 		EntityTransaction transaction = null;
-		final Optional<CacheEntry> value = cache.get(id, CacheEntry.class);
-		if(value.isPresent()) {
-			transaction = (EntityTransaction) decoder.decode(value.get().getValue());
+		final String value = cache.get(id);
+		cache.remove(id);
+		if(value != null) {
+			transaction = (EntityTransaction) decoder.decode(value);
 		}
 		return transaction;
 	}

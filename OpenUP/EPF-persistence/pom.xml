@@ -52,6 +52,10 @@
       <artifactId>quarkus-messaging-kafka</artifactId>
     </dependency>
     <dependency>
+	    <groupId>io.quarkus</groupId>
+	    <artifactId>quarkus-redis-cache</artifactId>
+	</dependency>
+    <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-arc</artifactId>
     </dependency>
@@ -70,10 +74,6 @@
 	<dependency>
 		<groupId>io.quarkiverse.helm</groupId>
 		<artifactId>quarkus-helm</artifactId>
-	</dependency>
-	<dependency>
-	    <groupId>io.quarkiverse.jnosql</groupId>
-	    <artifactId>quarkus-jnosql-keyvalue-redis</artifactId>
 	</dependency>
 	
 	<dependency>

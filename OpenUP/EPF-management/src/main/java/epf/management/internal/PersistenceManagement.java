@@ -1,13 +1,12 @@
 package epf.management.internal;
 
-import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Base64;
 import javax.sql.DataSource;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
+import epf.management.external.PersistenceClient;
 import epf.management.persistence.schema.PersistenceTenant;
 import epf.management.persistence.schema.PersistenceUser;
 import epf.management.persistence.schema.UpdatePersistenceTenantInfo;

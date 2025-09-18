@@ -738,6 +738,11 @@ public interface Naming {
 			 * 
 			 */
 			String SCHEMA = "epf.persistence.schema";
+			
+			/**
+			 * 
+			 */
+			String TRANSACTION_CACHE = "epf-persistence-transaction-cache";
 		}
 	}
 	
