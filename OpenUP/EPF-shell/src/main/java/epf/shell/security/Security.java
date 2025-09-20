@@ -54,7 +54,7 @@ public class Security {
 		final TokenInfo tokenInfo = security.login(grant_type, client_id, client_secret, username, new String(password));
 		final Credential credential = new Credential();
 		credential.setRawToken(tokenInfo.getAccess_token());
-		final JwtConsumer consumer = new JwtConsumerBuilder().build();
+		final JwtConsumer consumer = new JwtConsumerBuilder().setSkipSignatureVerification().build();
 		final JwtClaims claims = consumer.processToClaims(tokenInfo.getAccess_token());
 		credential.setTokenID(claims.getClaimValueAsString("jti"));
 		identityStore.put(credential);
