@@ -1,4 +1,4 @@
-package epf.shell.schema;
+package epf.shell.schema.management;
 
 import epf.naming.Naming;
 import epf.shell.Function;

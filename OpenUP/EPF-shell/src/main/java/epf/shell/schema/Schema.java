@@ -2,6 +2,7 @@ package epf.shell.schema;
 
 import epf.naming.Naming;
 import epf.shell.Function;
+import epf.shell.schema.management.Management;
 import epf.shell.security.Credential;
 import epf.shell.security.CallerPrincipal;
 import jakarta.enterprise.context.RequestScoped;
