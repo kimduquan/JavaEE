@@ -5,5 +5,5 @@ call ../env.bat
 call ../native_env.bat
 call ../config.bat
 call ../config_ssl.bat
-call mvn clean install -U -Dnative
+call mvn clean install -U -Dnative -Dquarkus.package.type=native
 endlocal
