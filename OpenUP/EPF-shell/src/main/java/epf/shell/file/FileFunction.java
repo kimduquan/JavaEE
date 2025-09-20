@@ -23,10 +23,10 @@ public class FileFunction {
 
 	@ConfigProperty(name = Naming.Gateway.GATEWAY_URL)
 	@Inject
-	private transient URI fileUrl;
+	transient URI fileUrl;
 	
 	@Inject
-	private transient ClientUtil clientUtil;
+	transient ClientUtil clientUtil;
 	
 	@Command(name = "create")
 	public URI createFile(

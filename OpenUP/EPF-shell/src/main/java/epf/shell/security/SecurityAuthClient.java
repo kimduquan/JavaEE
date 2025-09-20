@@ -10,6 +10,7 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import epf.naming.Naming;
 import epf.shell.security.schema.TokenInfo;
 
+@Path("/")
 @RegisterRestClient(configKey = Naming.Security.Auth.CLIENT)
 public interface SecurityAuthClient {
 
