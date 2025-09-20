@@ -48,7 +48,7 @@ public class Security {
 		    @NotEmpty
 			final char... password
 			) throws Exception {
-		final TokenInfo tokenInfo = security.login(grant_type, client_id, client_secret, username, new String(password));
+		final TokenInfo tokenInfo = security.authenticate(grant_type, client_id, client_secret, username, new String(password));
 		final Credential credential = new Credential();
 		credential.setRawToken(tokenInfo.getAccess_token());
 		credential.setTokenID(identityStore.getTokenId(tokenInfo.getAccess_token()));
