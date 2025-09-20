@@ -77,11 +77,6 @@
 	</dependency>
 	
 	<dependency>
-	    <groupId>redis.clients</groupId>
-	    <artifactId>jedis</artifactId>
-	</dependency>
-	
-	<dependency>
 		<groupId>openup</groupId>
 		<artifactId>EPF-naming</artifactId>
 		<version>${project.version}</version>

@@ -36,8 +36,12 @@
       <artifactId>quarkus-arc</artifactId>
     </dependency>
     <dependency>
+	    <groupId>io.quarkus</groupId>
+	    <artifactId>quarkus-jdbc-postgresql</artifactId>
+	</dependency>
+    <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-jdbc-h2</artifactId>
+      <artifactId>quarkus-hibernate-orm</artifactId>
     </dependency>
     
     <dependency>
@@ -68,11 +72,6 @@
     
     <dependency>
         <groupId>openup</groupId>
-        <artifactId>EPF-security-schema</artifactId>
-        <version>${project.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>openup</groupId>
         <artifactId>EPF-mail-client</artifactId>
         <version>${project.version}</version>
     </dependency>
@@ -81,5 +80,31 @@
         <artifactId>EPF-file-client</artifactId>
         <version>${project.version}</version>
     </dependency>
+    
+    <dependency>
+		<groupId>openup</groupId>
+		<artifactId>EPF-schema-utility</artifactId>
+		<version>${project.version}</version>
+	</dependency>
+    <dependency>
+		<groupId>openup</groupId>
+		<artifactId>EPF-delivery-processes-schema</artifactId>
+		<version>${project.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>openup</groupId>
+		<artifactId>EPF-roles-schema</artifactId>
+		<version>${project.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>openup</groupId>
+		<artifactId>EPF-tasks-schema</artifactId>
+		<version>${project.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>openup</groupId>
+		<artifactId>EPF-work-products-schema</artifactId>
+		<version>${project.version}</version>
+	</dependency>
   </dependencies>
 </project>

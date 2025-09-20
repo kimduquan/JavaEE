@@ -10,7 +10,7 @@ import org.eclipse.microprofile.rest.client.inject.RestClient;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 
-@Command(name = Naming.SCHEMA)
+@Command(name = Naming.SCHEMA, subcommands = {Management.class})
 @RequestScoped
 @Function
 public class Schema {
