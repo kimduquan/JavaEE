@@ -1209,6 +1209,11 @@ public interface Naming {
 	    	String AUTH_URL = "epf.security.auth.url";
 	    	
 	    	/**
+	    	 * 
+	    	 */
+	    	String CLIENT = "epf.security.auth.client";
+	    	
+	    	/**
 	    	 *
 	    	 */
 	    	String GOOGLE = "google";
@@ -1252,6 +1257,21 @@ public interface Naming {
 	    	 * 
 	    	 */
 	    	String FACEBOOK_CLIENT_SECRET = "epf.security.auth.openid.client.secret.facebook";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String GRANT_TYPE = "epf.security.auth.grant_type";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String CLIENT_ID = "epf.security.auth.client_id";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String CLIENT_SECRET = "epf.security.auth.client_secret";
 	    }
 	    
 	    /**

@@ -1,13 +1,12 @@
 package epf.shell.security;
 
 import epf.naming.Naming;
-import epf.security.schema.Token;
 import epf.shell.Function;
+import epf.shell.security.schema.TokenInfo;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.ws.rs.core.MultivaluedHashMap;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import picocli.CommandLine.ArgGroup;
@@ -23,67 +22,45 @@ public class Security {
 	public static final String TOKEN_DESC = "Token";
 	
 	@Inject
+	@ConfigProperty(name = Naming.Security.Auth.GRANT_TYPE)
+	String grant_type;
+	
+	@Inject
+	@ConfigProperty(name = Naming.Security.Auth.CLIENT_ID)
+	String client_id;
+	
+	@Inject
+	@ConfigProperty(name = Naming.Security.Auth.CLIENT_SECRET)
+	String client_secret;
+	
+	@Inject
 	transient IdentityStore identityStore;
 	
 	@RestClient
-	transient SecurityClient security;
-	
-	@ConfigProperty(name = Naming.Shell.SHELL_URL)
-	@Inject
-	String shellUrl;
+	transient SecurityAuthClient security;
 
-	@Command(name = "login")
-	public String login(
-			@Option(names = {"-u", "--user"}, required = true, description = "User name")
+	@Command(name = "auth")
+	public String authenticate(
+			@Option(names = {"-u", "--username"}, required = true, description = "User name")
 			@NotBlank
-			final String user,
+			final String username,
 			@Option(names = {"-p", "--password"}, required = true, description = "Password", interactive = true)
 		    @NotEmpty
 			final char... password
 			) throws Exception {
-		
-		return security.login(user, new String(password), shellUrl);
+		final TokenInfo tokenInfo = security.login(grant_type, client_id, client_secret, username, new String(password));
+		final Credential credential = new Credential();
+		credential.setRawToken(tokenInfo.getAccess_token());
+		identityStore.put(credential);
+		return tokenInfo.getAccess_token();
 	}
 	
 	@Command(name = "logout")
-	public String logout(
+	public void logout(
 			@ArgGroup(exclusive = true, multiplicity = "1")
 			@CallerPrincipal
 			final Credential credential
 			) throws Exception {
 		identityStore.remove(credential);
-		return security.logOut(credential.getAuthHeader());
-	}
-	
-	@Command(name = "auth")
-	public Token authenticate(
-			@Option(names = {"-t", TOKEN_ARG}, description = TOKEN_DESC) 
-			final String token) throws Exception {
-		final Credential credential = new Credential();
-		credential.setRawToken(token);
-		final Token authToken = security.authenticate(credential.getAuthHeader());
-		credential.setTokenID(authToken.getTokenID());
-		identityStore.put(credential);
-		return authToken;
-	}
-	
-	@Command(name = "update")
-	public void update(
-			@ArgGroup(exclusive = true, multiplicity = "1")
-			@CallerPrincipal
-			final Credential credential,
-			@Option(names = {"-p", "--password"}, description = "Password", interactive = true)
-		    final char... password
-		    ) throws Exception {
-		security.update(credential.getAuthHeader(), new String(password));
-	}
-	
-	@Command(name = "revoke")
-	public String revoke(
-			@ArgGroup(exclusive = true, multiplicity = "1")
-			@CallerPrincipal
-			final Credential credential
-			) throws Exception {
-		return security.revoke(credential.getAuthHeader(), new MultivaluedHashMap<>());
 	}
 }
