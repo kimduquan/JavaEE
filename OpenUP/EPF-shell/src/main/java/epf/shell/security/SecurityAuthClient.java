@@ -18,7 +18,7 @@ public interface SecurityAuthClient {
 	@Path("token")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
-    TokenInfo login(
+    TokenInfo authenticate(
     		@FormParam("grant_type")
     		final String grantType,
     		@FormParam("client_id")
@@ -30,4 +30,18 @@ public interface SecurityAuthClient {
             @FormParam("password")
             final String password
     ) throws Exception;
+	
+	@POST
+	@Path("token")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+	TokenInfo refresh(
+			@FormParam("grant_type")
+    		final String grantType,
+    		@FormParam("client_id")
+    		final String clientId,
+    		@FormParam("client_secret")
+    		final String clientSecret,
+    		@FormParam("refresh_token")
+    		final String refreshToken);
 }

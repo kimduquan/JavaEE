@@ -5,6 +5,9 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
+import org.jose4j.jwt.JwtClaims;
+import org.jose4j.jwt.consumer.JwtConsumer;
+import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import epf.file.util.PathUtil;
 import epf.util.logging.LogManager;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -17,6 +20,12 @@ public class IdentityStore implements ConstraintValidator<CallerPrincipal, Crede
 	private static final String TOKEN_FOLDER = "security";
 	
 	private static final Logger LOGGER = LogManager.getLogger(IdentityStore.class.getName());
+	
+	protected String getTokenId(final String token) throws Exception {
+		final JwtConsumer consumer = new JwtConsumerBuilder().setSkipSignatureVerification().build();
+		final JwtClaims claims = consumer.processToClaims(token);
+		return claims.getClaimValueAsString("jti");
+	}
 	
 	protected void put(final Credential credential) throws Exception {
 		final Path tokenFolder = PathUtil.of("", TOKEN_FOLDER);

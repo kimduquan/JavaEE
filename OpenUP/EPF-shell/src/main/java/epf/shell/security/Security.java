@@ -9,9 +9,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
-import org.jose4j.jwt.JwtClaims;
-import org.jose4j.jwt.consumer.JwtConsumer;
-import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -54,9 +51,7 @@ public class Security {
 		final TokenInfo tokenInfo = security.login(grant_type, client_id, client_secret, username, new String(password));
 		final Credential credential = new Credential();
 		credential.setRawToken(tokenInfo.getAccess_token());
-		final JwtConsumer consumer = new JwtConsumerBuilder().setSkipSignatureVerification().build();
-		final JwtClaims claims = consumer.processToClaims(tokenInfo.getAccess_token());
-		credential.setTokenID(claims.getClaimValueAsString("jti"));
+		credential.setTokenID(identityStore.getTokenId(tokenInfo.getAccess_token()));
 		identityStore.put(credential);
 		return tokenInfo.getAccess_token();
 	}
