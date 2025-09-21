@@ -20,7 +20,7 @@ servingEngineSpec:
   # - serviceAccountName: (Optional, string) The name of the service account to use for the deployment, e.g., "vllm-service-account"
   # - priorityClassName: (Optional, string) The name of the priority class name for the deployment, e.g., "high-priority"
   # - podAnnotations: (Optional, map) The annotations to add to the pod, e.g., {model: "opt125m"}
-  - name: "Mistral-7B-Instruct-v0.3-GPTQ-4bit"
+  - name: "mistral"
     repository: "vllm/vllm-openai"
     tag: "latest"
   # - imagePullSecret: (Optional, string) Name of secret with credentials to private container repository, e.g. "secret"
