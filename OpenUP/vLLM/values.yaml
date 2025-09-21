@@ -2,15 +2,15 @@ servingEngineSpec:
   runtimeClassName: "nvidia"
   modelSpec:
   - name: "Mistral-7B-Instruct-v0.3-GPTQ-4bit"
-    repository: "vllm/vllm-openai"
-    tag: "latest"
-    modelURL: "neuralmagic/Mistral-7B-Instruct-v0.3-GPTQ-4bit"
+  - repository: "vllm/vllm-openai"
+  - tag: "latest"
+  - modelURL: "neuralmagic/Mistral-7B-Instruct-v0.3-GPTQ-4bit"
 
-    replicaCount: 1
+  - replicaCount: 1
 
-    requestCPU: 2
-    requestMemory: "8Gi"
-    requestGPU: 1
+  - requestCPU: 2
+  - requestMemory: "8Gi"
+  - requestGPU: 1
 
   - vllmConfig:
     - maxModelLen: 23296
