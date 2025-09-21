@@ -22,7 +22,7 @@ servingEngineSpec:
   # - priorityClassName: (Optional, string) The name of the priority class name for the deployment, e.g., "high-priority"
     podAnnotations:
       model: "mistral"
-    name: "mistral"
+  - name: "mistral"
     repository: "lmcache/vllm-openai"
     tag: "latest"
   # - imagePullSecret: (Optional, string) Name of secret with credentials to private container repository, e.g. "secret"
