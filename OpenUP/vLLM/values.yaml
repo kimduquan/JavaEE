@@ -353,7 +353,7 @@ routerSpec:
   # -- router resource requests and limits
   resources:
     requests:
-      cpu: 400m
+      cpu: 100m
       memory: 500Mi
     limits:
       memory: 500Mi
