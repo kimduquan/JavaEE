@@ -21,16 +21,16 @@ servingEngineSpec:
   # - priorityClassName: (Optional, string) The name of the priority class name for the deployment, e.g., "high-priority"
   # - podAnnotations: (Optional, map) The annotations to add to the pod, e.g., {model: "opt125m"}
   - name: "Mistral-7B-Instruct-v0.3-GPTQ-4bit"
-  - repository: "vllm/vllm-openai"
-  - tag: "latest"
+    repository: "vllm/vllm-openai"
+    tag: "latest"
   # - imagePullSecret: (Optional, string) Name of secret with credentials to private container repository, e.g. "secret"
-  - modelURL: "neuralmagic/Mistral-7B-Instruct-v0.3-GPTQ-4bit"
+    modelURL: "neuralmagic/Mistral-7B-Instruct-v0.3-GPTQ-4bit"
   # - chatTemplate: (Optional, string) Chat template (Jinga2) specifying tokenizer configuration, e.g. "{% for message in messages %}\n{% if message['role'] == 'user' %}\n{{ 'Question:\n' + message['content'] + '\n\n' }}{% elif message['role'] == 'system' %}\n{{ 'System:\n' + message['content'] + '\n\n' }}{% elif message['role'] == 'assistant' %}{{ 'Answer:\n'  + message['content'] + '\n\n' }}{% endif %}\n{% if loop.last and add_generation_prompt %}\n{{ 'Answer:\n' }}{% endif %}{% endfor %}"
   #
-  - replicaCount: 1
-  - requestCPU: 2
-  - requestMemory: "8Gi"
-  - requestGPU: 1
+    replicaCount: 1
+    requestCPU: 2
+    requestMemory: "8Gi"
+    requestGPU: 1
   # - requestGPUType: (Optional, string) The type of GPU requested, e.g., "nvidia.com/mig-4g.71gb". If not specified, defaults to "nvidia.com/gpu"
   # - requestGPUMem: (Optional, string) Requires HAMi. The amount of GPU memory requested, e.g., 3000. Each unit equals to 1M. https://project-hami.io/docs/userguide/NVIDIA-device/specify-device-memory-usage
   # - requestGPUMemPercentage: (Optional, string) Requires HAMi. The percentage of GPU memory requested, e.g., "80". It cannot be used together with requestGPUMem.
@@ -41,10 +41,10 @@ servingEngineSpec:
   # - limitGPUMem: (Optional, string) Requires HAMi. The limit of GPU memory, e.g., 3000. Each unit equals to 1M. https://project-hami.io/docs/userguide/NVIDIA-device/specify-device-memory-usage
   # - limitGPUMemPercentage: (Optional, string) Requires HAMi. The limit of GPU memory of GPU, e.g., "80"
   # - limitGPUCores: (Optional, string) Requires HAMi. The limit of GPU cores, e.g., "10". Each unit equals to 1% device cores. https://project-hami.io/docs/userguide/NVIDIA-device/specify-device-core-usage
-  - pvcStorage: "20Gi"
+    pvcStorage: "20Gi"
   # - pvcAccessMode: (Optional, list) The access mode policy for the mounted volume, e.g., ["ReadWriteOnce"]
   # - storageClass: (Optional, String) The storage class of the PVC e.g., "", default is ""
-  - pvcMatchLabels:
+    pvcMatchLabels:
       model: "mistral"
   # - extraVolumes: (Optional, list) Additional volumes to add to the pod, in Kubernetes volume format. https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.32/#volume-v1-core
   #   Example for an emptyDir volume:
@@ -68,23 +68,23 @@ servingEngineSpec:
   #   - mountPvcStorage: (optional, bool) Whether to mount the model's volume.
   #   - extraVolumeMounts: (Optional, list) Additional volume mounts to add to the init container, in Kubernetes volumeMount format. https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.32/#volumemount-v1-core
   #
-  - vllmConfig:
+    vllmConfig:
   #   - v0: (optional, map) Specify to 1 to use vLLM v0, otherwise vLLM v1 is used. e.g., 0
   #   - enablePrefixCaching: (optional, bool) Enable prefix caching, e.g., false
   #   - enableChunkedPrefill: (optional, bool) Enable chunked prefill, e.g., false
-    - maxModelLen: 23296
+      maxModelLen: 23296
   #   - dtype: (optional, string) The data type, e.g., "bfloat16"
   #   - tensorParallelSize: (optional, int) The degree of tensor parallelism, e.g., 2
   #   - maxNumSeqs: (optional, int) Maximum number of sequences to be processed in a single iteration., e.g., 32
   #   - maxLoras: (optional, int) The maximum number of LoRA models to be loaded in a single batch, e.g., 4
-    - gpuMemoryUtilization: 0.87
+      gpuMemoryUtilization: 0.87
   #   - extraArgs: (optional, list) Extra command line arguments to pass to vLLM, e.g., ["--disable-log-requests"]
   #
   # - lmcacheConfig: (optional, map) The configuration of the LMCache for KV offloading, supported options are:
   #   - enabled: (optional, bool) Enable LMCache, e.g., true
   #   - cpuOffloadingBufferSize: (optional, string) The CPU offloading buffer size, e.g., "30"
   #
-  - hf_token:
+    hf_token:
   #   - A string containing the token directly (will be stored in a generated secret)
   #   - An object referencing an existing secret:
       secretName: "vllm"
@@ -111,7 +111,7 @@ servingEngineSpec:
   #
   # - nodeSelectorTerms: (optional, list) The node selector terms to match the nodes
   # - nodeName: (optional) Directly assigns a pod to a specific node (e.g., "192.168.56.5"). When both nodeName and nodeSelectorTerms are defined, the preference is given to nodeName.
-  - shmSize: "8Gi"
+    shmSize: "8Gi"
   # - enableLoRA: (optional, bool) Whether to enable LoRA, e.g., true
   #
   # Example:
