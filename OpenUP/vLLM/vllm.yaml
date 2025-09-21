@@ -74,7 +74,6 @@ spec:
         app.kubernetes.io/version: 1.0.0
         app.kubernetes.io/name: vllm
     spec:
-      runtimeClassName: nvidia
       hostIPC: true
       containers:
         - env:
