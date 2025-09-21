@@ -1,13 +1,22 @@
 servingEngineSpec:
-  runtimeClassName: ""
+  runtimeClassName: "nvidia"
   modelSpec:
-  - name: "opt125m"
+  - name: "Mistral-7B-Instruct-v0.3-GPTQ-4bit"
     repository: "vllm/vllm-openai"
     tag: "latest"
-    modelURL: "facebook/opt-125m"
+    modelURL: "neuralmagic/Mistral-7B-Instruct-v0.3-GPTQ-4bit"
+  - vllmConfig:
+    - maxModelLen: 23296
+    - gpuMemoryUtilization: 0.87
+    - hf_token:
+        secretName: "vllm"
+        secretKey: "hf-token"
+    - shmSize: "8Gi"
 
     replicaCount: 1
 
     requestCPU: 2
     requestMemory: "8Gi"
     requestGPU: 1
+  routerSpec:
+    enableRouter: false
