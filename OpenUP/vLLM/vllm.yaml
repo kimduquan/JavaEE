@@ -71,6 +71,7 @@ spec:
         app.kubernetes.io/name: vllm
     spec:
       runtimeClassName: nvidia
+      hostIPC: true
       containers:
         - env:
             - name: KUBERNETES_NAMESPACE
@@ -85,7 +86,6 @@ spec:
           image: vllm/vllm-openai:latest
           imagePullPolicy: IfNotPresent
           name: vllm
-          hostIPC: true
           resources:
             limits:
               nvidia.com/gpu: 1
