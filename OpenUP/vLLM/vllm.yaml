@@ -1,0 +1,111 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+  labels:
+    app.kubernetes.io/name: vllm
+    app.kubernetes.io/version: 1.0.0
+  name: vllm
+spec:
+  ports:
+    - name: http
+      port: 8000
+      protocol: TCP
+      targetPort: 8000
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+  labels:
+    app.kubernetes.io/name: vllm
+    app.kubernetes.io/version: 1.0.0
+  name: vllm
+spec:
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: "Retain"
+  storageClassName: "hostpath"
+  hostPath:
+    path: "/var/lib/k8s-pvs/vllm"
+    type: ""
+  capacity:  
+    storage: 50Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+  labels:
+    app.kubernetes.io/name: vllm
+    app.kubernetes.io/version: 1.0.0
+  name: vllm
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: "50Gi"
+  volumeName: "vllm"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+  labels:
+    app.kubernetes.io/name: vllm
+    app.kubernetes.io/version: 1.0.0
+  name: vllm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/version: 1.0.0
+      app.kubernetes.io/name: vllm
+  template:
+    metadata:
+      annotations:
+      labels:
+        app.kubernetes.io/version: 1.0.0
+        app.kubernetes.io/name: vllm
+    spec:
+      runtimeClassName: nvidia
+      containers:
+        - env:
+            - name: KUBERNETES_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: HUGGING_FACE_HUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: vllm
+                  key: hf-token
+          image: vllm/vllm-openai:latest
+          imagePullPolicy: IfNotPresent
+          name: vllm
+          hostIPC: true
+          resources:
+            limits:
+              nvidia.com/gpu: 1
+          args:
+            - "--model"
+            - "neuralmagic/Mistral-7B-Instruct-v0.3-GPTQ-4bit"
+            - "--gpu-memory-utilization"
+            - "0.87"
+            - "--max_model_len"
+            - "23296"
+          ports:
+            - containerPort: 8000
+              name: http
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /root/.cache/huggingface
+              name: vllm
+              readOnly: false
+      volumes:
+        - name: vllm
+          persistentVolumeClaim:
+            claimName: vllm
+            readOnly: false
