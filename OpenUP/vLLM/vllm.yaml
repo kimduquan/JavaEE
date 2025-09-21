@@ -104,8 +104,14 @@ spec:
             - mountPath: /root/.cache/huggingface
               name: vllm
               readOnly: false
+            - mountPath: /dev/shm
+              name: shm-size
       volumes:
         - name: vllm
           persistentVolumeClaim:
             claimName: vllm
             readOnly: false
+        - name: shm-size
+          emptyDir:
+            medium: Memory
+            sizeLimit: 8Gi
