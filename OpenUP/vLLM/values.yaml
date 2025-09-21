@@ -5,6 +5,13 @@ servingEngineSpec:
     repository: "vllm/vllm-openai"
     tag: "latest"
     modelURL: "neuralmagic/Mistral-7B-Instruct-v0.3-GPTQ-4bit"
+
+    replicaCount: 1
+
+    requestCPU: 2
+    requestMemory: "8Gi"
+    requestGPU: 1
+
   - vllmConfig:
     - maxModelLen: 23296
     - gpuMemoryUtilization: 0.87
@@ -12,11 +19,5 @@ servingEngineSpec:
         secretName: "vllm"
         secretKey: "hf-token"
     - shmSize: "8Gi"
-
-    replicaCount: 1
-
-    requestCPU: 2
-    requestMemory: "8Gi"
-    requestGPU: 1
   routerSpec:
     enableRouter: false
