@@ -15,6 +15,7 @@ servingEngineSpec:
   #     secretKey: "vllm-api-key"
   #
   modelSpec:
+  - name: "mistral"
   # Each entry in the modelSpec array should contain the following fields:
     annotations:
       model: "mistral"
@@ -22,7 +23,6 @@ servingEngineSpec:
   # - priorityClassName: (Optional, string) The name of the priority class name for the deployment, e.g., "high-priority"
     podAnnotations:
       model: "mistral"
-  - name: "mistral"
     repository: "lmcache/vllm-openai"
     tag: "latest"
   # - imagePullSecret: (Optional, string) Name of secret with credentials to private container repository, e.g. "secret"
