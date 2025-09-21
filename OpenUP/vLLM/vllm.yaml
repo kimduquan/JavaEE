@@ -13,6 +13,10 @@ spec:
       port: 8000
       protocol: TCP
       targetPort: 8000
+  selector:
+    app.kubernetes.io/name: vllm
+    app.kubernetes.io/version: 1.0.0
+  type: ClusterIP
 ---
 apiVersion: v1
 kind: PersistentVolume
