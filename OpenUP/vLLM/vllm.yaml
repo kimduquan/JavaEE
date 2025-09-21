@@ -86,9 +86,9 @@ spec:
           image: vllm/vllm-openai:latest
           imagePullPolicy: IfNotPresent
           name: vllm
-          resources:
-            limits:
-              nvidia.com/gpu: 1
+          # resources:
+          #   limits:
+          #     nvidia.com/gpu: 1
           args:
             - "--model"
             - "neuralmagic/Mistral-7B-Instruct-v0.3-GPTQ-4bit"
