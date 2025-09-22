@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -68,15 +67,18 @@ public class Persistence {
     @Inject
     transient EntityManager manager;
     
-    @PostConstruct
-	protected void postConstruct() {
-		final List<Class<?>> entityClasses = manager.getMetamodel().getEntities().stream().map(entity -> entity.getJavaType()).collect(Collectors.toList());
-		schemaUtil = new SchemaUtil(entityClasses);
-	}
+    protected void initSchemaUtil()  {
+    	if(schemaUtil == null) {
+    		final List<Class<?>> entityClasses = manager.getMetamodel().getEntities().stream().map(entity -> entity.getJavaType()).collect(Collectors.toList());
+    		schemaUtil = new SchemaUtil(entityClasses);
+    	}
+    }
 	
 	@PreDestroy
 	protected void preDestroy() {
-		schemaUtil.clear();
+		if(schemaUtil != null) {
+			schemaUtil.clear();
+		}
 	}
     
     @POST
@@ -128,7 +130,7 @@ public class Persistence {
         transaction.setId(headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER));
         transaction.setEvent(entityEvent);
         transaction.setDiff(JsonUtil.toString(diff.toJsonArray()));
-        
+        initSchemaUtil();
         final Optional<Field> entityIdField = schemaUtil.getEntityIdField(transactionEntity.getClass());
         final Object entityId = entityIdField.get().get(transactionEntity);
     	transaction.setEntityId(entityId);
