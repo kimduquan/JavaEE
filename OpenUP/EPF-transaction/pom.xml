@@ -29,7 +29,7 @@
     </dependencies>
   </dependencyManagement>
   <dependencies>
-	<dependency>
+    <dependency>
       <groupId>org.jboss.narayana.lra</groupId>
       <artifactId>lra-coordinator-jar</artifactId>
     </dependency>
