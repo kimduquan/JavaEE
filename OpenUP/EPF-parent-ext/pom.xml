@@ -16,7 +16,6 @@
 		<quarkus.platform.version>3.26.4</quarkus.platform.version>
 		<skipITs>true</skipITs>
 		<surefire-plugin.version>3.5.3</surefire-plugin.version>
-		<narayana.version>7.2.1.Final</narayana.version>
 	</properties>
   <dependencyManagement>
     <dependencies>
@@ -63,11 +62,11 @@
 		    <artifactId>langchain4j-ollama</artifactId>
 		    <version>0.36.2</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.jboss.narayana.rts/lra-coordinator-jar -->
+		<!-- https://mvnrepository.com/artifact/org.jboss.narayana.lra/lra-coordinator-jar -->
 		<dependency>
-			<groupId>org.jboss.narayana.rts</groupId>
+			<groupId>org.jboss.narayana.lra</groupId>
 			<artifactId>lra-coordinator-jar</artifactId>
-			<version>7.1.0.Final</version>
+			<version>1.0.2.Final</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.graphql-java/graphql-java -->
 		<dependency>
