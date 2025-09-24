@@ -2,6 +2,7 @@ package epf.persistence;
 
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -137,7 +138,8 @@ public class Persistence {
     	
         cache.put(transaction);
         
-        return Response.ok(JsonUtil.toString(entity)).build();
+        final String entityUri = "/" + Naming.PERSISTENCE + "/" + entitySchema.get() + "/" + entityType.get().getName() + "/" + entityId;
+        return Response.created(URI.create(entityUri)).entity(JsonUtil.toString(entity)).build();
     }
     
     @PUT
