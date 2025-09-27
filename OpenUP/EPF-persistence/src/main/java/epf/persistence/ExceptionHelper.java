@@ -66,7 +66,7 @@ public class ExceptionHelper implements ExceptionMapper<Exception>, Serializable
     private static boolean map(final Throwable failure, final Response.ResponseBuilder builder){
     	boolean map = false;
         if(failure instanceof SQLException) {
-        	final SQLException sqlException = (SQLException) failure.getCause();
+        	final SQLException sqlException = (SQLException) failure;
         	final String sqlState = sqlException.getSQLState();
         	map = true;
         	if(isConnectionException(sqlState)) {
