@@ -11,7 +11,7 @@ public class EntityEvent implements Serializable {
 	
 	private Long time;
 	
-	private String tenant;
+	private String organization;
 	
 	private String schema;
 	
@@ -22,7 +22,7 @@ public class EntityEvent implements Serializable {
 	
 	@Override
 	public String toString() {
-		return String.format("[%dms]%s/%s", Instant.now().toEpochMilli() - time, getClass().getName(), entity);
+		return String.format("[%dms]%s/%s/%s", Instant.now().toEpochMilli() - time, schema, name, entity);
 	}
 
 	public Object getEntity() {
@@ -41,14 +41,6 @@ public class EntityEvent implements Serializable {
 		this.time = time;
 	}
 
-	public String getTenant() {
-		return tenant;
-	}
-
-	public void setTenant(final String tenant) {
-		this.tenant = tenant;
-	}
-
 	public String getSchema() {
 		return schema;
 	}
@@ -63,5 +55,13 @@ public class EntityEvent implements Serializable {
 
 	public void setName(final String name) {
 		this.name = name;
+	}
+
+	public String getOrganization() {
+		return organization;
+	}
+
+	public void setOrganization(final String organization) {
+		this.organization = organization;
 	}
 }

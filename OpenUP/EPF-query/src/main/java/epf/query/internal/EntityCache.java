@@ -52,24 +52,24 @@ public class EntityCache implements HealthCheck {
 	public void accept(final EntityEvent event) {
 		final Optional<EntityKey> key = schemaCache.getKey(event.getEntity());
 		if(key.isPresent()) {
-			manager.getEntityCache(event.getTenant()).remove(key.get().toString());
+			manager.getEntityCache(event.getOrganization()).remove(key.get().toString());
 		}
 	}
 	
 	public Optional<Object> getEntity(
-			final String tenant,
+			final String organizationId,
 			final String schema,
             final String entity,
             final String entityId
             ) {
 		final EntityKey key = schemaCache.getKey(schema, entity, entityId);
-		return Optional.ofNullable(manager.getEntityCache(tenant).get(key.toString()));
+		return Optional.ofNullable(manager.getEntityCache(organizationId).get(key.toString()));
 	}
 	
-	public List<Object> getEntities(final String tenant, final List<EntityId> entityIds){
+	public List<Object> getEntities(final String organizationId, final List<EntityId> entityIds){
 		final List<EntityKey> entityKeys = entityIds.stream().map(key -> schemaCache.getSearchKey(key)).collect(Collectors.toList());
 		final List<String> keys = entityKeys.stream().map(EntityKey::toString).collect(Collectors.toList());
-		final Map<String, Object> values = manager.getEntityCache(tenant).getAll(keys.stream().collect(Collectors.toSet()));
+		final Map<String, Object> values = manager.getEntityCache(organizationId).getAll(keys.stream().collect(Collectors.toSet()));
 		final List<Object> result = new ArrayList<>();
 		keys.forEach(key -> {
 			result.add(values.get(key));

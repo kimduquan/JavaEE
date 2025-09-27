@@ -3,6 +3,7 @@ package epf.persistence;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.URI;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -22,6 +23,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
@@ -31,10 +33,13 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.lra.annotation.Compensate;
 import org.eclipse.microprofile.lra.annotation.Forget;
 import org.eclipse.microprofile.lra.annotation.ParticipantStatus;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
+
+import epf.management.util.OrganizationUtil;
 import epf.naming.Naming;
 import epf.persistence.cache.TransactionCache;
 import epf.persistence.event.TransactionEvent;
@@ -98,9 +103,12 @@ public class Persistence {
             final String name,
             @Context
             final HttpHeaders headers,
+            @Context 
+            final JsonWebToken jwt,
             @NotNull
             final InputStream body
             ) throws Exception {
+    	final String organizationId = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
     	final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), name);
     	if(!entityType.isPresent()) {
     		return Response.status(Response.Status.NOT_FOUND).build();
@@ -126,7 +134,12 @@ public class Persistence {
         
         final Object transactionEntity = entity;
         final PostPersist entityEvent = new PostPersist();
+        entityEvent.setTime(Instant.now().toEpochMilli());
         entityEvent.setEntity(transactionEntity);
+        entityEvent.setName(entityType.get().getName());
+        entityEvent.setSchema(entitySchema.get());
+        entityEvent.setOrganization(organizationId);
+        
         final EntityTransaction transaction = new EntityTransaction();
         transaction.setId(headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER));
         transaction.setEvent(entityEvent);
@@ -160,9 +173,12 @@ public class Persistence {
             final String id,
             @Context
             final HttpHeaders headers,
+            @Context 
+            final JsonWebToken jwt,
             @NotNull
             final InputStream body
             ) throws Exception {
+    	final String organizationId = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
     	final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), name);
     	if(!entityType.isPresent()) {
     		return Response.status(Response.Status.NOT_FOUND).build();
@@ -197,7 +213,12 @@ public class Persistence {
         
     	final Object transactionEntity = entityObject;
         final PostUpdate entityEvent = new PostUpdate();
+        entityEvent.setTime(Instant.now().toEpochMilli());
         entityEvent.setEntity(transactionEntity);
+        entityEvent.setName(entityType.get().getName());
+        entityEvent.setSchema(entitySchema.get());
+        entityEvent.setOrganization(organizationId);
+        
         final EntityTransaction transaction = new EntityTransaction();
         transaction.setId(headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER));
         transaction.setEvent(entityEvent);
@@ -231,8 +252,11 @@ public class Persistence {
             @NotBlank
             final String id,
             @Context
-            final HttpHeaders headers
+            final HttpHeaders headers,
+            @Context 
+            final JsonWebToken jwt
             ) throws Exception {
+    	final String organizationId = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
     	final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), name);
     	if(!entityType.isPresent()) {
     		return Response.status(Response.Status.NOT_FOUND).build();
@@ -262,7 +286,12 @@ public class Persistence {
     	
     	final Object transactionEntity = entityObject;
         final PostRemove entityEvent = new PostRemove();
+        entityEvent.setTime(Instant.now().toEpochMilli());
         entityEvent.setEntity(transactionEntity);
+        entityEvent.setName(entityType.get().getName());
+        entityEvent.setSchema(entitySchema.get());
+        entityEvent.setOrganization(organizationId);
+        
         final EntityTransaction transaction = new EntityTransaction();
         transaction.setId(headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER));
         transaction.setEvent(entityEvent);

@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HEAD;
 import jakarta.ws.rs.NotFoundException;
@@ -23,6 +24,7 @@ import jakarta.ws.rs.core.Response.ResponseBuilder;
 import jakarta.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import epf.management.util.OrganizationUtil;
 import epf.management.util.TenantUtil;
 import epf.naming.Naming;
 import epf.naming.Naming.Query.Client;
@@ -49,9 +51,6 @@ public class Query {
 	@Inject
 	transient Search search;
 	
-	@Inject
-	transient JsonWebToken jwt;
-	
 	@GET
     @Path(Naming.Query.Client.ENTITY_PATH)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -68,10 +67,12 @@ public class Query {
             @PathParam(Naming.Query.Client.ID)
             @NotNull
             @NotBlank
-            final String entityId
+            final String entityId,
+            @Context
+            final JsonWebToken jwt
             ) {
-		final String tenant = TenantUtil.getTenantId(jwt);
-		final Optional<Object> entity = entityCache.getEntity(tenant, schema, name, entityId);
+		final String organizationId = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
+		final Optional<Object> entity = entityCache.getEntity(organizationId, schema, name, entityId);
 		return Response.ok(entity.orElseThrow(NotFoundException::new)).build();
 	}
 
@@ -86,10 +87,12 @@ public class Query {
             @PathParam(Naming.Query.Client.ENTITY)
             @NotNull
             @NotBlank
-            final String entity
+            final String entity,
+            @Context
+            final JsonWebToken jwt
             ) {
-		final String tenant = TenantUtil.getTenantId(jwt);
-		final Optional<Integer> count = queryCache.countEntity(tenant, schema, entity);
+		final String organizationId = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
+		final Optional<Integer> count = queryCache.countEntity(organizationId, schema, entity);
 		if(count.isPresent()) {
 			return Response.ok().header(Client.ENTITY_COUNT, count.get()).build();
 		}
@@ -112,12 +115,14 @@ public class Query {
             final Integer maxResults,
             @Context
             final SecurityContext context,
+            @Context
+            final JsonWebToken jwt,
             @QueryParam(Naming.Query.Client.SORT)
     		final List<String> sort
             ) throws Exception {
 		if(!paths.isEmpty()) {
-			final String tenant = TenantUtil.getTenantId(jwt);
-			final List<?> resultList = persistence.executeQuery(tenant, paths, firstResult, maxResults, context, sort);
+			final String organizationId = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
+			final List<?> resultList = persistence.executeQuery(organizationId, paths, firstResult, maxResults, context, sort);
 			return Response.ok(resultList).header(Client.ENTITY_COUNT, resultList.size()).build();
 		}
 		throw new NotFoundException();
@@ -133,11 +138,13 @@ public class Query {
             @PathParam("criteria")
             final List<PathSegment> paths,
             @Context
-            final SecurityContext context
+            final SecurityContext context,
+            @Context
+            final JsonWebToken jwt
             ) throws Exception {
 		if(!paths.isEmpty()) {
-			final String tenant = TenantUtil.getTenantId(jwt);
-			final Object count = persistence.executeCountQuery(tenant, paths, context);
+			final String organizationId = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
+			final Object count = persistence.executeCountQuery(organizationId, paths, context);
 	    	return Response.ok().header(Client.ENTITY_COUNT, count).build();
 		}
 		throw new NotFoundException();
@@ -149,9 +156,11 @@ public class Query {
     @Produces(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
     public Response fetchEntities(
+    		@Context
+            final JsonWebToken jwt,
     		final List<EntityId> entityIds) {
-		final String tenant = TenantUtil.getTenantId(jwt);
-		final List<Object> entities = entityCache.getEntities(tenant, entityIds);
+		final String organizationId = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
+		final List<Object> entities = entityCache.getEntities(organizationId, entityIds);
 		ResponseBuilder response = Response.ok(entities).header(Client.ENTITY_COUNT, entities.size());
 		response = LinkUtil.links(response, "", entityIds);
 		return response.build();

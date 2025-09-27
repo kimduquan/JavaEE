@@ -53,17 +53,17 @@ public class QueryCache implements HealthCheck {
 		final Optional<QueryKey> queryKey = schemaCache.getQueryKey(event.getEntity().getClass());
 		if(queryKey.isPresent()) {
 			final String key = queryKey.get().toString();
-			manager.getQueryCache(event.getTenant()).remove(key);
+			manager.getQueryCache(event.getOrganization()).remove(key);
 		}
 	}
 	
 	public Optional<Integer> countEntity(
-			final String tenant,
+			final String organizationId,
 			final String schema,
             final String entity
             ) {
 		final QueryKey queryKey = schemaCache.getQueryKey(schema, entity);
-		return Optional.ofNullable(manager.getQueryCache(tenant).get(queryKey.toString()));
+		return Optional.ofNullable(manager.getQueryCache(organizationId).get(queryKey.toString()));
 	}
 
 	@Override
