@@ -26,5 +26,11 @@
 		    <artifactId>agroal-api</artifactId>
 		    <scope>provided</scope>
 		</dependency>
+		
+		<dependency>
+			<groupId>openup</groupId>
+			<artifactId>EPF-management-utility</artifactId>
+			<version>${project.version}</version>
+		</dependency>
     </dependencies>
 </project>

@@ -5,7 +5,7 @@ import jakarta.ws.rs.ext.Provider;
 import epf.persistence.util.SQLStateExceptionMapper;
 
 @Provider
-public class ExceptionHelper extends SQLStateExceptionMapper implements ExceptionMapper<Exception> {
+public class PersistenceExceptionMapper extends SQLStateExceptionMapper implements ExceptionMapper<Exception> {
 
     private static final long serialVersionUID = 1L;
 }

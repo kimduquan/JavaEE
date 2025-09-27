@@ -733,6 +733,9 @@ public interface Naming {
 		 * @author PC
 		 *
 		 */
+		/**
+		 * 
+		 */
 		interface Internal {
 			/**
 			 * 
@@ -743,6 +746,16 @@ public interface Naming {
 			 * 
 			 */
 			String TRANSACTION_CACHE = "epf-persistence-transaction-cache";
+			
+			/**
+			 * 
+			 */
+			String JDBC_URL_FORMAT = "epf.datasource.jdbc.url.format";
+			
+			/**
+			 * 
+			 */
+			String CONNECTION_POOL_SIZE = "epf.datasource.connection.pool.size";
 		}
 	}
 	

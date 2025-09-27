@@ -1,4 +1,4 @@
-package epf.persistence.internal;
+package epf.persistence.util;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

@@ -1,6 +1,8 @@
 package epf.persistence.internal;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import epf.naming.Naming;
+import epf.persistence.util.OrganizationConnectionResolver;
 import io.agroal.api.AgroalDataSource;
 import io.agroal.api.configuration.AgroalDataSourceConfiguration;
 import io.agroal.api.transaction.TransactionIntegration;
@@ -19,11 +21,11 @@ import jakarta.transaction.TransactionSynchronizationRegistry;
 public class PersistenceConnectionResolver extends OrganizationConnectionResolver<QuarkusConnectionProvider> implements TenantConnectionResolver {
 	
 	@Inject
-    @ConfigProperty(name = "epf.datasource.jdbc.url.format")
+    @ConfigProperty(name = Naming.Persistence.Internal.JDBC_URL_FORMAT)
 	String jdbcUrlFormat;
 	
 	@Inject
-    @ConfigProperty(name = "epf.datasource.connection.pool.size")
+    @ConfigProperty(name = Naming.Persistence.Internal.CONNECTION_POOL_SIZE)
 	int connectionPoolSize;
 	
 	@Inject
