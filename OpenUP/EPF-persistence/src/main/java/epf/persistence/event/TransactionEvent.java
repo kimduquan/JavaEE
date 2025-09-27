@@ -1,7 +1,7 @@
 package epf.persistence.event;
 
 import java.io.Serializable;
-import epf.persistence.internal.EntityTransaction;
+import epf.schema.utility.EntityTransaction;
 
 public class TransactionEvent implements Serializable {
 

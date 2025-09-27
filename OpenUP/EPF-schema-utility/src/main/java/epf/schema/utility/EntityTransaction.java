@@ -1,8 +1,7 @@
-package epf.persistence.internal;
+package epf.schema.utility;
 
 import java.io.Serializable;
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
-import epf.schema.utility.EntityEvent;
 import epf.util.json.ext.Adapter;
 
 public class EntityTransaction implements Serializable {

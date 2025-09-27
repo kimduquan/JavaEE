@@ -23,7 +23,7 @@ import jakarta.transaction.TransactionSynchronizationRegistry;
 
 @ApplicationScoped
 @PersistenceUnitExtension
-public class EntityTenantConnectionResolver implements TenantConnectionResolver {
+public class PersistenceConnectionResolver implements TenantConnectionResolver {
 	
 	private final Map<String, QuarkusConnectionProvider> connectionProviders = new ConcurrentHashMap<>();
 	

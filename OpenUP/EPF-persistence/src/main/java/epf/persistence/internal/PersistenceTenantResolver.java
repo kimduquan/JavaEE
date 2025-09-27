@@ -9,7 +9,7 @@ import io.quarkus.hibernate.orm.runtime.tenant.TenantResolver;
 
 @RequestScoped
 @PersistenceUnitExtension
-public class EntityTenantResolver extends OrganizationTenantResolver implements TenantResolver {
+public class PersistenceTenantResolver extends OrganizationTenantResolver implements TenantResolver {
 	
 	@Inject
     JsonWebToken jwt;

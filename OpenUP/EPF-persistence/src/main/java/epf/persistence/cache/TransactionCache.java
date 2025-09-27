@@ -3,7 +3,7 @@ package epf.persistence.cache;
 import java.util.Objects;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import epf.persistence.internal.EntityTransaction;
+import epf.schema.utility.EntityTransaction;
 import epf.util.json.ext.Decoder;
 import epf.util.json.ext.Encoder;
 
