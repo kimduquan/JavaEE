@@ -25,7 +25,6 @@ import jakarta.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.management.util.OrganizationUtil;
-import epf.management.util.TenantUtil;
 import epf.naming.Naming;
 import epf.naming.Naming.Query.Client;
 import epf.query.client.EntityId;

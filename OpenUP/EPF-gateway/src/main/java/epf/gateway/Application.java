@@ -111,7 +111,7 @@ public class Application {
             final UriInfo uriInfo,
             final jakarta.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-    	if(jwt != null && !security.authenticate(jwt, uriInfo)) {
+    	if(jwt != null && !security.authenticate(jwt)) {
     		throw new NotAuthorizedException(Response.status(Status.UNAUTHORIZED));
     	}
     	final URI serviceUrl = registry.lookup(service).orElseThrow(NotFoundException::new);

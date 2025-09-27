@@ -26,19 +26,19 @@ public class CachingManager {
 	
 	private transient final Map<String, Cache<String, Integer>> queryCaches = new ConcurrentHashMap<>();
 
-	public Cache<String, Object> getEntityCache(final String tenant){
-		return entityCaches.computeIfAbsent(tenant != null ? String.join("-", Naming.ENTITY_CACHE, tenant) : Naming.ENTITY_CACHE, cacheName -> {
+	public Cache<String, Object> getEntityCache(final String organizationId){
+		return entityCaches.computeIfAbsent(organizationId != null ? String.join("-", Naming.ENTITY_CACHE, organizationId) : Naming.ENTITY_CACHE, cacheName -> {
 			final MutableConfiguration<String, Object> config = new MutableConfiguration<>();
-			config.setCacheLoaderFactory(FactoryBuilder.factoryOf(new Loader<>(tenant, new EventEmitter<EntityLoad>(entityLoad), EntityLoad::new)));
+			config.setCacheLoaderFactory(FactoryBuilder.factoryOf(new Loader<>(organizationId, new EventEmitter<EntityLoad>(entityLoad), EntityLoad::new)));
 			config.setReadThrough(true);
 			return Caching.getCachingProvider().getCacheManager().createCache(cacheName, config);
 		});
 	}
 	
-	public Cache<String, Integer> getQueryCache(final String tenant){
-		return queryCaches.computeIfAbsent(tenant != null ? String.join("-", Naming.QUERY_CACHE, tenant) : Naming.QUERY_CACHE, cacheName -> {
+	public Cache<String, Integer> getQueryCache(final String organizationId){
+		return queryCaches.computeIfAbsent(organizationId != null ? String.join("-", Naming.QUERY_CACHE, organizationId) : Naming.QUERY_CACHE, cacheName -> {
 			final MutableConfiguration<String, Integer> config = new MutableConfiguration<>();
-			config.setCacheLoaderFactory(FactoryBuilder.factoryOf(new Loader<>(tenant, new EventEmitter<QueryLoad>(queryLoad), QueryLoad::new)));
+			config.setCacheLoaderFactory(FactoryBuilder.factoryOf(new Loader<>(organizationId, new EventEmitter<QueryLoad>(queryLoad), QueryLoad::new)));
 			config.setReadThrough(true);
 			return Caching.getCachingProvider().getCacheManager().createCache(cacheName, config);
 		});

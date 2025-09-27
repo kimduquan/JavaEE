@@ -6,10 +6,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import jakarta.ws.rs.HEAD;
+import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.GET;
-import jakarta.ws.rs.MatrixParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -18,6 +19,8 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.health.Readiness;
+import org.eclipse.microprofile.jwt.JsonWebToken;
+import epf.management.util.OrganizationUtil;
 import epf.naming.Naming;
 import epf.query.client.EntityId;
 import epf.query.internal.SchemaCache;
@@ -40,15 +43,16 @@ public class Search {
     @Produces(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
     public Response search(
-    		@MatrixParam(Naming.Management.TENANT)
-    		final String tenant,
+    		@Context
+            final JsonWebToken jwt,
     		@QueryParam(Naming.Query.Client.TEXT)
     		final String text, 
     		@QueryParam(Naming.Query.Client.FIRST)
     		final Integer firstResult,
             @QueryParam(Naming.Query.Client.MAX)
     		final Integer maxResults) {
-		final Query query = createSearchQuery(FULLTEXT_SEARCH, tenant, text, maxResults != null ? maxResults : 0, firstResult != null ? firstResult : 0);
+		final String organizationId = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
+		final Query query = createSearchQuery(FULLTEXT_SEARCH, organizationId, text, maxResults != null ? maxResults : 0, firstResult != null ? firstResult : 0);
 		final List<?> resultList = query.getResultList();
 		final List<EntityId> entities = resultList.stream().map(this::toEntityId).filter(entityId -> entityId != null).collect(Collectors.toList());
 		//final FetchEntitiesFunction fetchFunc = new FetchEntitiesFunction();
@@ -59,11 +63,12 @@ public class Search {
 	@HEAD
 	@RunOnVirtualThread
     public Response count(
-    		@MatrixParam(Naming.Management.TENANT)
-    		final String tenant,
+    		@Context
+            final JsonWebToken jwt,
 			@QueryParam(Naming.Query.Client.TEXT)
 			final String text) {
-		final Query query = createSearchQuery(FULLTEXT_SEARCH_COUNT, tenant, text, 0, 0);
+		final String organizationId = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
+		final Query query = createSearchQuery(FULLTEXT_SEARCH_COUNT, organizationId, text, 0, 0);
 		final Long count = (Long) query.getSingleResult();
 		return Response.ok().header(Naming.Query.Client.ENTITY_COUNT, count).build();
 	}
@@ -101,8 +106,8 @@ public class Search {
 		return entityId;
 	}
 	
-	private Query createSearchQuery(final String query, final String tenant, final String text, final int maxResults, final int firstResult) {
-		final String filter = tenant == null ? "%" : "%_" + tenant;
+	private Query createSearchQuery(final String query, final String organizationId, final String text, final int maxResults, final int firstResult) {
+		final String filter = organizationId == null ? "%" : "%_" + organizationId;
 		return manager.createNativeQuery(query)
 				.setParameter(1, text)
 				.setParameter(2, maxResults)

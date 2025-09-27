@@ -151,8 +151,4 @@ public interface RequestUtil {
     static SseEventSource.Builder buildSource(final SseEventSource.Builder builder){
     	return builder;
     }
-    
-    static Optional<String> getTenant(final UriInfo uriInfo){
-    	return Optional.ofNullable(uriInfo.getPathSegments().get(0).getMatrixParameters().getFirst(Naming.Management.TENANT));
-    }
 }

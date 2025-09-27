@@ -45,12 +45,12 @@ public class Security {
 		return tokenId;
 	}
 	
-	public Response authenticate(final Client client, final URI securityUrl, final Optional<String> tenant, final String token) {
+	public Response authenticate(final Client client, final URI securityUrl, final Optional<String> organizationId, final String token) {
 		final StringBuilder builder = new StringBuilder();
 		builder.append("Bearer ").append(token);
 		WebTarget target = client.target(securityUrl);
-		if(tenant.isPresent()) {
-			target = target.matrixParam(Naming.Management.TENANT, tenant);
+		if(organizationId.isPresent()) {
+			target = target.matrixParam(Naming.Management.ORGANIZATION, organizationId);
 		}
 		return target.request(MediaType.APPLICATION_JSON_TYPE)
 				.header(HttpHeaders.AUTHORIZATION, builder.toString())
