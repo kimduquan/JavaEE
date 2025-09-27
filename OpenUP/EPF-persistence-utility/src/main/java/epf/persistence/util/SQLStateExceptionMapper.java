@@ -14,7 +14,7 @@ public class SQLStateExceptionMapper implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private static boolean checkSQLState(final String sqlState, final String sqlStateClass) {
-		final String prefix = sqlStateClass.substring(2);
+		final String prefix = sqlStateClass.substring(0, 2);
 		return sqlState.startsWith(prefix);
 	}
     
