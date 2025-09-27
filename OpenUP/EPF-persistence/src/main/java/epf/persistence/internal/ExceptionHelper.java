@@ -1,6 +1,5 @@
-package epf.persistence;
+package epf.persistence.internal;
 
-import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 import epf.persistence.util.SQLStateExceptionMapper;

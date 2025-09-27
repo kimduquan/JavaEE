@@ -68,7 +68,7 @@ public class SQLStateExceptionMapper implements Serializable {
         return map;
     }
     
-    public Response toException(final Exception failure){
+    public Response toResponse(final Exception failure){
     	final ResponseBuilder builder = Response.serverError();
     	if(failure != null){
         	Throwable rootCause = failure;

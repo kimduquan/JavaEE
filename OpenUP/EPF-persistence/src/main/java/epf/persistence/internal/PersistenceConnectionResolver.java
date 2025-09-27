@@ -1,16 +1,9 @@
 package epf.persistence.internal;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
-import epf.management.util.OrganizationUtil;
 import io.agroal.api.AgroalDataSource;
-import io.agroal.api.configuration.AgroalConnectionPoolConfiguration.TransactionRequirement;
 import io.agroal.api.configuration.AgroalDataSourceConfiguration;
-import io.agroal.api.configuration.supplier.AgroalDataSourceConfigurationSupplier;
-import io.agroal.api.security.NamePrincipal;
-import io.agroal.api.security.SimplePassword;
+import io.agroal.api.transaction.TransactionIntegration;
 import io.agroal.narayana.NarayanaTransactionIntegration;
 import io.agroal.pool.DataSource;
 import io.quarkus.hibernate.orm.PersistenceUnitExtension;
@@ -23,13 +16,11 @@ import jakarta.transaction.TransactionSynchronizationRegistry;
 
 @ApplicationScoped
 @PersistenceUnitExtension
-public class PersistenceConnectionResolver implements TenantConnectionResolver {
-	
-	private final Map<String, QuarkusConnectionProvider> connectionProviders = new ConcurrentHashMap<>();
+public class PersistenceConnectionResolver extends OrganizationConnectionResolver<QuarkusConnectionProvider> implements TenantConnectionResolver {
 	
 	@Inject
     @ConfigProperty(name = "epf.datasource.jdbc.url.format")
-	String format;
+	String jdbcUrlFormat;
 	
 	@Inject
     @ConfigProperty(name = "epf.datasource.connection.pool.size")
@@ -42,24 +33,27 @@ public class PersistenceConnectionResolver implements TenantConnectionResolver {
     transient TransactionSynchronizationRegistry transactionSynchronizationRegistry;
 
 	@Override
-	public ConnectionProvider resolve(final String tenantId) {
-		return connectionProviders.computeIfAbsent(tenantId, orgnanizationId -> {
-			final String database = OrganizationUtil.getDefaultPersistenceDatabase(orgnanizationId);
-			final String userName = OrganizationUtil.getDefaultPersistenceUserName(orgnanizationId);
-			final String password = OrganizationUtil.getDefaultPersistencePassword(orgnanizationId);
-			final String jdbcUrl = String.format(format, database);
-			final AgroalDataSourceConfigurationSupplier supplier = new AgroalDataSourceConfigurationSupplier();
-			supplier.connectionPoolConfiguration()
-			.maxSize(connectionPoolSize)
-			.transactionIntegration(new NarayanaTransactionIntegration(transactionManager, transactionSynchronizationRegistry))
-			.transactionRequirement(TransactionRequirement.STRICT)
-			.connectionFactoryConfiguration()
-			.credential(new NamePrincipal(userName + "." + orgnanizationId))
-			.credential(new SimplePassword(password))
-			.jdbcUrl(jdbcUrl);
-			final AgroalDataSourceConfiguration config = supplier.get();
-			final AgroalDataSource dataSource = new DataSource(config);
-			return new QuarkusConnectionProvider(dataSource);
-		});
+	protected TransactionIntegration newTransactionIntegration() {
+		return new NarayanaTransactionIntegration(transactionManager, transactionSynchronizationRegistry);
+	}
+
+	@Override
+	protected AgroalDataSource newDataSource(final AgroalDataSourceConfiguration config) {
+		return new DataSource(config);
+	}
+
+	@Override
+	protected QuarkusConnectionProvider newConnection(final AgroalDataSource dataSource) {
+		return new QuarkusConnectionProvider(dataSource);
+	}
+
+	@Override
+	protected String getJdbcUrlFormat() {
+		return jdbcUrlFormat;
+	}
+
+	@Override
+	protected int getConnectionPoolSize() {
+		return connectionPoolSize;
 	}
 }
