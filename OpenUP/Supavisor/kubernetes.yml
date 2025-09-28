@@ -35,7 +35,7 @@ metadata:
     app.kubernetes.io/version: 1.0.0
   name: supavisor
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: supavisor
