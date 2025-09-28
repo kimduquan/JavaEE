@@ -507,6 +507,11 @@ public interface Naming {
 		/**
 		 * 
 		 */
+		String SESSION = "session";
+		
+		/**
+		 * 
+		 */
 		String ORGANIZATION_MANAGEMENT = "epf-management-organization";
 		
 		/**

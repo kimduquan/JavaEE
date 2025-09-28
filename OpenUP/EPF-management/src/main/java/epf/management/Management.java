@@ -3,10 +3,9 @@ package epf.management;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.SecurityContext;
 import java.util.Optional;
 import org.eclipse.microprofile.jwt.Claims;
 import org.eclipse.microprofile.jwt.JsonWebToken;
@@ -24,12 +23,12 @@ public class Management {
 	@Inject
 	transient OrganizationManagement organizationManagement;
 	
-	@GET
+	@POST
+	@Path(Naming.Management.SESSION)
 	@RolesAllowed(Naming.Security.DEFAULT_ROLE)
 	@RunOnVirtualThread
-	public Session authenticate(@Context final SecurityContext security) throws Exception {
+	public Session newSession(@Context final JsonWebToken jwt) throws Exception {
 		final Principal principal = new Principal();
-		final JsonWebToken jwt = (JsonWebToken) security.getUserPrincipal();
 		principal.setAddress((String) jwt.claim(Claims.address).orElse(null));
 		principal.setBirthdate((String) jwt.claim(Claims.birthdate).orElse(null));
 		principal.setEmail((String) jwt.claim(Claims.email).orElse(null));

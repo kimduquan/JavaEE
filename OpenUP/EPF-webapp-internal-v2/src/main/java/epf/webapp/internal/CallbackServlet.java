@@ -38,7 +38,7 @@ public abstract class CallbackServlet extends HttpServlet {
     	final OpenIdContext context = getContext();
         if (context != null) {
         	final ManagementClient management = getManagement();
-        	final Session session = management.authenticate();
+        	final Session session = management.newSession();
         	final boolean isFirstTimeLogin = context.getAccessToken().getClaim(Naming.Management.ORGANIZATION) == null;
         	final Optional<String> originalRequest = context.getStoredValue(request, response, OpenIdConstant.ORIGINAL_REQUEST);
         	if(isFirstTimeLogin) {

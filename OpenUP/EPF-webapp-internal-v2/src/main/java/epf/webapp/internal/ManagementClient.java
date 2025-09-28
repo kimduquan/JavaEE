@@ -2,7 +2,7 @@ package epf.webapp.internal;
 
 import epf.management.schema.Session;
 import epf.naming.Naming;
-import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
@@ -10,7 +10,8 @@ import jakarta.ws.rs.core.MediaType;
 @Path(Naming.MANAGEMENT)
 public interface ManagementClient {
 
-	@GET
+	@POST
+	@Path(Naming.Management.SESSION)
 	@Produces(MediaType.APPLICATION_JSON)
-	Session authenticate();
+	Session newSession();
 }
