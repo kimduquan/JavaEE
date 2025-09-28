@@ -8,13 +8,13 @@ public class EPFEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Transient
-	private String tenant;
+	private String organization;
 
-	public String getTenant() {
-		return tenant;
+	public String getOrganization() {
+		return organization;
 	}
 
-	public void setTenant(final String tenant) {
-		this.tenant = tenant;
+	public void setOrganization(String organization) {
+		this.organization = organization;
 	}
 }

@@ -26,8 +26,8 @@ public class EntityListener {
 		event.setTime(Instant.now().toEpochMilli());
 		if(entity instanceof EPFEntity) {
 			EPFEntity epfEntity = (EPFEntity) entity;
-			event.setTenant(epfEntity.getTenant());
-			epfEntity.setTenant(null);
+			event.setOrganization(epfEntity.getOrganization());
+			epfEntity.setOrganization(null);
 		}
 		event.setEntity(entity);
 		persistEvent.fire(event);
@@ -39,8 +39,8 @@ public class EntityListener {
 		event.setTime(Instant.now().toEpochMilli());
 		if(entity instanceof EPFEntity) {
 			EPFEntity epfEntity = (EPFEntity) entity;
-			event.setTenant(epfEntity.getTenant());
-			epfEntity.setTenant(null);
+			event.setOrganization(epfEntity.getOrganization());
+			epfEntity.setOrganization(null);
 		}
 		event.setEntity(entity);
 		removeEvent.fire(event);
@@ -52,8 +52,8 @@ public class EntityListener {
 		event.setTime(Instant.now().toEpochMilli());
 		if(entity instanceof EPFEntity) {
 			EPFEntity epfEntity = (EPFEntity) entity;
-			event.setTenant(epfEntity.getTenant());
-			epfEntity.setTenant(null);
+			event.setOrganization(epfEntity.getOrganization());
+			epfEntity.setOrganization(null);
 		}
 		event.setEntity(entity);
 		updateEvent.fire(event);
