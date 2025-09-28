@@ -18,7 +18,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.PathSegment;
 import jakarta.ws.rs.core.Request;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.SecurityContext;
 import jakarta.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
@@ -32,16 +31,13 @@ public class Query {
 
 	@Inject
     transient Application request;
-    
-    @Inject
-    transient JsonWebToken jwt;
 	
 	@GET
     @Path(Naming.Query.Client.ENTITY_PATH)
 	@Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
     public Response getEntity(
-    		@Context final SecurityContext context,
+    		@Context final JsonWebToken jwt,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final Request req,
@@ -55,7 +51,7 @@ public class Query {
 	@Path("entity/{schema}/{entity}")
     @RunOnVirtualThread
 	public Response countEntity(
-			@Context final SecurityContext context,
+			@Context final JsonWebToken jwt,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final Request req,
@@ -71,7 +67,7 @@ public class Query {
     @Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
 	public Response fetchEntities(
-			@Context final SecurityContext context,
+			@Context final JsonWebToken jwt,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final Request req,
@@ -85,7 +81,7 @@ public class Query {
     @RunOnVirtualThread
 	public Response executeQuery(
     		@Context 
-    		final SecurityContext context,
+    		final JsonWebToken jwt,
             @Context 
             final HttpHeaders headers, 
             @Context 
@@ -104,7 +100,7 @@ public class Query {
     @RunOnVirtualThread
 	public Response executeCountQuery(
 			@Context 
-			final SecurityContext context,
+			final JsonWebToken jwt,
             @Context 
             final HttpHeaders headers, 
             @Context 
@@ -123,7 +119,7 @@ public class Query {
 	@Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
     public Response search(
-    		@Context final SecurityContext context,
+    		@Context final JsonWebToken jwt,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final Request req) throws Exception {
@@ -134,7 +130,7 @@ public class Query {
 	@Path(Naming.Query.SEARCH)
     @RunOnVirtualThread
 	public Response count(
-    		@Context final SecurityContext context,
+    		@Context final JsonWebToken jwt,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final Request req) throws Exception {

@@ -17,7 +17,6 @@ import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.PathSegment;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.SecurityContext;
 import jakarta.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
@@ -32,15 +31,12 @@ public class Files {
     @Inject
     transient Application request;
     
-    @Inject
-    transient JsonWebToken jwt;
-    
     @POST
 	@Path("{paths: .+}")
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
     @RunOnVirtualThread
     public Response createFile(
-    		@Context final SecurityContext context,
+    		@Context final JsonWebToken jwt,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final jakarta.ws.rs.core.Request req,
@@ -56,7 +52,7 @@ public class Files {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     @RunOnVirtualThread
     public Response lines(
-    		@Context final SecurityContext context,
+    		@Context final JsonWebToken jwt,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final jakarta.ws.rs.core.Request req,
@@ -70,7 +66,7 @@ public class Files {
     @Path("{paths: .+}")
     @RunOnVirtualThread
     public Response delete(
-    		@Context final SecurityContext context,
+    		@Context final JsonWebToken jwt,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final jakarta.ws.rs.core.Request req,

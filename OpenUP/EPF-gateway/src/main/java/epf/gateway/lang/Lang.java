@@ -15,7 +15,6 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.SecurityContext;
 import jakarta.ws.rs.core.UriInfo;
 
 @Path(Naming.LANG)
@@ -26,15 +25,12 @@ public class Lang {
 	@Inject
     transient Application request;
     
-    @Inject
-    transient JsonWebToken jwt;
-    
     @Path(Naming.PERSISTENCE)
     @POST
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
     @RunOnVirtualThread
     public Response persist(
-    		@Context final SecurityContext context,
+    		@Context final JsonWebToken jwt,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final jakarta.ws.rs.core.Request req,
@@ -46,7 +42,7 @@ public class Lang {
 	@Consumes(MediaType.TEXT_PLAIN)
     @RunOnVirtualThread
     public Response chat(
-    		@Context final SecurityContext context,
+    		@Context final JsonWebToken jwt,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final jakarta.ws.rs.core.Request req,

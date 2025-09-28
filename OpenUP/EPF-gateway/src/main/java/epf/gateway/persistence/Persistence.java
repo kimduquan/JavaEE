@@ -16,7 +16,6 @@ import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Request;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.SecurityContext;
 import jakarta.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
@@ -31,16 +30,13 @@ public class Persistence {
     @Inject
     transient Application request;
     
-    @Inject
-    transient JsonWebToken jwt;
-    
     @POST
     @Path("{schema}/{entity}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
     public Response persist(
-    		@Context final SecurityContext context,
+    		@Context final JsonWebToken jwt,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final Request req,
@@ -55,7 +51,7 @@ public class Persistence {
     @Consumes(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
     public Response merge(
-    		@Context final SecurityContext context,
+    		@Context final JsonWebToken jwt,
     		@Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final Request req,
@@ -71,7 +67,7 @@ public class Persistence {
     @Path("{schema}/{entity}/{id}")
     @RunOnVirtualThread
     public Response remove(
-    		@Context final SecurityContext context,
+    		@Context final JsonWebToken jwt,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final Request req,

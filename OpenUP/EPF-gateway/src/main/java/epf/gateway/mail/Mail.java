@@ -11,7 +11,6 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.SecurityContext;
 import jakarta.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
@@ -26,14 +25,11 @@ public class Mail {
 	@Inject
     transient Application request;
     
-    @Inject
-    transient JsonWebToken jwt;
-    
     @POST
 	@Consumes(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
     public Response send(
-    		@Context final SecurityContext context,
+    		@Context final JsonWebToken jwt,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final jakarta.ws.rs.core.Request req,

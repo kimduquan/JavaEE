@@ -2,6 +2,7 @@ package epf.webapp.internal;
 
 import epf.management.schema.Session;
 import epf.naming.Naming;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -13,5 +14,6 @@ public interface ManagementClient {
 	@POST
 	@Path(Naming.Management.SESSION)
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	Session newSession();
 }

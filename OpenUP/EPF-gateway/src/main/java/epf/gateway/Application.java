@@ -22,7 +22,6 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -32,7 +31,6 @@ import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
-import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.HttpMethod;
 import org.eclipse.microprofile.health.Readiness;
@@ -61,9 +59,6 @@ public class Application {
     @Inject 
     @Readiness
     transient Registry registry;
-    
-    @Inject
-    transient Security security;
     
     @Inject
     transient Concurrent concurrent;
@@ -111,9 +106,6 @@ public class Application {
             final UriInfo uriInfo,
             final jakarta.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-    	if(jwt != null && !security.authenticate(jwt)) {
-    		throw new NotAuthorizedException(Response.status(Status.UNAUTHORIZED));
-    	}
     	final URI serviceUrl = registry.lookup(service).orElseThrow(NotFoundException::new);
     	final Optional<String> organizationId = OrganizationUtil.getOrganizationId(jwt);
     	final Client client = ClientBuilder.newClient();

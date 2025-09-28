@@ -10,7 +10,6 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.SecurityContext;
 import jakarta.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
@@ -25,14 +24,11 @@ public class Schema {
     @Inject
     transient Application request;
     
-    @Inject
-    transient JsonWebToken jwt;
-    
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
     public Response getEntities(
-    		@Context final SecurityContext context,
+    		@Context final JsonWebToken jwt,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final jakarta.ws.rs.core.Request req) throws Exception {
@@ -44,7 +40,7 @@ public class Schema {
     @Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
     public Response getEmbeddables(
-    		@Context final SecurityContext context,
+    		@Context final JsonWebToken jwt,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final jakarta.ws.rs.core.Request req) throws Exception {

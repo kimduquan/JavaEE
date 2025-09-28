@@ -1,7 +1,6 @@
 package epf.gateway.lang.messaging;
 
 import java.io.InputStream;
-import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
 import epf.naming.Naming;
 import io.smallrye.common.annotation.RunOnVirtualThread;
@@ -23,9 +22,6 @@ public class Messenger {
 
 	@Inject
     transient Application request;
-    
-    @Inject
-    transient JsonWebToken jwt;
     
     @GET
     @RunOnVirtualThread
