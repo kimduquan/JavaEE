@@ -836,7 +836,7 @@ primary:
   persistentVolumeClaimRetentionPolicy:
     ## @param primary.persistentVolumeClaimRetentionPolicy.enabled Enable Persistent volume retention policy for Primary Statefulset
     ##
-    enabled: false
+    enabled: true
     ## @param primary.persistentVolumeClaimRetentionPolicy.whenScaled Volume retention behavior when the replica count of the StatefulSet is reduced
     ##
     whenScaled: Retain
@@ -1290,7 +1290,7 @@ readReplicas:
   persistentVolumeClaimRetentionPolicy:
     ## @param readReplicas.persistentVolumeClaimRetentionPolicy.enabled Enable Persistent volume retention policy for read only Statefulset
     ##
-    enabled: false
+    enabled: true
     ## @param readReplicas.persistentVolumeClaimRetentionPolicy.whenScaled Volume retention behavior when the replica count of the StatefulSet is reduced
     ##
     whenScaled: Retain
@@ -1304,7 +1304,7 @@ readReplicas:
 ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/
 backup:
   ## @param backup.enabled Enable the logical dump of the database "regularly"
-  enabled: false
+  enabled: true
   cronjob:
     ## @param backup.cronjob.schedule Set the cronjob parameter schedule
     schedule: "@daily"
@@ -1539,7 +1539,7 @@ passwordUpdateJob:
   ## @param passwordUpdateJob.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if passwordUpdateJob.resources is set (passwordUpdateJob.resources is recommended for production).
   ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
   ##
-  resourcesPreset: "micro"
+  resourcesPreset: "nano"
   ## @param passwordUpdateJob.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
   ## Example:
   ## resources:
