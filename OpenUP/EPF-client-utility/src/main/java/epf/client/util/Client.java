@@ -2,14 +2,12 @@ package epf.client.util;
 
 import java.net.URI;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import jakarta.ws.rs.client.Invocation;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.sse.SseEventSource;
-import epf.naming.Naming;
 
 public class Client implements AutoCloseable {
 
@@ -18,8 +16,6 @@ public class Client implements AutoCloseable {
 	private transient final jakarta.ws.rs.client.Client rsClient;
     
     private transient final BiConsumer<URI, jakarta.ws.rs.client.Client> collector;
-    
-    private transient Optional<String> tenant = Optional.empty();
     
     private transient char[] authToken;
     
@@ -55,17 +51,10 @@ public class Client implements AutoCloseable {
 		authToken = header.substring("Bearer ".length()).toCharArray();
 		return this;
 	}
-	
-	public Client tenant(final String tenant) {
-		Objects.requireNonNull(tenant);
-		this.tenant = Optional.of(tenant);
-		return this;
-	}
 
     @Override
     public void close() throws Exception {
     	authToken = null;
-    	tenant = Optional.empty();
         collector.accept(uri, rsClient);
     }
     
@@ -73,9 +62,6 @@ public class Client implements AutoCloseable {
     	Objects.requireNonNull(buildTarget);
     	Objects.requireNonNull(buildRequest);
     	WebTarget target = rsClient.target(uri);
-    	if(tenant.isPresent()) {
-    		target = target.matrixParam(Naming.Management.TENANT, tenant.get());
-    	}
     	target = buildTarget.apply(target);
     	Invocation.Builder request = target.request();
     	if(authToken != null) {

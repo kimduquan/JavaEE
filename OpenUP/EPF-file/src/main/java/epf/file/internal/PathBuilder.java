@@ -14,22 +14,22 @@ public class PathBuilder {
 	
 	private transient final String rootFolder;
 	
-	private transient final Optional<String> tenant;
+	private transient final Optional<String> organization;
 	
 	private transient List<String> subPaths;
 	
 	private List<String> getPaths() {
 		final List<String> paths = new ArrayList<>(subPaths);
-		if(tenant.isPresent()) {
-			paths.add(0, tenant.get());
+		if(organization.isPresent()) {
+			paths.add(0, organization.get());
 		}
 		return paths;
 	}
 
-	public PathBuilder(final FileSystem system, final String rootFolder, final String tenant) {
+	public PathBuilder(final FileSystem system, final String rootFolder, final String organization) {
 		this.rootFolder = rootFolder;
 		this.system = system;
-		this.tenant = Optional.ofNullable(tenant);
+		this.organization = Optional.ofNullable(organization);
 	}
 	
 	public PathBuilder paths(final List<PathSegment> paths) {

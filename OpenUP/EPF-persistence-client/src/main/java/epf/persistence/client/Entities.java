@@ -27,8 +27,6 @@ public interface Entities {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response persist(
-    		@MatrixParam(Naming.Management.TENANT)
-    		final String tenant,
     		@PathParam(Naming.Persistence.Client.SCHEMA)
             @NotBlank
             final String schema,
@@ -72,8 +70,6 @@ public interface Entities {
     @Path("{schema}/{entity}/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     Response merge(
-    		@MatrixParam(Naming.Management.TENANT)
-    		final String tenant,
     		@PathParam(Naming.Persistence.Client.SCHEMA)
             @NotBlank
             final String schema,
@@ -120,8 +116,6 @@ public interface Entities {
     @DELETE
     @Path("{schema}/{entity}/{id}")
     Response remove(
-    		@MatrixParam(Naming.Management.TENANT)
-    		final String tenant,
     		@PathParam(Naming.Persistence.Client.SCHEMA)
             @NotBlank
             final String schema,

@@ -12,7 +12,6 @@ import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.HttpMethod;
-import jakarta.ws.rs.MatrixParam;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
@@ -54,8 +53,6 @@ public interface Security {
             @QueryParam(URL)
             @NotNull
             final URL url,
-            @MatrixParam(Naming.Management.TENANT)
-            final String tenant,
             @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_HOST)
             final List<String> forwardedHost
     ) throws Exception;
@@ -91,8 +88,6 @@ public interface Security {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     Token authenticate(
-    		@MatrixParam(Naming.Management.TENANT)
-    		final String tenant,
             @Context
             final SecurityContext context) throws Exception;
     
@@ -160,8 +155,6 @@ public interface Security {
             final String token,
             @FormParam(URL)
             final URL url,
-            @MatrixParam(Naming.Management.TENANT)
-            final String tenant,
             @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_HOST)
             final List<String> forwardedHost) throws Exception;
     

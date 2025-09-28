@@ -79,7 +79,7 @@ public class TokenBuilder {
     public static Map<String, Object> buildClaims(final Map<String, Object> claims, final Optional<String> tenant){
     	final Map<String, Object> newClaims = new HashMap<>(claims);
     	if(tenant.isPresent()) {
-        	newClaims.put(Naming.Management.TENANT, tenant);
+        	newClaims.put(Naming.Management.ORGANIZATION, tenant);
     	}
     	return newClaims;
     }

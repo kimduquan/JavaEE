@@ -26,6 +26,8 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
+
+import epf.management.util.OrganizationUtil;
 import epf.naming.Naming;
 import epf.security.internal.token.TokenBuilder;
 import epf.security.management.internal.ManagementIdentityStore;
@@ -135,7 +137,7 @@ public class Management implements epf.security.client.Management {
 	@Override
 	public Response setPassword(final String password, final SecurityContext context) throws Exception {
 		final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
-		final Optional<String> tenant = Optional.ofNullable(jwt.getClaim(Naming.Management.TENANT));
+		final Optional<String> tenant = OrganizationUtil.getOrganizationId(jwt);
 		final Password pass = new Password(password.toCharArray());
 		final Credential credential = new Credential(tenant.orElse(null), jwt.getName(), pass);
 		identityStore.setCredential(credential).toCompletableFuture().get();
@@ -145,7 +147,7 @@ public class Management implements epf.security.client.Management {
 	@Override
 	public Response activeCredential(final SecurityContext context) throws Exception {
 		final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
-		final Optional<String> tenant = Optional.ofNullable(jwt.getClaim(Naming.Management.TENANT));
+		final Optional<String> tenant = OrganizationUtil.getOrganizationId(jwt);
 		final String passwordHash = jwt.getClaim(Naming.Security.Credential.PASSWORD_HASH);
 		final Password password = new Password(passwordHash.toCharArray());
 		final Credential credential = new Credential(tenant.orElse(null), jwt.getName(), password);

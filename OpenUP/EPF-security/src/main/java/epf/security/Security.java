@@ -37,6 +37,7 @@ import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.jwt.config.Names;
 import org.jose4j.jwt.JwtClaims;
+import epf.management.util.OrganizationUtil;
 import epf.naming.Naming;
 import epf.security.auth.Provider;
 import epf.security.auth.StandardProvider;
@@ -184,9 +185,8 @@ public class Security implements epf.security.client.Security, epf.security.clie
             final String username,
             final String passwordText,
             final URL url,
-            final String tenant,
             final List<String> forwardedHost) throws Exception {
-    	final Credential credential = CredentialUtil.newCredential(tenant, username, passwordText);
+    	final Credential credential = CredentialUtil.newCredential(null, username, passwordText);
     	return identityStore.authenticate(credential)
     			.thenApply(
     					principal -> {
@@ -226,7 +226,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
     
     @RolesAllowed(Naming.Security.DEFAULT_ROLE)
     @Override
-    public Token authenticate(final String tenant, final SecurityContext context) {
+    public Token authenticate(final SecurityContext context) {
     	final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
     	final Token token = TokenUtil.from(jwt);
 		token.setClaims(TokenUtil.getClaims(jwt));
@@ -250,7 +250,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
     	final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
 		tokenCache.expireToken(jwt);
 		final String tokenDuration = duration != null && !duration.isEmpty() ? duration : expireDuration;
-		final Set<String> audience = TokenBuilder.buildAudience(null, forwardedHost, Optional.ofNullable(jwt.getClaim(Naming.Management.TENANT)));
+		final Set<String> audience = TokenBuilder.buildAudience(null, forwardedHost, OrganizationUtil.getOrganizationId(jwt));
 		audience.addAll(jwt.getAudience());
 		return identityStore.getCallerGroups(jwt)
 				.thenCombine(principalStore.getCallerClaims(jwt), (groups, claims) -> newToken(jwt, groups, audience, claims, tokenDuration))
@@ -263,9 +263,8 @@ public class Security implements epf.security.client.Security, epf.security.clie
 	@Override
 	public CompletionStage<String> loginOneTime(
 			final String username, 
-			final String passwordText,
-			final String tenant) throws Exception {
-		final Credential credential = CredentialUtil.newCredential(tenant, username, passwordText);
+			final String passwordText) throws Exception {
+		final Credential credential = CredentialUtil.newCredential(null, username, passwordText);
 		return identityStore.authenticate(credential)
     			.thenApply(
     					principal -> {
@@ -292,10 +291,9 @@ public class Security implements epf.security.client.Security, epf.security.clie
 	public String authenticateOneTime(
 			final String oneTimePassword,
 			final URL url,
-			final List<String> forwardedHost,
-            final String tenant) {
+			final List<String> forwardedHost) {
 		final Session session = otpSessionStore.removeSession(oneTimePassword).orElseThrow(() -> new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build()));
-		final Set<String> audience = TokenBuilder.buildAudience(url, forwardedHost, Optional.ofNullable(tenant));
+		final Set<String> audience = TokenBuilder.buildAudience(url, forwardedHost, Optional.empty());
 		final Token token = newToken(session.getName(), session.getGroups(), audience, session.getClaims(), expireDuration);
 		final TokenBuilder builder = new TokenBuilder(token, privateKey);
 		return builder.build().getRawToken();
@@ -308,7 +306,6 @@ public class Security implements epf.security.client.Security, epf.security.clie
 			final String session, 
 			final String token,
             final URL url,
-			final String tenant,
             final List<String> forwardedHost) throws Exception {
 		final Provider authProvider = authProviders.get(provider);
 		if(authProvider == null) {
@@ -318,13 +315,10 @@ public class Security implements epf.security.client.Security, epf.security.clie
 			return Response.status(Response.Status.UNAUTHORIZED).build();
 		}
 		final JwtClaims claims = JwtUtil.decode(token.toCharArray());
-		final Set<String> audience = TokenBuilder.buildAudience(url, forwardedHost, Optional.ofNullable(tenant));
+		final Set<String> audience = TokenBuilder.buildAudience(url, forwardedHost, Optional.empty());
 		final Set<String> groups = new HashSet<>();
 		groups.add(Naming.Security.DEFAULT_ROLE);
 		final Map<String, Object> newClaims = new HashMap<>();
-		if(tenant != null) {
-			newClaims.put(Naming.Management.TENANT, tenant);
-		}
 		final Token newToken = new Token();
 		newToken.setAudience(audience);
 		newToken.setClaims(newClaims);
@@ -344,13 +338,13 @@ public class Security implements epf.security.client.Security, epf.security.clie
 		final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
 		final String password_hash = jwt.getClaim(Naming.Security.Credential.PASSWORD_HASH);
 		final Password password = new Password(password_hash.toCharArray());
-		final Optional<String> tenant = Optional.ofNullable(jwt.getClaim(Naming.Management.TENANT));
+		final Optional<String> tenant = OrganizationUtil.getOrganizationId(jwt);
 		final Credential credential = new Credential(tenant.orElse(null), jwt.getName(), password);
 		final Map<String, Object> claims = new HashMap<>();
 		claims.put(Naming.Security.Claims.FIRST_NAME, jwt.getClaim(Naming.Security.Claims.FIRST_NAME));
 		claims.put(Naming.Security.Claims.LAST_NAME, jwt.getClaim(Naming.Security.Claims.LAST_NAME));
 		claims.put(Naming.Security.Claims.EMAIL, jwt.getClaim(Naming.Security.Claims.EMAIL));
-		tenant.ifPresent(tenantClaim -> claims.put(Naming.Management.TENANT, tenantClaim));
+		tenant.ifPresent(tenantClaim -> claims.put(Naming.Management.ORGANIZATION, tenantClaim));
 		final JPAPrincipal principal = identityStore.authenticate(credential).toCompletableFuture().get();
 		if(principal != null) {
 			principalStore.putCaller(principal).toCompletableFuture().get();

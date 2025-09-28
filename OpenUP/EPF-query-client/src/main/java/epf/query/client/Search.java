@@ -3,7 +3,6 @@ package epf.query.client;
 import java.util.List;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HEAD;
-import jakarta.ws.rs.MatrixParam;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
@@ -19,8 +18,6 @@ public interface Search {
 	@GET
     @Produces(MediaType.APPLICATION_JSON)
     Response search(
-    		@MatrixParam(Naming.Management.TENANT)
-    		final String tenant,
     		@QueryParam(Naming.Query.Client.TEXT)
     		final String text, 
     		@QueryParam(Naming.Query.Client.FIRST)
@@ -42,8 +39,6 @@ public interface Search {
 	
 	@HEAD
 	Response count(
-    		@MatrixParam(Naming.Management.TENANT)
-    		final String tenant,
 			@QueryParam(Naming.Query.Client.TEXT)
 			final String text);
     

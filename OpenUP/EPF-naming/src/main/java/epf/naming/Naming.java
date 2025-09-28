@@ -502,11 +502,6 @@ public interface Naming {
 		/**
 		 * 
 		 */
-		String TENANT = "tenant";
-		
-		/**
-		 * 
-		 */
 		String ORGANIZATION = "organization";
 		
 		/**
@@ -517,7 +512,7 @@ public interface Naming {
 		/**
 		 *
 		 */
-		String MANAGEMENT_TENANT = "epf.management.tenant";
+		String MANAGEMENT_ORGANIZATION = "epf.management.organization";
 		
 		/**
 		 * 

@@ -40,12 +40,12 @@ public class JPAPrincipalStore implements HealthCheck {
 	@Transactional
 	public CompletionStage<Void> setCallerPassword(final JsonWebToken jwt, final Password password) throws Exception{
 		Objects.requireNonNull(jwt, "JsonWebToken");
-		return setCallerPassword(jwt.getName(), jwt.getClaim(Naming.Management.TENANT), password);
+		return setCallerPassword(jwt.getName(), jwt.getClaim(Naming.Management.ORGANIZATION), password);
 	}
 	
 	private CompletionStage<Void> setCallerPassword(final String name, final String tenant, final Password password) throws Exception {
 		final String tenantId = TenantUtil.getTenantId(Security.SCHEMA, tenant);
-		manager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenantId);
+		manager.setProperty(Naming.Management.MANAGEMENT_ORGANIZATION, tenantId);
 		final Query query = manager.createNativeQuery(String.format(NativeQueries.SET_PASSWORD, name));
 		query.setParameter(1, new String(password.getValue()));
 		query.executeUpdate();
@@ -55,7 +55,7 @@ public class JPAPrincipalStore implements HealthCheck {
 
 	public CompletionStage<Map<String, Object>> getCallerClaims(final JsonWebToken jwt) {
 		Objects.requireNonNull(jwt, "JsonWebToken");
-		return getCallerClaims(jwt.getName(), jwt.getClaim(Naming.Management.TENANT));
+		return getCallerClaims(jwt.getName(), jwt.getClaim(Naming.Management.ORGANIZATION));
 	}
 	
 	public CompletionStage<Map<String, Object>> getCallerClaims(final Credential credential) {
@@ -65,7 +65,7 @@ public class JPAPrincipalStore implements HealthCheck {
 	
 	private CompletionStage<Map<String, Object>> getCallerClaims(final String name, final String tenant){
 		final String tenantId = TenantUtil.getTenantId(Security.SCHEMA, tenant);
-		manager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenantId);
+		manager.setProperty(Naming.Management.MANAGEMENT_ORGANIZATION, tenantId);
 		final Principal principal = manager.find(Principal.class, name);
 		final Map<String, Object> claims = new HashMap<>();
 		if(principal != null && principal.getClaims() != null) {
@@ -79,7 +79,7 @@ public class JPAPrincipalStore implements HealthCheck {
 		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
 		final JPAPrincipal principal = (JPAPrincipal) callerPrincipal;
 		final String tenant = TenantUtil.getTenantId(Security.SCHEMA, principal.getTenant().orElse(null));
-		manager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenant);
+		manager.setProperty(Naming.Management.MANAGEMENT_ORGANIZATION, tenant);
 		final Principal p = manager.find(Principal.class, principal.getName());
 		if(p != null) {
 			if(p.getClaims() == null) {
@@ -100,7 +100,7 @@ public class JPAPrincipalStore implements HealthCheck {
 		Objects.requireNonNull(callerPrincipal.getName(), "CallerPrincipal.name");
 		final JPAPrincipal principal = (JPAPrincipal) callerPrincipal;
 		final String tenant = TenantUtil.getTenantId(Security.SCHEMA, principal.getTenant().orElse(null));
-		manager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenant);
+		manager.setProperty(Naming.Management.MANAGEMENT_ORGANIZATION, tenant);
 		if(manager.find(Principal.class, callerPrincipal.getName()) != null) {
 			return executor.failedStage(new BadRequestException());
 		}

@@ -7,7 +7,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.HeaderParam;
-import jakarta.ws.rs.MatrixParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
@@ -31,9 +30,7 @@ public interface OTPSecurity {
             final String username,
             @FormParam("password")
             @NotBlank
-            final String password,
-            @MatrixParam(Naming.Management.TENANT)
-            final String tenant
+            final String password
     ) throws Exception;
     
     static String loginOneTime(
@@ -62,9 +59,7 @@ public interface OTPSecurity {
             @NotBlank
             final URL url,
             @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_HOST)
-            final List<String> forwardedHost,
-            @MatrixParam(Naming.Management.TENANT)
-            final String tenant
+            final List<String> forwardedHost
     );
     
     static String authenticateOneTime(

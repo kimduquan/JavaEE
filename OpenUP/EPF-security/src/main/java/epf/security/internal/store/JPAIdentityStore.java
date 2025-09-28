@@ -44,7 +44,7 @@ public class JPAIdentityStore implements HealthCheck {
 	
 	private CompletionStage<Set<String>> getCallerGroups(final EntityManager manager, final String tenant){
 		final String tenantId = TenantUtil.getTenantId(Security.SCHEMA, tenant);
-		manager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenantId);
+		manager.setProperty(Naming.Management.MANAGEMENT_ORGANIZATION, tenantId);
 		final Query query = manager.createNativeQuery(NativeQueries.GET_CURRENT_ROLES);
 		final Stream<?> stream = query.getResultStream();
 		final Set<String> groups = stream.map(role -> StringUtil.toPascalSnakeCase(role.toString().split("_"))).collect(Collectors.toSet());
@@ -56,12 +56,12 @@ public class JPAIdentityStore implements HealthCheck {
         props.put(Naming.Persistence.JDBC.JDBC_USER, credential.getCaller());
         props.put(Naming.Persistence.JDBC.JDBC_PASSWORD, String.valueOf(credential.getPassword().getValue()));
         final String tenant = TenantUtil.getTenantId(Security.SCHEMA, credential.getTenant().orElse(null));
-        props.put(Naming.Management.MANAGEMENT_TENANT, tenant);
+        props.put(Naming.Management.MANAGEMENT_ORGANIZATION, tenant);
         return executor.supplyAsync(() -> Persistence.createEntityManagerFactory(Naming.Security.Internal.SECURITY_UNIT_NAME, props))
         		.thenApply(factory -> {
         			try {
         				final Map<String, Object> newProps = new ConcurrentHashMap<>();
-        				newProps.put(Naming.Management.MANAGEMENT_TENANT, tenant);
+        				newProps.put(Naming.Management.MANAGEMENT_ORGANIZATION, tenant);
         				final EntityManager manager = factory.createEntityManager(newProps);
         				return new JPAPrincipal(credential.getTenant(), credential.getCaller(), factory, manager);
 		        	}

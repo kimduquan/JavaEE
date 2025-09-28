@@ -8,7 +8,6 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HEAD;
 import jakarta.ws.rs.HttpMethod;
-import jakarta.ws.rs.MatrixParam;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
@@ -32,8 +31,6 @@ public interface Query {
     @Path(Naming.Query.Client.ENTITY_PATH)
 	@Produces(MediaType.APPLICATION_JSON)
     Response getEntity(
-    		@MatrixParam(Naming.Management.TENANT)
-    		final String tenant,
     		@PathParam(Naming.Query.Client.SCHEMA)
             @NotNull
             @NotBlank
@@ -67,8 +64,6 @@ public interface Query {
 	@HEAD
 	@Path("entity/{schema}/{entity}")
     Response countEntity(
-    		@MatrixParam(Naming.Management.TENANT)
-    		final String tenant,
     		@PathParam(Naming.Query.Client.SCHEMA)
             @NotNull
             @NotBlank
@@ -94,8 +89,6 @@ public interface Query {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response fetchEntities(
-    		@MatrixParam(Naming.Management.TENANT)
-    		final String tenant,
     		final List<EntityId> entityIds);
     
     static Response fetchEntities(final Client client, final List<EntityId> entityIds) {
@@ -107,8 +100,6 @@ public interface Query {
     @Path("query/{schema}/{criteria: .+}")
     @Produces(MediaType.APPLICATION_JSON)
 	Response executeQuery(
-    		@MatrixParam(Naming.Management.TENANT)
-    		final String tenant,
     		@PathParam(Naming.Query.Client.SCHEMA)
             @NotBlank
             final String schema,
@@ -161,8 +152,6 @@ public interface Query {
     @HEAD
     @Path("query/{schema}/{criteria: .+}")
 	Response executeCountQuery(
-    		@MatrixParam(Naming.Management.TENANT)
-    		final String tenant,
     		@PathParam(Naming.Query.Client.SCHEMA)
             @NotBlank
             final String schema,
