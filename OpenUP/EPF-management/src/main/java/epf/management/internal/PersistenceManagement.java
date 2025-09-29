@@ -47,11 +47,15 @@ public class PersistenceManagement {
 		final String databaseName = OrganizationUtil.getDefaultPersistenceDatabase(organization.getId());
 		final String userName = OrganizationUtil.getDefaultPersistenceUserName(organization.getId());
 		final String password = OrganizationUtil.getDefaultPersistencePassword(organization.getId());
+		final String queryUserName = OrganizationUtil.getDefaultQueryUserName(organization.getId());
+		final String queryPassword = OrganizationUtil.getDefaultQueryPassword(organization.getId());
 		
 		try(Connection connection = managementDataSource.getConnection()) {
 			try(Statement statement = connection.createStatement()){
 				final String createUserSql = "CREATE USER \"" + userName + "\" WITH PASSWORD '" + password + "';";
 				statement.execute(createUserSql);
+				final String createQueryUserSql = "CREATE USER \"" + queryUserName + "\" WITH PASSWORD '" + queryPassword + "';";
+				statement.execute(createQueryUserSql);
 				final String createDatabaseSql = "CREATE DATABASE \"" + databaseName + "\" OWNER \"" + userName + "\" TEMPLATE " + databaseTemplate + ";";
 				statement.execute(createDatabaseSql);
 			}
@@ -72,7 +76,14 @@ public class PersistenceManagement {
 		persistenceUser.setMode_type("transaction");
 		persistenceUser.setPool_size(1);
 		
+		final PersistenceUser queryUser = new PersistenceUser();
+		queryUser.setDb_password(queryPassword);
+		queryUser.setDb_user(queryUserName);
+		queryUser.setMode_type("session");
+		queryUser.setPool_size(3);
+		
 		persistenceTenant.getUsers().add(persistenceUser);
+		persistenceTenant.getUsers().add(queryUser);
 		
 		final UpdatePersistenceTenantInfo updateInfo = new UpdatePersistenceTenantInfo();
 		updateInfo.setTenant(persistenceTenant);

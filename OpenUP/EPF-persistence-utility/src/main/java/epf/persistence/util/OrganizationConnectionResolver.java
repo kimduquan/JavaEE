@@ -20,12 +20,14 @@ public abstract class OrganizationConnectionResolver<Connection> {
 	protected abstract Connection newConnection(final AgroalDataSource dataSource);
 	protected abstract String getJdbcUrlFormat();
 	protected abstract int getConnectionPoolSize();
+	protected abstract String getUserName(final String organizationId);
+	protected abstract String getPassword(final String organizationId);
 	
 	public Connection resolve(final String tenantId) {
 		return connections.computeIfAbsent(tenantId, organizationId -> {
 			final String database = OrganizationUtil.getDefaultPersistenceDatabase(organizationId);
-			final String userName = OrganizationUtil.getDefaultPersistenceUserName(organizationId);
-			final String password = OrganizationUtil.getDefaultPersistencePassword(organizationId);
+			final String userName = getUserName(organizationId);
+			final String password = getPassword(organizationId);
 			final String jdbcUrl = String.format(getJdbcUrlFormat(), database);
 			final AgroalDataSourceConfigurationSupplier supplier = new AgroalDataSourceConfigurationSupplier();
 			supplier.connectionPoolConfiguration()
