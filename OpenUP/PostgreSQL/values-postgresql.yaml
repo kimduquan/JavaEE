@@ -181,7 +181,7 @@ auth:
   usePasswordFiles: true
 ## @param architecture PostgreSQL architecture (`standalone` or `replication`)
 ##
-architecture: standalone
+architecture: replication
 ## Replication configuration
 ## Ignored if `architecture` is `standalone`
 ##
@@ -190,11 +190,11 @@ replication:
   ## @param replication.numSynchronousReplicas Number of replicas that will have synchronous replication. Note: Cannot be greater than `readReplicas.replicaCount`.
   ## ref: https://www.postgresql.org/docs/current/runtime-config-wal.html#GUC-SYNCHRONOUS-COMMIT
   ##
-  synchronousCommit: "off"
-  numSynchronousReplicas: 0
+  synchronousCommit: "on"
+  numSynchronousReplicas: 1
   ## @param replication.applicationName Cluster application name. Useful for advanced replication settings
   ##
-  applicationName: my_application
+  applicationName: epf
 ## @param containerPorts.postgresql PostgreSQL container port
 ##
 containerPorts:
@@ -277,7 +277,7 @@ shmVolume:
   ## e.g:
   ## sizeLimit: 1Gi
   ##
-  sizeLimit: ""
+  sizeLimit: "1Gi"
 ## TLS configuration
 ##
 tls:
