@@ -1,1 +1,2 @@
-helm install jaeger oci://registry-1.docker.io/bitnamicharts/jaeger -f values-jaeger.yaml
+helm repo add jaegertracing https://jaegertracing.github.io/helm-charts
+helm install jaeger jaegertracing/jaeger -f values-jaeger.yaml
