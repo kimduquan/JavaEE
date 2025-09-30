@@ -327,8 +327,8 @@ ingester:
   replicaCount: 1
   autoscaling:
     enabled: false
-    minReplicas: 2
-    maxReplicas: 10
+    minReplicas: 1
+    maxReplicas: 3
     behavior: {}
     # targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
@@ -377,7 +377,7 @@ ingester:
 agent:
   podSecurityContext: {}
   securityContext: {}
-  enabled: true
+  enabled: false
   annotations: {}
   image:
     registry: ""
@@ -459,7 +459,7 @@ agent:
 collector:
   podSecurityContext: {}
   securityContext: {}
-  enabled: true
+  enabled: false
   annotations: {}
   image:
     registry: ""
@@ -629,7 +629,7 @@ collector:
     #   customRules: []
 
 query:
-  enabled: true
+  enabled: false
   basePath: /
   initContainers: []
   oAuthSidecar:
