@@ -794,7 +794,7 @@ controller:
   ## @param controller.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if controller.resources is set (controller.resources is recommended for production).
   ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
   ##
-  ## resourcesPreset: "small"
+  ## resourcesPreset: "nano"
   ## @param controller.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
   ## Example:
   ## resources:
@@ -807,7 +807,7 @@ controller:
   ##
   resources:
     requests:
-      cpu: 100m
+      cpu: 50m
       memory: 256Mi
     limits:
       cpu: 250m
@@ -1026,7 +1026,7 @@ controller:
     hpa:
       ## @param controller.autoscaling.hpa.enabled Enable HPA for Kafka Controller
       ##
-      enabled: false
+      enabled: true
       ## @param controller.autoscaling.hpa.annotations Annotations for HPA resource
       ##
       annotations: {}
@@ -1059,7 +1059,7 @@ controller:
   ## @param controller.persistentVolumeClaimRetentionPolicy.whenDeleted Volume retention behavior that applies when the StatefulSet is deleted
   ##
   persistentVolumeClaimRetentionPolicy:
-    enabled: false
+    enabled: true
     whenScaled: Retain
     whenDeleted: Retain
   ## Enable persistence using Persistent Volume Claims
@@ -1261,7 +1261,7 @@ broker:
   ## @param broker.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if broker.resources is set (broker.resources is recommended for production).
   ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
   ##
-  resourcesPreset: "nano"
+  ## resourcesPreset: "nano"
   ## @param broker.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
   ## Example:
   ## resources:
@@ -1272,7 +1272,13 @@ broker:
   ##     cpu: 3
   ##     memory: 1024Mi
   ##
-  resources: {}
+  resources:
+    requests:
+      cpu: 50m
+      memory: 256Mi
+    limits:
+      cpu: 250m
+      memory: 512Mi
   ## Kafka pods' Security Context
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
   ## @param broker.podSecurityContext.enabled Enable security context for the pods
@@ -1496,7 +1502,7 @@ broker:
     hpa:
       ## @param broker.autoscaling.hpa.enabled Enable HPA for Kafka Broker
       ##
-      enabled: false
+      enabled: true
       ## @param broker.autoscaling.hpa.annotations Annotations for HPA resource
       ##
       annotations: {}
@@ -1519,7 +1525,7 @@ broker:
   ## @param broker.persistentVolumeClaimRetentionPolicy.whenDeleted Volume retention behavior that applies when the StatefulSet is deleted
   ##
   persistentVolumeClaimRetentionPolicy:
-    enabled: false
+    enabled: true
     whenScaled: Retain
     whenDeleted: Retain
   ## Enable persistence using Persistent Volume Claims
