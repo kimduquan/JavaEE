@@ -1032,10 +1032,10 @@ controller:
       annotations: {}
       ## @param controller.autoscaling.hpa.minReplicas Minimum number of Kafka Controller replicas
       ##
-      minReplicas: ""
+      minReplicas: "1"
       ## @param controller.autoscaling.hpa.maxReplicas Maximum number of Kafka Controller replicas
       ##
-      maxReplicas: ""
+      maxReplicas: "2"
       ## @param controller.autoscaling.hpa.targetCPU Target CPU utilization percentage
       ##
       targetCPU: ""
@@ -1508,10 +1508,10 @@ broker:
       annotations: {}
       ## @param broker.autoscaling.hpa.minReplicas Minimum number of Kafka Broker replicas
       ##
-      minReplicas: ""
+      minReplicas: "1"
       ## @param broker.autoscaling.hpa.maxReplicas Maximum number of Kafka Broker replicas
       ##
-      maxReplicas: ""
+      maxReplicas: "2"
       ## @param broker.autoscaling.hpa.targetCPU Target CPU utilization percentage
       ##
       targetCPU: ""
