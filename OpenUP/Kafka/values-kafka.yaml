@@ -537,7 +537,7 @@ defaultInitContainers:
     ##     cpu: 3
     ##     memory: 1024Mi
     ##
-    resources: {}
+    ## resources: {}
   ## Kafka "prepare-config" init container
   ## Used to prepare the Kafka configuration files for main containers to use them
   ##
@@ -575,7 +575,7 @@ defaultInitContainers:
     ## @param defaultInitContainers.prepareConfig.resourcesPreset Set Kafka "prepare-config" init container resources according to one common preset (allowed values: none, nano, small, medium, large, xlarge, 2xlarge). This is ignored if defaultInitContainers.prepareConfig.resources is set (defaultInitContainers.prepareConfig.resources is recommended for production).
     ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
     ##
-    resourcesPreset: "nano"
+    ## resourcesPreset: "nano"
     ## @param defaultInitContainers.prepareConfig.resources Set Kafka "prepare-config" init container requests and limits for different resources like CPU or memory (essential for production workloads)
     ## E.g:
     ## resources:
@@ -586,7 +586,13 @@ defaultInitContainers:
     ##     cpu: 3
     ##     memory: 1024Mi
     ##
-    resources: {}
+    resources:
+      requests:
+        cpu: 25m
+        memory: 128Mi
+      limits:
+        cpu: 150m
+        memory: 192Mi
     ## @param defaultInitContainers.prepareConfig.extraInit Additional content for the "prepare-config" init script, rendered as a template.
     ##
     extraInit: ""
