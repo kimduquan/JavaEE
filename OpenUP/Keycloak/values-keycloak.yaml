@@ -92,7 +92,7 @@ usePasswordFiles: true
 ##
 image:
   registry: docker.io
-  repository: bitnamisecure/keycloak
+  repository: bitnamilegacy/keycloak
   tag: latest
   digest: ""
   ## Specify a imagePullPolicy
