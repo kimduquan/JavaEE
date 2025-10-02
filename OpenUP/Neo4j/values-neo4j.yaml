@@ -96,7 +96,7 @@ diagnosticMode:
 ##
 image:
   registry: docker.io
-  repository: bitnamisecure/neo4j
+  repository: bitnamilegacy/neo4j
   tag: latest
   digest: ""
   ## Specify a imagePullPolicy
