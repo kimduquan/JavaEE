@@ -26,7 +26,7 @@ global:
   ##
   security:
     ## @param global.security.allowInsecureImages Allows skipping image verification
-    allowInsecureImages: false
+    allowInsecureImages: true
   namespaceOverride: ""
   ## Compatibility adaptations for Kubernetes platforms
   ##
@@ -138,8 +138,8 @@ diagnosticMode:
 ##
 image:
   registry: docker.io
-  repository: bitnami/mongodb
-  tag: 8.0.13-debian-12-r0
+  repository: bitnamisecure/mongodb
+  tag: latest
   digest: ""
   ## Specify a imagePullPolicy
   ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
