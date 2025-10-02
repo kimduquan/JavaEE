@@ -137,7 +137,7 @@ image:
 
 ## @param architecture Redis(R) architecture. Allowed values: `standalone` or `replication`
 ##
-architecture: standalone
+architecture: replication
 ## Redis(R) Authentication parameters
 ## ref: https://github.com/bitnami/containers/tree/main/bitnami/redis#setting-the-server-password-on-first-run
 ##
@@ -314,7 +314,7 @@ master:
   ## @param master.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if master.resources is set (master.resources is recommended for production).
   ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
   ##
-  resourcesPreset: "nano"
+  ## resourcesPreset: "nano"
   ## @param master.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
   ## Example:
   ## resources:
@@ -325,7 +325,13 @@ master:
   ##     cpu: 3
   ##     memory: 1024Mi
   ##
-  resources: {}
+  resources:
+    requests:
+      cpu: 25m
+      memory: 128Mi
+    limits:
+      cpu: 150m
+      memory: 192Mi
   ## Configure Pods Security Context
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
   ## @param master.podSecurityContext.enabled Enabled Redis(R) master pods' Security Context
@@ -563,7 +569,7 @@ master:
   ## @param master.persistentVolumeClaimRetentionPolicy.whenDeleted Volume retention behavior that applies when the StatefulSet is deleted
   ##
   persistentVolumeClaimRetentionPolicy:
-    enabled: false
+    enabled: true
     whenScaled: Retain
     whenDeleted: Retain
   ## Redis(R) master service parameters
@@ -799,7 +805,7 @@ replica:
   ## @param replica.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if replica.resources is set (replica.resources is recommended for production).
   ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
   ##
-  resourcesPreset: "nano"
+  ## resourcesPreset: "nano"
   ## @param replica.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
   ## Example:
   ## resources:
@@ -810,7 +816,13 @@ replica:
   ##     cpu: 3
   ##     memory: 1024Mi
   ##
-  resources: {}
+  resources:
+    requests:
+      cpu: 25m
+      memory: 128Mi
+    limits:
+      cpu: 150m
+      memory: 192Mi
   ## Configure Pods Security Context
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
   ## @param replica.podSecurityContext.enabled Enabled Redis(R) replicas pods' Security Context
@@ -1048,7 +1060,7 @@ replica:
   ## @param replica.persistentVolumeClaimRetentionPolicy.whenDeleted Volume retention behavior that applies when the StatefulSet is deleted
   ##
   persistentVolumeClaimRetentionPolicy:
-    enabled: false
+    enabled: true
     whenScaled: Retain
     whenDeleted: Retain
   ## Redis(R) replicas service parameters
@@ -1118,13 +1130,13 @@ replica:
   autoscaling:
     ## @param replica.autoscaling.enabled Enable replica autoscaling settings
     ##
-    enabled: false
+    enabled: true
     ## @param replica.autoscaling.minReplicas Minimum replicas for the pod autoscaling
     ##
     minReplicas: 1
     ## @param replica.autoscaling.maxReplicas Maximum replicas for the pod autoscaling
     ##
-    maxReplicas: 11
+    maxReplicas: 1
     ## @param replica.autoscaling.targetCPU Percentage of CPU to consider when autoscaling
     ##
     targetCPU: ""
@@ -1332,7 +1344,7 @@ sentinel:
   persistence:
     ## @param sentinel.persistence.enabled Enable persistence on Redis(R) sentinel nodes using Persistent Volume Claims (Experimental)
     ##
-    enabled: false
+    enabled: true
     ## @param sentinel.persistence.storageClass Persistent Volume storage class
     ## If defined, storageClassName: <storageClass>
     ## If set to "-", storageClassName: "", which disables dynamic provisioning
@@ -1375,7 +1387,7 @@ sentinel:
   ## @param sentinel.persistentVolumeClaimRetentionPolicy.whenDeleted Volume retention behavior that applies when the StatefulSet is deleted
   ##
   persistentVolumeClaimRetentionPolicy:
-    enabled: false
+    enabled: true
     whenScaled: Retain
     whenDeleted: Retain
   ## Redis(R) Sentinel resource requests and limits
@@ -1383,7 +1395,7 @@ sentinel:
   ## @param sentinel.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if sentinel.resources is set (sentinel.resources is recommended for production).
   ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
   ##
-  resourcesPreset: "nano"
+  ## resourcesPreset: "nano"
   ## @param sentinel.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
   ## Example:
   ## resources:
@@ -1394,7 +1406,13 @@ sentinel:
   ##     cpu: 3
   ##     memory: 1024Mi
   ##
-  resources: {}
+  resources:
+    requests:
+      cpu: 25m
+      memory: 128Mi
+    limits:
+      cpu: 150m
+      memory: 192Mi
   ## Configure Container Security Context
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
   ## @param sentinel.containerSecurityContext.enabled Enabled Redis(R) Sentinel containers' Security Context
@@ -1908,7 +1926,7 @@ metrics:
   ## @param metrics.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if metrics.resources is set (metrics.resources is recommended for production).
   ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
   ##
-  resourcesPreset: "nano"
+  ## resourcesPreset: "nano"
   ## @param metrics.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
   ## Example:
   ## resources:
@@ -1919,7 +1937,13 @@ metrics:
   ##     cpu: 3
   ##     memory: 1024Mi
   ##
-  resources: {}
+  resources:
+    requests:
+      cpu: 25m
+      memory: 128Mi
+    limits:
+      cpu: 150m
+      memory: 192Mi
   ## @param metrics.podLabels Extra labels for Redis(R) exporter pods
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
   ##
@@ -2179,7 +2203,7 @@ volumePermissions:
   ## @param volumePermissions.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if volumePermissions.resources is set (volumePermissions.resources is recommended for production).
   ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
   ##
-  resourcesPreset: "nano"
+  ## resourcesPreset: "nano"
   ## @param volumePermissions.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
   ## Example:
   ## resources:
@@ -2190,7 +2214,13 @@ volumePermissions:
   ##     cpu: 3
   ##     memory: 1024Mi
   ##
-  resources: {}
+  resources:
+    requests:
+      cpu: 25m
+      memory: 128Mi
+    limits:
+      cpu: 150m
+      memory: 192Mi
   ## Init container Container Security Context
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
   ## @param volumePermissions.containerSecurityContext.seLinuxOptions [object,nullable] Set SELinux options in container
