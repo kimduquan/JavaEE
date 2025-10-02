@@ -96,8 +96,8 @@ serviceBindings:
 ##
 image:
   registry: docker.io
-  repository: bitnami/kafka
-  tag: 4.0.0-debian-12-r10
+  repository: bitnamisecure/kafka
+  tag: latest
   digest: ""
   ## Specify a imagePullPolicy
   ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
@@ -113,7 +113,7 @@ image:
   pullSecrets: []
   ## Set to true if you would like to see extra information on logs
   ##
-  debug: false
+  debug: true
 
 ## @param clusterId Kafka Kraft cluster ID (ignored if existingKraftSecret is set). A random cluster ID will be generated the 1st time Kraft is initialized if not set.
 ## NOTE: Already initialized Kafka nodes will use cluster ID stored in their persisted storage.
