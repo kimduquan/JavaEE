@@ -294,7 +294,7 @@ tls:
   ## @param tls.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if tls.resources is set (tls.resources is recommended for production).
   ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
   ##
-  resourcesPreset: "nano"
+  ## resourcesPreset: "nano"
   ## @param tls.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
   ## Example:
   ## resources:
@@ -306,6 +306,12 @@ tls:
   ##     memory: 1024Mi
   ##
   resources: {}
+    requests:
+      cpu: 25m
+      memory: 128Mi
+    limits:
+      cpu: 150m
+      memory: 192Mi
   ## Init Container securityContext
   ## ref: https://kubernetes.io/docs/concepts/security/pod-security-policy/
   ## @param tls.securityContext Init container generate-tls-cert Security context
@@ -623,7 +629,7 @@ containerSecurityContext:
 ##
 resources:
   requests:
-    cpu: 100m
+    cpu: 50m
     memory: 128Mi
   limits:
     cpu: 500m
@@ -1377,7 +1383,7 @@ persistence:
 persistentVolumeClaimRetentionPolicy:
   ## @param persistentVolumeClaimRetentionPolicy.enabled Enable Persistent volume retention policy for MongoDB(&reg;) Statefulset
   ##
-  enabled: false
+  enabled: true
   ## @param persistentVolumeClaimRetentionPolicy.whenScaled Volume retention behavior when the replica count of the StatefulSet is reduced
   ##
   whenScaled: Retain
@@ -1393,7 +1399,7 @@ persistentVolumeClaimRetentionPolicy:
 backup:
   ## @param backup.enabled Enable the logical dump of the database "regularly"
   ##
-  enabled: false
+  enabled: true
   ## Fine tuning cronjob's config
   ##
   cronjob:
