@@ -1023,7 +1023,7 @@ keycloakConfigCli:
   image:
     registry: docker.io
     repository: bitnamilegacy/keycloak-config-cli
-    tag: latest
+    tag: 6.4.0-debian-12-r11
     digest: ""
     ## Specify a imagePullPolicy
     ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
