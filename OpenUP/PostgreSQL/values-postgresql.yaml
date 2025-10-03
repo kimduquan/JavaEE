@@ -120,7 +120,7 @@ diagnosticMode:
 ##
 image:
   registry: docker.io
-  repository: bitnamisecure/postgresql
+  repository: bitnamilegacy/postgresql
   tag: latest
   digest: ""
   ## Specify a imagePullPolicy
@@ -1622,7 +1622,7 @@ volumePermissions:
   ##
   image:
     registry: docker.io
-    repository: bitnamisecure/os-shell
+    repository: bitnamilegacy/os-shell
     tag: latest
     digest: ""
     pullPolicy: IfNotPresent
@@ -1737,7 +1737,7 @@ metrics:
   ##
   image:
     registry: docker.io
-    repository: bitnamisecure/postgres-exporter
+    repository: bitnamilegacy/postgres-exporter
     tag: latest
     digest: ""
     pullPolicy: IfNotPresent
