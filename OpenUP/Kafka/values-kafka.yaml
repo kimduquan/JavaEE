@@ -489,7 +489,7 @@ defaultInitContainers:
       registry: docker.io
       repository: bitnamisecure/os-shell
       tag: latest
-      digest: "sha256:cfa7d49190a08c13ef9ba050b258a8835560a75ba705cf767b0ecc5ea787bc69"
+      digest: ""
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -616,7 +616,7 @@ defaultInitContainers:
       registry: docker.io
       repository: bitnamisecure/kubectl
       tag: latest
-      digest: "sha256:9d54ea08ec75c9cbd47194b73275fdaf1d278f517ff6d9ba751ebc94b260404e"
+      digest: ""
       ## Specify a imagePullPolicy
       ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
       ##
@@ -2026,7 +2026,7 @@ metrics:
       registry: docker.io
       repository: bitnamisecure/jmx-exporter
       tag: latest
-      digest: "sha256:6cc7c8145e4d3e7c6c43afbd613ad675633dc7ac58b25e0fdd0f847b7a92ced6"
+      digest: ""
       ## Specify a imagePullPolicy
       ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
       ##
