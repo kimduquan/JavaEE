@@ -614,7 +614,7 @@ defaultInitContainers:
     ##
     image:
       registry: docker.io
-      repository: bitnamilegacy/kubectl
+      repository: bitnamisecure/kubectl
       tag: latest
       digest: ""
       ## Specify a imagePullPolicy
@@ -2024,7 +2024,7 @@ metrics:
     ##
     image:
       registry: docker.io
-      repository: bitnamilegacy/jmx-exporter
+      repository: bitnamisecure/jmx-exporter
       tag: latest
       digest: ""
       ## Specify a imagePullPolicy
