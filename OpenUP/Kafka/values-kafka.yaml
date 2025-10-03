@@ -98,7 +98,7 @@ image:
   registry: docker.io
   repository: bitnamilegacy/kafka
   tag: 4.0.0-debian-12-r10
-  digest: "sha256-aa0b2aee8c5610dd1d18d48b4f1df0dbe3267b5d4c338d36c9af9cbf0529c0b0"
+  digest: "sha256:b205a6da3d5d4bc89a73c087cfd83c0a69c032cef58a858e3fab81b8bb510540"
   ## Specify a imagePullPolicy
   ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
   ##
@@ -487,9 +487,9 @@ defaultInitContainers:
     ##
     image:
       registry: docker.io
-      repository: bitnamilegacy/os-shell
-      tag: 12-debian-12-r51
-      digest: "sha256-77e65e9d633ec1463f8bea185763aa7ef91e5ddbe0b60beb1b0b5d4da58882b6"
+      repository: bitnamisecure/os-shell
+      tag: latest
+      digest: "sha256:cfa7d49190a08c13ef9ba050b258a8835560a75ba705cf767b0ecc5ea787bc69"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -616,7 +616,7 @@ defaultInitContainers:
       registry: docker.io
       repository: bitnamisecure/kubectl
       tag: latest
-      digest: "sha256-fdfa84cb8c35bded62e093f02e30c4efc963de994676effda9a33b2fa04b1e26"
+      digest: "sha256:9d54ea08ec75c9cbd47194b73275fdaf1d278f517ff6d9ba751ebc94b260404e"
       ## Specify a imagePullPolicy
       ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
       ##
@@ -2026,7 +2026,7 @@ metrics:
       registry: docker.io
       repository: bitnamisecure/jmx-exporter
       tag: latest
-      digest: "sha256-a5c27f9ab3934907b05dae93da1e8fa1bb884fa4a14ff92658dea4a1bb627def"
+      digest: "sha256:6cc7c8145e4d3e7c6c43afbd613ad675633dc7ac58b25e0fdd0f847b7a92ced6"
       ## Specify a imagePullPolicy
       ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
       ##
