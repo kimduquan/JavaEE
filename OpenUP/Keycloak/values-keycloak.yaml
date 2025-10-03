@@ -267,7 +267,7 @@ extraEnvVars:
   - name: KC_HEALTH_ENABLED
     value: "true"
   - name: KC_DB_HOST
-    value: "postgresql-primary.default.svc.cluster.local"
+    value: "postgresql-primary"
 ## @param extraEnvVarsCM Name of existing ConfigMap containing extra env vars
 ##
 extraEnvVarsCM: ""
