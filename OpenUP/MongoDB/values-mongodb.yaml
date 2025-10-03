@@ -138,7 +138,7 @@ diagnosticMode:
 ##
 image:
   registry: docker.io
-  repository: bitnamilegacy/mongodb
+  repository: bitnamisecure/mongodb
   tag: latest
   digest: ""
   ## Specify a imagePullPolicy
@@ -264,7 +264,7 @@ tls:
   ##
   image:
     registry: docker.io
-    repository: bitnamilegacy/nginx
+    repository: bitnamisecure/nginx
     tag: latest
     digest: ""
     pullPolicy: IfNotPresent
@@ -868,7 +868,7 @@ externalAccess:
     ##
     image:
       registry: docker.io
-      repository: bitnamilegacy/kubectl
+      repository: bitnamisecure/kubectl
       tag: latest
       digest: ""
       ## Specify a imagePullPolicy
@@ -917,7 +917,7 @@ externalAccess:
     ##
     image:
       registry: docker.io
-      repository: bitnamilegacy/os-shell
+      repository: bitnamisecure/os-shell
       tag: latest
       digest: ""
       ## Specify a imagePullPolicy
@@ -1652,8 +1652,8 @@ volumePermissions:
   ##
   image:
     registry: docker.io
-    repository: bitnami/os-shell
-    tag: 12-debian-12-r51
+    repository: bitnamisecure/os-shell
+    tag: latest
     digest: ""
     ## Specify a imagePullPolicy
     ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
@@ -2458,7 +2458,7 @@ metrics:
   ##
   image:
     registry: docker.io
-    repository: bitnamilegacy/mongodb-exporter
+    repository: bitnamisecure/mongodb-exporter
     tag: latest
     digest: ""
     pullPolicy: IfNotPresent
