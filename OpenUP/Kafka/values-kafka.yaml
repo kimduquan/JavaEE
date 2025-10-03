@@ -98,7 +98,7 @@ image:
   registry: docker.io
   repository: bitnamilegacy/kafka
   tag: 4.0.0-debian-12-r10
-  digest: "sha256:b205a6da3d5d4bc89a73c087cfd83c0a69c032cef58a858e3fab81b8bb510540"
+  digest: ""
   ## Specify a imagePullPolicy
   ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
   ##
