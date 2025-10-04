@@ -690,7 +690,7 @@ autoscaling:
     minReplicas: 1
     ## @param autoscaling.hpa.maxReplicas Max replicas
     ##
-    maxReplicas: 2
+    maxReplicas: 1
     ## @param autoscaling.hpa.targetCPUUtilizationPercentage Target CPU utilization percentage
     ##
     targetCPUUtilizationPercentage: 75
