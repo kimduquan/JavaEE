@@ -206,7 +206,7 @@ auth:
 tls:
   ## @param tls.enabled Enable MongoDB(&reg;) TLS support between nodes in the cluster as well as between mongo clients and nodes
   ##
-  enabled: true
+  enabled: false
   mTLS:
     ## @param tls.mTLS.enabled IF TLS support is enabled, require clients to provide certificates
     enabled: true
@@ -1467,7 +1467,7 @@ backup:
     ## @param backup.cronjob.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if resources is set (resources is recommended for production).
     ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
     ##
-    ## resourcesPreset: "none"
+    resourcesPreset: "none"
     ## @param backup.cronjob.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
     ## Example:
     ## resources:
@@ -1478,13 +1478,7 @@ backup:
     ##     cpu: 3
     ##     memory: 1024Mi
     ##
-    resources:
-      requests:
-        cpu: 25m
-        memory: 128Mi
-      limits:
-        cpu: 150m
-        memory: 192Mi
+    resources: {}
     ## @param backup.cronjob.command Set backup container's command to run
     ##
     command: []
