@@ -347,7 +347,7 @@ resources:
     cpu: 25m
     memory: 512Mi
   limits:
-    cpu: 500m
+    cpu: 750m
     memory: 768Mi
 ## Configure extra options for Keycloak containers' liveness, readiness and startup probes
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
