@@ -846,7 +846,7 @@ autoscaling:
   ## @param autoscaling.vpa.minAllowed VPA Min allowed resources for the pod
   ##
   vpa:
-    enabled: true
+    enabled: false
     annotations: {}
     controlledResources: []
     maxAllowed: {}
