@@ -113,7 +113,7 @@ image:
 auth:
   ## @param auth.adminUser Keycloak administrator user
   ##
-  adminUser: "kimduquan@gmail.com"
+  adminUser: "kimduquan"
   ## @param auth.adminPassword Keycloak administrator password for the new user
   ##
   adminPassword: "090323508"
