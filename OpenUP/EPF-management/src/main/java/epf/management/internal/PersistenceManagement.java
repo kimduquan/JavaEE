@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import javax.sql.DataSource;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
+import epf.management.config.util.ConfigPath;
 import epf.management.external.PersistenceClient;
 import epf.management.persistence.schema.PersistenceTenant;
 import epf.management.persistence.schema.PersistenceUser;
@@ -26,10 +27,6 @@ public class PersistenceManagement {
 	String databaseTemplate;
 	
 	@Inject
-	@ConfigProperty(name = Naming.Management.Internal.PERSISTENCE_MANAGEMENT_SECURITY_SECRET)
-	String persistenceClientSecert;
-	
-	@Inject
 	@ConfigProperty(name = Naming.Management.Internal.PERSISTENCE_DATASOURCE_HOST)
 	String databaseHost;
 	
@@ -42,6 +39,8 @@ public class PersistenceManagement {
 	
 	@RestClient
 	transient PersistenceClient persistenceClient;
+	
+	private final ConfigPath config = new ConfigPath("/epf/config");
 
 	public void createPersistence(final Organization organization, final Principal principal) throws Exception {
 		final String databaseName = OrganizationUtil.getDefaultPersistenceDatabase(organization.getId());
@@ -88,7 +87,8 @@ public class PersistenceManagement {
 		final UpdatePersistenceTenantInfo updateInfo = new UpdatePersistenceTenantInfo();
 		updateInfo.setTenant(persistenceTenant);
 		
-		final String securityToken = SecurityUtil.generateToken(persistenceClientSecert);
+		final String persistenceSecret = config.getValue(Naming.Management.Internal.PERSISTENCE_MANAGEMENT_SECRET);
+		final String securityToken = SecurityUtil.generateToken(persistenceSecret);
 		final String authorization = "Bearer " + securityToken;
 		
 		persistenceClient.createOrUpdateTenant(authorization, organization.getId(), updateInfo);

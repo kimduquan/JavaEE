@@ -557,7 +557,7 @@ public interface Naming {
 			/**
 			 * 
 			 */
-			String PERSISTENCE_MANAGEMENT_SECURITY_SECRET = "epf-management-persistence-secret";
+			String PERSISTENCE_MANAGEMENT_SECRET = "epf.management.persistence.secret";
 			
 			/**
 			 * 

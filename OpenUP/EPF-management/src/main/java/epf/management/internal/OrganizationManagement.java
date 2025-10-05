@@ -12,6 +12,7 @@ import epf.management.admin.schema.Domain;
 import epf.management.schema.Organization;
 import epf.management.auth.schema.ClientCredential;
 import epf.management.auth.schema.TokenInfo;
+import epf.management.config.util.ConfigPath;
 import epf.management.external.AdminClient;
 import epf.management.external.AuthClient;
 import epf.management.schema.Principal;
@@ -34,10 +35,6 @@ public class OrganizationManagement {
 	@ConfigProperty(name = Naming.Management.Internal.AUTH_CLIENT_ID)
 	String clientId;
 	
-	@Inject
-	@ConfigProperty(name = Naming.Management.Internal.AUTH_CLIENT_SECRET)
-	String clientSecret;
-	
 	@RestClient
 	transient AuthClient authClient;
 	
@@ -46,10 +43,13 @@ public class OrganizationManagement {
 	
 	@Inject
 	transient PersistenceManagement persistenceManagement;
+	
+	private final ConfigPath config = new ConfigPath("/epf/config");
 
 	@CacheResult(cacheName = Naming.Management.ORGANIZATION_MANAGEMENT)
 	public Organization createOrganization(@CacheKey final String tokenId, final Principal principal) throws Exception {
 		
+		final String clientSecret = config.getValue(Naming.Management.Internal.AUTH_CLIENT_SECRET);
 		final ClientCredential credential = new ClientCredential();
 		credential.setClient_id(clientId);
 		credential.setClient_secret(clientSecret);
