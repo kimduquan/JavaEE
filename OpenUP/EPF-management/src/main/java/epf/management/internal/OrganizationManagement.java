@@ -44,7 +44,7 @@ public class OrganizationManagement {
 	@Inject
 	transient PersistenceManagement persistenceManagement;
 	
-	private final ConfigPath config = new ConfigPath("/epf/config");
+	private final ConfigPath config = new ConfigPath("/epf/config/management");
 
 	@CacheResult(cacheName = Naming.Management.ORGANIZATION_MANAGEMENT)
 	public Organization createOrganization(@CacheKey final String tokenId, final Principal principal) throws Exception {

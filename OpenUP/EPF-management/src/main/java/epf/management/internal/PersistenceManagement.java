@@ -40,7 +40,7 @@ public class PersistenceManagement {
 	@RestClient
 	transient PersistenceClient persistenceClient;
 	
-	private final ConfigPath config = new ConfigPath("/epf/config");
+	private final ConfigPath config = new ConfigPath("/epf/config/persistence");
 
 	public void createPersistence(final Organization organization, final Principal principal) throws Exception {
 		final String databaseName = OrganizationUtil.getDefaultPersistenceDatabase(organization.getId());
