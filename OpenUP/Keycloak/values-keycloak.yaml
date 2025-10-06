@@ -387,7 +387,7 @@ readinessProbe:
 ## @param startupProbe.successThreshold Success threshold for startupProbe
 ##
 startupProbe:
-  enabled: true
+  enabled: false
   initialDelaySeconds: 480
   periodSeconds: 5
   timeoutSeconds: 1
