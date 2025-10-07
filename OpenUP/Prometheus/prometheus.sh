@@ -1,1 +1,0 @@
-helm install prometheus oci://registry-1.docker.io/bitnamicharts/prometheus -f values-prometheus.yaml
