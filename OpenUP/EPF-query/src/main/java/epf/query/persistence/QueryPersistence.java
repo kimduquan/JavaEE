@@ -10,7 +10,6 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.metamodel.EntityType;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.PathSegment;
-import jakarta.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
@@ -34,7 +33,6 @@ public class QueryPersistence implements HealthCheck {
 			final List<PathSegment> paths, 
 			final Integer firstResult, 
 			final Integer maxResults,
-			final SecurityContext context,
 			final List<String> sort) throws Exception {
 		final Entity<Object> entity = new Entity<>();
 		final PathSegment rootSegment = paths.get(0);
@@ -60,8 +58,7 @@ public class QueryPersistence implements HealthCheck {
 	
 	public Object executeCountQuery(
 			final String schema,
-			final List<PathSegment> paths,
-			final SecurityContext context) throws Exception {
+			final List<PathSegment> paths) throws Exception {
 		final Entity<Object> entity = new Entity<>();
 		final PathSegment rootSegment = paths.get(0);
     	final String entityName = rootSegment.getPath();

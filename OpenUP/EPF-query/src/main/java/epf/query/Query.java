@@ -6,12 +6,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HEAD;
 import jakarta.ws.rs.NotFoundException;
-import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -20,18 +18,14 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.PathSegment;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.ResponseBuilder;
-import jakarta.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.management.util.OrganizationUtil;
 import epf.naming.Naming;
 import epf.naming.Naming.Query.Client;
-import epf.query.client.EntityId;
 import epf.query.internal.EntityCache;
 import epf.query.internal.QueryCache;
 import epf.query.persistence.QueryPersistence;
-import epf.query.util.LinkUtil;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
 @ApplicationScoped
@@ -51,7 +45,7 @@ public class Query {
 	transient Search search;
 	
 	@GET
-    @Path(Naming.Query.Client.ENTITY_PATH)
+    @Path("entity/{schema}/{entity}/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
     public Response getEntity(
@@ -113,15 +107,13 @@ public class Query {
             @QueryParam(Naming.Query.Client.MAX)
             final Integer maxResults,
             @Context
-            final SecurityContext context,
-            @Context
             final JsonWebToken jwt,
             @QueryParam(Naming.Query.Client.SORT)
     		final List<String> sort
             ) throws Exception {
 		if(!paths.isEmpty()) {
 			final String organizationId = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
-			final List<?> resultList = persistence.executeQuery(organizationId, paths, firstResult, maxResults, context, sort);
+			final List<?> resultList = persistence.executeQuery(organizationId, paths, firstResult, maxResults, sort);
 			return Response.ok(resultList).header(Client.ENTITY_COUNT, resultList.size()).build();
 		}
 		throw new NotFoundException();
@@ -137,32 +129,14 @@ public class Query {
             @PathParam("criteria")
             final List<PathSegment> paths,
             @Context
-            final SecurityContext context,
-            @Context
             final JsonWebToken jwt
             ) throws Exception {
 		if(!paths.isEmpty()) {
 			final String organizationId = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
-			final Object count = persistence.executeCountQuery(organizationId, paths, context);
+			final Object count = persistence.executeCountQuery(organizationId, paths);
 	    	return Response.ok().header(Client.ENTITY_COUNT, count).build();
 		}
 		throw new NotFoundException();
-	}
-
-	@PATCH
-    @Path(Naming.Query.Client.ENTITY)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-	@RunOnVirtualThread
-    public Response fetchEntities(
-    		@Context
-            final JsonWebToken jwt,
-    		final List<EntityId> entityIds) {
-		final String organizationId = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
-		final List<Object> entities = entityCache.getEntities(organizationId, entityIds);
-		ResponseBuilder response = Response.ok(entities).header(Client.ENTITY_COUNT, entities.size());
-		response = LinkUtil.links(response, "", entityIds);
-		return response.build();
 	}
 	
 	@Path(Naming.Query.SEARCH)
