@@ -1,14 +1,11 @@
 package epf.gateway.query;
 
-import java.io.InputStream;
 import java.util.List;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HEAD;
-import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -59,20 +56,6 @@ public class Query {
             @PathParam(Naming.Query.Client.ENTITY) final String entity
             ) throws Exception {
     	return request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, null);
-    }
-	
-	@PATCH
-    @Path(Naming.Query.Client.ENTITY)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @RunOnVirtualThread
-	public Response fetchEntities(
-			@Context final JsonWebToken jwt,
-            @Context final HttpHeaders headers, 
-            @Context final UriInfo uriInfo,
-            @Context final Request req,
-            final InputStream body) throws Exception {
-    	return request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, body);
     }
 	
 	@GET

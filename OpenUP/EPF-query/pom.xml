@@ -64,18 +64,8 @@
       <artifactId>quarkus-hibernate-validator</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-jdbc-h2</artifactId>
-    </dependency>
-	
-	<dependency>
-		<groupId>org.apache.lucene</groupId>
-		<artifactId>lucene-queryparser</artifactId>
-		<version>8.5.2</version>
-	</dependency>
-	<dependency>
-		<groupId>com.hazelcast</groupId>
-		<artifactId>hazelcast</artifactId>
+	    <groupId>io.quarkus</groupId>
+	    <artifactId>quarkus-jdbc-postgresql</artifactId>
 	</dependency>
 
 	<dependency>

@@ -805,6 +805,11 @@ public interface Naming {
 		/**
 		 * 
 		 */
+		String ENTITY = "entity";
+		
+		/**
+		 * 
+		 */
 		String SEARCH = "search";
 
 		/**

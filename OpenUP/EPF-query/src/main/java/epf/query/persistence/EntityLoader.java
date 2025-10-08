@@ -6,7 +6,6 @@ import jakarta.enterprise.context.control.ActivateRequestContext;
 import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.ws.rs.BadRequestException;
 import org.eclipse.microprofile.health.Readiness;
 import epf.persistence.util.EntityUtil;
@@ -18,7 +17,7 @@ import epf.util.json.ext.JsonUtil;
 @Dependent
 public class EntityLoader implements Loader<String, Object> {
 	
-	@PersistenceContext(unitName = epf.query.Naming.QUERY_UNIT_NAME)
+	@Inject
 	transient EntityManager manager;
 
 	@Inject @Readiness

@@ -3,8 +3,8 @@ package epf.query.persistence;
 import java.util.List;
 import java.util.logging.Logger;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.metamodel.EntityType;
@@ -25,7 +25,7 @@ public class QueryPersistence implements HealthCheck {
 	
 	private transient static final Logger LOGGER = LogManager.getLogger(QueryPersistence.class.getName());
 	
-	@PersistenceContext(unitName = epf.query.Naming.QUERY_UNIT_NAME)
+	@Inject
 	transient EntityManager entityManager;
 	
 	public List<?> executeQuery(

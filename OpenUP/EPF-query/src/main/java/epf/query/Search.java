@@ -15,7 +15,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.health.Readiness;
@@ -33,7 +32,7 @@ public class Search {
 	
 	private static final String FULLTEXT_SEARCH_COUNT = "SELECT COUNT(*) FROM FTL_SEARCH_DATA(?, ?, ?) WHERE SCHEMA LIKE ?;";
 	
-	@PersistenceContext(unitName = "EPF-query")
+	@Inject
 	transient EntityManager manager;
 	
 	@Inject @Readiness

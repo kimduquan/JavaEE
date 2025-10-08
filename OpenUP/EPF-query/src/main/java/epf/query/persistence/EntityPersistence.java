@@ -7,7 +7,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.control.ActivateRequestContext;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
@@ -25,7 +24,7 @@ public class EntityPersistence implements HealthCheck {
 	
 	private transient static final Logger LOGGER = LogManager.getLogger(EntityPersistence.class.getName());
 	
-	@PersistenceContext(unitName = epf.query.Naming.QUERY_UNIT_NAME)
+	@Inject
 	transient EntityManager entityManager;
 	
 	@Inject @Readiness

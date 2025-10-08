@@ -6,7 +6,6 @@ import jakarta.enterprise.context.control.ActivateRequestContext;
 import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
@@ -18,7 +17,7 @@ import epf.query.internal.SchemaCache;
 @Dependent
 public class QueryLoader implements Loader<String, Integer> {
 	
-	@PersistenceContext(unitName = epf.query.Naming.QUERY_UNIT_NAME)
+	@Inject
 	transient EntityManager manager;
 
 	@Inject @Readiness

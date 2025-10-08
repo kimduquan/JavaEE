@@ -10,8 +10,8 @@ import java.util.stream.Collectors;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
@@ -27,7 +27,7 @@ public class SchemaCache implements HealthCheck {
 
 	private transient SchemaUtil schemaUtil;
 	
-	@PersistenceContext(unitName = epf.query.Naming.QUERY_UNIT_NAME)
+	@Inject
 	transient EntityManager entityManager;
 	
 	@PostConstruct
