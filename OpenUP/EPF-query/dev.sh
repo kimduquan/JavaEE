@@ -1,7 +1,6 @@
 . ../env.sh
-mkdir -p ./src/main/jib/home/jboss/
-cp $USER_DIR/EPF-query.trace.db ./src/main/jib/home/jboss/
-cp $USER_DIR/EPF-query.mv.db ./src/main/jib/home/jboss/
-mvn clean install -U -Dquarkus.container-image.build=true
+. ../native_env.sh
+. ./config.sh
+mvn clean install -U -Pnative -Dquarkus.native.container-build=true -Dquarkus.container-image.build=true
 ./stop.sh
 ./start.sh
