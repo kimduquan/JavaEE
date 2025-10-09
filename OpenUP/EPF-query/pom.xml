@@ -67,6 +67,10 @@
 	    <groupId>io.quarkus</groupId>
 	    <artifactId>quarkus-jdbc-postgresql</artifactId>
 	</dependency>
+	<dependency>
+	    <groupId>io.quarkus</groupId>
+	    <artifactId>quarkus-redis-cache</artifactId>
+	</dependency>
 
 	<dependency>
 		<groupId>openup</groupId>
