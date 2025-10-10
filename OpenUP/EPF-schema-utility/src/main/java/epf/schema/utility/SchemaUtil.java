@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.metamodel.Metamodel;
 
 public class SchemaUtil {
 
@@ -57,7 +59,7 @@ public class SchemaUtil {
 		return table;
 	}
 	
-	public SchemaUtil(final List<Class<?>> classes) {
+	private SchemaUtil(final List<Class<?>> classes) {
 		classes.forEach(entityClass -> entitySchemas.put(entityClass.getName(), computeEntitySchema(entityClass)));
 		classes.forEach(entityClass -> {
 			final Optional<String> entityName = computeEntityName(entityClass);
@@ -80,6 +82,11 @@ public class SchemaUtil {
 			}
 		});
 		classes.forEach(entityClass -> entityIdFields.put(entityClass.getName(), computeEntityIdField(entityClass)));
+	}
+	
+	public static SchemaUtil from(final Metamodel metamodel) throws Exception {
+		final List<Class<?>> entityClasses = metamodel.getEntities().stream().map(entity -> entity.getJavaType()).collect(Collectors.toList());
+		return new SchemaUtil(entityClasses);
 	}
 	
 	public void clear() {

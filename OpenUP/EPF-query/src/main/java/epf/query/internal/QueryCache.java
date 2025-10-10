@@ -1,76 +1,41 @@
 package epf.query.internal;
 
-import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
-import javax.cache.Cache;
+import java.util.ArrayList;
+import java.util.List;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.event.Event;
-import jakarta.inject.Inject;
-import org.eclipse.microprofile.health.HealthCheck;
-import org.eclipse.microprofile.health.HealthCheckResponse;
-import org.eclipse.microprofile.health.Readiness;
-import epf.query.cache.CachingManager;
-import epf.query.cache.QueryLoad;
-import epf.schema.utility.EntityEvent;
-import epf.util.logging.LogManager;
+import epf.naming.Naming;
+import epf.query.client.Entity;
+import io.quarkus.cache.CacheInvalidate;
+import io.quarkus.cache.CacheKey;
+import io.quarkus.cache.CacheResult;
 
 @ApplicationScoped
-@Readiness
-public class QueryCache implements HealthCheck {
+public class QueryCache {
 	
-	private transient static final Logger LOGGER = LogManager.getLogger(QueryCache.class.getName());
-	
-	@Inject
-	transient CachingManager manager;
-	
-	@Inject  @Readiness
-	transient SchemaCache schemaCache;
-	
-	@Inject
-	transient Event<QueryLoad> event;
-	
-	private transient Cache<String, Integer> queryCache;
-	
-	@PostConstruct
-	protected void postConstruct() {
-		try {
-			queryCache = manager.getQueryCache(null);
-		}
-		catch(Exception ex) {
-			LOGGER.log(Level.SEVERE, "[QueryCache.queryCache]", ex);
-		}
+	@CacheResult(cacheName = Naming.Query.QUERY_COUNT)
+	public Integer executeCountQuery(
+			@CacheKey
+			final String schema) throws Exception {
+		return 0;
 	}
 	
-	@PreDestroy
-	protected void preDestroy() {
-		queryCache.close();
-	}
-
-	public void accept(final EntityEvent event) {
-		final Optional<QueryKey> queryKey = schemaCache.getQueryKey(event.getEntity().getClass());
-		if(queryKey.isPresent()) {
-			final String key = queryKey.get().toString();
-			manager.getQueryCache(event.getOrganization()).remove(key);
-		}
+	@CacheInvalidate(cacheName = Naming.Query.QUERY_COUNT)
+	public void clearQueryCount(
+			@CacheKey
+			final String schema) throws Exception {
 	}
 	
-	public Optional<Integer> countEntity(
-			final String organizationId,
-			final String schema,
-            final String entity
-            ) {
-		final QueryKey queryKey = schemaCache.getQueryKey(schema, entity);
-		return Optional.ofNullable(manager.getQueryCache(organizationId).get(queryKey.toString()));
+	@CacheResult(cacheName = Naming.Query.QUERY)
+	public List<Entity> executeQuery(
+			@CacheKey
+			final String schema) throws Exception {
+		final List<Entity> entities = new ArrayList<>();
+		return entities;
 	}
-
-	@Override
-	public HealthCheckResponse call() {
-		if(queryCache == null || queryCache.isClosed()) {
-			return HealthCheckResponse.down("EPF-query-query-cache");
-		}
-		return HealthCheckResponse.up("EPF-query-query-cache");
+	
+	@CacheInvalidate(cacheName = Naming.Query.QUERY)
+	public void clearQuery(
+			@CacheKey
+			final String schema) throws Exception {
 	}
 }

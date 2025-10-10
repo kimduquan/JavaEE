@@ -810,7 +810,37 @@ public interface Naming {
 		/**
 		 * 
 		 */
+		String ID = "id";
+		
+		/**
+		 *
+		 */
+		String ENTITY_COUNT = "entity-count";
+		
+		/**
+		 * 
+		 */
 		String SEARCH = "search";
+		
+		/**
+		 * 
+		 */
+		String QUERY_ENTITY = "epf-query-entity";
+		
+		/**
+		 * 
+		 */
+		String QUERY_ENTITY_COUNT = "epf-query-entity-count";
+		
+		/**
+		 * 
+		 */
+		String QUERY_COUNT = "epf-query-count";
+		
+		/**
+		 * 
+		 */
+		String QUERY = "epf-query";
 
 		/**
 		 * @author PC

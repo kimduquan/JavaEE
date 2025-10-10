@@ -3,51 +3,40 @@ package epf.query;
 import java.util.logging.Logger;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import org.eclipse.microprofile.health.HealthCheck;
-import org.eclipse.microprofile.health.HealthCheckResponse;
-import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import epf.naming.Naming;
 import epf.query.internal.EntityCache;
 import epf.query.internal.QueryCache;
-import epf.query.persistence.EntityPersistence;
 import epf.schema.utility.EntityEvent;
+import epf.schema.utility.PostPersist;
+import epf.schema.utility.PostRemove;
+import epf.schema.utility.PostUpdate;
 import epf.util.logging.LogManager;
-import io.smallrye.reactive.messaging.annotations.Blocking;
 
 @ApplicationScoped
-@Readiness
-public class Listener implements HealthCheck {
+public class Listener {
 	
 	private transient static final Logger LOGGER = LogManager.getLogger(Listener.class.getName());
 	
-	@Inject @Readiness
+	@Inject
 	transient EntityCache entityCache;
 	
-	@Inject @Readiness
+	@Inject
 	transient QueryCache queryCache;
 	
-	@Inject @Readiness
-	transient EntityPersistence persistence;
-
-	@Override
-	public HealthCheckResponse call() {
-		return HealthCheckResponse.up("EPF-query-listener");
-	}
-	
 	@Incoming(Naming.Persistence.ENTITY_LISTENERS)
-	@Blocking
-	public void postEvent(final EntityEvent event) {
+	public void postEvent(final EntityEvent event) throws Exception {
 		if(event != null) {
 			LOGGER.info("[Listener.postEvent]" + event.toString());
-			accept(event);
+			if(event instanceof PostRemove || event instanceof PostUpdate) {
+				entityCache.clearEntity(event.getSchema(), event.getName(), event.getId());
+			}
+			if(event instanceof PostPersist || event instanceof PostRemove) {
+				entityCache.clearEntityCount(event.getSchema(), event.getName());
+			}
+			queryCache.clearQueryCount(event.getSchema());
+			queryCache.clearQuery(event.getSchema());
 			LOGGER.info("[Listener.accept]" + event.toString());
 		}
-	}
-	
-	private void accept(final EntityEvent event) {
-		persistence.accept(event);
-		entityCache.accept(event);
-		queryCache.accept(event);
 	}
 }

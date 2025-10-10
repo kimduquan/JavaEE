@@ -7,19 +7,18 @@ import jakarta.persistence.metamodel.Metamodel;
 
 public interface EntityTypeUtil {
 	
-	static Optional<EntityType<?>> findEntityType(final Metamodel metamodel, final String name){
+	static Optional<EntityType<?>> findEntityType(final Metamodel metamodel, final String schema, final String name) {
 		return metamodel.getEntities()
 				.stream()
-				.filter(type -> type.getName().equals(name))
-				.findFirst();
-	}
-	
-	@SuppressWarnings("unchecked")
-	static <T> Optional<EntityType<T>> findEntityType(final Metamodel metamodel, final Class<T> cls){
-		return metamodel.getEntities()
-				.stream()
-				.filter(type -> type.getJavaType().getName().equals(cls.getName()))
-				.map(type -> (EntityType<T>)type)
+				.filter(entityType -> {
+					if(entityType.getName().equals(name)) {
+						final Optional<String> entitySchema = getSchema(entityType);
+						if(entitySchema.isPresent()) {
+							return entitySchema.get().equals(schema);
+						}
+					}
+					return false;
+				})
 				.findFirst();
 	}
 	

@@ -1,14 +1,10 @@
 package epf.persistence;
 
 import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.net.URI;
 import java.time.Instant;
-import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.json.Json;
@@ -50,7 +46,6 @@ import epf.schema.utility.EntityTransaction;
 import epf.schema.utility.PostPersist;
 import epf.schema.utility.PostRemove;
 import epf.schema.utility.PostUpdate;
-import epf.schema.utility.SchemaUtil;
 import epf.util.json.ext.JsonUtil;
 import epf.util.logging.LogManager;
 import io.smallrye.common.annotation.RunOnVirtualThread;
@@ -61,8 +56,6 @@ public class Persistence {
 	
 	private transient final static Logger LOGGER = LogManager.getLogger(Persistence.class.getName());
 	
-	private transient SchemaUtil schemaUtil;
-	
 	@Inject
 	transient TransactionCache cache;
     
@@ -71,20 +64,6 @@ public class Persistence {
     
     @Inject
     transient EntityManager manager;
-    
-    protected void initSchemaUtil()  {
-    	if(schemaUtil == null) {
-    		final List<Class<?>> entityClasses = manager.getMetamodel().getEntities().stream().map(entity -> entity.getJavaType()).collect(Collectors.toList());
-    		schemaUtil = new SchemaUtil(entityClasses);
-    	}
-    }
-	
-	@PreDestroy
-	protected void preDestroy() {
-		if(schemaUtil != null) {
-			schemaUtil.clear();
-		}
-	}
     
     @POST
     @Path("{schema}/{entity}")
@@ -108,7 +87,7 @@ public class Persistence {
             final InputStream body
             ) throws Exception {
     	final String organizationId = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
-    	final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), name);
+    	final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), schema, name);
     	if(!entityType.isPresent()) {
     		return Response.status(Response.Status.NOT_FOUND).build();
     	}
@@ -129,12 +108,15 @@ public class Persistence {
     	
     	manager.persist(entity);
         manager.flush();
+        
         final JsonPatch diff = JsonUtil.createDiff(new Object(), entity);
         
-        final Object transactionEntity = entity;
+        final Object entityId = EntityUtil.getEntityId(entityType.get(), entity);
+        
         final PostPersist entityEvent = new PostPersist();
         entityEvent.setTime(Instant.now().toEpochMilli());
-        entityEvent.setEntity(transactionEntity);
+        entityEvent.setId(entityId.toString());
+        entityEvent.setEntity(entity);
         entityEvent.setName(entityType.get().getName());
         entityEvent.setSchema(entitySchema.get());
         entityEvent.setOrganization(organizationId);
@@ -143,10 +125,6 @@ public class Persistence {
         transaction.setId(headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER));
         transaction.setEvent(entityEvent);
         transaction.setDiff(JsonUtil.toString(diff.toJsonArray()));
-        initSchemaUtil();
-        final Optional<Field> entityIdField = schemaUtil.getEntityIdField(transactionEntity.getClass());
-        final Object entityId = entityIdField.get().get(transactionEntity);
-    	transaction.setEntityId(entityId);
     	
         cache.put(transaction);
         
@@ -178,7 +156,7 @@ public class Persistence {
             final InputStream body
             ) throws Exception {
     	final String organizationId = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
-    	final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), name);
+    	final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), schema, name);
     	if(!entityType.isPresent()) {
     		return Response.status(Response.Status.NOT_FOUND).build();
     	}
@@ -188,7 +166,7 @@ public class Persistence {
     	}
     	Object entityId = null;
     	try {
-    		entityId = EntityUtil.getEntityId(entityType.get().getIdType().getJavaType().getName(), id);
+    		entityId = EntityUtil.convertEntityId(entityType.get(), id);
     	}
     	catch(NumberFormatException ex) {
     		return Response.status(Response.Status.BAD_REQUEST).build();
@@ -210,10 +188,10 @@ public class Persistence {
 
         final JsonObject preEntity = JsonUtil.toJsonObject(entityObject);
         
-    	final Object transactionEntity = entityObject;
-        final PostUpdate entityEvent = new PostUpdate();
+    	final PostUpdate entityEvent = new PostUpdate();
         entityEvent.setTime(Instant.now().toEpochMilli());
-        entityEvent.setEntity(transactionEntity);
+        entityEvent.setId(entityId.toString());
+        entityEvent.setEntity(entityObject);
         entityEvent.setName(entityType.get().getName());
         entityEvent.setSchema(entitySchema.get());
         entityEvent.setOrganization(organizationId);
@@ -221,7 +199,6 @@ public class Persistence {
         final EntityTransaction transaction = new EntityTransaction();
         transaction.setId(headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER));
         transaction.setEvent(entityEvent);
-        transaction.setEntityId(entityId);
         
         final Object mergedEntity = manager.merge(entity);
         manager.flush();
@@ -256,7 +233,7 @@ public class Persistence {
             final JsonWebToken jwt
             ) throws Exception {
     	final String organizationId = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
-    	final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), name);
+    	final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), schema, name);
     	if(!entityType.isPresent()) {
     		return Response.status(Response.Status.NOT_FOUND).build();
     	}
@@ -266,7 +243,7 @@ public class Persistence {
     	}
     	Object entityId = null;
     	try {
-    		entityId = EntityUtil.getEntityId(entityType.get().getIdType().getJavaType().getName(), id);
+    		entityId = EntityUtil.convertEntityId(entityType.get(), id);
     	}
     	catch(NumberFormatException ex) {
     		return Response.status(Response.Status.BAD_REQUEST).build();
@@ -283,10 +260,10 @@ public class Persistence {
     	manager.remove(entityObject);
     	manager.flush();
     	
-    	final Object transactionEntity = entityObject;
-        final PostRemove entityEvent = new PostRemove();
+    	final PostRemove entityEvent = new PostRemove();
         entityEvent.setTime(Instant.now().toEpochMilli());
-        entityEvent.setEntity(transactionEntity);
+        entityEvent.setId(entityId.toString());
+        entityEvent.setEntity(entityObject);
         entityEvent.setName(entityType.get().getName());
         entityEvent.setSchema(entitySchema.get());
         entityEvent.setOrganization(organizationId);
@@ -294,7 +271,6 @@ public class Persistence {
         final EntityTransaction transaction = new EntityTransaction();
         transaction.setId(headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER));
         transaction.setEvent(entityEvent);
-        transaction.setEntityId(entityId);
         transaction.setDiff(JsonUtil.toString(diff.toJsonArray()));
         
         cache.put(transaction);
@@ -317,15 +293,17 @@ public class Persistence {
 	    	transactionEvent.setEventType(TransactionEventType.rollback);
 	    	transactionEvent.setTransaction(transaction);
     		final EntityEvent entityEvent = transaction.getEvent();
+    		final EntityType<?> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), entityEvent.getSchema(), entityEvent.getName()).get();
+    		final Object entityId = EntityUtil.convertEntityId(entityType, entityEvent.getId());
     		if(entityEvent instanceof PostPersist) {
-     			final Object entity = manager.find(entityEvent.getEntity().getClass(), transaction.getEntityId());
+     			final Object entity = manager.find(entityEvent.getEntity().getClass(), entityId);
     			if(entity != null) {
     				manager.remove(entity);
     				manager.flush();
     			}
     		}
     		else if(entityEvent instanceof PostUpdate) {
-    			final Object entity = manager.find(entityEvent.getEntity().getClass(), transaction.getEntityId());
+    			final Object entity = manager.find(entityEvent.getEntity().getClass(), entityId);
     			if(entity != null) {
     				manager.merge(entityEvent.getEntity());
     				manager.flush();

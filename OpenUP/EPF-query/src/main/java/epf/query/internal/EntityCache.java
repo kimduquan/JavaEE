@@ -1,87 +1,71 @@
 package epf.query.internal;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
-import javax.cache.Cache;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import org.eclipse.microprofile.health.HealthCheck;
-import org.eclipse.microprofile.health.HealthCheckResponse;
-import org.eclipse.microprofile.health.Readiness;
-import epf.query.cache.CachingManager;
-import epf.query.client.EntityId;
-import epf.schema.utility.EntityEvent;
-import epf.util.logging.LogManager;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.metamodel.EntityType;
+import jakarta.ws.rs.NotFoundException;
+import java.util.Optional;
+import epf.naming.Naming;
+import epf.persistence.util.EntityTypeUtil;
+import epf.persistence.util.EntityUtil;
+import epf.query.cache.CacheEntry;
+import io.quarkus.cache.CacheInvalidate;
+import io.quarkus.cache.CacheKey;
+import io.quarkus.cache.CacheResult;
 
 @ApplicationScoped
-@Readiness
-public class EntityCache implements HealthCheck {
-	
-	private transient static final Logger LOGGER = LogManager.getLogger(EntityCache.class.getName());
+public class EntityCache {
 	
 	@Inject
-	transient CachingManager manager;
-	
-	@Inject @Readiness
-	transient SchemaCache schemaCache;
-	
-	transient Cache<String, Object> entityCache;
-	
-	@PostConstruct
-	protected void postConstruct() {
-		try {
-			entityCache = manager.getEntityCache(null);
-		}
-		catch(Exception ex) {
-			LOGGER.log(Level.SEVERE, "[EntityCache.entityCache]", ex);
-		}
-	}
-	
-	@PreDestroy
-	protected void preDestroy() {
-		entityCache.close();
-	}
+	transient EntityManager manager;
 
-	public void accept(final EntityEvent event) {
-		final Optional<EntityKey> key = schemaCache.getKey(event.getEntity());
-		if(key.isPresent()) {
-			manager.getEntityCache(event.getOrganization()).remove(key.get().toString());
+	@CacheResult(cacheName = Naming.Query.QUERY_ENTITY)
+	public CacheEntry getEntity(
+			@CacheKey
+			final String schema, 
+			@CacheKey
+			final String name, 
+			@CacheKey
+			final String id) throws Exception {
+		final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), schema, name);
+		final Object entityId = EntityUtil.convertEntityId(entityType.get(), id);
+		final Class<?> entityClass = entityType.get().getJavaType();
+		final Object entity = manager.find(entityClass, entityId);
+		if(entity != null) {
+			final CacheEntry entry = new CacheEntry();
+			entry.setValue(entity);
+			return entry;
 		}
+		throw new NotFoundException();
 	}
 	
-	public Optional<Object> getEntity(
-			final String organizationId,
-			final String schema,
-            final String entity,
-            final String entityId
-            ) {
-		final EntityKey key = schemaCache.getKey(schema, entity, entityId);
-		return Optional.ofNullable(manager.getEntityCache(organizationId).get(key.toString()));
+	@CacheInvalidate(cacheName = Naming.Query.QUERY_ENTITY)
+	public void clearEntity(
+			@CacheKey
+			final String schema, 
+			@CacheKey
+			final String name, 
+			@CacheKey
+			final String id) {
 	}
 	
-	public List<Object> getEntities(final String organizationId, final List<EntityId> entityIds){
-		final List<EntityKey> entityKeys = entityIds.stream().map(key -> schemaCache.getSearchKey(key)).collect(Collectors.toList());
-		final List<String> keys = entityKeys.stream().map(EntityKey::toString).collect(Collectors.toList());
-		final Map<String, Object> values = manager.getEntityCache(organizationId).getAll(keys.stream().collect(Collectors.toSet()));
-		final List<Object> result = new ArrayList<>();
-		keys.forEach(key -> {
-			result.add(values.get(key));
-		});
-		return result;
+	@CacheResult(cacheName = Naming.Query.QUERY_ENTITY_COUNT)
+	public Integer countEntity(
+			@CacheKey
+			final String schema, 
+			@CacheKey
+			final String name) throws Exception {
+		return 0;
 	}
-
-	@Override
-	public HealthCheckResponse call() {
-		if(entityCache == null || entityCache.isClosed()) {
-			return HealthCheckResponse.down("EPF-query-entity-cache");
-		}
-		return HealthCheckResponse.up("EPF-query-entity-cache");
+	
+	@CacheInvalidate(cacheName = Naming.Query.QUERY_ENTITY_COUNT)
+	public void clearEntityCount(
+			@CacheKey
+			final String schema, 
+			@CacheKey
+			final String name
+			) {
+		
 	}
 }

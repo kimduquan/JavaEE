@@ -13,8 +13,6 @@ public class EntityTransaction implements Serializable {
 	@JsonbTypeAdapter(Adapter.class)
 	private EntityEvent event;
 	
-	private Object entityId;
-	
 	private String diff;
 
 	public String getId() {
@@ -27,14 +25,6 @@ public class EntityTransaction implements Serializable {
 
 	public void setEvent(final EntityEvent event) {
 		this.event = event;
-	}
-
-	public Object getEntityId() {
-		return entityId;
-	}
-
-	public void setEntityId(final Object entityId) {
-		this.entityId = entityId;
 	}
 
 	public String getDiff() {

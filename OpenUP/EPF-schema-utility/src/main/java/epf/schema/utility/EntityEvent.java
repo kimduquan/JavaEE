@@ -17,6 +17,8 @@ public class EntityEvent implements Serializable {
 	
 	private String name;
 	
+	private String id;
+	
 	@JsonbTypeAdapter(Adapter.class)
 	private Object entity;
 	
@@ -63,5 +65,13 @@ public class EntityEvent implements Serializable {
 
 	public void setOrganization(final String organization) {
 		this.organization = organization;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(final String id) {
+		this.id = id;
 	}
 }

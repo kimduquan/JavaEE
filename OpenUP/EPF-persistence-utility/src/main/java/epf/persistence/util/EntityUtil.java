@@ -1,8 +1,13 @@
 package epf.persistence.util;
 
+import java.lang.reflect.Field;
+import jakarta.persistence.metamodel.EntityType;
+import jakarta.persistence.metamodel.SingularAttribute;
+
 public interface EntityUtil {
 	
-	static Object getEntityId(final String entityIdFieldType, final Object id) {
+	static Object convertEntityId(final EntityType<?> entityType, final Object id) {
+		final String entityIdFieldType = entityType.getIdType().getJavaType().getName();
     	Object entityId = id;
     	switch(entityIdFieldType) {
     		case "java.lang.Integer":
@@ -16,4 +21,12 @@ public interface EntityUtil {
 		}
     	return entityId;
     }
+	
+	static Object getEntityId(final EntityType<?> entityType, final Object entity) throws Exception {
+		final SingularAttribute<?, ?> idAttribute = entityType.getId(entityType.getIdType().getJavaType());
+		final Field idField = entity.getClass().getField(idAttribute.getName());
+		idField.setAccessible(true);
+		final Object entityId = idField.get(entity);
+		return entityId;
+	}
 }
