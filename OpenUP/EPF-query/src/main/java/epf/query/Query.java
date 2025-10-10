@@ -102,7 +102,7 @@ public class Query {
             final String schema,
             @PathParam("criteria")
             final List<PathSegment> paths) throws Exception {
-		final Object count = queryCache.executeCountQuery(schema);
+		final Integer count = queryCache.executeCountQuery(schema);
     	return Response.ok().header(Naming.Query.ENTITY_COUNT, count).build();
 	}
 }

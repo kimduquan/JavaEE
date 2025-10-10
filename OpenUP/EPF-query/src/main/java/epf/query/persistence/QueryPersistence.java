@@ -10,9 +10,6 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.metamodel.EntityType;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.PathSegment;
-import org.eclipse.microprofile.health.HealthCheck;
-import org.eclipse.microprofile.health.HealthCheckResponse;
-import org.eclipse.microprofile.health.Readiness;
 import epf.persistence.internal.Entity;
 import epf.persistence.internal.QueryBuilder;
 import epf.persistence.util.EntityTypeUtil;
@@ -20,8 +17,7 @@ import epf.util.json.ext.JsonUtil;
 import epf.util.logging.LogManager;
 
 @ApplicationScoped
-@Readiness
-public class QueryPersistence implements HealthCheck {
+public class QueryPersistence {
 	
 	private transient static final Logger LOGGER = LogManager.getLogger(QueryPersistence.class.getName());
 	
@@ -38,7 +34,7 @@ public class QueryPersistence implements HealthCheck {
 		final PathSegment rootSegment = paths.get(0);
     	final String entityName = rootSegment.getPath();
     	@SuppressWarnings("unchecked")
-		final EntityType<Object> entityType = (EntityType<Object>) EntityTypeUtil.findEntityType(entityManager.getMetamodel(), entityName).orElseThrow(NotFoundException::new);
+		final EntityType<Object> entityType = (EntityType<Object>) EntityTypeUtil.findEntityType(entityManager.getMetamodel(), schema, entityName).orElseThrow(NotFoundException::new);
     	EntityTypeUtil.getSchema(entityType).ifPresent(entitySchema -> {
     		if(!entitySchema.equals(schema)) {
     			throw new NotFoundException();
@@ -63,7 +59,7 @@ public class QueryPersistence implements HealthCheck {
 		final PathSegment rootSegment = paths.get(0);
     	final String entityName = rootSegment.getPath();
     	@SuppressWarnings("unchecked")
-		final EntityType<Object> entityType = (EntityType<Object>) EntityTypeUtil.findEntityType(entityManager.getMetamodel(), entityName).orElseThrow(NotFoundException::new);
+		final EntityType<Object> entityType = (EntityType<Object>) EntityTypeUtil.findEntityType(entityManager.getMetamodel(), schema, entityName).orElseThrow(NotFoundException::new);
     	EntityTypeUtil.getSchema(entityType).ifPresent(entitySchema -> {
     		if(!entitySchema.equals(schema)) {
     			throw new NotFoundException();
@@ -105,12 +101,4 @@ public class QueryPersistence implements HealthCheck {
         });
         return resultList;
     }
-
-	@Override
-	public HealthCheckResponse call() {
-		if(!entityManager.isOpen()) {
-			return HealthCheckResponse.down("EPF-query-persistence");
-		}
-		return HealthCheckResponse.up("EPF-query-query-persistence");
-	}
 }
