@@ -1,10 +1,13 @@
 package epf.query;
 
 import java.util.List;
+import java.util.Optional;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.metamodel.EntityType;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HEAD;
 import jakarta.ws.rs.NotFoundException;
@@ -16,6 +19,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.PathSegment;
 import jakarta.ws.rs.core.Response;
 import epf.naming.Naming;
+import epf.persistence.util.EntityTypeUtil;
 import epf.query.cache.CacheEntry;
 import epf.query.client.Entity;
 import epf.query.internal.EntityCache;
@@ -31,6 +35,9 @@ public class Query {
 	
 	@Inject
 	transient QueryCache queryCache;
+	
+	@Inject
+	transient EntityManager manager;
 	
 	@GET
     @Path("entity/{schema}/{entity}/{id}")
@@ -49,7 +56,8 @@ public class Query {
             @NotNull
             @NotBlank
             final String id) throws Exception {
-		final CacheEntry entry = entityCache.getEntity(schema, name, id);
+		final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), schema, name);
+		final CacheEntry entry = entityCache.getEntity(schema, name, id, entityType.orElseThrow(NotFoundException::new));
 		return Response.ok(entry.getValue()).build();
 	}
 
@@ -64,8 +72,9 @@ public class Query {
             @PathParam(Naming.Query.ENTITY)
             @NotNull
             @NotBlank
-            final String entity) throws Exception {
-		final Integer count = entityCache.countEntity(schema, entity);
+            final String name) throws Exception {
+		final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), schema, name);
+		final Long count = entityCache.countEntity(schema, name, entityType.orElseThrow(NotFoundException::new));
 		return Response.ok().header(Naming.Query.ENTITY_COUNT, count).build();
 	}
 
