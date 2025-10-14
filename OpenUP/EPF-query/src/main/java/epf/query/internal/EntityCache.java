@@ -45,13 +45,7 @@ public class EntityCache {
 	}
 	
 	@CacheInvalidate(cacheName = Naming.Query.QUERY_ENTITY)
-	public void clearEntity(
-			@CacheKey
-			final String schema, 
-			@CacheKey
-			final String name, 
-			@CacheKey
-			final String id) {
+	public void clearEntity(@CacheKey final String schema,  @CacheKey final String name, @CacheKey final String id) {
 	}
 	
 	@CacheResult(cacheName = Naming.Query.QUERY_ENTITY_COUNT)
@@ -68,11 +62,6 @@ public class EntityCache {
 	}
 	
 	@CacheInvalidate(cacheName = Naming.Query.QUERY_ENTITY_COUNT)
-	public void clearEntityCount(
-			@CacheKey
-			final String schema, 
-			@CacheKey
-			final String name
-			) {
+	public void clearEntityCount(@CacheKey final String schema, @CacheKey final String name) {
 	}
 }
