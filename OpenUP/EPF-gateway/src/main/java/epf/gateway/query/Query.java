@@ -30,7 +30,7 @@ public class Query {
     transient Application request;
 	
 	@GET
-    @Path(Naming.Query.Client.ENTITY_PATH)
+    @Path("entity/{schema}/{entity}/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
     public Response getEntity(
@@ -38,9 +38,9 @@ public class Query {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final Request req,
-            @PathParam(Naming.Query.Client.SCHEMA) final String schema,
-            @PathParam(Naming.Query.Client.ENTITY) final String entity,
-            @PathParam(Naming.Query.Client.ID) final String entityId) throws Exception {
+            @PathParam(Naming.SCHEMA) final String schema,
+            @PathParam(Naming.Query.ENTITY) final String entity,
+            @PathParam(Naming.Query.ID) final String entityId) throws Exception {
     	return request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, null);
     }
 	
@@ -52,8 +52,8 @@ public class Query {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final Request req,
-            @PathParam(Naming.Query.Client.SCHEMA) final String schema,
-            @PathParam(Naming.Query.Client.ENTITY) final String entity
+            @PathParam(Naming.SCHEMA) final String schema,
+            @PathParam(Naming.Query.ENTITY) final String entity
             ) throws Exception {
     	return request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, null);
     }
@@ -71,7 +71,7 @@ public class Query {
             final UriInfo uriInfo,
             @Context 
             final Request req,
-    		@PathParam(Naming.Query.Client.SCHEMA)
+    		@PathParam(Naming.SCHEMA)
             final String schema,
             @PathParam("criteria")
             final List<PathSegment> paths) throws Exception {
@@ -90,7 +90,7 @@ public class Query {
             final UriInfo uriInfo,
             @Context 
             final Request req,
-    		@PathParam(Naming.Query.Client.SCHEMA)
+    		@PathParam(Naming.SCHEMA)
             final String schema,
             @PathParam("criteria")
             final List<PathSegment> paths) throws Exception {
