@@ -1,7 +1,6 @@
 [
   {
-
-    "name" : "io.narayana.lra.coordinator.domain.model.LRARecord",
+    "name" : "com.arjuna.ats.internal.arjuna.coordinator.CheckedActionFactoryImple",
     "allDeclaredConstructors" : true,
     "allPublicConstructors" : true,
     "allDeclaredMethods" : true,
@@ -10,7 +9,24 @@
     "allPublicFields" : true
   },
   {
-
+    "name" : "io.narayana.lra.coordinator.internal.LRARecoveryModule",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true,
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true,
+    "allDeclaredFields" : true,
+    "allPublicFields" : true
+  },
+  {
+    "name" : "com.arjuna.ats.internal.arjuna.objectstore.ShadowNoFileLockStore",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true,
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true,
+    "allDeclaredFields" : true,
+    "allPublicFields" : true
+  },
+  {
     "name" : "io.narayana.lra.coordinator.domain.model.LRAParticipantRecord",
     "allDeclaredConstructors" : true,
     "allPublicConstructors" : true,
@@ -20,8 +36,7 @@
     "allPublicFields" : true
   },
   {
-
-    "name" : "com.arjuna.ats.internal.arjuna.coordinator.CheckedActionFactoryImple",
+    "name" : "io.narayana.lra.coordinator.domain.model.LRAParentAbstractRecord",
     "allDeclaredConstructors" : true,
     "allPublicConstructors" : true,
     "allDeclaredMethods" : true,
@@ -29,5 +44,4 @@
     "allDeclaredFields" : true,
     "allPublicFields" : true
   }
-
 ]
