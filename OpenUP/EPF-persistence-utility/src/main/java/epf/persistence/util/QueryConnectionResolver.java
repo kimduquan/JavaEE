@@ -1,6 +1,7 @@
 package epf.persistence.util;
 
 import epf.management.util.OrganizationUtil;
+import io.agroal.api.transaction.TransactionIntegration;
 
 public abstract class QueryConnectionResolver<Connection> extends OrganizationConnectionResolver<Connection> {
 
@@ -14,4 +15,8 @@ public abstract class QueryConnectionResolver<Connection> extends OrganizationCo
 		return OrganizationUtil.getDefaultQueryPassword(organizationId);
 	}
 
+	@Override
+	protected TransactionIntegration getTransactionIntegration() {
+		return null;
+	}
 }

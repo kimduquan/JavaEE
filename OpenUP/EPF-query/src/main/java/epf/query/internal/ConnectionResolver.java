@@ -5,16 +5,12 @@ import epf.naming.Naming;
 import epf.persistence.util.QueryConnectionResolver;
 import io.agroal.api.AgroalDataSource;
 import io.agroal.api.configuration.AgroalDataSourceConfiguration;
-import io.agroal.api.transaction.TransactionIntegration;
-import io.agroal.narayana.NarayanaTransactionIntegration;
 import io.agroal.pool.DataSource;
 import io.quarkus.hibernate.orm.PersistenceUnitExtension;
 import io.quarkus.hibernate.orm.runtime.customized.QuarkusConnectionProvider;
 import io.quarkus.hibernate.orm.runtime.tenant.TenantConnectionResolver;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.transaction.TransactionManager;
-import jakarta.transaction.TransactionSynchronizationRegistry;
 
 @ApplicationScoped
 @PersistenceUnitExtension
@@ -27,17 +23,6 @@ public class ConnectionResolver extends QueryConnectionResolver<QuarkusConnectio
 	@Inject
     @ConfigProperty(name = Naming.Persistence.Internal.CONNECTION_POOL_SIZE)
 	int connectionPoolSize;
-	
-	@Inject
-	transient TransactionManager transactionManager;
-	
-	@Inject
-    transient TransactionSynchronizationRegistry transactionSynchronizationRegistry;
-
-	@Override
-	protected TransactionIntegration newTransactionIntegration() {
-		return new NarayanaTransactionIntegration(transactionManager, transactionSynchronizationRegistry);
-	}
 
 	@Override
 	protected AgroalDataSource newDataSource(final AgroalDataSourceConfiguration config) {

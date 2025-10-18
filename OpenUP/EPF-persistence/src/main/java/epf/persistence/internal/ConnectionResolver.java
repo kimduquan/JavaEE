@@ -35,7 +35,7 @@ public class ConnectionResolver extends PersistenceConnectionResolver<QuarkusCon
     transient TransactionSynchronizationRegistry transactionSynchronizationRegistry;
 
 	@Override
-	protected TransactionIntegration newTransactionIntegration() {
+	protected TransactionIntegration getTransactionIntegration() {
 		return new NarayanaTransactionIntegration(transactionManager, transactionSynchronizationRegistry);
 	}
 

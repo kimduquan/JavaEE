@@ -6,6 +6,7 @@ import epf.management.util.OrganizationUtil;
 import io.agroal.api.AgroalDataSource;
 import io.agroal.api.configuration.AgroalDataSourceConfiguration;
 import io.agroal.api.configuration.AgroalConnectionPoolConfiguration.TransactionRequirement;
+import io.agroal.api.configuration.supplier.AgroalConnectionPoolConfigurationSupplier;
 import io.agroal.api.configuration.supplier.AgroalDataSourceConfigurationSupplier;
 import io.agroal.api.security.NamePrincipal;
 import io.agroal.api.security.SimplePassword;
@@ -15,7 +16,7 @@ public abstract class OrganizationConnectionResolver<Connection> {
 	
 	private final Map<String, Connection> connections = new ConcurrentHashMap<>();
 	
-	protected abstract TransactionIntegration newTransactionIntegration();
+	protected abstract TransactionIntegration getTransactionIntegration();
 	protected abstract AgroalDataSource newDataSource(final AgroalDataSourceConfiguration config);
 	protected abstract Connection newConnection(final AgroalDataSource dataSource);
 	protected abstract String getJdbcUrlFormat();
@@ -30,14 +31,17 @@ public abstract class OrganizationConnectionResolver<Connection> {
 			final String password = getPassword(organizationId);
 			final String jdbcUrl = String.format(getJdbcUrlFormat(), database);
 			final AgroalDataSourceConfigurationSupplier supplier = new AgroalDataSourceConfigurationSupplier();
-			supplier.connectionPoolConfiguration()
-			.maxSize(getConnectionPoolSize())
-			.transactionIntegration(newTransactionIntegration())
-			.transactionRequirement(TransactionRequirement.STRICT)
+			final TransactionIntegration transactionIntegration = getTransactionIntegration();
+			final AgroalConnectionPoolConfigurationSupplier connectionSupplier = supplier.connectionPoolConfiguration();
+			connectionSupplier.maxSize(getConnectionPoolSize())
 			.connectionFactoryConfiguration()
 			.credential(new NamePrincipal(userName + "." + organizationId))
 			.credential(new SimplePassword(password))
 			.jdbcUrl(jdbcUrl);
+			if(transactionIntegration != null) {
+				connectionSupplier.transactionIntegration(transactionIntegration)
+				.transactionRequirement(TransactionRequirement.STRICT);
+			}
 			final AgroalDataSourceConfiguration config = supplier.get();
 			final AgroalDataSource dataSource = newDataSource(config);
 			return newConnection(dataSource);
