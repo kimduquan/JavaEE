@@ -11,6 +11,16 @@
   },
   {
 
+    "name" : "io.narayana.lra.coordinator.domain.model.LRAParticipantRecord",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true,
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true,
+    "allDeclaredFields" : true,
+    "allPublicFields" : true
+  },
+  {
+
     "name" : "com.arjuna.ats.internal.arjuna.coordinator.CheckedActionFactoryImple",
     "allDeclaredConstructors" : true,
     "allPublicConstructors" : true,
