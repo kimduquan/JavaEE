@@ -35,6 +35,14 @@ public class PersistenceManagement {
 	Integer databasePort;
 	
 	@Inject
+	@ConfigProperty(name = Naming.Management.Internal.QUERY_DATASOURCE_HOST)
+	String queryDatabaseHost;
+	
+	@Inject
+	@ConfigProperty(name = Naming.Management.Internal.QUERY_DATASOURCE_PORT)
+	Integer queryDatabasePort;
+	
+	@Inject
 	transient DataSource managementDataSource;
 	
 	@RestClient
@@ -90,7 +98,26 @@ public class PersistenceManagement {
 		final String persistenceSecret = config.getValue(Naming.Management.Internal.PERSISTENCE_MANAGEMENT_SECRET);
 		final String securityToken = SecurityUtil.generateToken(persistenceSecret);
 		final String authorization = "Bearer " + securityToken;
+		final String persistenceExternalId = OrganizationUtil.getDefaultPersistenceExternalId(organization.getId());
 		
-		persistenceClient.createOrUpdateTenant(authorization, organization.getId(), updateInfo);
+		persistenceClient.createOrUpdateTenant(authorization, persistenceExternalId, updateInfo);
+		
+		final PersistenceTenant queryTenant = new PersistenceTenant();
+		queryTenant.setDb_database(databaseName);
+		queryTenant.setDb_host(queryDatabaseHost);
+		queryTenant.setDb_port(queryDatabasePort);
+		queryTenant.setEnforce_ssl(false);
+		queryTenant.setIp_version("auto");
+		queryTenant.setRequire_user(true);
+		queryTenant.setUsers(new ArrayList<>());
+		
+		persistenceTenant.getUsers().add(persistenceUser);
+		persistenceTenant.getUsers().add(queryUser);
+		
+		updateInfo.setTenant(queryTenant);
+		
+		final String queryExternalId = OrganizationUtil.getDefaultQueryExternalId(organization.getId());
+		
+		persistenceClient.createOrUpdateTenant(authorization, queryExternalId, updateInfo);
 	}
 }

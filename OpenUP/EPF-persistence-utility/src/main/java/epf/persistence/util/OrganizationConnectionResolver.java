@@ -2,7 +2,6 @@ package epf.persistence.util;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import epf.management.util.OrganizationUtil;
 import io.agroal.api.AgroalDataSource;
 import io.agroal.api.configuration.AgroalDataSourceConfiguration;
 import io.agroal.api.configuration.AgroalConnectionPoolConfiguration.TransactionRequirement;
@@ -21,12 +20,15 @@ public abstract class OrganizationConnectionResolver<Connection> {
 	protected abstract Connection newConnection(final AgroalDataSource dataSource);
 	protected abstract String getJdbcUrlFormat();
 	protected abstract int getConnectionPoolSize();
+	protected abstract String getExternalId(final String organizationId);
+	protected abstract String getDatabase(final String organizationId);
 	protected abstract String getUserName(final String organizationId);
 	protected abstract String getPassword(final String organizationId);
 	
 	public Connection resolve(final String tenantId) {
 		return connections.computeIfAbsent(tenantId, organizationId -> {
-			final String database = OrganizationUtil.getDefaultPersistenceDatabase(organizationId);
+			final String externalId = getExternalId(tenantId);
+			final String database = getDatabase(organizationId);
 			final String userName = getUserName(organizationId);
 			final String password = getPassword(organizationId);
 			final String jdbcUrl = String.format(getJdbcUrlFormat(), database);
@@ -35,7 +37,7 @@ public abstract class OrganizationConnectionResolver<Connection> {
 			final AgroalConnectionPoolConfigurationSupplier connectionSupplier = supplier.connectionPoolConfiguration();
 			connectionSupplier.maxSize(getConnectionPoolSize())
 			.connectionFactoryConfiguration()
-			.credential(new NamePrincipal(userName + "." + organizationId))
+			.credential(new NamePrincipal(userName + "." + externalId))
 			.credential(new SimplePassword(password))
 			.jdbcUrl(jdbcUrl);
 			if(transactionIntegration != null) {

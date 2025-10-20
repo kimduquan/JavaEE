@@ -4,6 +4,16 @@ import epf.management.util.OrganizationUtil;
 import io.agroal.api.transaction.TransactionIntegration;
 
 public abstract class QueryConnectionResolver<Connection> extends OrganizationConnectionResolver<Connection> {
+	
+	@Override
+	protected String getExternalId(final String organizationId) {
+		return OrganizationUtil.getDefaultQueryExternalId(organizationId);
+	}
+	
+	@Override
+	protected String getDatabase(final String organizationId) {
+		return OrganizationUtil.getDefaultQueryDatabase(organizationId);
+	}
 
 	@Override
 	protected String getUserName(final String organizationId) {

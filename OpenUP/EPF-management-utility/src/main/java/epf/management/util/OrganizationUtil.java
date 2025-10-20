@@ -23,7 +23,19 @@ public interface OrganizationUtil {
 		return Optional.ofNullable(organizationId);
 	}
 	
+	static String getDefaultPersistenceExternalId(final String organizationId) {
+		return organizationId;
+	}
+	
+	static String getDefaultQueryExternalId(final String organizationId) {
+		return organizationId + "-query";
+	}
+	
 	static String getDefaultPersistenceDatabase(final String organizationId) {
+		return organizationId;
+	}
+	
+	static String getDefaultQueryDatabase(final String organizationId) {
 		return organizationId;
 	}
 	

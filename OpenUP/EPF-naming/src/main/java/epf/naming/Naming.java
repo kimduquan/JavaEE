@@ -573,6 +573,16 @@ public interface Naming {
 			 * 
 			 */
 			String PERSISTENCE_DATASOURCE_PORT = "epf.management.persistence.datasource.port";
+			
+			/**
+			 * 
+			 */
+			String QUERY_DATASOURCE_HOST = "epf.management.query.datasource.host";
+			
+			/**
+			 * 
+			 */
+			String QUERY_DATASOURCE_PORT = "epf.management.query.datasource.port";
 		}
 	}
 	
