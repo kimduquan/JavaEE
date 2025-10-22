@@ -2,6 +2,7 @@ package epf.persistence.util;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import epf.management.util.OrganizationUtil;
 import io.agroal.api.AgroalDataSource;
 import io.agroal.api.configuration.AgroalDataSourceConfiguration;
 import io.agroal.api.configuration.AgroalConnectionPoolConfiguration.TransactionRequirement;
@@ -21,16 +22,13 @@ public abstract class OrganizationConnectionResolver<Connection> {
 	protected abstract String getJdbcUrlFormat();
 	protected abstract int getConnectionPoolSize();
 	protected abstract String getExternalId(final String organizationId);
-	protected abstract String getDatabase(final String organizationId);
-	protected abstract String getUserName(final String organizationId);
-	protected abstract String getPassword(final String organizationId);
 	
 	public Connection resolve(final String tenantId) {
 		return connections.computeIfAbsent(tenantId, organizationId -> {
 			final String externalId = getExternalId(tenantId);
-			final String database = getDatabase(organizationId);
-			final String userName = getUserName(organizationId);
-			final String password = getPassword(organizationId);
+			final String database = OrganizationUtil.getDefaultDatabase(organizationId);
+			final String userName = OrganizationUtil.getDefaultUserName(organizationId);
+			final String password = OrganizationUtil.getDefaultPassword(organizationId);
 			final String jdbcUrl = String.format(getJdbcUrlFormat(), database);
 			final AgroalDataSourceConfigurationSupplier supplier = new AgroalDataSourceConfigurationSupplier();
 			final TransactionIntegration transactionIntegration = getTransactionIntegration();

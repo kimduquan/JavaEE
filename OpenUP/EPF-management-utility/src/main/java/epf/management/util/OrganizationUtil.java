@@ -31,27 +31,15 @@ public interface OrganizationUtil {
 		return organizationId + "-query";
 	}
 	
-	static String getDefaultPersistenceDatabase(final String organizationId) {
+	static String getDefaultDatabase(final String organizationId) {
 		return organizationId;
 	}
 	
-	static String getDefaultQueryDatabase(final String organizationId) {
-		return organizationId;
+	static String getDefaultUserName(final String organizationId) {
+		return Base64.getEncoder().withoutPadding().encodeToString(organizationId.getBytes(StandardCharsets.UTF_8));
 	}
 	
-	static String getDefaultPersistenceUserName(final String organizationId) {
-		return Naming.PERSISTENCE + "-" + organizationId;
-	}
-	
-	static String getDefaultQueryUserName(final String organizationId) {
-		return Naming.QUERY + "-" + organizationId;
-	}
-	
-	static String getDefaultPersistencePassword(final String organizationId) {
-		return Base64.getEncoder().withoutPadding().encodeToString(getDefaultPersistenceUserName(organizationId).getBytes(StandardCharsets.UTF_8));
-	}
-	
-	static String getDefaultQueryPassword(final String organizationId) {
-		return Base64.getEncoder().withoutPadding().encodeToString(getDefaultQueryUserName(organizationId).getBytes(StandardCharsets.UTF_8));
+	static String getDefaultPassword(final String organizationId) {
+		return Base64.getEncoder().withoutPadding().encodeToString(getDefaultUserName(organizationId).getBytes(StandardCharsets.UTF_8));
 	}
 }

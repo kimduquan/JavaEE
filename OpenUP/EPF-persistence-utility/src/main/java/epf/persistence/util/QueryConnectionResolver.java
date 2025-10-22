@@ -9,21 +9,6 @@ public abstract class QueryConnectionResolver<Connection> extends OrganizationCo
 	protected String getExternalId(final String organizationId) {
 		return OrganizationUtil.getDefaultQueryExternalId(organizationId);
 	}
-	
-	@Override
-	protected String getDatabase(final String organizationId) {
-		return OrganizationUtil.getDefaultQueryDatabase(organizationId);
-	}
-
-	@Override
-	protected String getUserName(final String organizationId) {
-		return OrganizationUtil.getDefaultQueryUserName(organizationId);
-	}
-
-	@Override
-	protected String getPassword(final String organizationId) {
-		return OrganizationUtil.getDefaultQueryPassword(organizationId);
-	}
 
 	@Override
 	protected TransactionIntegration getTransactionIntegration() {

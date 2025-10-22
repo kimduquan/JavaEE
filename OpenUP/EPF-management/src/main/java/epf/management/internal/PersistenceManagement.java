@@ -51,19 +51,15 @@ public class PersistenceManagement {
 	private final ConfigPath config = new ConfigPath("/epf/config/persistence");
 
 	public void createPersistence(final Organization organization, final Principal principal) throws Exception {
-		final String databaseName = OrganizationUtil.getDefaultPersistenceDatabase(organization.getId());
-		final String userName = OrganizationUtil.getDefaultPersistenceUserName(organization.getId());
-		final String password = OrganizationUtil.getDefaultPersistencePassword(organization.getId());
-		final String queryUserName = OrganizationUtil.getDefaultQueryUserName(organization.getId());
-		final String queryPassword = OrganizationUtil.getDefaultQueryPassword(organization.getId());
+		final String databaseName = OrganizationUtil.getDefaultDatabase(organization.getId());
+		final String defaultUserName = OrganizationUtil.getDefaultUserName(organization.getId());
+		final String defaultPassword = OrganizationUtil.getDefaultPassword(organization.getId());
 		
 		try(Connection connection = managementDataSource.getConnection()) {
 			try(Statement statement = connection.createStatement()){
-				final String createUserSql = "CREATE USER \"" + userName + "\" WITH PASSWORD '" + password + "';";
-				statement.execute(createUserSql);
-				final String createQueryUserSql = "CREATE USER \"" + queryUserName + "\" WITH PASSWORD '" + queryPassword + "';";
-				statement.execute(createQueryUserSql);
-				final String createDatabaseSql = "CREATE DATABASE \"" + databaseName + "\" OWNER \"" + userName + "\" TEMPLATE " + databaseTemplate + ";";
+				final String createDefaultUserSql = "CREATE USER \"" + defaultUserName + "\" WITH PASSWORD '" + defaultPassword + "';";
+				statement.execute(createDefaultUserSql);
+				final String createDatabaseSql = "CREATE DATABASE \"" + databaseName + "\" OWNER \"" + defaultUserName + "\" TEMPLATE " + databaseTemplate + ";";
 				statement.execute(createDatabaseSql);
 			}
 		}
@@ -77,20 +73,13 @@ public class PersistenceManagement {
 		persistenceTenant.setRequire_user(true);
 		persistenceTenant.setUsers(new ArrayList<>());
 		
-		final PersistenceUser persistenceUser = new PersistenceUser();
-		persistenceUser.setDb_password(password);
-		persistenceUser.setDb_user(userName);
-		persistenceUser.setMode_type("transaction");
-		persistenceUser.setPool_size(1);
+		final PersistenceUser defaultPersistenceUser = new PersistenceUser();
+		defaultPersistenceUser.setDb_password(defaultPassword);
+		defaultPersistenceUser.setDb_user(defaultUserName);
+		defaultPersistenceUser.setMode_type("transaction");
+		defaultPersistenceUser.setPool_size(1);
 		
-		final PersistenceUser queryUser = new PersistenceUser();
-		queryUser.setDb_password(queryPassword);
-		queryUser.setDb_user(queryUserName);
-		queryUser.setMode_type("session");
-		queryUser.setPool_size(3);
-		
-		persistenceTenant.getUsers().add(persistenceUser);
-		persistenceTenant.getUsers().add(queryUser);
+		persistenceTenant.getUsers().add(defaultPersistenceUser);
 		
 		final UpdatePersistenceTenantInfo updateInfo = new UpdatePersistenceTenantInfo();
 		updateInfo.setTenant(persistenceTenant);
@@ -111,8 +100,13 @@ public class PersistenceManagement {
 		queryTenant.setRequire_user(true);
 		queryTenant.setUsers(new ArrayList<>());
 		
-		persistenceTenant.getUsers().add(persistenceUser);
-		persistenceTenant.getUsers().add(queryUser);
+		final PersistenceUser defaultQueryUser = new PersistenceUser();
+		defaultQueryUser.setDb_password(defaultPassword);
+		defaultQueryUser.setDb_user(defaultUserName);
+		defaultQueryUser.setMode_type("session");
+		defaultQueryUser.setPool_size(3);
+		
+		queryTenant.getUsers().add(defaultQueryUser);
 		
 		updateInfo.setTenant(queryTenant);
 		
