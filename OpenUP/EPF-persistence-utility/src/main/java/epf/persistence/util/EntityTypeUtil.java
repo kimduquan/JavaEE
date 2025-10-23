@@ -23,11 +23,11 @@ public interface EntityTypeUtil {
 	}
 	
 	static Optional<String> getSchema(final EntityType<?> entityType) {
-		Optional<String> schema = Optional.empty();
+		Optional<String> entitySchema = Optional.empty();
 		final Table table = entityType.getJavaType().getAnnotation(Table.class);
 		if(table != null) {
-			schema = Optional.ofNullable(table.schema());
+			entitySchema = Optional.ofNullable(table.schema());
 		}
-		return schema;
+		return entitySchema;
 	}
 }

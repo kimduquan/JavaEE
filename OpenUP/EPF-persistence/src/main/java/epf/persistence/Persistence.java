@@ -1,7 +1,6 @@
 package epf.persistence;
 
 import java.io.InputStream;
-import java.net.URI;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -91,10 +90,6 @@ public class Persistence {
     	if(!entityType.isPresent()) {
     		return Response.status(Response.Status.NOT_FOUND).build();
     	}
-    	final Optional<String> entitySchema = EntityTypeUtil.getSchema(entityType.get());
-    	if(entitySchema.isPresent() && !entitySchema.get().equals(schema)) {
-    		return Response.status(Response.Status.NOT_FOUND).build();
-    	}
     	Object entity = null;
     	try {
         	entity = JsonUtil.fromJson(body, entityType.get().getJavaType());
@@ -109,16 +104,20 @@ public class Persistence {
     	manager.persist(entity);
         manager.flush();
         
-        final JsonPatch diff = JsonUtil.createDiff(new Object(), entity);
+        final JsonObject preEntity = JsonValue.EMPTY_JSON_OBJECT;
+        final JsonObject postEntity = JsonUtil.toJsonObject(entity);
+        final JsonPatch diff = Json.createDiff(preEntity, postEntity);
         
         final Object entityId = EntityUtil.getEntityId(entityType.get(), entity);
+        
+        manager.detach(entity);
         
         final PostPersist entityEvent = new PostPersist();
         entityEvent.setTime(Instant.now().toEpochMilli());
         entityEvent.setId(entityId.toString());
         entityEvent.setEntity(entity);
         entityEvent.setName(entityType.get().getName());
-        entityEvent.setSchema(entitySchema.get());
+        entityEvent.setSchema(schema);
         entityEvent.setOrganization(organizationId);
         
         final EntityTransaction transaction = new EntityTransaction();
@@ -128,8 +127,7 @@ public class Persistence {
     	
         cache.put(transaction);
         
-        final String entityUri = "/" + Naming.PERSISTENCE + "/" + entitySchema.get() + "/" + entityType.get().getName() + "/" + entityId;
-        return Response.created(URI.create(entityUri)).entity(JsonUtil.toString(entity)).build();
+        return Response.ok().entity(JsonUtil.toString(entity)).build();
     }
     
     @PUT
@@ -160,10 +158,6 @@ public class Persistence {
     	if(!entityType.isPresent()) {
     		return Response.status(Response.Status.NOT_FOUND).build();
     	}
-    	final Optional<String> entitySchema = EntityTypeUtil.getSchema(entityType.get());
-    	if(entitySchema.isPresent() && !entitySchema.get().equals(schema)) {
-    		return Response.status(Response.Status.NOT_FOUND).build();
-    	}
     	Object entityId = null;
     	try {
     		entityId = EntityUtil.convertEntityId(entityType.get(), id);
@@ -188,23 +182,25 @@ public class Persistence {
 
         final JsonObject preEntity = JsonUtil.toJsonObject(entityObject);
         
-    	final PostUpdate entityEvent = new PostUpdate();
-        entityEvent.setTime(Instant.now().toEpochMilli());
-        entityEvent.setId(entityId.toString());
-        entityEvent.setEntity(entityObject);
-        entityEvent.setName(entityType.get().getName());
-        entityEvent.setSchema(entitySchema.get());
-        entityEvent.setOrganization(organizationId);
-        
-        final EntityTransaction transaction = new EntityTransaction();
-        transaction.setId(headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER));
-        transaction.setEvent(entityEvent);
-        
         final Object mergedEntity = manager.merge(entity);
         manager.flush();
         
         final JsonObject postEntity = JsonUtil.toJsonObject(mergedEntity);
         final JsonPatch diff = Json.createDiff(preEntity, postEntity);
+        
+        manager.detach(mergedEntity);
+        
+    	final PostUpdate entityEvent = new PostUpdate();
+        entityEvent.setTime(Instant.now().toEpochMilli());
+        entityEvent.setId(entityId.toString());
+        entityEvent.setEntity(mergedEntity);
+        entityEvent.setName(entityType.get().getName());
+        entityEvent.setSchema(schema);
+        entityEvent.setOrganization(organizationId);
+        
+        final EntityTransaction transaction = new EntityTransaction();
+        transaction.setId(headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER));
+        transaction.setEvent(entityEvent);
         transaction.setDiff(JsonUtil.toString(diff.toJsonArray()));
         
         cache.put(transaction);
@@ -237,10 +233,6 @@ public class Persistence {
     	if(!entityType.isPresent()) {
     		return Response.status(Response.Status.NOT_FOUND).build();
     	}
-    	final Optional<String> entitySchema = EntityTypeUtil.getSchema(entityType.get());
-    	if(entitySchema.isPresent() && !entitySchema.get().equals(schema)) {
-    		return Response.status(Response.Status.NOT_FOUND).build();
-    	}
     	Object entityId = null;
     	try {
     		entityId = EntityUtil.convertEntityId(entityType.get(), id);
@@ -265,7 +257,7 @@ public class Persistence {
         entityEvent.setId(entityId.toString());
         entityEvent.setEntity(entityObject);
         entityEvent.setName(entityType.get().getName());
-        entityEvent.setSchema(entitySchema.get());
+        entityEvent.setSchema(schema);
         entityEvent.setOrganization(organizationId);
         
         final EntityTransaction transaction = new EntityTransaction();
