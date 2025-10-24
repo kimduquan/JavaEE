@@ -1,13 +1,14 @@
 package epf.query;
 
 import java.util.List;
-import java.util.Optional;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.metamodel.EntityType;
+import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HEAD;
 import jakarta.ws.rs.NotFoundException;
@@ -15,15 +16,17 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.PathSegment;
 import jakarta.ws.rs.core.Response;
+import epf.management.util.OrganizationUtil;
 import epf.naming.Naming;
 import epf.persistence.util.EntityTypeUtil;
 import epf.query.cache.CacheEntry;
+import epf.query.cache.EntityCache;
+import epf.query.cache.QueryCache;
 import epf.query.client.Entity;
-import epf.query.internal.EntityCache;
-import epf.query.internal.QueryCache;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
 @ApplicationScoped
@@ -55,9 +58,12 @@ public class Query {
             @PathParam(Naming.Query.ID)
             @NotNull
             @NotBlank
-            final String id) throws Exception {
-		final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), schema, name);
-		final CacheEntry entry = entityCache.getEntity(schema, name, id, entityType.orElseThrow(NotFoundException::new));
+            final String id,
+            @Context
+            final JsonWebToken jwt) throws Exception {
+		final String organizationId = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
+		final EntityType<?> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), schema, name).orElseThrow(NotFoundException::new);
+		final CacheEntry entry = entityCache.getEntity(organizationId, schema, name, id, entityType);
 		return Response.ok(entry.getValue()).build();
 	}
 
@@ -72,9 +78,12 @@ public class Query {
             @PathParam(Naming.Query.ENTITY)
             @NotNull
             @NotBlank
-            final String name) throws Exception {
-		final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), schema, name);
-		final Long count = entityCache.countEntity(schema, name, entityType.orElseThrow(NotFoundException::new));
+            final String name,
+            @Context
+            final JsonWebToken jwt) throws Exception {
+		final String organizationId = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
+		final EntityType<?> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), schema, name).orElseThrow(NotFoundException::new);
+		final Long count = entityCache.countEntity(organizationId, schema, name, entityType);
 		return Response.ok().header(Naming.Query.ENTITY_COUNT, count).build();
 	}
 
@@ -93,10 +102,12 @@ public class Query {
             @QueryParam(Naming.Query.Client.MAX)
             final Integer maxResults,
             @QueryParam(Naming.Query.Client.SORT)
-    		final List<String> sort
-            ) throws Exception {
+    		final List<String> sort,
+            @Context
+            final JsonWebToken jwt) throws Exception {
+		final String organizationId = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
 		if(!paths.isEmpty()) {
-			final List<Entity> queryResult = queryCache.executeQuery(schema);
+			final List<Entity> queryResult = queryCache.executeQuery(organizationId, schema);
 			return Response.ok(queryResult).header(Naming.Query.ENTITY_COUNT, queryResult.size()).build();
 		}
 		throw new NotFoundException();
@@ -110,8 +121,11 @@ public class Query {
             @NotBlank
             final String schema,
             @PathParam("criteria")
-            final List<PathSegment> paths) throws Exception {
-		final Integer count = queryCache.executeCountQuery(schema);
+            final List<PathSegment> paths,
+            @Context
+            final JsonWebToken jwt) throws Exception {
+		final String organizationId = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
+		final Integer count = queryCache.executeCountQuery(organizationId, schema);
     	return Response.ok().header(Naming.Query.ENTITY_COUNT, count).build();
 	}
 }

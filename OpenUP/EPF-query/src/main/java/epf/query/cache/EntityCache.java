@@ -1,4 +1,4 @@
-package epf.query.internal;
+package epf.query.cache;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -10,7 +10,6 @@ import jakarta.persistence.metamodel.EntityType;
 import jakarta.ws.rs.NotFoundException;
 import epf.naming.Naming;
 import epf.persistence.util.EntityUtil;
-import epf.query.cache.CacheEntry;
 import epf.util.json.ext.JsonUtil;
 import io.quarkus.cache.CacheInvalidate;
 import io.quarkus.cache.CacheKey;
@@ -24,6 +23,8 @@ public class EntityCache {
 
 	@CacheResult(cacheName = Naming.Query.QUERY_ENTITY)
 	public CacheEntry getEntity(
+			@CacheKey
+			final String organizationId,
 			@CacheKey
 			final String schema, 
 			@CacheKey
@@ -45,11 +46,13 @@ public class EntityCache {
 	}
 	
 	@CacheInvalidate(cacheName = Naming.Query.QUERY_ENTITY)
-	public void clearEntity(@CacheKey final String schema,  @CacheKey final String name, @CacheKey final String id) {
+	public void clearEntity(@CacheKey final String organizationId, @CacheKey final String schema,  @CacheKey final String name, @CacheKey final String id) {
 	}
 	
 	@CacheResult(cacheName = Naming.Query.QUERY_ENTITY_COUNT)
 	public Long countEntity(
+			@CacheKey
+			final String organizationId,
 			@CacheKey
 			final String schema, 
 			@CacheKey
@@ -62,6 +65,6 @@ public class EntityCache {
 	}
 	
 	@CacheInvalidate(cacheName = Naming.Query.QUERY_ENTITY_COUNT)
-	public void clearEntityCount(@CacheKey final String schema, @CacheKey final String name) {
+	public void clearEntityCount(@CacheKey final String organizationId, @CacheKey final String schema, @CacheKey final String name) {
 	}
 }

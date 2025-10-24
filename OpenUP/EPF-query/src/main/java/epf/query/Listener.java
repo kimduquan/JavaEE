@@ -5,8 +5,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import epf.naming.Naming;
-import epf.query.internal.EntityCache;
-import epf.query.internal.QueryCache;
+import epf.query.cache.EntityCache;
+import epf.query.cache.QueryCache;
 import epf.schema.utility.EntityEvent;
 import epf.schema.utility.PostPersist;
 import epf.schema.utility.PostRemove;
@@ -29,13 +29,13 @@ public class Listener {
 		if(event != null) {
 			LOGGER.info("[Listener.postEvent]" + event.toString());
 			if(event instanceof PostRemove || event instanceof PostUpdate) {
-				entityCache.clearEntity(event.getSchema(), event.getName(), event.getId());
+				entityCache.clearEntity(event.getOrganization(), event.getSchema(), event.getName(), event.getId());
 			}
 			if(event instanceof PostPersist || event instanceof PostRemove) {
-				entityCache.clearEntityCount(event.getSchema(), event.getName());
+				entityCache.clearEntityCount(event.getOrganization(), event.getSchema(), event.getName());
 			}
-			queryCache.clearQueryCount(event.getSchema());
-			queryCache.clearQuery(event.getSchema());
+			queryCache.clearQueryCount(event.getOrganization(), event.getSchema());
+			queryCache.clearQuery(event.getOrganization(), event.getSchema());
 			LOGGER.info("[Listener.accept]" + event.toString());
 		}
 	}
