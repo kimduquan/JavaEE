@@ -2,7 +2,6 @@ package epf.persistence;
 
 import java.io.InputStream;
 import java.time.Instant;
-import java.util.Optional;
 import java.util.logging.Logger;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -16,9 +15,11 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Validator;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.ForbiddenException;
+import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
@@ -33,6 +34,8 @@ import org.eclipse.microprofile.lra.annotation.Compensate;
 import org.eclipse.microprofile.lra.annotation.Forget;
 import org.eclipse.microprofile.lra.annotation.ParticipantStatus;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
+import org.eclipse.microprofile.reactive.messaging.Channel;
+import org.eclipse.microprofile.reactive.messaging.Emitter;
 import epf.management.util.OrganizationUtil;
 import epf.naming.Naming;
 import epf.persistence.cache.TransactionCache;
@@ -54,6 +57,9 @@ import io.smallrye.common.annotation.RunOnVirtualThread;
 public class Persistence {
 	
 	private transient final static Logger LOGGER = LogManager.getLogger(Persistence.class.getName());
+	
+	@Channel(Naming.Persistence.PERSISTENCE_EVENT)
+	transient Emitter<EntityEvent> emitter;
 	
 	@Inject
 	transient TransactionCache cache;
@@ -86,19 +92,16 @@ public class Persistence {
             final InputStream body
             ) throws Exception {
     	final String organizationId = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
-    	final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), schema, name);
-    	if(!entityType.isPresent()) {
-    		return Response.status(Response.Status.NOT_FOUND).build();
-    	}
+    	final EntityType<?> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), schema, name).orElseThrow(NotFoundException::new);
     	Object entity = null;
     	try {
-        	entity = JsonUtil.fromJson(body, entityType.get().getJavaType());
+        	entity = JsonUtil.fromJson(body, entityType.getJavaType());
     	}
     	catch(Exception ex) {
-    		return Response.status(Response.Status.BAD_REQUEST).build();
+    		throw new BadRequestException();
     	}
     	if(!validator.validate(entity).isEmpty()) {
-    		return Response.status(Response.Status.BAD_REQUEST).build();
+    		throw new BadRequestException();
         }
     	
     	manager.persist(entity);
@@ -108,7 +111,7 @@ public class Persistence {
         final JsonObject postEntity = JsonUtil.toJsonObject(entity);
         final JsonPatch diff = Json.createDiff(preEntity, postEntity);
         
-        final Object entityId = EntityUtil.getEntityId(entityType.get(), entity);
+        final Object entityId = EntityUtil.getEntityId(entityType, entity);
         
         manager.detach(entity);
         
@@ -116,7 +119,7 @@ public class Persistence {
         entityEvent.setTime(Instant.now().toEpochMilli());
         entityEvent.setId(entityId.toString());
         entityEvent.setEntity(entity);
-        entityEvent.setName(entityType.get().getName());
+        entityEvent.setName(entityType.getName());
         entityEvent.setSchema(schema);
         entityEvent.setOrganization(organizationId);
         
@@ -126,6 +129,7 @@ public class Persistence {
         transaction.setDiff(JsonUtil.toString(diff.toJsonArray()));
     	
         cache.put(transaction);
+        emitter.send(entityEvent);
         
         return Response.ok().entity(JsonUtil.toString(entity)).build();
     }
@@ -154,30 +158,27 @@ public class Persistence {
             final InputStream body
             ) throws Exception {
     	final String organizationId = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
-    	final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), schema, name);
-    	if(!entityType.isPresent()) {
-    		return Response.status(Response.Status.NOT_FOUND).build();
-    	}
+    	final EntityType<?> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), schema, name).orElseThrow(NotFoundException::new);
     	Object entityId = null;
     	try {
-    		entityId = EntityUtil.convertEntityId(entityType.get(), id);
+    		entityId = EntityUtil.convertEntityId(entityType, id);
     	}
     	catch(NumberFormatException ex) {
     		return Response.status(Response.Status.BAD_REQUEST).build();
     	}
-    	final Object entityObject = manager.find(entityType.get().getJavaType(), entityId);
+    	final Object entityObject = manager.find(entityType.getJavaType(), entityId);
     	if(entityObject == null) {
-    		return Response.status(Response.Status.NOT_FOUND).build();
+    		throw new NotFoundException();
     	}
     	Object entity = null;
     	try {
-        	entity = JsonUtil.fromJson(body, entityType.get().getJavaType());
+        	entity = JsonUtil.fromJson(body, entityType.getJavaType());
     	}
     	catch(Exception ex) {
-    		return Response.status(Response.Status.BAD_REQUEST).build();
+    		throw new BadRequestException();
     	}
     	if(!validator.validate(entity).isEmpty()) {
-    		return Response.status(Response.Status.BAD_REQUEST).build();
+    		throw new BadRequestException();
         }
 
         final JsonObject preEntity = JsonUtil.toJsonObject(entityObject);
@@ -194,7 +195,7 @@ public class Persistence {
         entityEvent.setTime(Instant.now().toEpochMilli());
         entityEvent.setId(entityId.toString());
         entityEvent.setEntity(mergedEntity);
-        entityEvent.setName(entityType.get().getName());
+        entityEvent.setName(entityType.getName());
         entityEvent.setSchema(schema);
         entityEvent.setOrganization(organizationId);
         
@@ -204,6 +205,7 @@ public class Persistence {
         transaction.setDiff(JsonUtil.toString(diff.toJsonArray()));
         
         cache.put(transaction);
+        emitter.send(entityEvent);
         
         return Response.ok(JsonUtil.toString(mergedEntity)).build();
 	}
@@ -229,20 +231,17 @@ public class Persistence {
             final JsonWebToken jwt
             ) throws Exception {
     	final String organizationId = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
-    	final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), schema, name);
-    	if(!entityType.isPresent()) {
-    		return Response.status(Response.Status.NOT_FOUND).build();
-    	}
+    	final EntityType<?> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), schema, name).orElseThrow(NotFoundException::new);
     	Object entityId = null;
     	try {
-    		entityId = EntityUtil.convertEntityId(entityType.get(), id);
+    		entityId = EntityUtil.convertEntityId(entityType, id);
     	}
     	catch(NumberFormatException ex) {
-    		return Response.status(Response.Status.BAD_REQUEST).build();
+    		throw new BadRequestException();
     	}
-    	final Object entityObject = manager.find(entityType.get().getJavaType(), entityId);
+    	final Object entityObject = manager.find(entityType.getJavaType(), entityId);
     	if(entityObject == null) {
-    		return Response.status(Response.Status.NOT_FOUND).build();
+    		throw new NotFoundException();
     	}
     	
     	final JsonObject preEntity = JsonUtil.toJsonObject(entityObject);
@@ -256,7 +255,7 @@ public class Persistence {
         entityEvent.setTime(Instant.now().toEpochMilli());
         entityEvent.setId(entityId.toString());
         entityEvent.setEntity(entityObject);
-        entityEvent.setName(entityType.get().getName());
+        entityEvent.setName(entityType.getName());
         entityEvent.setSchema(schema);
         entityEvent.setOrganization(organizationId);
         
@@ -266,6 +265,7 @@ public class Persistence {
         transaction.setDiff(JsonUtil.toString(diff.toJsonArray()));
         
         cache.put(transaction);
+        emitter.send(entityEvent);
         
     	return Response.ok().build();
     }
@@ -285,7 +285,7 @@ public class Persistence {
 	    	transactionEvent.setEventType(TransactionEventType.rollback);
 	    	transactionEvent.setTransaction(transaction);
     		final EntityEvent entityEvent = transaction.getEvent();
-    		final EntityType<?> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), entityEvent.getSchema(), entityEvent.getName()).get();
+    		final EntityType<?> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), entityEvent.getSchema(), entityEvent.getName()).orElseThrow(NotFoundException::new);
     		final Object entityId = EntityUtil.convertEntityId(entityType, entityEvent.getId());
     		if(entityEvent instanceof PostPersist) {
      			final Object entity = manager.find(entityEvent.getEntity().getClass(), entityId);

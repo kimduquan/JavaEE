@@ -700,7 +700,7 @@ public interface Naming {
 		/**
 		 * 
 		 */
-		String ENTITY_LISTENERS = "persistence";
+		String PERSISTENCE_EVENT = "persistence-event";
 		
 		/**
 		 * @author PC

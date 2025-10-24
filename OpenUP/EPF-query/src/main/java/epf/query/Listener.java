@@ -24,7 +24,7 @@ public class Listener {
 	@Inject
 	transient QueryCache queryCache;
 	
-	@Incoming(Naming.Persistence.ENTITY_LISTENERS)
+	@Incoming(Naming.Persistence.PERSISTENCE_EVENT)
 	public void postEvent(final EntityEvent event) throws Exception {
 		if(event != null) {
 			LOGGER.info("[Listener.postEvent]" + event.toString());
