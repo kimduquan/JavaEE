@@ -4,6 +4,7 @@ import epf.naming.Naming;
 import io.quarkus.cache.CacheInvalidate;
 import io.quarkus.cache.CacheKey;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ws.rs.core.PathSegment;
 
 @ApplicationScoped
 public class PersistenceCache {
@@ -16,11 +17,29 @@ public class PersistenceCache {
 	public void clearEntityCount(@CacheKey final String organizationId, @CacheKey final String schema, @CacheKey final String name) {
 	}
 	
-	@CacheInvalidate(cacheName = Naming.Query.QUERY_COUNT_CACHE)
-	public void clearQueryCount(@CacheKey final String organizationId, @CacheKey final String schema) throws Exception {
+	@CacheInvalidate(cacheName = Naming.Query.QUERY_COUNT_CACHE, keyGenerator = QueryCacheKeyGenerator.class)
+	public void clearCountQuery(
+			@CacheKey
+			final String organizationId,
+			@CacheKey
+			final String schema,
+			@CacheKey
+			final PathSegment[] paths) throws Exception {
 	}
 	
-	@CacheInvalidate(cacheName = Naming.Query.QUERY_CACHE)
-	public void clearQuery(@CacheKey final String organizationId, @CacheKey final String schema) throws Exception {
+	@CacheInvalidate(cacheName = Naming.Query.QUERY_CACHE, keyGenerator = QueryCacheKeyGenerator.class)
+	public void clearQuery(
+			@CacheKey
+			final String organizationId,
+			@CacheKey
+			final String schema,
+			@CacheKey
+			final PathSegment[] paths,
+			@CacheKey
+			final Integer firstResult,
+			@CacheKey
+			final Integer maxResults,
+			@CacheKey
+			final String[] sort) throws Exception {
 	}
 }

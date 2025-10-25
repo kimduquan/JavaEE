@@ -3,15 +3,20 @@ package epf.query.cache;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import jakarta.persistence.metamodel.EntityType;
 import jakarta.ws.rs.NotFoundException;
-import java.util.ArrayList;
+import jakarta.ws.rs.core.PathSegment;
+
+import java.util.Arrays;
 import java.util.List;
 import epf.naming.Naming;
-import epf.query.client.Entity;
+import epf.persistence.internal.Entity;
+import epf.persistence.internal.QueryBuilder;
+import epf.persistence.util.EntityTypeUtil;
 import epf.persistence.util.EntityUtil;
 import epf.util.json.ext.JsonUtil;
 import io.quarkus.cache.CacheKey;
@@ -62,22 +67,79 @@ public class QueryCache {
 		return manager.createQuery(query.select(builder.count(from))).getSingleResult();
 	}
 	
-	@CacheResult(cacheName = Naming.Query.QUERY_COUNT_CACHE)
-	public Integer executeCountQuery(
+	@CacheResult(cacheName = Naming.Query.QUERY_CACHE, keyGenerator = QueryCacheKeyGenerator.class)
+	public List<?> executeQuery(
 			@CacheKey
 			final String organizationId,
 			@CacheKey
-			final String schema) throws Exception {
-		return 0;
+			final String schema,
+			@CacheKey
+			final PathSegment[] paths,
+			@CacheKey
+			final Integer firstResult,
+			@CacheKey
+			final Integer maxResults,
+			@CacheKey
+			final String[] sort) throws Exception {
+		final Entity<Object> entity = new Entity<>();
+		final PathSegment rootSegment = paths[0];
+    	final String entityName = rootSegment.getPath();
+    	@SuppressWarnings("unchecked")
+		final EntityType<Object> entityType = (EntityType<Object>) EntityTypeUtil.findEntityType(manager.getMetamodel(), schema, entityName).orElseThrow(NotFoundException::new);
+    	entity.setType(entityType);
+    	final QueryBuilder queryBuilder = new QueryBuilder();
+    	final CriteriaQuery<Object> criteria = queryBuilder
+    			.metamodel(manager.getMetamodel())
+    			.criteria(manager.getCriteriaBuilder())
+    			.entity(entity)
+    			.paths(Arrays.asList(paths))
+    			.sort(Arrays.asList(sort))
+    			.build();
+    	return executeQuery(manager, criteria, firstResult, maxResults);
 	}
 	
-	@CacheResult(cacheName = Naming.Query.QUERY_CACHE)
-	public List<Entity> executeQuery(
+	@CacheResult(cacheName = Naming.Query.QUERY_COUNT_CACHE, keyGenerator = QueryCacheKeyGenerator.class)
+	public Long executeCountQuery(
 			@CacheKey
 			final String organizationId,
 			@CacheKey
-			final String schema) throws Exception {
-		final List<Entity> entities = new ArrayList<>();
-		return entities;
+			final String schema,
+			@CacheKey
+			final PathSegment[] paths) throws Exception {
+		final Entity<Object> entity = new Entity<>();
+		final PathSegment rootSegment = paths[0];
+    	final String entityName = rootSegment.getPath();
+    	@SuppressWarnings("unchecked")
+		final EntityType<Object> entityType = (EntityType<Object>) EntityTypeUtil.findEntityType(manager.getMetamodel(), schema, entityName).orElseThrow(NotFoundException::new);
+    	entity.setType(entityType);
+    	final QueryBuilder queryBuilder = new QueryBuilder();
+    	final CriteriaQuery<Object> criteria = queryBuilder
+    			.metamodel(manager.getMetamodel())
+    			.criteria(manager.getCriteriaBuilder())
+    			.entity(entity)
+    			.paths(Arrays.asList(paths))
+    			.countOnly()
+    			.build();
+    	final TypedQuery<?> query = manager.createQuery(criteria);
+    	return (Long)query.getSingleResult();
 	}
+	
+	private List<?> executeQuery(
+    		final EntityManager manager, 
+    		final CriteriaQuery<Object> criteria,
+    		final Integer firstResult,
+            final Integer maxResults) throws Exception {
+		final TypedQuery<Object> query = manager.createQuery(criteria);
+		if(firstResult != null){
+            query.setFirstResult(firstResult);
+        }
+        if(maxResults != null){
+            query.setMaxResults(maxResults);
+        }
+        final List<?> resultList = query.getResultList();
+        for(Object object : resultList) {
+        	manager.detach(object);
+        }
+        return resultList;
+    }
 }

@@ -825,7 +825,7 @@ public interface Naming {
 		/**
 		 *
 		 */
-		String ENTITY_COUNT = "entity-count";
+		String COUNT = "count";
 		
 		/**
 		 * 

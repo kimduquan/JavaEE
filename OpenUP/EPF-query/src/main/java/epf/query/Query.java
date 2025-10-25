@@ -24,8 +24,8 @@ import epf.management.util.OrganizationUtil;
 import epf.naming.Naming;
 import epf.persistence.util.EntityTypeUtil;
 import epf.query.cache.CacheEntry;
+import epf.query.cache.PersistenceCache;
 import epf.query.cache.QueryCache;
-import epf.query.client.Entity;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
 @ApplicationScoped
@@ -33,10 +33,13 @@ import io.smallrye.common.annotation.RunOnVirtualThread;
 public class Query {
 	
 	@Inject
+	transient EntityManager manager;
+	
+	@Inject
 	transient QueryCache queryCache;
 	
 	@Inject
-	transient EntityManager manager;
+	transient PersistenceCache persistenceCache;
 	
 	@GET
     @Path("entity/{schema}/{entity}/{id}")
@@ -80,7 +83,7 @@ public class Query {
 		final String organizationId = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
 		final EntityType<?> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), schema, name).orElseThrow(NotFoundException::new);
 		final Long count = queryCache.countEntity(organizationId, schema, name, entityType);
-		return Response.ok().header(Naming.Query.ENTITY_COUNT, count).build();
+		return Response.ok().header(Naming.Query.COUNT, count).build();
 	}
 
 	@GET
@@ -103,8 +106,9 @@ public class Query {
             final JsonWebToken jwt) throws Exception {
 		final String organizationId = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
 		if(!paths.isEmpty()) {
-			final List<Entity> queryResult = queryCache.executeQuery(organizationId, schema);
-			return Response.ok(queryResult).header(Naming.Query.ENTITY_COUNT, queryResult.size()).build();
+			final List<?> queryResult = queryCache.executeQuery(organizationId, schema, paths.toArray(new PathSegment[0]), firstResult, maxResults, sort.toArray(new String[0]));
+			persistenceCache.clearCountQuery(organizationId, schema, paths.toArray(new PathSegment[0]));
+			return Response.ok(queryResult).header(Naming.Query.COUNT, queryResult.size()).build();
 		}
 		throw new NotFoundException();
 	}
@@ -121,7 +125,7 @@ public class Query {
             @Context
             final JsonWebToken jwt) throws Exception {
 		final String organizationId = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
-		final Integer count = queryCache.executeCountQuery(organizationId, schema);
-    	return Response.ok().header(Naming.Query.ENTITY_COUNT, count).build();
+		final Long count = queryCache.executeCountQuery(organizationId, schema, paths.toArray(new PathSegment[0]));
+    	return Response.ok().header(Naming.Query.COUNT, count).build();
 	}
 }
