@@ -835,22 +835,22 @@ public interface Naming {
 		/**
 		 * 
 		 */
-		String QUERY_ENTITY = "epf-query-entity";
+		String PERSISTENCE_CACHE = "epf-persistence";
 		
 		/**
 		 * 
 		 */
-		String QUERY_ENTITY_COUNT = "epf-query-entity-count";
+		String PERSISTENCE_COUNT_CACHE = "epf-persistence-count";
 		
 		/**
 		 * 
 		 */
-		String QUERY_COUNT = "epf-query-count";
+		String QUERY_COUNT_CACHE = "epf-query-count";
 		
 		/**
 		 * 
 		 */
-		String QUERY = "epf-query";
+		String QUERY_CACHE = "epf-query";
 
 		/**
 		 * @author PC

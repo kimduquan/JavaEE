@@ -24,7 +24,6 @@ import epf.management.util.OrganizationUtil;
 import epf.naming.Naming;
 import epf.persistence.util.EntityTypeUtil;
 import epf.query.cache.CacheEntry;
-import epf.query.cache.EntityCache;
 import epf.query.cache.QueryCache;
 import epf.query.client.Entity;
 import io.smallrye.common.annotation.RunOnVirtualThread;
@@ -32,9 +31,6 @@ import io.smallrye.common.annotation.RunOnVirtualThread;
 @ApplicationScoped
 @Path(Naming.QUERY)
 public class Query {
-
-	@Inject
-	transient EntityCache entityCache;
 	
 	@Inject
 	transient QueryCache queryCache;
@@ -63,7 +59,7 @@ public class Query {
             final JsonWebToken jwt) throws Exception {
 		final String organizationId = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
 		final EntityType<?> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), schema, name).orElseThrow(NotFoundException::new);
-		final CacheEntry entry = entityCache.getEntity(organizationId, schema, name, id, entityType);
+		final CacheEntry entry = queryCache.getEntity(organizationId, schema, name, id, entityType);
 		return Response.ok(entry.getValue()).build();
 	}
 
@@ -83,7 +79,7 @@ public class Query {
             final JsonWebToken jwt) throws Exception {
 		final String organizationId = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
 		final EntityType<?> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), schema, name).orElseThrow(NotFoundException::new);
-		final Long count = entityCache.countEntity(organizationId, schema, name, entityType);
+		final Long count = queryCache.countEntity(organizationId, schema, name, entityType);
 		return Response.ok().header(Naming.Query.ENTITY_COUNT, count).build();
 	}
 

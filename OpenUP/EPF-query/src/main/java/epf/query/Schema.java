@@ -1,4 +1,4 @@
-package epf.query.config;
+package epf.query;
 
 import epf.schema.utility.EntityEvent;
 import epf.schema.utility.EntityTransaction;
