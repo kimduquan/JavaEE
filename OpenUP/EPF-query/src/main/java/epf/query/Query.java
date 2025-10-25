@@ -94,7 +94,7 @@ public class Query {
     		@PathParam(Naming.SCHEMA)
             @NotBlank
             final String schema,
-            @PathParam("criteria")
+            @PathParam(Naming.Query.CRITERIA)
             final List<PathSegment> paths,
             @QueryParam(Naming.Query.Client.FIRST)
             final Integer firstResult,
@@ -120,7 +120,7 @@ public class Query {
     		@PathParam(Naming.SCHEMA)
             @NotBlank
             final String schema,
-            @PathParam("criteria")
+            @PathParam(Naming.Query.CRITERIA)
             final List<PathSegment> paths,
             @Context
             final JsonWebToken jwt) throws Exception {

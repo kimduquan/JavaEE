@@ -1,5 +1,6 @@
 package epf.query.cache;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
@@ -24,17 +25,26 @@ public class QueryCacheKeyGenerator implements CacheKeyGenerator {
 				final Object value = methodParams[index];
 				if(value != null) {
 					final Class<?> parameterType = parameter.getType();
-					if(parameterType.isArray() && PathSegment.class == parameterType.getComponentType()) {
-						final PathSegment[] pathSegments = (PathSegment[]) value;
-						for(PathSegment pathSegment : pathSegments) {
-							cacheKeys.add("/");
-							cacheKeys.add(pathSegment.getPath());
-							pathSegment.getMatrixParameters().forEach((name, values) -> {
-								cacheKeys.add(";");
-								cacheKeys.add(name);
-								cacheKeys.add("=");
-								cacheKeys.add(values.stream().collect(Collectors.joining(",")));
-							});
+					if(parameterType.isArray()) {
+						if(PathSegment.class == parameterType.getComponentType()) {
+							final PathSegment[] pathSegments = (PathSegment[]) value;
+							for(PathSegment pathSegment : pathSegments) {
+								cacheKeys.add("/");
+								cacheKeys.add(pathSegment.getPath());
+								pathSegment.getMatrixParameters().forEach((name, values) -> {
+									cacheKeys.add(";");
+									cacheKeys.add(name);
+									cacheKeys.add("=");
+									cacheKeys.add(values.stream().collect(Collectors.joining(",")));
+								});
+							}
+						}
+						else {
+							final int length = Array.getLength(value);
+							for(int i = 0; i < length; i++) {
+								final Object item = Array.get(value, i);
+								cacheKeys.add(item);
+							}
 						}
 					}
 					else {

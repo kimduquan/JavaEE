@@ -823,6 +823,11 @@ public interface Naming {
 		String ID = "id";
 		
 		/**
+		 * 
+		 */
+		String CRITERIA = "criteria";
+		
+		/**
 		 *
 		 */
 		String COUNT = "count";
@@ -853,7 +858,7 @@ public interface Naming {
 		String QUERY_CACHE = "epf-query";
 
 		/**
-		 * @author PC
+		 *
 		 *
 		 */
 		interface Client {
