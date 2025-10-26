@@ -1,5 +1,5 @@
 docker build -t epf-agent:1.0.0 .
-#docker run -d -e "MODEL=neuralmagic/Mistral-7B-Instruct-v0.3-GPTQ-4bit" -e MODEL_API_BASE=vllm.default.svc.cluster.local:8000/v1 -e MODEL_API_KEY=EMPTY -p 8080:8080 epf-agent:1.0.0
+#docker run -d -e "MODEL=hosted_vllm/neuralmagic/Mistral-7B-Instruct-v0.3-GPTQ-4bit" -e MODEL_API_BASE=host.docker.internal:8000 -p 8080:8080 epf-agent:1.0.0
 kubectl delete secret epf-agent
 kubectl delete hpa epf-agent
 kubectl create secret generic epf-agent --from-literal=MODEL_API_KEY="$(openssl rand -hex 32)"
