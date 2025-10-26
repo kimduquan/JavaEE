@@ -12,7 +12,7 @@ class InvokeRequest(BaseModel):
 class RunRequest(BaseModel):
     input: str
 
-model = LiteLLMModel(
+model = LitellmModel(
     model=os.environ.get("MODEL"),
     api_base=os.environ.get("MODEL_API_BASE"),
     api_key=os.environ.get("MODEL_API_KEY"),
