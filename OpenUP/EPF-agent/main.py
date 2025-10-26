@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import os
-from agents.models import LiteLLMModel
+from agents.extensions.models.litellm_model import LitellmModel
 from agents import Agent, ModelSettings, Runner
 
 app = FastAPI()
