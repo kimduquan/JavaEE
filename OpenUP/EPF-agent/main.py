@@ -2,11 +2,14 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import os
 from agents.models import LiteLLMModel
-from agents import Agent, ModelSettings
+from agents import Agent, ModelSettings, Runner
 
 app = FastAPI()
 
 class InvokeRequest(BaseModel):
+    input: str
+
+class RunRequest(BaseModel):
     input: str
 
 model = LiteLLMModel(
@@ -24,4 +27,9 @@ agent = Agent(
 @app.post("/invoke")
 async def query_agent(request: InvokeRequest):
     response = await agent.invoke({"input": request.input})
-    return {"output": response.output_text}
+    return {"output_text": response.output_text}
+
+@app.post("/run")
+async def query_agent(request: RunRequest):
+    response = await Runner.run(agent, request.input)
+    return {"final_output": response.final_output}
