@@ -700,7 +700,7 @@ public interface Naming {
 		/**
 		 * 
 		 */
-		String PERSISTENCE_EVENT = "persistence-event";
+		String PERSISTENCE_EVENT = "epf-persistence-event";
 		
 		/**
 		 * @author PC
