@@ -14,7 +14,7 @@ class RunRequest(BaseModel):
 
 model = LitellmModel(
     model=os.environ.get("MODEL"),
-    api_base=os.environ.get("MODEL_API_BASE"),
+    base_url=os.environ.get("MODEL_BASE_URL"),
     api_key=os.environ.get("MODEL_API_KEY"),
 )
 
