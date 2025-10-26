@@ -1,1 +1,1 @@
-docker build -t epf-agent .
+docker build -t epf-agent:1.0.0 .
