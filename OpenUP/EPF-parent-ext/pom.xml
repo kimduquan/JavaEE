@@ -159,6 +159,12 @@
 			<artifactId>quarkus-hazelcast-client</artifactId>
 			<version>4.0.0</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.quarkiverse.mcp/quarkus-mcp-server-sse -->
+		<dependency>
+			<groupId>io.quarkiverse.mcp</groupId>
+			<artifactId>quarkus-mcp-server-sse</artifactId>
+			<version>1.7.0</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/jakarta.nosql/jakarta.nosql-api -->
 		<dependency>
 		    <groupId>jakarta.nosql</groupId>
