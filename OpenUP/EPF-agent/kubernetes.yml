@@ -46,7 +46,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: vllm
-                  key: MODEL_API_KEY
+                  key: VLLM_API_KEY
             - name: MODEL_NAME
               value: "neuralmagic/Mistral-7B-Instruct-v0.3-GPTQ-4bit"
             - name: MODEL_BASE_URL
