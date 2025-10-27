@@ -6,9 +6,6 @@ from agents import Agent, ModelSettings, Runner, AsyncOpenAI, OpenAIChatCompleti
 
 app = FastAPI()
 
-class InvokeRequest(BaseModel):
-    input: str
-
 class RunRequest(BaseModel):
     input: str
 
@@ -28,12 +25,7 @@ agent = Agent(
     model_settings=ModelSettings(include_usage=True)
 )
 
-@app.post("/invoke")
-async def query_agent(request: InvokeRequest):
-    response = await agent.invoke({"input": request.input})
-    return {"output_text": response.output_text}
-
 @app.post("/run")
-async def query_agent(request: RunRequest):
+async def run_agent(request: RunRequest):
     response = await Runner.run(agent, request.input)
     return {"final_output": response.final_output}
