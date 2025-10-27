@@ -51,6 +51,8 @@ spec:
               value: "neuralmagic/Mistral-7B-Instruct-v0.3-GPTQ-4bit"
             - name: MODEL_BASE_URL
               value: "http://vllm.default.svc.cluster.local:8000/v1"
+            - name: MCP_SERVER_URL
+              value: "http://epf-mcp-gateway.default.svc.cluster.local:9197/mcp"
           image: epf-agent:1.0.0
           imagePullPolicy: IfNotPresent
           name: epf-agent
