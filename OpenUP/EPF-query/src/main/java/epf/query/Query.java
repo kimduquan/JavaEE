@@ -2,16 +2,19 @@ package epf.query;
 
 import java.util.List;
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.metamodel.EntityType;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HEAD;
 import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -26,6 +29,9 @@ import epf.persistence.util.EntityTypeUtil;
 import epf.query.cache.CacheEntry;
 import epf.query.cache.PersistenceCache;
 import epf.query.cache.QueryCache;
+import epf.query.schema.NativeQuery;
+import epf.query.schema.ResultList;
+import epf.query.schema.SingleResult;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
 @ApplicationScoped
@@ -127,5 +133,37 @@ public class Query {
 		final String organizationId = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
 		final Long count = queryCache.executeCountQuery(organizationId, schema, paths.toArray(new PathSegment[0]));
     	return Response.ok().header(Naming.Query.COUNT, count).build();
+	}
+	
+	@POST
+	@Path("query/result")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@RunOnVirtualThread
+	public Response executeSingleResultQuery(
+			@Context
+            final JsonWebToken jwt,
+            @Valid
+            final NativeQuery query) throws Exception {
+		final SingleResult singleResult = queryCache.executeSingleResultQuery(query);
+		return Response.ok(singleResult).build();
+	}
+	
+	@POST
+	@Path("query/results")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@RunOnVirtualThread
+	public Response executeResultListQuery(
+			@Context
+            final JsonWebToken jwt,
+            @QueryParam(Naming.Query.Client.FIRST)
+            final Integer firstResult,
+            @QueryParam(Naming.Query.Client.MAX)
+            final Integer maxResults,
+            @Valid 
+            final NativeQuery query) throws Exception {
+		final ResultList resultList = queryCache.executeResultListQuery(query, firstResult, maxResults);
+		return Response.ok(resultList).build();
 	}
 }

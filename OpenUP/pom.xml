@@ -981,6 +981,7 @@
 		<module>EPF-workflow-task-schema</module>
 		<module>EPF-event-schema</module>
 		<module>EPF-messaging-schema</module>
+		<module>EPF-query-schema</module>
 		
 		<module>OpenUP-architecture-schema</module>
 		<module>OpenUP-deployment-schema</module>

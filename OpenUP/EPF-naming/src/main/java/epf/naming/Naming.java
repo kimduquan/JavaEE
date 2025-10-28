@@ -856,6 +856,11 @@ public interface Naming {
 		 * 
 		 */
 		String QUERY_CACHE = "epf-query";
+		
+		/**
+		 * 
+		 */
+		String QUERY_CONFIG = "epf-query";
 
 		/**
 		 *

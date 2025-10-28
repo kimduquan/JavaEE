@@ -12,9 +12,21 @@
   <artifactId>EPF-mcp-gateway</artifactId>
   <name>Eclipse Process Framework MCP Gateway</name>
   <dependencies>
+  	<dependency>
+		<groupId>io.quarkus</groupId>
+		<artifactId>quarkus-rest-client-jsonb</artifactId>
+	</dependency>
+	<dependency>
+	    <groupId>io.quarkus</groupId>
+	    <artifactId>quarkus-oidc</artifactId> 
+	</dependency>
 	<dependency>
 		<groupId>io.quarkiverse.mcp</groupId>
 		<artifactId>quarkus-mcp-server-sse</artifactId>
+	</dependency>
+	<dependency>
+	    <groupId>io.quarkiverse.mcp</groupId>
+	    <artifactId>quarkus-mcp-server-hibernate-validator</artifactId>
 	</dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -33,15 +45,15 @@
 		<artifactId>quarkus-helm</artifactId>
 	</dependency>
 	
-    <dependency>
-        <groupId>openup</groupId>
-        <artifactId>EPF-logging-utility</artifactId>
-        <version>${project.version}</version>
-    </dependency>
-    <dependency>
+	<dependency>
         <groupId>openup</groupId>
         <artifactId>EPF-naming</artifactId>
         <version>${project.version}</version>
     </dependency>
+    <dependency>
+		<groupId>openup</groupId>
+		<artifactId>EPF-query-schema</artifactId>
+		<version>${project.version}</version>
+	</dependency>
   </dependencies>
 </project>

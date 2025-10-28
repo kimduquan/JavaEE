@@ -3,6 +3,7 @@ package epf.query.cache;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -10,14 +11,17 @@ import jakarta.persistence.criteria.Root;
 import jakarta.persistence.metamodel.EntityType;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.PathSegment;
-
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import epf.naming.Naming;
 import epf.persistence.internal.Entity;
 import epf.persistence.internal.QueryBuilder;
 import epf.persistence.util.EntityTypeUtil;
 import epf.persistence.util.EntityUtil;
+import epf.query.schema.NativeQuery;
+import epf.query.schema.ResultList;
+import epf.query.schema.SingleResult;
 import epf.util.json.ext.JsonUtil;
 import io.quarkus.cache.CacheKey;
 import io.quarkus.cache.CacheResult;
@@ -142,4 +146,36 @@ public class QueryCache {
         }
         return resultList;
     }
+	
+	public SingleResult executeSingleResultQuery(final NativeQuery nativeQuery) {
+		final Query query = manager.createQuery(nativeQuery.getQuery());
+		if(nativeQuery.getParameters() != null) {
+			for(Map.Entry<String, Object> parameter : nativeQuery.getParameters().entrySet()) {
+				query.setParameter(parameter.getKey(), parameter.getValue());
+			}
+		}
+		final Object result = query.getSingleResultOrNull();
+		final SingleResult queryResult = new SingleResult();
+		queryResult.setResult(result);
+		return queryResult;
+	}
+	
+	public ResultList executeResultListQuery(final NativeQuery nativeQuery, final Integer firstResult, final Integer maxResults) {
+		final Query query = manager.createQuery(nativeQuery.getQuery());
+		if(nativeQuery.getParameters() != null) {
+			for(Map.Entry<String, Object> parameter : nativeQuery.getParameters().entrySet()) {
+				query.setParameter(parameter.getKey(), parameter.getValue());
+			}
+		}
+		if(firstResult != null) {
+			query.setFirstResult(firstResult);
+		}
+		if(maxResults != null) {
+			query.setMaxResults(maxResults);
+		}
+		final List<?> results = query.getResultList();
+		final ResultList queryResult = new ResultList();
+		queryResult.setResult(results);
+		return queryResult;
+	}
 }
