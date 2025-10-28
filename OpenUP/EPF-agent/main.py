@@ -4,14 +4,13 @@ from pydantic import BaseModel
 import os
 from agents import Agent, ModelSettings, Runner, AsyncOpenAI, OpenAIChatCompletionsModel
 from agents.mcp import MCPServerStreamableHttp
+from contextlib import asynccontextmanager
 
 class RunRequest(BaseModel):
     input: str
 
 class PromptRequest(BaseModel):
     arguments: dict[str, Any]
-
-app = FastAPI()
 
 client = AsyncOpenAI(
     base_url=os.environ.get("MODEL_BASE_URL"),
@@ -37,6 +36,14 @@ agent = Agent(
         tool_choice="auto"
     ),
 )
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    mcp_server.connect()
+    yield
+    mcp_server.cleanup()
+
+app = FastAPI(lifespan=lifespan)
 
 @app.post("/run")
 async def run_agent(request: RunRequest):
