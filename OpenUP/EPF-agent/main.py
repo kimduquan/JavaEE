@@ -33,7 +33,7 @@ agent = Agent(
     mcp_servers=[mcp_server],
     model=model,
     model_settings=ModelSettings(
-        tool_choice="auto"
+        tool_choice="auto",
     ),
 )
 
