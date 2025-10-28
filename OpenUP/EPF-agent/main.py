@@ -39,9 +39,9 @@ agent = Agent(
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    mcp_server.connect()
+    await mcp_server.connect()
     yield
-    mcp_server.cleanup()
+    await mcp_server.cleanup()
 
 app = FastAPI(lifespan=lifespan)
 
