@@ -1,5 +1,5 @@
 from typing import Any
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from pydantic import BaseModel
 import os
 from agents import Agent, ModelSettings, Runner, AsyncOpenAI, OpenAIChatCompletionsModel
@@ -8,9 +8,6 @@ from contextlib import asynccontextmanager
 
 class RunRequest(BaseModel):
     input: str
-
-class PromptRequest(BaseModel):
-    arguments: dict[str, Any]
 
 client = AsyncOpenAI(
     base_url=os.environ.get("MODEL_BASE_URL"),
@@ -51,7 +48,9 @@ async def run_agent(request: RunRequest):
     return {"final_output": response.final_output}
 
 @app.post("/prompts/{name}")
-async def run_prompt(name, request: PromptRequest):
-    prompt = await mcp_server.get_prompt(name=name, arguments=request.arguments)
+async def run_prompt(name, request: Request):
+    arguments = dict[str, Any]
+    for param_name, param_value in request.query_params.items():
+        arguments[param_name] = param_value
+    prompt = await mcp_server.get_prompt(name=name, arguments=arguments)
     await Runner.run(starting_agent=agent, input=prompt.messages[0].content.text)
-                
