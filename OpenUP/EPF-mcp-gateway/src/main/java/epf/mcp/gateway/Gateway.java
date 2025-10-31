@@ -8,6 +8,7 @@ import epf.query.schema.ResultList;
 import epf.query.schema.SingleResult;
 import io.quarkiverse.mcp.server.Tool;
 import io.quarkiverse.mcp.server.ToolArg;
+import io.quarkus.security.Authenticated;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -23,6 +24,7 @@ public class Gateway {
 	JsonWebToken jwt;
 
 	@Tool(description = "Execute a JPQL query which return a single result object", structuredContent = true)
+	@Authenticated
 	@RunOnVirtualThread
     SingleResult executeSingleResultQuery(
     		@ToolArg(description = "The JPQL query")
