@@ -8,15 +8,15 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import epf.client.util.Client;
 import epf.naming.Naming;
-import epf.persistence.schema.Embeddable;
-import epf.persistence.schema.Entity;
+import epf.persistence.schema.EmbeddableType;
+import epf.persistence.schema.EntityType;
 
 @Path(Naming.SCHEMA)
 public interface Schema {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    List<Entity> getEntities();
+    List<EntityType> getEntities();
     
     static Response getEntities(final Client client) {
     	return client.request(
@@ -29,7 +29,7 @@ public interface Schema {
     @GET
     @Path("embeddable")
     @Produces(MediaType.APPLICATION_JSON)
-    List<Embeddable> getEmbeddables();
+    List<EmbeddableType> getEmbeddables();
     
     static Response getEmbeddables(final Client client) {
     	return client.request(

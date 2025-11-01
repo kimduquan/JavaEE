@@ -1,7 +1,6 @@
 from typing import Any
 from fastapi import Depends, FastAPI, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from pydantic import BaseModel
 import os
 from agents import Agent, ModelSettings, Runner, AsyncOpenAI, OpenAIChatCompletionsModel
 from agents.mcp import MCPServerStreamableHttp
@@ -56,6 +55,7 @@ async def get_mcp_server(session_id: str) -> MCPServerStreamableHttp:
             }
         }
     )
+    await mcp_server.connect()
     return mcp_server
 
 @cached
