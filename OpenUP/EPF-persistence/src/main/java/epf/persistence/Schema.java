@@ -12,8 +12,8 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import epf.naming.Naming;
 import epf.persistence.internal.util.SchemaUtil;
-import epf.persistence.schema.Embeddable;
-import epf.persistence.schema.Entity;
+import epf.persistence.schema.EmbeddableType;
+import epf.persistence.schema.EntityType;
 import epf.persistence.schema.internal.EmbeddableBuilder;
 import epf.persistence.schema.internal.EmbeddableComparator;
 import epf.persistence.schema.internal.EntityBuilder;
@@ -30,12 +30,12 @@ public class Schema {
 	@GET
     @Produces(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
-	public List<Entity> getEntities() {
+	public List<EntityType> getEntities() {
 		final EntityBuilder builder = new EntityBuilder();
 		final EntityComparator comparator = new EntityComparator();
-		final Stream<Entity> entities = SchemaUtil
+		final Stream<EntityType> entities = SchemaUtil
 				.getEntities(manager.getMetamodel())
-				.map(builder::build)
+				.map(entity -> builder.buildEntityType(entity.getType()))
 				.sorted(comparator);
 		return entities.collect(Collectors.toList());
 	}
@@ -44,12 +44,12 @@ public class Schema {
     @Path("embeddable")
     @Produces(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
-	public List<Embeddable> getEmbeddables() {
+	public List<EmbeddableType> getEmbeddables() {
 		final EmbeddableBuilder builder = new EmbeddableBuilder();
 		final EmbeddableComparator comparator = new EmbeddableComparator();
-		final Stream<Embeddable> embeddables = SchemaUtil
+		final Stream<EmbeddableType> embeddables = SchemaUtil
 				.getEmbeddables(manager.getMetamodel())
-				.map(builder::build)
+				.map(embeddable -> builder.build(embeddable.getType()))
 				.sorted(comparator);
 		return embeddables.collect(Collectors.toList());
 	}
