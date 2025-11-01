@@ -1093,6 +1093,11 @@ public interface Naming {
 		 */
 		String SCHEMA_URL = "epf.schema.url";
 		
+		/**
+		 * 
+		 */
+		String SCHEMA_CONFIG = "epf-schema";
+		
 	}
 	
 	/**

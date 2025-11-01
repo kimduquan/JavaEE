@@ -1,40 +1,46 @@
 package epf.persistence.schema;
 
-public class EntityType extends IdentifiableType {
+public class PluralAttribute extends Attribute {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	private String name;
+
+	private CollectionType collectionType;
+	private Type elementType;
 	private BindableType bindableType;
 	private String bindableJavaType;
-	private Table table;
-	
-	public String getName() {
-		return name;
+
+	public CollectionType getCollectionType() {
+		return collectionType;
 	}
-	public void setName(String name) {
-		this.name = name;
+
+	public void setCollectionType(CollectionType collectionType) {
+		this.collectionType = collectionType;
 	}
+
+	public Type getElementType() {
+		return elementType;
+	}
+
+	public void setElementType(Type elementType) {
+		this.elementType = elementType;
+	}
+
 	public BindableType getBindableType() {
 		return bindableType;
 	}
+
 	public void setBindableType(BindableType bindableType) {
 		this.bindableType = bindableType;
 	}
+
 	public String getBindableJavaType() {
 		return bindableJavaType;
 	}
+
 	public void setBindableJavaType(String bindableJavaType) {
 		this.bindableJavaType = bindableJavaType;
 	}
-	public Table getTable() {
-		return table;
-	}
-	public void setTable(Table table) {
-		this.table = table;
-	}
-
 }

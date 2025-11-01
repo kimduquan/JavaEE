@@ -1,23 +1,17 @@
 package epf.persistence.schema;
 
-public class EntityType extends IdentifiableType {
+import java.io.Serializable;
+
+public class Bindable implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private String name;
 	private BindableType bindableType;
 	private String bindableJavaType;
-	private Table table;
 	
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
 	public BindableType getBindableType() {
 		return bindableType;
 	}
@@ -30,11 +24,4 @@ public class EntityType extends IdentifiableType {
 	public void setBindableJavaType(String bindableJavaType) {
 		this.bindableJavaType = bindableJavaType;
 	}
-	public Table getTable() {
-		return table;
-	}
-	public void setTable(Table table) {
-		this.table = table;
-	}
-
 }

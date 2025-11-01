@@ -7,76 +7,61 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class Attribute implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
-	private String type;
 	private String name;
-	private AttributeType attributeType;
-	private BindableType bindable;
-	private String bindableType;
+	private PersistentAttributeType persistentAttributeType;
+	private String declaringType;
+	private String javaType;
+	private String javaMember;
 	private boolean association;
 	private boolean collection;
 	private Column column;
 	
-	public String getType() {
-		return type;
-	}
-	
-	public void setType(final String type) {
-		this.type = type;
-	}
-	
 	public String getName() {
 		return name;
 	}
-	
-	public void setName(final String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
-	
-	public AttributeType getAttributeType() {
-		return attributeType;
+	public PersistentAttributeType getPersistentAttributeType() {
+		return persistentAttributeType;
 	}
-	
-	public void setAttributeType(final AttributeType attributeType) {
-		this.attributeType = attributeType;
+	public void setPersistentAttributeType(PersistentAttributeType persistentAttributeType) {
+		this.persistentAttributeType = persistentAttributeType;
 	}
-	
+	public String getDeclaringType() {
+		return declaringType;
+	}
+	public void setDeclaringType(String declaringType) {
+		this.declaringType = declaringType;
+	}
+	public String getJavaType() {
+		return javaType;
+	}
+	public void setJavaType(String javaType) {
+		this.javaType = javaType;
+	}
+	public String getJavaMember() {
+		return javaMember;
+	}
+	public void setJavaMember(String javaMember) {
+		this.javaMember = javaMember;
+	}
 	public boolean isAssociation() {
 		return association;
 	}
-	
-	public void setAssociation(final boolean association) {
+	public void setAssociation(boolean association) {
 		this.association = association;
 	}
-	
 	public boolean isCollection() {
 		return collection;
 	}
-	
-	public void setCollection(final boolean collection) {
+	public void setCollection(boolean collection) {
 		this.collection = collection;
 	}
-	
-	public String getBindableType() {
-		return bindableType;
-	}
-	
-	public void setBindableType(String bindableType) {
-		this.bindableType = bindableType;
-	}
-	
-	public BindableType getBindable() {
-		return bindable;
-	}
-	
-	public void setBindable(BindableType bindable) {
-		this.bindable = bindable;
-	}
-	
 	public Column getColumn() {
 		return column;
 	}
-	
-	public void setColumn(final Column column) {
+	public void setColumn(Column column) {
 		this.column = column;
 	}
 }

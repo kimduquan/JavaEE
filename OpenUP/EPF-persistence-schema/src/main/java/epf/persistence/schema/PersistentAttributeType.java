@@ -1,8 +1,8 @@
 package epf.persistence.schema;
 
-public enum AttributeType {
-	MANY_TO_ONE, 
-	ONE_TO_ONE,
+public enum PersistentAttributeType {
+	MANY_TO_ONE,
+    ONE_TO_ONE,
     BASIC,
     EMBEDDED,
     MANY_TO_MANY,
