@@ -12,9 +12,6 @@ from agents.extensions.memory.encrypt_session import EncryptedSession
 from agents.extensions.memory.redis_session import RedisSession
 from redis import Redis
 
-class RunRequest(BaseModel):
-    input: str
-
 client = AsyncOpenAI(
     base_url=os.environ.get("MODEL_BASE_URL"),
     api_key=os.environ.get("MODEL_API_KEY"),
@@ -35,11 +32,11 @@ redis_client = Redis(host=os.environ.get("REDIS_HOST"), password=os.environ.get(
 async def lifespan(app: FastAPI):
     yield
 
-def get_claims(credentials: HTTPAuthorizationCredentials = Depends(security)):
+async def get_claims(credentials: HTTPAuthorizationCredentials = Depends(security)) -> dict[str, Any]:
     return jwt.decode(token=credentials.credentials)
 
 @cached
-def get_session(session_id: str):
+async def get_session(session_id: str) -> EncryptedSession:
     underlying_session = RedisSession(session_id=session_id, redis_client=redis_client)
     session = EncryptedSession(
         session_id=session_id,
@@ -50,7 +47,7 @@ def get_session(session_id: str):
     return session
 
 @cached
-def get_mcp_server(session_id: str):
+async def get_mcp_server(session_id: str) -> MCPServerStreamableHttp:
     mcp_server = MCPServerStreamableHttp(
         params={
             "url":os.environ.get("MCP_SERVER_URL"),
@@ -62,7 +59,7 @@ def get_mcp_server(session_id: str):
     return mcp_server
 
 @cached
-def get_agent(session_id: str):
+async def get_agent(session_id: str) -> Agent:
     mcp_server = get_mcp_server(session_id)
     agent = Agent(
         name="EPF Agent",
@@ -76,15 +73,27 @@ def get_agent(session_id: str):
 
 app = FastAPI(lifespan=lifespan)
 
-@app.post("/prompts/{name}")
-async def run_prompt(name, request: Request, claims: dict[str, Any] = Depends(get_claims)):
+@app.post("/agents/{name}")
+async def run_agent(name: str, request: Request, claims: dict[str, Any] = Depends(get_claims)):
     arguments = dict[str, Any]
     for param_name, param_value in request.query_params.items():
         arguments[param_name] = param_value
     session_id = str(claims["sub"])
     authorization.set(session_id, request.headers.get("Authorization"))
-    mcp_server = get_mcp_server(session_id)
+    mcp_server = await get_mcp_server(session_id)
     prompt = await mcp_server.get_prompt(name=name, arguments=arguments)
-    agent = get_agent(session_id)
-    session = get_session(session_id)
+    agent = await get_agent(session_id)
+    session = await get_session(session_id)
     await Runner.run(starting_agent=agent, input=prompt.messages[0].content.text,session=session)
+
+@app.get("/sessions/items")
+async def get_session_items(claims: dict[str, Any] = Depends(get_claims)):
+    session_id = str(claims["sub"])
+    session = await get_session(session_id)
+    return await session.get_items()
+    
+@app.delete("/sessions/items")
+async def clear_session_items(claims: dict[str, Any] = Depends(get_claims)):
+    session_id = str(claims["sub"])
+    session = await get_session(session_id)
+    await session.clear_session()
