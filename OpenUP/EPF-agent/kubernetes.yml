@@ -53,13 +53,15 @@ spec:
               value: "http://vllm.default.svc.cluster.local:8000/v1"
             - name: MCP_SERVER_URL
               value: "http://epf-mcp-gateway.default.svc.cluster.local:9197/mcp"
-            - name: SESSION_ENCRYPTION_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: epf-agent
-                  key: SESSION_ENCRYPTION_KEY
             - name: SESSION_TTL
               value: "600"
+            - name: REDIS_HOST
+              value: "redis-master.default.svc.cluster.local"
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: redis
+                  key: redis-password
           image: epf-agent:1.0.0
           imagePullPolicy: IfNotPresent
           name: epf-agent

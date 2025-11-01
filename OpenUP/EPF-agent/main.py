@@ -3,12 +3,14 @@ from fastapi import Depends, FastAPI, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel
 import os
-from agents import Agent, ModelSettings, Runner, AsyncOpenAI, OpenAIChatCompletionsModel, SQLiteSession
+from agents import Agent, ModelSettings, Runner, AsyncOpenAI, OpenAIChatCompletionsModel
 from agents.mcp import MCPServerStreamableHttp
 from contextlib import asynccontextmanager
 from jose import jwt
 from aiocache import cached, SimpleMemoryCache
 from agents.extensions.memory.encrypt_session import EncryptedSession
+from agents.extensions.memory.redis_session import RedisSession
+from redis import Redis
 
 class RunRequest(BaseModel):
     input: str
@@ -27,6 +29,8 @@ authorization = SimpleMemoryCache()
 
 security = HTTPBearer()
 
+redis_client = Redis(host=os.environ.get("REDIS_HOST"), password=os.environ.get("REDIS_PASSWORD"))
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     yield
@@ -36,11 +40,11 @@ def get_claims(credentials: HTTPAuthorizationCredentials = Depends(security)):
 
 @cached
 def get_session(session_id: str):
-    underlying_session = SQLiteSession(session_id=session_id)
+    underlying_session = RedisSession(session_id=session_id, redis_client=redis_client)
     session = EncryptedSession(
         session_id=session_id,
         underlying_session=underlying_session,
-        encryption_key=os.environ.get("SESSION_ENCRYPTION_KEY"),
+        encryption_key=session_id,
         ttl=int(os.environ.get("SESSION_TTL")),
     )
     return session
@@ -77,7 +81,7 @@ async def run_prompt(name, request: Request, claims: dict[str, Any] = Depends(ge
     arguments = dict[str, Any]
     for param_name, param_value in request.query_params.items():
         arguments[param_name] = param_value
-    session_id = str(claims["jti"])
+    session_id = str(claims["sub"])
     authorization.set(session_id, request.headers.get("Authorization"))
     mcp_server = get_mcp_server(session_id)
     prompt = await mcp_server.get_prompt(name=name, arguments=arguments)
