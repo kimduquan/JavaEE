@@ -1,4 +1,7 @@
 fastapi[standard]
 pydantic
 openai
-openai-agents
+openai-agents[encrypt]
+python-jose
+redis
+aiocache

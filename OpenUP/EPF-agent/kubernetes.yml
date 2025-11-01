@@ -53,6 +53,13 @@ spec:
               value: "http://vllm.default.svc.cluster.local:8000/v1"
             - name: MCP_SERVER_URL
               value: "http://epf-mcp-gateway.default.svc.cluster.local:9197/mcp"
+            - name: SESSION_ENCRYPTION_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: epf-agent
+                  key: SESSION_ENCRYPTION_KEY
+            - name: SESSION_TTL
+              value: "600"
           image: epf-agent:1.0.0
           imagePullPolicy: IfNotPresent
           name: epf-agent
