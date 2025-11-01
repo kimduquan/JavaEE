@@ -19,7 +19,7 @@ import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortMeta;
 import epf.client.util.Client;
 import epf.naming.Naming;
-import epf.persistence.schema.Entity;
+import epf.persistence.schema.EntityType;
 import epf.query.client.Query;
 import epf.query.client.QueryUtil;
 import epf.util.json.ext.JsonUtil;
@@ -38,11 +38,11 @@ public class QueryCollector extends LazyDataModel<JsonObject> {
 	
 	private final String schema;
 	
-	private final Entity entity;
+	private final EntityType entity;
 	
 	private final Map<String, JsonObject> entityMap = new HashMap<>();
 	
-	public QueryCollector(final GatewayUtil gateway, final char[] token, final String schema, final Entity entity) {
+	public QueryCollector(final GatewayUtil gateway, final char[] token, final String schema, final EntityType entity) {
 		this.gateway = gateway;
 		this.token = token;
 		this.schema = schema;
@@ -103,7 +103,7 @@ public class QueryCollector extends LazyDataModel<JsonObject> {
 
     @Override
     public String getRowKey(final JsonObject object) {
-    	final String rowKey = object.get(entity.getId().getName()).toString();
+    	final String rowKey = object.get(entity.getSingularAttributes().stream().filter(attr -> attr.isId()).findFirst().get().getName()).toString();
     	entityMap.put(rowKey, object);
         return rowKey;
     }

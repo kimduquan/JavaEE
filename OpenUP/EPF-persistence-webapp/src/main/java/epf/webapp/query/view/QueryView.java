@@ -11,8 +11,8 @@ import jakarta.inject.Named;
 import jakarta.json.JsonObject;
 import jakarta.servlet.http.HttpServletRequest;
 import epf.persistence.schema.Attribute;
-import epf.persistence.schema.AttributeType;
-import epf.persistence.schema.Entity;
+import epf.persistence.schema.PersistentAttributeType;
+import epf.persistence.schema.EntityType;
 import epf.util.json.ext.JsonUtil;
 import epf.webapp.internal.GatewayUtil;
 import epf.webapp.internal.Session;
@@ -50,10 +50,10 @@ public class QueryView implements Serializable {
 	protected void initialize() {
 		schema = request.getParameter("schema");
 		entity = request.getParameter("entity");
-		final Optional<Entity> currentEntity = schemaCache.getEntity(schema, entity);
+		final Optional<EntityType> currentEntity = schemaCache.getEntity(schema, entity);
 		if(currentEntity.isPresent()) {
-			attributes = currentEntity.get().getAttributes().stream().filter(
-					attribute -> !attribute.isAssociation() && !attribute.isCollection() && AttributeType.BASIC.equals(attribute.getAttributeType()))
+			attributes = currentEntity.get().getSingularAttributes().stream().filter(
+					attribute -> !attribute.isAssociation() && !attribute.isCollection() && PersistentAttributeType.BASIC.equals(attribute.getPersistentAttributeType()))
 					.collect(Collectors.toList());
 			collector = new QueryCollector(gateway, session.getToken(), schema, currentEntity.get());
 		}

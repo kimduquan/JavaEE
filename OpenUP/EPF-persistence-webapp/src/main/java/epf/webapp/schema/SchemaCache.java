@@ -11,7 +11,7 @@ import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.Response;
 import epf.client.util.Client;
 import epf.naming.Naming;
-import epf.persistence.schema.Entity;
+import epf.persistence.schema.EntityType;
 import epf.persistence.client.Schema;
 import epf.util.logging.LogManager;
 import epf.webapp.internal.GatewayUtil;
@@ -22,7 +22,7 @@ public class SchemaCache {
 	
 	private transient static final Logger LOGGER = LogManager.getLogger(SchemaCache.class.getName());
 
-	private List<Entity> entities;
+	private List<EntityType> entities;
 	
 	@Inject
 	private transient GatewayUtil gateway;
@@ -35,7 +35,7 @@ public class SchemaCache {
 		try(Client client = gateway.newClient(Naming.SCHEMA)){
 			client.authorization(session.getToken());
 			try(Response response = Schema.getEntities(client)){
-				entities = response.readEntity(new GenericType<List<Entity>>() {});
+				entities = response.readEntity(new GenericType<List<EntityType>>() {});
 			}
 		} 
 		catch (Exception e) {
@@ -43,7 +43,7 @@ public class SchemaCache {
 		}
 	}
 	
-	public Optional<Entity> getEntity(final String schema, final String entity) {
+	public Optional<EntityType> getEntity(final String schema, final String entity) {
 		return entities.stream().filter(e -> e.getTable().getSchema().equals(schema) && e.getName().equals(entity)).findFirst();
 	}
 }
