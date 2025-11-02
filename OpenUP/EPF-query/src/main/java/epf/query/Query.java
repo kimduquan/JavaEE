@@ -96,7 +96,7 @@ public class Query {
     @Path("query/{schema}/{criteria: .+}")
     @Produces(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
-	public Response executeQuery(
+	public Response executeCriteriaQuery(
     		@PathParam(Naming.SCHEMA)
             @NotBlank
             final String schema,
@@ -112,8 +112,8 @@ public class Query {
             final JsonWebToken jwt) throws Exception {
 		final String organizationId = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
 		if(!paths.isEmpty()) {
-			final List<?> queryResult = queryCache.executeQuery(organizationId, schema, paths.toArray(new PathSegment[0]), firstResult, maxResults, sort.toArray(new String[0]));
-			persistenceCache.clearCountQuery(organizationId, schema, paths.toArray(new PathSegment[0]));
+			final List<?> queryResult = queryCache.executeCriteriaQuery(organizationId, schema, paths.toArray(new PathSegment[0]), firstResult, maxResults, sort.toArray(new String[0]));
+			persistenceCache.clearCountCriteriaQuery(organizationId, schema, paths.toArray(new PathSegment[0]));
 			return Response.ok(queryResult).header(Naming.Query.COUNT, queryResult.size()).build();
 		}
 		throw new NotFoundException();
@@ -122,7 +122,7 @@ public class Query {
 	@HEAD
     @Path("query/{schema}/{criteria: .+}")
 	@RunOnVirtualThread
-	public Response executeCountQuery(
+	public Response executeCountCriteriaQuery(
     		@PathParam(Naming.SCHEMA)
             @NotBlank
             final String schema,
@@ -131,7 +131,7 @@ public class Query {
             @Context
             final JsonWebToken jwt) throws Exception {
 		final String organizationId = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
-		final Long count = queryCache.executeCountQuery(organizationId, schema, paths.toArray(new PathSegment[0]));
+		final Long count = queryCache.executeCountCriteriaQuery(organizationId, schema, paths.toArray(new PathSegment[0]));
     	return Response.ok().header(Naming.Query.COUNT, count).build();
 	}
 	
@@ -140,12 +140,12 @@ public class Query {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
-	public Response executeSingleResultQuery(
+	public Response executeQuerySingleResult(
 			@Context
             final JsonWebToken jwt,
             @Valid
             final NativeQuery query) throws Exception {
-		final SingleResult singleResult = queryCache.executeSingleResultQuery(query);
+		final SingleResult singleResult = queryCache.executeQuerySingleResult(query);
 		return Response.ok(singleResult).build();
 	}
 	
@@ -154,7 +154,7 @@ public class Query {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
-	public Response executeResultListQuery(
+	public Response executeQueryResultList(
 			@Context
             final JsonWebToken jwt,
             @QueryParam(Naming.Query.Client.FIRST)
@@ -163,7 +163,7 @@ public class Query {
             final Integer maxResults,
             @Valid 
             final NativeQuery query) throws Exception {
-		final ResultList resultList = queryCache.executeResultListQuery(query, firstResult, maxResults);
+		final ResultList resultList = queryCache.executeQueryResultList(query, firstResult, maxResults);
 		return Response.ok(resultList).build();
 	}
 }

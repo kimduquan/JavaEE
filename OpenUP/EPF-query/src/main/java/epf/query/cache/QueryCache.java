@@ -72,7 +72,7 @@ public class QueryCache {
 	}
 	
 	@CacheResult(cacheName = Naming.Query.QUERY_CACHE, keyGenerator = QueryCacheKeyGenerator.class)
-	public List<?> executeQuery(
+	public List<?> executeCriteriaQuery(
 			@CacheKey
 			final String organizationId,
 			@CacheKey
@@ -103,7 +103,7 @@ public class QueryCache {
 	}
 	
 	@CacheResult(cacheName = Naming.Query.QUERY_COUNT_CACHE, keyGenerator = QueryCacheKeyGenerator.class)
-	public Long executeCountQuery(
+	public Long executeCountCriteriaQuery(
 			@CacheKey
 			final String organizationId,
 			@CacheKey
@@ -147,7 +147,7 @@ public class QueryCache {
         return resultList;
     }
 	
-	public SingleResult executeSingleResultQuery(final NativeQuery nativeQuery) {
+	public SingleResult executeQuerySingleResult(final NativeQuery nativeQuery) {
 		final Query query = manager.createQuery(nativeQuery.getQuery());
 		if(nativeQuery.getParameters() != null) {
 			for(Map.Entry<String, Object> parameter : nativeQuery.getParameters().entrySet()) {
@@ -160,7 +160,7 @@ public class QueryCache {
 		return queryResult;
 	}
 	
-	public ResultList executeResultListQuery(final NativeQuery nativeQuery, final Integer firstResult, final Integer maxResults) {
+	public ResultList executeQueryResultList(final NativeQuery nativeQuery, final Integer firstResult, final Integer maxResults) {
 		final Query query = manager.createQuery(nativeQuery.getQuery());
 		if(nativeQuery.getParameters() != null) {
 			for(Map.Entry<String, Object> parameter : nativeQuery.getParameters().entrySet()) {

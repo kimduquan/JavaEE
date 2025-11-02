@@ -18,7 +18,7 @@ public class PersistenceCache {
 	}
 	
 	@CacheInvalidate(cacheName = Naming.Query.QUERY_COUNT_CACHE, keyGenerator = QueryCacheKeyGenerator.class)
-	public void clearCountQuery(
+	public void clearCountCriteriaQuery(
 			@CacheKey
 			final String organizationId,
 			@CacheKey

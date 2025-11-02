@@ -1,17 +1,11 @@
 package epf.mcp.gateway;
 
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
-import epf.naming.Naming;
-import epf.persistence.schema.EntityType;
 import epf.query.schema.NativeQuery;
 import epf.query.schema.ResultList;
 import epf.query.schema.SingleResult;
-import io.quarkiverse.mcp.server.Prompt;
-import io.quarkiverse.mcp.server.PromptArg;
 import io.quarkiverse.mcp.server.Tool;
 import io.quarkiverse.mcp.server.ToolArg;
 import io.quarkus.security.Authenticated;
@@ -22,64 +16,47 @@ import jakarta.validation.constraints.NotBlank;
 
 @ApplicationScoped
 @Authenticated
-public class Gateway {
+public class Query {
 	
 	@RestClient
 	transient QueryClient queryClient;
 	
-	@RestClient
-	transient SchemaClient schemaClient;
-	
 	@Inject
 	JsonWebToken jwt;
-	
-	@Prompt(name = Naming.QUERY)
-	String getQueryPrompt(@PromptArg(name = Naming.SCHEMA) final String schema) throws Exception {
-		final StringBuilder prompt = new StringBuilder();
-		final SchemaBuilder schemaBuilder = new SchemaBuilder();
-		final String authorization = "Bearer " + jwt.getRawToken();
-		final List<EntityType> entities = schemaClient.getEntities(authorization).stream().filter(entity -> entity.getTable().getSchema().equals(schema)).collect(Collectors.toList());
-		schemaBuilder.entities(entities);
-		prompt.append("""
-		Given below Java Persistence API entity classes :
-				""");
-		prompt.append(schemaBuilder.build());
-		return prompt.toString();
-	}
 
 	@Tool(description = "Execute a JPQL query which return a single result object", structuredContent = true)
 	@RunOnVirtualThread
-    SingleResult executeSingleResultQuery(
-    		@ToolArg(description = "The JPQL query")
+    SingleResult executeQuerySingleResult(
+    		@ToolArg(name = "query", description = "The JPQL query")
     		@NotBlank
     		final String query,
-    		@ToolArg(description = "The input parameters", required = false)
+    		@ToolArg(name = "parameters", description = "The input parameters", required = false)
     		final Map<String, Object> parameters) throws Exception {
 		final NativeQuery nativeQuery = new NativeQuery();
 		nativeQuery.setQuery(query);
 		nativeQuery.setParameters(parameters);
 		final String authorization = "Bearer " + jwt.getRawToken();
-		final SingleResult singleResult = queryClient.executeSingleResultQuery(authorization, nativeQuery);
+		final SingleResult singleResult = queryClient.executeQuerySingleResult(authorization, nativeQuery);
         return singleResult;
     }
 	
 	@Tool(description = "Execute a JPQL query which return a list of object", structuredContent = true)
 	@RunOnVirtualThread
-	ResultList executeResultListQuery(
-    		@ToolArg(description = "The JPQL query")
+	ResultList executeQueryResultList(
+    		@ToolArg(name = "query", description = "The JPQL query")
     		@NotBlank
     		final String query,
-    		@ToolArg(description = "The input parameters", required = false)
+    		@ToolArg(name = "parameters", description = "The input parameters", required = false)
     		final Map<String, Object> parameters,
-    		@ToolArg(description = "The first result position", required = false)
+    		@ToolArg(name = "firstResult", description = "The first result position", required = false)
     		final Integer firstResult,
-    		@ToolArg(description = "The first result position", required = false)
+    		@ToolArg(name = "maxResults", description = "The first result position", required = false)
     		final Integer maxResults) throws Exception {
 		final NativeQuery nativeQuery = new NativeQuery();
 		nativeQuery.setQuery(query);
 		nativeQuery.setParameters(parameters);
 		final String authorization = "Bearer " + jwt.getRawToken();
-		final ResultList resultList = queryClient.executeResultListQuery(authorization, maxResults, firstResult, nativeQuery);
+		final ResultList resultList = queryClient.executeQueryResultList(authorization, maxResults, firstResult, nativeQuery);
         return resultList;
     }
 }
