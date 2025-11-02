@@ -1,4 +1,4 @@
-package epf.persistence.internal;
+package epf.query.internal;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,6 +20,7 @@ import jakarta.persistence.metamodel.Attribute.PersistentAttributeType;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.PathSegment;
 import epf.naming.Naming;
+import epf.schema.internal.Entity;
 import epf.util.Var;
 
 public class QueryBuilder {

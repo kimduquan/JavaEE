@@ -1,4 +1,4 @@
-package epf.persistence.internal;
+package epf.schema.internal;
 
 import jakarta.persistence.metamodel.EntityType;
 

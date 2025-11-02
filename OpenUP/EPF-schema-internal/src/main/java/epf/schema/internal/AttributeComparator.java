@@ -1,4 +1,4 @@
-package epf.persistence.schema.internal;
+package epf.schema.internal;
 
 import java.util.Comparator;
 import epf.persistence.schema.Attribute;

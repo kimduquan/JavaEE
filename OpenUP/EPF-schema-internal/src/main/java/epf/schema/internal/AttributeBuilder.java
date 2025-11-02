@@ -1,4 +1,4 @@
-package epf.persistence.schema.internal;
+package epf.schema.internal;
 
 import jakarta.persistence.metamodel.Attribute;
 import jakarta.persistence.metamodel.PluralAttribute;

@@ -1,16 +1,56 @@
 package epf.query;
 
-import epf.schema.utility.EntityEvent;
-import epf.schema.utility.EntityTransaction;
-import epf.schema.utility.PostPersist;
-import epf.schema.utility.PostRemove;
-import epf.schema.utility.PostUpdate;
-import epf.util.json.ext.Adapter;
-import io.quarkus.runtime.annotations.RegisterForReflection;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import epf.naming.Naming;
+import epf.persistence.schema.EmbeddableType;
+import epf.persistence.schema.EntityType;
+import epf.schema.internal.EmbeddableBuilder;
+import epf.schema.internal.EmbeddableComparator;
+import epf.schema.internal.EntityBuilder;
+import epf.schema.internal.EntityComparator;
+import epf.schema.internal.MetamodelUtil;
+import io.smallrye.common.annotation.RunOnVirtualThread;
 
-@RegisterForReflection(targets = {
-		EntityEvent.class,EntityTransaction.class,PostPersist.class,PostRemove.class,PostUpdate.class,Adapter.class
-})
-public interface Schema {
+@Path(Naming.SCHEMA)
+@ApplicationScoped
+public class Schema {
+	
+	@Inject
+    transient EntityManager manager;
 
+	@GET
+    @Produces(MediaType.APPLICATION_JSON)
+	@RunOnVirtualThread
+	public List<EntityType> getEntities() {
+		final EntityBuilder builder = new EntityBuilder();
+		final EntityComparator comparator = new EntityComparator();
+		final Stream<EntityType> entities = MetamodelUtil
+				.getEntities(manager.getMetamodel())
+				.map(entity -> builder.buildEntityType(entity.getType()))
+				.sorted(comparator);
+		return entities.collect(Collectors.toList());
+	}
+
+	@GET
+    @Path("embeddable")
+    @Produces(MediaType.APPLICATION_JSON)
+	@RunOnVirtualThread
+	public List<EmbeddableType> getEmbeddables() {
+		final EmbeddableBuilder builder = new EmbeddableBuilder();
+		final EmbeddableComparator comparator = new EmbeddableComparator();
+		final Stream<EmbeddableType> embeddables = MetamodelUtil
+				.getEmbeddables(manager.getMetamodel())
+				.map(embeddable -> builder.build(embeddable.getType()))
+				.sorted(comparator);
+		return embeddables.collect(Collectors.toList());
+	}
 }

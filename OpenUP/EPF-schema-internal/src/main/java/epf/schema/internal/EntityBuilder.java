@@ -1,4 +1,4 @@
-package epf.persistence.schema.internal;
+package epf.schema.internal;
 
 import java.util.stream.Collectors;
 import jakarta.persistence.metamodel.EntityType;

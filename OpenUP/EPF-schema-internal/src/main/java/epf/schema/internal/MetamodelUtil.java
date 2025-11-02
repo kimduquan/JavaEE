@@ -1,20 +1,19 @@
-package epf.persistence.internal.util;
+package epf.schema.internal;
 
 import java.lang.reflect.Field;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
 import jakarta.persistence.metamodel.Attribute;
 import jakarta.persistence.metamodel.EmbeddableType;
 import jakarta.persistence.metamodel.EntityType;
 import jakarta.persistence.metamodel.Metamodel;
-import epf.persistence.internal.Embeddable;
-import epf.persistence.internal.Entity;
 
-public interface SchemaUtil {
+public interface MetamodelUtil {
 	
 	static <T> Stream<Entity<T>> getEntities(final Metamodel metamodel) {
 		return metamodel
