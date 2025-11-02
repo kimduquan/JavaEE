@@ -12,13 +12,14 @@ import epf.query.schema.ResultList;
 import epf.query.schema.SingleResult;
 import io.quarkiverse.mcp.server.Prompt;
 import io.quarkiverse.mcp.server.PromptArg;
+import io.quarkiverse.mcp.server.ResourceTemplate;
 import io.quarkiverse.mcp.server.Tool;
 import io.quarkiverse.mcp.server.ToolArg;
 import io.quarkus.security.Authenticated;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.ws.rs.core.Response;
 
 @ApplicationScoped
 @Authenticated
@@ -51,7 +52,6 @@ public class Query {
 	@RunOnVirtualThread
     SingleResult executeQuerySingleResult(
     		@ToolArg(name = "query", description = "The JPQL query")
-    		@NotBlank
     		final String query,
     		@ToolArg(name = "parameters", description = "The input parameters", required = false)
     		final Map<String, Object> parameters) throws Exception {
@@ -67,7 +67,6 @@ public class Query {
 	@RunOnVirtualThread
 	ResultList executeQueryResultList(
     		@ToolArg(name = "query", description = "The JPQL query")
-    		@NotBlank
     		final String query,
     		@ToolArg(name = "parameters", description = "The input parameters", required = false)
     		final Map<String, Object> parameters,
@@ -82,4 +81,23 @@ public class Query {
 		final ResultList resultList = queryClient.executeQueryResultList(authorization, maxResults, firstResult, nativeQuery);
         return resultList;
     }
+	
+	@Tool(name = "query.countEntity", description = "Count entity", structuredContent = true)
+	@RunOnVirtualThread
+	Integer countEntity(
+			@ToolArg(name = "schema", description = "The schema")
+			final String schema,
+			@ToolArg(name = "entity", description = "The entity")
+			final String entity) throws Exception {
+		final String authorization = "Bearer " + jwt.getRawToken();
+		final Response response = queryClient.countEntity(authorization, schema, entity);
+		return Integer.valueOf(response.getHeaderString(Naming.Query.COUNT));
+	}
+	
+	@ResourceTemplate(uriTemplate = "query://{schema}/{entity}/{id}")
+	@RunOnVirtualThread
+	Object getEntity(final String schema, final String entity, final String id) throws Exception {
+		final String authorization = "Bearer " + jwt.getRawToken();
+		return queryClient.getEntity(authorization, schema, entity, id).getEntity();
+	}
 }

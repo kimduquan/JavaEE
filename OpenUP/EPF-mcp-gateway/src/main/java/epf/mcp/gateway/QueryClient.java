@@ -47,6 +47,8 @@ public interface QueryClient {
     @Path("entity/{schema}/{entity}/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	Response getEntity(
+			@HeaderParam(HttpHeaders.AUTHORIZATION)
+			final String authorization,
     		@PathParam(Naming.SCHEMA)
             final String schema,
             @PathParam(Naming.Query.ENTITY)
@@ -57,6 +59,8 @@ public interface QueryClient {
 	@HEAD
 	@Path("entity/{schema}/{entity}")
 	Response countEntity(
+			@HeaderParam(HttpHeaders.AUTHORIZATION)
+			final String authorization,
     		@PathParam(Naming.SCHEMA)
             final String schema,
             @PathParam(Naming.Query.ENTITY)
