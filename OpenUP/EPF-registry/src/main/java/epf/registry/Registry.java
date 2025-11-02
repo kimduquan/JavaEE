@@ -88,20 +88,6 @@ public class Registry {
 	 * 
 	 */
 	@Inject
-	@ConfigProperty(name = Naming.Security.SECURITY_URL)
-	transient URI securityUrl;
-	
-	/**
-	 * 
-	 */
-	@Inject
-	@ConfigProperty(name = Naming.Security.Management.SECURITY_MANAGEMENT_URL)
-	transient URI securityManagementUrl;
-	
-	/**
-	 * 
-	 */
-	@Inject
 	@ConfigProperty(name = Naming.Registry.REGISTRY_URL)
 	transient URI registryUrl;
 	
@@ -214,13 +200,6 @@ public class Registry {
 	 * 
 	 */
 	@Inject
-	@ConfigProperty(name = Naming.Lang.Internal.OLLAMA)
-	transient URI ollamaUrl;
-	
-	/**
-	 * 
-	 */
-	@Inject
 	@ConfigProperty(name = Naming.Net.HTTP_PORT)
 	transient int httpPort;
 	
@@ -234,8 +213,6 @@ public class Registry {
 			remotes.put(Naming.FILE, fileUrl);
 			remotes.put(Naming.MAIL, mailUrl);
 			remotes.put(Naming.PERSISTENCE, persistenceUrl);
-			remotes.put(Naming.SECURITY, securityUrl);
-			remotes.put(Naming.Security.SECURITY_MANAGEMENT, securityManagementUrl);
 			remotes.put(Naming.REGISTRY, registryUrl);
 			remotes.put(Naming.MESSAGING, messagingUrl);
 			remotes.put(Naming.CACHE, cacheUrl);
@@ -252,7 +229,6 @@ public class Registry {
 			remotes.put(Naming.EVENT, eventUrl);
 			remotes.put(Naming.CONCURRENT, concurrentUrl);
 			remotes.put(Naming.LANG, langUrl);
-			remotes.put(Naming.Lang.Internal.OLLAMA, ollamaUrl);
 			remotes.forEach((name, url) -> {
 				LOGGER.info(String.format("%s=%s", name, url));
 			});
