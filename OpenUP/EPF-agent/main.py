@@ -81,7 +81,7 @@ app = FastAPI(lifespan=lifespan)
 
 @app.post("/agents/{name}")
 async def run_agent(name: str, request: Request, claims: dict[str, Any] = Depends(get_claims)):
-    arguments = dict[str, str] = {}
+    arguments: dict[str, str] = {}
     for param_name, param_value in request.query_params.items():
         arguments[param_name] = param_value
     session_id = str(claims["sub"])
