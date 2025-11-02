@@ -3,4 +3,4 @@ kubectl create secret generic epf-agent --from-literal=SESSION_ENCRYPTION_KEY="$
 kubectl apply -f kubernetes.yml
 kubectl wait deployment --for condition=available --timeout=60s epf-agent
 kubectl wait pod --for condition=ready --timeout=60s -l app.kubernetes.io/name=epf-agent
-kubectl autoscale deployment epf-agent --max 2
+kubectl autoscale deployment epf-agent --max 1
