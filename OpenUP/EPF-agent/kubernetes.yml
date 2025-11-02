@@ -48,7 +48,7 @@ spec:
                   name: vllm
                   key: VLLM_API_KEY
             - name: MODEL_NAME
-              value: "neuralmagic/Mistral-7B-Instruct-v0.3-GPTQ-4bit"
+              value: "neuralmagic/granite-3.1-8b-instruct-quantized.w4a16"
             - name: MODEL_BASE_URL
               value: "http://vllm.default.svc.cluster.local:8000/v1"
             - name: MCP_SERVER_URL
