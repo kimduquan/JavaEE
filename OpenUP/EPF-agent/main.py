@@ -12,6 +12,7 @@ from agents.extensions.memory.redis_session import RedisSession
 from jwt import PyJWKClient
 from pydantic import BaseModel
 from redis import Redis
+from agents.mcp.util import MCPTool, ToolFilterContext
 
 class AgentRequest(BaseModel):
     input: str
@@ -44,6 +45,11 @@ def get_claims(credentials: HTTPAuthorizationCredentials = Depends(security)) ->
     signing_key = jwk_client.get_signing_key_from_jwt(token=credentials.credentials)
     return jwt.decode(token=credentials.credentials,key=signing_key.key,issuer=jwt_issuer)
 
+async def agent_tool_filter(context: ToolFilterContext, tool: MCPTool) -> bool:
+    if(tool.name.startswith(context.agent.name + ".")):
+        return True
+    return False
+
 @cached()
 async def get_session(session_id: str) -> EncryptedSession:
     underlying_session = RedisSession(session_id=session_id, redis_client=redis_client)
@@ -58,6 +64,7 @@ async def get_session(session_id: str) -> EncryptedSession:
 @cached()
 async def get_mcp_server(session_id: str) -> MCPServerStreamableHttp:
     mcp_server = MCPServerStreamableHttp(
+        tool_filter=agent_tool_filter,
         params={
             "url":os.environ.get("MCP_SERVER_URL"),
             "headers": {
