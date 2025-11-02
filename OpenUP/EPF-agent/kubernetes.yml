@@ -62,6 +62,10 @@ spec:
                 secretKeyRef:
                   name: redis
                   key: redis-password
+            - name: JWT_VERIFY_PUBLICKEY_LOCATION
+              value: "https://chipmunk-capable-prawn.ngrok-free.app/auth/realms/EPF-dev/protocol/openid-connect/certs"
+            - name: JWT_VERIFY_ISSUER
+              value: "https://chipmunk-capable-prawn.ngrok-free.app/auth/realms/EPF-dev"
           image: epf-agent:1.0.0
           imagePullPolicy: IfNotPresent
           name: epf-agent

@@ -9,6 +9,7 @@ from jose import jwt
 from aiocache import cached, SimpleMemoryCache
 from agents.extensions.memory.encrypt_session import EncryptedSession
 from agents.extensions.memory.redis_session import RedisSession
+from jwt import PyJWKClient
 from redis import Redis
 
 client = AsyncOpenAI(
@@ -27,12 +28,17 @@ security = HTTPBearer()
 
 redis_client = Redis(host=os.environ.get("REDIS_HOST"), password=os.environ.get("REDIS_PASSWORD"))
 
+jwk_client = PyJWKClient(os.environ.get("JWT_VERIFY_PUBLICKEY_LOCATION"))
+
+jwt_issuer = os.environ.get("JWT_VERIFY_ISSUER")
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     yield
 
 async def get_claims(credentials: HTTPAuthorizationCredentials = Depends(security)) -> dict[str, Any]:
-    return jwt.decode(token=credentials.credentials)
+    signing_key = jwk_client.get_signing_key_from_jwt(token=credentials.credentials)
+    return jwt.decode(token=credentials.credentials,key=signing_key.key,issuer=jwt_issuer)
 
 @cached
 async def get_session(session_id: str) -> EncryptedSession:
