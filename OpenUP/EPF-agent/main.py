@@ -13,7 +13,8 @@ from jwt import PyJWKClient
 from mcp.client.session import ClientSession
 from pydantic import AnyUrl, BaseModel
 from redis import Redis
-from agents.mcp.util import MCPTool, ToolFilterContext
+from mcp.types import Tool
+from agents.mcp.util import ToolFilterContext
 from mcp.client.streamable_http import streamablehttp_client
 from mcp.types import TextResourceContents, BlobResourceContents, ListResourcesResult, ListResourceTemplatesResult, ReadResourceResult
 from openai.types.responses.response_input_file_param import ResponseInputFileParam
@@ -50,7 +51,7 @@ def get_claims(credentials: HTTPAuthorizationCredentials = Depends(security)) ->
     signing_key = jwk_client.get_signing_key_from_jwt(token=credentials.credentials)
     return jwt.decode(token=credentials.credentials,key=signing_key.key,issuer=jwt_issuer)
 
-async def agent_tool_filter(context: ToolFilterContext, tool: MCPTool) -> bool:
+async def agent_tool_filter(context: ToolFilterContext, tool: Tool) -> bool:
     if(tool.name.startswith(context.agent.name + ".")):
         return True
     return False
