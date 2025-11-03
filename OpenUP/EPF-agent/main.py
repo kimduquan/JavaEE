@@ -1,8 +1,8 @@
-from typing import Any
+from typing import Any, List, Literal
 from fastapi import Depends, FastAPI, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 import os
-from agents import Agent, ModelSettings, Runner, AsyncOpenAI, OpenAIChatCompletionsModel
+from agents import Agent, ModelSettings, Runner, AsyncOpenAI, OpenAIChatCompletionsModel, TResponseInputItem
 from agents.mcp import MCPServerStreamableHttp
 from contextlib import asynccontextmanager
 from jose import jwt
@@ -10,9 +10,14 @@ from aiocache import cached, SimpleMemoryCache
 from agents.extensions.memory.encrypt_session import EncryptedSession
 from agents.extensions.memory.redis_session import RedisSession
 from jwt import PyJWKClient
-from pydantic import BaseModel
+from mcp.client.session import ClientSession
+from pydantic import AnyUrl, BaseModel
 from redis import Redis
 from agents.mcp.util import MCPTool, ToolFilterContext
+from mcp.client.streamable_http import streamablehttp_client
+from mcp.types import TextResourceContents, BlobResourceContents, ListResourcesResult, ListResourceTemplatesResult, ReadResourceResult
+from openai.types.responses.response_input_file_param import ResponseInputFileParam
+import re
 
 class AgentRequest(BaseModel):
     input: str
@@ -50,6 +55,22 @@ async def agent_tool_filter(context: ToolFilterContext, tool: MCPTool) -> bool:
         return True
     return False
 
+def extract_uris_from_text(templates: list[str], text: str) -> list[Any]:
+    regex_patterns = list[str]
+    for template in templates:
+        # Escape special regex characters except braces
+        escaped = re.sub(r"([.+?^$()\\|])", r"\\\1", template)
+        # Replace {variable} with regex to match anything except '/'
+        pattern = re.sub(r"\{[^/]+\}", r"[^/]+", escaped)
+        regex_patterns.append(pattern)
+    
+    # Combine all patterns into a single regex with OR
+    combined_regex = re.compile("|".join(regex_patterns))
+    
+    # Find all matches in text
+    matches = combined_regex.findall(text)
+    return matches
+
 @cached()
 async def get_session(session_id: str) -> EncryptedSession:
     underlying_session = RedisSession(session_id=session_id, redis_client=redis_client)
@@ -75,11 +96,22 @@ async def get_mcp_server(session_id: str) -> MCPServerStreamableHttp:
     await mcp_server.connect()
     return mcp_server
 
-async def get_agent(session_id: str, name: str, arguments: dict[str, Any], handoffs: list[Agent[Any]]) -> Agent[Any]:
+@cached()
+async def get_client_session(session_id: str) -> ClientSession:
+    read, write = await streamablehttp_client(
+        url=os.environ.get("MCP_SERVER_URL"),
+        headers={
+            "Authorization": await authorization.get(session_id)
+            })
+    client_session = ClientSession(read, write)
+    await client_session.initialize()
+    return client_session
+
+async def get_starting_agent(session_id: str, name: str, arguments: dict[str, Any], handoffs: list[Agent[Any]]) -> Agent[Any]:
     mcp_server: MCPServerStreamableHttp = await get_mcp_server(session_id)
     prompt = await mcp_server.get_prompt(name=name, arguments=arguments)
     instructions = prompt.messages[0].content.text
-    agent = Agent(
+    starting_agent = Agent(
         name=name,
         handoff_description=prompt.description,
         mcp_servers=[mcp_server],
@@ -90,7 +122,7 @@ async def get_agent(session_id: str, name: str, arguments: dict[str, Any], hando
             tool_choice="auto",
         ),
     )
-    return agent
+    return starting_agent
 
 async def get_handoffs(session_id: str, name: str, arguments: dict[str, Any]) -> list[Agent[Any]]:
     handoffs: list[Agent[Any]] = []
@@ -114,6 +146,44 @@ async def get_handoffs(session_id: str, name: str, arguments: dict[str, Any]) ->
             handoffs.append(handoff_agent)
     return handoffs
 
+def append_input(read_resource: ReadResourceResult, inputs: list[TResponseInputItem]) -> list[TResponseInputItem]:
+    for resource_content in read_resource.contents:
+                if(isinstance(resource_content, TextResourceContents)):
+                    text_contents = TextResourceContents(resource_content)
+                    input = TResponseInputItem(content=text_contents.text,role=Literal('user'))
+                    inputs.append(input)
+                elif(isinstance(resource_content, BlobResourceContents)):
+                    blob_contents = BlobResourceContents(resource_content)
+                    file = ResponseInputFileParam(
+                        file_data=blob_contents.blob,
+                        file_id=blob_contents.uri.unicode_string(),
+                        file_url=blob_contents.uri.unicode_string(),
+                        )
+                    file_contents: List[ResponseInputFileParam] = []
+                    file_contents.append(file)
+                    input = TResponseInputItem(content=file_contents,role=Literal('user'))
+                    inputs.append(input)
+    return inputs
+
+async def get_input(agent_request: AgentRequest, session_id: str) -> list[TResponseInputItem]:
+    inputs: list[TResponseInputItem] = []
+    client_session: ClientSession = await get_client_session(session_id)
+    list_resources: ListResourcesResult = await client_session.list_resources()
+    for resource in list_resources.resources:
+        if(agent_request.input.find(resource.uri.unicode_string()) != -1):
+            read_resource: ReadResourceResult = await client_session.read_resource(resource.uri)
+            inputs = append_input(read_resource=read_resource,inputs=inputs)
+    list_resource_templates: ListResourceTemplatesResult = await client_session.list_resource_templates()
+    resource_uri_templates: list[str] = []
+    for resource_template in list_resource_templates.resourceTemplates:
+        resource_uri_templates.append(resource_template.uriTemplate)
+    resource_uris: list[Any] = extract_uris_from_text(resource_uri_templates, agent_request.input)
+    for resource_uri in resource_uris:
+        uri = AnyUrl(url=resource_uri)
+        read_resource: ReadResourceResult = await client_session.read_resource(uri)
+        inputs = append_input(read_resource=read_resource,inputs=inputs)
+    return inputs
+
 app = FastAPI(lifespan=lifespan)
 
 @app.post("/agents/{name}")
@@ -124,9 +194,10 @@ async def run_agent(name: str, request: Request, agent_request: AgentRequest, cl
     session_id = str(claims["sub"])
     await authorization.set(session_id, request.headers.get("Authorization"))
     handoffs = await get_handoffs(session_id=session_id,name=name,arguments=arguments)
-    starting_agent = await get_agent(session_id=session_id,name=name,arguments=arguments,handoffs=handoffs)
+    starting_agent = await get_starting_agent(session_id=session_id,name=name,arguments=arguments,handoffs=handoffs)
     session = await get_session(session_id)
-    run_result = await Runner.run(starting_agent=starting_agent,input=agent_request.input,session=session)
+    input = await get_input(agent_request=agent_request,session_id=session_id)
+    run_result = await Runner.run(starting_agent=starting_agent,input=input,session=session)
     return run_result
 
 @app.get("/sessions/items")

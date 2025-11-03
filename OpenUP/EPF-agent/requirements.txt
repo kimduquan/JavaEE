@@ -4,3 +4,4 @@ openai
 openai-agents[encrypt,redis]
 python-jose
 aiocache
+mcp
