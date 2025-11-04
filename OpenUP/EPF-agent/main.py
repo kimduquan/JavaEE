@@ -185,14 +185,22 @@ async def get_input(agent_request: AgentRequest, session_id: str) -> list[TRespo
         inputs = append_input(read_resource=read_resource,inputs=inputs)
     return inputs
 
+def get_arguments(request: Request) -> dict[str, str]:
+    arguments: dict[str, str] = {}
+    for param_name, param_value in request.query_params.items():
+        arguments[param_name] = param_value
+    return arguments
+
+def get_session_id(claims: dict[str, Any]) -> str:
+    session_id = str(claims["sub"])
+    return session_id
+
 app = FastAPI(lifespan=lifespan)
 
 @app.post("/agents/{name}")
 async def run_agent(name: str, request: Request, agent_request: AgentRequest, claims: dict[str, Any] = Depends(get_claims)):
-    arguments: dict[str, str] = {}
-    for param_name, param_value in request.query_params.items():
-        arguments[param_name] = param_value
-    session_id = str(claims["sub"])
+    arguments = get_arguments(request=request)
+    session_id = get_session_id(claims=claims)
     await authorization.set(session_id, request.headers.get("Authorization"))
     handoffs = await get_handoffs(session_id=session_id,name=name,arguments=arguments)
     starting_agent = await get_starting_agent(session_id=session_id,name=name,arguments=arguments,handoffs=handoffs)
