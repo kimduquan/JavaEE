@@ -149,21 +149,22 @@ async def get_handoffs(session_id: str, name: str, arguments: dict[str, Any]) ->
 
 def append_input(read_resource: ReadResourceResult, inputs: list[TResponseInputItem]) -> list[TResponseInputItem]:
     for resource_content in read_resource.contents:
-                if(isinstance(resource_content, TextResourceContents)):
-                    text_contents = TextResourceContents(resource_content)
-                    input = TResponseInputItem(content=text_contents.text,role=Literal('user'))
-                    inputs.append(input)
-                elif(isinstance(resource_content, BlobResourceContents)):
-                    blob_contents = BlobResourceContents(resource_content)
-                    file = ResponseInputFileParam(
-                        file_data=blob_contents.blob,
-                        file_id=blob_contents.uri.unicode_string(),
-                        file_url=blob_contents.uri.unicode_string(),
-                        )
-                    file_contents: List[ResponseInputFileParam] = []
-                    file_contents.append(file)
-                    input = TResponseInputItem(content=file_contents,role=Literal('user'))
-                    inputs.append(input)
+        if(isinstance(resource_content, TextResourceContents)):
+            text_contents = TextResourceContents(resource_content)
+            input = TResponseInputItem(content=text_contents.text,role=Literal('user'))
+            inputs.append(input)
+        elif(isinstance(resource_content, BlobResourceContents)):
+            blob_contents = BlobResourceContents(resource_content)
+            file = ResponseInputFileParam(
+                file_data=blob_contents.blob,
+                file_id=blob_contents.uri.unicode_string(),
+                file_url=blob_contents.uri.unicode_string(),
+                filename=blob_contents.uri.unicode_string()
+                )
+            file_contents: List[ResponseInputFileParam] = []
+            file_contents.append(file)
+            input = TResponseInputItem(content=file_contents,role=Literal('user'))
+            inputs.append(input)
     return inputs
 
 async def get_input(agent_request: AgentRequest, session_id: str) -> list[TResponseInputItem]:
