@@ -3,8 +3,25 @@ from typing import Any, List, Literal, Optional
 from fastapi import Depends, FastAPI, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 import os
-from agents import Agent, MessageOutputItem, ModelResponse, ModelSettings, RunContextWrapper, RunHooks, RunItemStreamEvent, RunResultStreaming, Runner, AsyncOpenAI, OpenAIChatCompletionsModel, TContext, TResponseInputItem, ToolCallItem, ToolCallOutputItem
+from agents import (
+    Agent, 
+    MessageOutputItem, 
+    ModelResponse, 
+    ModelSettings, 
+    RunContextWrapper, 
+    RunHooks, 
+    RunItemStreamEvent, 
+    RunResultStreaming, 
+    Runner, 
+    AsyncOpenAI, 
+    OpenAIChatCompletionsModel, 
+    TContext, 
+    TResponseInputItem, 
+    ToolCallItem, 
+    ToolCallOutputItem
+)
 from openai.types.responses.response_input_item_param import FunctionCallOutput
+from agents.items import ToolCallItemTypes
 from agents.mcp import MCPServerStreamableHttp
 from contextlib import asynccontextmanager
 from jose import jwt
@@ -28,8 +45,10 @@ from ag_ui.core import (
     RunStartedEvent,
     RunFinishedEvent,
     TextMessageStartEvent,
+    TextMessageContentEvent,
     TextMessageEndEvent,
     ToolCallStartEvent,
+    ToolCallArgsEvent,
     ToolCallEndEvent,
 )
 from ag_ui.core.events import BaseEvent
@@ -315,28 +334,65 @@ def get_session_id(claims: dict[str, Any]) -> str:
     session_id = str(claims["sub"])
     return session_id
 
-async def generate_events(run_result_streaming: RunResultStreaming):
+async def generate_events(run_agent_input: RunAgentInput, event_encoder: EventEncoder, run_result_streaming: RunResultStreaming):
+    yield event_encoder.encode(
+        RunStartedEvent(
+            thread_id=run_agent_input.thread_id,
+            run_id=run_agent_input.run_id
+        )
+    )
     async for stream_event in run_result_streaming.stream_events():
         if(isinstance(stream_event, RunItemStreamEvent)):
             run_item_event: RunItemStreamEvent = RunItemStreamEvent(stream_event)
             if(isinstance(run_item_event.item, MessageOutputItem)):
                 message_output: MessageOutputItem = MessageOutputItem(run_item_event.item)
-                yield TextMessageStartEvent(
-                    message_id=message_output.raw_item.id,
+                yield event_encoder.encode(
+                    TextMessageStartEvent(
+                        message_id=message_output.raw_item.id,
+                    )
+                )
+                yield event_encoder.encode(
+                    TextMessageContentEvent(
+                        message_id=message_output.raw_item.id,
+                        delta=message_output.raw_item.content[0].text
+                    )
+                )
+                yield event_encoder.encode(
+                    TextMessageEndEvent(
+                        message_id=message_output.raw_item.id,
+                    )
                 )
             elif(isinstance(run_item_event.item, ToolCallItem)):
                 tool_call: ToolCallItem = ToolCallItem(run_item_event.item)
-                yield ToolCallStartEvent(
-                    tool_call_id=tool_call.raw_item.call_id,
-                    tool_call_name=tool_call.raw_item.name
+                raw_item: ToolCallItemTypes = tool_call.raw_item
+                yield event_encoder.encode(
+                    ToolCallStartEvent(
+                        tool_call_id=raw_item.call_id,
+                        tool_call_name=raw_item.name
+                    )
                 )
+                yield event_encoder.encode(
+                    ToolCallArgsEvent(
+                        tool_call_id=raw_item.call_id,
+                        delta=raw_item.arguments
+                    )
+                )
+
             elif(isinstance(run_item_event.item, ToolCallOutputItem )):
                 tool_call_output: ToolCallOutputItem  = ToolCallOutputItem (run_item_event.item)
                 if(isinstance(tool_call_output.raw_item, FunctionCallOutput)):
                     function_call_output: FunctionCallOutput = FunctionCallOutput(tool_call_output.raw_item)
-                    yield ToolCallEndEvent(
-                        tool_call_id=function_call_output.call_id
+                    yield event_encoder.encode(
+                        ToolCallEndEvent(
+                            tool_call_id=function_call_output.call_id
+                        )
                     )
+    yield event_encoder.encode(
+        RunFinishedEvent(
+            thread_id=run_agent_input.thread_id,
+            run_id=run_agent_input.run_id
+        )
+    )
 
 app = FastAPI(lifespan=lifespan)
 
@@ -364,6 +420,9 @@ async def agentic_chat_endpoint(name: str, run_agent_input: RunAgentInput, reque
     accept_header = request.headers.get("accept")
     encoder = EventEncoder(accept=accept_header)
     run_result_streaming = Runner.run_streamed(starting_agent=starting_agent,input=input,session=session)
+    accept = request.headers.get("accept")
+    event_encoder = EventEncoder(accept=accept)
     return StreamingResponse(
-        generate_events(run_result_streaming),
-        media_type=encoder.get_content_type())
+        generate_events(run_agent_input=run_agent_input,event_encoder=event_encoder,run_result_streaming=run_result_streaming),
+        media_type=encoder.get_content_type()
+    )
