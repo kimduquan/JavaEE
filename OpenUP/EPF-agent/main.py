@@ -1,8 +1,9 @@
-from typing import Any, List, Literal
+import asyncio
+from typing import Any, List, Literal, Optional
 from fastapi import Depends, FastAPI, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 import os
-from agents import Agent, ModelSettings, Runner, AsyncOpenAI, OpenAIChatCompletionsModel, TResponseInputItem
+from agents import Agent, ModelResponse, ModelSettings, RunContextWrapper, RunHooks, Runner, AsyncOpenAI, OpenAIChatCompletionsModel, TContext, TResponseInputItem
 from agents.mcp import MCPServerStreamableHttp
 from contextlib import asynccontextmanager
 from jose import jwt
@@ -19,9 +20,94 @@ from mcp.client.streamable_http import streamablehttp_client
 from mcp.types import TextResourceContents, BlobResourceContents, ListResourcesResult, ListResourceTemplatesResult, ReadResourceResult
 from openai.types.responses.response_input_file_param import ResponseInputFileParam
 import re
+from fastapi.responses import StreamingResponse
+from ag_ui.core import (
+    RunAgentInput,
+    EventType,
+    RunStartedEvent,
+    RunFinishedEvent,
+    TextMessageStartEvent,
+    TextMessageContentEvent,
+    TextMessageEndEvent,
+    ToolCallStartEvent,
+    ToolCallEndEvent,
+)
+from ag_ui.core.events import BaseEvent
+from ag_ui.encoder import EventEncoder
 
 class AgentRequest(BaseModel):
     input: str
+
+class AGUIRunHooks(RunHooks):
+    def __init__(self, thread_id: str, run_id: str):
+        self._event_queue: asyncio.Queue = asyncio.Queue()
+        self._run_finished = asyncio.Event()
+        self._thread_id = thread_id
+        self._run_id = run_id;
+
+    async def _emit_event(self, event: BaseEvent):
+        await self._event_queue.put(event)
+    
+    async def on_llm_start(self, context: RunContextWrapper[TContext], agent: Agent[TContext], system_prompt: Optional[str], input_items: list[TResponseInputItem], ) -> None:
+        event = TextMessageStartEvent(
+            type=EventType.TEXT_MESSAGE_START,
+            message_id='message_id',
+            role="assistant"
+        )
+        await self._emit_event(event=event)
+        pass
+
+    async def on_llm_end(self, context: RunContextWrapper[TContext], agent: Agent[TContext], response: ModelResponse, ) -> None:
+        event = TextMessageEndEvent(
+                type=EventType.TEXT_MESSAGE_END,
+                message_id='message_id'
+        )
+        await self._emit_event(event=event)
+        pass
+
+    async def on_agent_start(self, context: RunContextWrapper[TContext], agent: Agent) -> None:
+        event = RunStartedEvent(
+                type=EventType.RUN_STARTED,
+                thread_id=self._thread_id,
+                run_id=self._run_id
+            ),
+        await self._emit_event(event=event)
+        pass
+
+    async def on_agent_end(self, context: RunContextWrapper[TContext], agent: Agent, output: Any, ) -> None:
+        event = RunFinishedEvent(
+                type=EventType.RUN_FINISHED,
+                thread_id=self._thread_id,
+                run_id=self._run_id
+            )
+        await self._emit_event(event=event)
+        self._run_finished.set()
+        pass
+
+    async def on_handoff(self, context: RunContextWrapper[TContext], from_agent: Agent, to_agent: Agent, ) -> None:
+        pass
+
+    async def on_tool_start(self, context: RunContextWrapper[TContext], agent: Agent, tool: Tool, ) -> None:
+        event = ToolCallStartEvent(
+            type=EventType.TOOL_CALL_START,
+            tool_call_id='tool_call_id',
+            tool_call_name=tool.name
+        )
+        await self._emit_event(event=event)
+        pass
+
+    async def on_tool_end(self, context: RunContextWrapper[TContext], agent: Agent, tool: Tool, result: str, ) -> None:
+        event = ToolCallEndEvent(
+            type=EventType.TOOL_CALL_END,
+            tool_call_id='tool_call_id'
+        )
+        await self._emit_event(event=event)
+        pass
+
+    async def event_generator(self, run_agent_input: RunAgentInput, encoder: EventEncoder):
+        while not self._run_finished.is_set() or not self._event_queue.empty():
+            event: BaseEvent = await self._event_queue.get()
+            yield encoder.encode(event)
 
 client = AsyncOpenAI(
     base_url=os.environ.get("MODEL_BASE_URL"),
@@ -169,21 +255,54 @@ def append_input(read_resource: ReadResourceResult, inputs: list[TResponseInputI
 
 async def get_input(agent_request: AgentRequest, session_id: str) -> list[TResponseInputItem]:
     inputs: list[TResponseInputItem] = []
+
     client_session: ClientSession = await get_client_session(session_id)
     list_resources: ListResourcesResult = await client_session.list_resources()
+    list_resource_templates: ListResourceTemplatesResult = await client_session.list_resource_templates()
+
     for resource in list_resources.resources:
         if(agent_request.input.find(resource.uri.unicode_string()) != -1):
             read_resource: ReadResourceResult = await client_session.read_resource(resource.uri)
             inputs = append_input(read_resource=read_resource,inputs=inputs)
-    list_resource_templates: ListResourceTemplatesResult = await client_session.list_resource_templates()
+    
     resource_uri_templates: list[str] = []
     for resource_template in list_resource_templates.resourceTemplates:
         resource_uri_templates.append(resource_template.uriTemplate)
+    
     resource_uris: list[Any] = extract_uris_from_text(resource_uri_templates, agent_request.input)
     for resource_uri in resource_uris:
         uri = AnyUrl(url=resource_uri)
         read_resource: ReadResourceResult = await client_session.read_resource(uri)
         inputs = append_input(read_resource=read_resource,inputs=inputs)
+    
+    return inputs
+
+async def get_input(run_agent_input: RunAgentInput, session_id: str) -> list[TResponseInputItem]:
+    inputs: list[TResponseInputItem] = []
+    for message in run_agent_input.messages:
+        input = TResponseInputItem(content=message.content,role=message.role)
+        inputs.append(input)
+    
+    client_session: ClientSession = await get_client_session(session_id)
+    list_resources: ListResourcesResult = await client_session.list_resources()
+    list_resource_templates: ListResourceTemplatesResult = await client_session.list_resource_templates()
+
+    for message in run_agent_input.messages:
+        for resource in list_resources.resources:
+            if(message.content.find(resource.uri.unicode_string()) != -1):
+                read_resource: ReadResourceResult = await client_session.read_resource(resource.uri)
+                inputs = append_input(read_resource=read_resource,inputs=inputs)
+        
+        resource_uri_templates: list[str] = []
+        for resource_template in list_resource_templates.resourceTemplates:
+            resource_uri_templates.append(resource_template.uriTemplate)
+        
+        resource_uris: list[Any] = extract_uris_from_text(resource_uri_templates, message.content)
+        for resource_uri in resource_uris:
+            uri = AnyUrl(url=resource_uri)
+            read_resource: ReadResourceResult = await client_session.read_resource(uri)
+            inputs = append_input(read_resource=read_resource,inputs=inputs)
+    
     return inputs
 
 def get_arguments(request: Request) -> dict[str, str]:
@@ -210,14 +329,19 @@ async def run_agent(name: str, request: Request, agent_request: AgentRequest, cl
     run_result = await Runner.run(starting_agent=starting_agent,input=input,session=session)
     return run_result
 
-@app.get("/sessions/items")
-async def get_session_items(claims: dict[str, Any] = Depends(get_claims)):
-    session_id = str(claims["sub"])
+@app.post("/{name}/agentic_chat")
+async def agentic_chat_endpoint(name: str, run_agent_input: RunAgentInput, request: Request, claims: dict[str, Any] = Depends(get_claims)) -> StreamingResponse:
+    arguments = get_arguments(request=request)
+    session_id = get_session_id(claims=claims)
+    await authorization.set(session_id, request.headers.get("Authorization"))
+    handoffs = await get_handoffs(session_id=session_id,name=name,arguments=arguments)
+    starting_agent = await get_starting_agent(session_id=session_id,name=name,arguments=arguments,handoffs=handoffs)
     session = await get_session(session_id)
-    return session.get_items()
-    
-@app.delete("/sessions/items")
-async def clear_session_items(claims: dict[str, Any] = Depends(get_claims)):
-    session_id = str(claims["sub"])
-    session = await get_session(session_id)
-    session.clear_session()
+    input = await get_input(run_agent_input=run_agent_input,session_id=session_id)
+    accept_header = request.headers.get("accept")
+    encoder = EventEncoder(accept=accept_header)
+    hooks = AGUIRunHooks()
+    await Runner.run(starting_agent=starting_agent,input=input,session=session,hooks=hooks)
+    return StreamingResponse(
+        hooks.event_generator(run_agent_input,encoder), 
+        media_type=encoder.get_content_type())
