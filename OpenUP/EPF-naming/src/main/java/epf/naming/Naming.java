@@ -703,6 +703,11 @@ public interface Naming {
 		String PERSISTENCE_EVENT = "epf-persistence-event";
 		
 		/**
+		 * 
+		 */
+		String PERSISTENCE_CONFIG = "epf-persistence";
+		
+		/**
 		 * @author PC
 		 *
 		 */

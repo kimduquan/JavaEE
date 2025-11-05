@@ -13,9 +13,9 @@ import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 
 @RegisterRestClient(configKey = Naming.Schema.SCHEMA_CONFIG)
-@Path(Naming.SCHEMA)
 public interface SchemaClient {
-	
+
+	@Path(Naming.SCHEMA)
 	@GET
     @Produces(MediaType.APPLICATION_JSON)
 	List<EntityType> getEntities(
@@ -23,7 +23,7 @@ public interface SchemaClient {
 			final String authorization) throws Exception;
 	
 	@GET
-    @Path("embeddable")
+    @Path("schema/embeddable")
     @Produces(MediaType.APPLICATION_JSON)
 	List<EmbeddableType> getEmbeddables(
 			@HeaderParam(HttpHeaders.AUTHORIZATION)

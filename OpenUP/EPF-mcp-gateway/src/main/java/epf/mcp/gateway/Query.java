@@ -35,6 +35,7 @@ public class Query {
 	JsonWebToken jwt;
 	
 	@Prompt(name = Naming.QUERY)
+	@RunOnVirtualThread
 	String getQueryPrompt(@PromptArg(name = Naming.SCHEMA) final String schema) throws Exception {
 		final StringBuilder prompt = new StringBuilder();
 		final SchemaBuilder schemaBuilder = new SchemaBuilder();

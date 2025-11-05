@@ -20,6 +20,8 @@ import jakarta.ws.rs.core.Response;
 
 @RegisterRestClient(configKey = Naming.Query.QUERY_CONFIG)
 public interface QueryClient {
+	
+	String QUERY_URI_FORMAT = "query://%s/%s/%s";
 
 	@POST
 	@Path("query/result")
