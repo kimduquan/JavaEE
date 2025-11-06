@@ -60,9 +60,9 @@ public class Persistence {
 		return String.format(QueryClient.QUERY_URI_FORMAT, schema, entity, id);
 	}
 	
-	@Tool(name = "persistence.merge", description = "Merge an entity")
+	@Tool(name = "persistence.merge", description = "Merge an entity", structuredContent = true)
 	@RunOnVirtualThread
-	void merge(
+	String merge(
 			@ToolArg(name = "schema", description = "The schema of entity")
 			final String schema, 
 			@ToolArg(name = "entity", description = "The entity")
@@ -73,11 +73,12 @@ public class Persistence {
 			final Map<String, Object> data) throws Exception {
 		final String authorization = "Bearer " + jwt.getRawToken();
 		persistenceClient.merge(authorization, schema, entity, id, data);
+		return String.format(QueryClient.QUERY_URI_FORMAT, schema, entity, id);
 	}
 	
-	@Tool(name = "persistence.remove", description = "Remove an entity")
+	@Tool(name = "persistence.remove", description = "Remove an entity", structuredContent = true)
 	@RunOnVirtualThread
-	void remove(
+	boolean remove(
 			@ToolArg(name = "schema", description = "The schema of entity")
 			final String schema, 
 			@ToolArg(name = "entity", description = "The entity")
@@ -86,5 +87,6 @@ public class Persistence {
 			final String id) throws Exception {
 		final String authorization = "Bearer " + jwt.getRawToken();
 		persistenceClient.remove(authorization, schema, entity, id);
+		return true;
 	}
 }
