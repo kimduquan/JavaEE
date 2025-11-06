@@ -74,11 +74,6 @@
 
 	<dependency>
 		<groupId>openup</groupId>
-		<artifactId>EPF-query-client</artifactId>
-		<version>${project.version}</version>
-	</dependency>
-	<dependency>
-		<groupId>openup</groupId>
 		<artifactId>EPF-messaging-utility-ext</artifactId>
 		<version>${project.version}</version>
 	</dependency>
@@ -92,11 +87,6 @@
         <artifactId>EPF-logging-utility</artifactId>
         <version>${project.version}</version>
     </dependency>
-	<dependency>
-		<groupId>openup</groupId>
-		<artifactId>EPF-concurrent-utility-ext</artifactId>
-		<version>${project.version}</version>
-	</dependency>
 	<dependency>
 		<groupId>openup</groupId>
 		<artifactId>EPF-persistence-utility</artifactId>
