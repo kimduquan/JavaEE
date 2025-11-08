@@ -6,6 +6,8 @@ COPY /webapp /
 
 WORKDIR /webapp
 
+ENV NEXT_TELEMETRY_DEBUG=1
+
 RUN npm install --verbose && npm run build
 
 EXPOSE 3000
