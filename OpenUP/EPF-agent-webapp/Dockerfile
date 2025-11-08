@@ -8,7 +8,7 @@ WORKDIR /webapp
 
 ENV NEXT_TELEMETRY_DEBUG=1
 
-RUN npm install --verbose && npm run build --verbose && npm run start --verbose
+RUN npm install --verbose && npm run build --verbose
 
 EXPOSE 3000
 
