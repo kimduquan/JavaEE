@@ -11,4 +11,4 @@ REM Activate the virtual environment
 call .venv\Scripts\activate.bat
 
 REM Install requirements using pip
-pip install -r requirements.txt 
+REM pip install -r requirements.txt 

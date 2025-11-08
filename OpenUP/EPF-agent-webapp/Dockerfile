@@ -8,14 +8,8 @@ WORKDIR /webapp
 
 ENV NEXT_TELEMETRY_DEBUG=1
 
-RUN npm install --verbose && npm run build
+RUN npm install --verbose && npm run build --verbose && npm run start --verbose
 
 EXPOSE 3000
 
-CMD npm run start
-
-#WORKDIR /workdir
-
-#COPY --chmod=777 dev.sh dev.sh
-
-#CMD ./dev.sh
+CMD npx serve@latest out
