@@ -61,7 +61,7 @@ async def chat_node(state: AgentState, config: RunnableConfig) -> Command[Litera
     """
 
     # 1. Define the model
-    model = ChatOpenAI(model="gpt-4o")
+    model = ChatOpenAI(model="neuralmagic/granite-3.1-8b-instruct-quantized.w4a16",base_url="http://localhost:8000/v1")
 
     # 2. Bind the tools to the model
     model_with_tools = model.bind_tools(
