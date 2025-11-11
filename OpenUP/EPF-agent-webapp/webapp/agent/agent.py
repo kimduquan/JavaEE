@@ -1,129 +1,101 @@
-"""
-This is the main entry point for the agent.
-It defines the workflow graph, state, tools, nodes and edges.
-"""
-
-from typing import Any, List
-from typing_extensions import Literal
+import asyncio
+from typing import TypedDict
 from langchain_openai import ChatOpenAI
-from langchain_core.messages import SystemMessage, BaseMessage
-from langchain_core.runnables import RunnableConfig
-from langchain.tools import tool
-from langgraph.graph import StateGraph, END
-from langgraph.types import Command
 from langgraph.graph import MessagesState
-from langgraph.prebuilt import ToolNode
+from langgraph.graph.state import CompiledStateGraph
+from langchain.agents.factory import create_agent
+import os
+from langchain_core.tools.base import BaseTool
+from langchain_mcp_adapters.client import MultiServerMCPClient
+from langchain_mcp_adapters.sessions import Connection, StreamableHttpConnection
+from langchain_mcp_adapters.tools import load_mcp_tools
+from mcp.types import Prompt
 
 class AgentState(MessagesState):
-    """
-    Here we define the state of the agent
+    """"""
 
-    In this instance, we're inheriting from CopilotKitState, which will bring in
-    the CopilotKitState fields. We're also adding a custom field, `language`,
-    which will be used to set the language of the agent.
-    """
-    proverbs: List[str] = []
-    tools: List[Any]
-    # your_custom_agent_state: str = ""
+class AgentInput(TypedDict):
+    """"""
 
-@tool
-def get_weather(location: str):
-    """
-    Get the weather for a given location.
-    """
-    return f"The weather for {location} is 70 degrees."
+class AgentOutput(TypedDict):
+    """"""
 
-# @tool
-# def your_tool_here(your_arg: str):
-#     """Your tool description here."""
-#     print(f"Your tool logic here")
-#     return "Your tool response here."
+class AgentContext(TypedDict):
+    """"""
 
-backend_tools = [
-    get_weather
-    # your_tool_here
-]
+def get_model() -> ChatOpenAI:
+    return ChatOpenAI(model=os.environ["OPENAI_MODEL"],base_url=os.environ["OPENAI_BASE_URL"])
 
-# Extract tool names from backend_tools for comparison
-backend_tool_names = [tool.name for tool in backend_tools]
-
-
-async def chat_node(state: AgentState, config: RunnableConfig) -> Command[Literal["tool_node", "__end__"]]:
-    """
-    Standard chat node based on the ReAct design pattern. It handles:
-    - The model to use (and binds in CopilotKit actions and the tools defined above)
-    - The system prompt
-    - Getting a response from the model
-    - Handling tool calls
-
-    For more about the ReAct design pattern, see:
-    https://www.perplexity.ai/search/react-agents-NcXLQhreS0WDzpVaS4m9Cg
-    """
-
-    # 1. Define the model
-    model = ChatOpenAI(model="neuralmagic/granite-3.1-8b-instruct-quantized.w4a16",base_url="http://localhost:8000/v1")
-
-    # 2. Bind the tools to the model
-    model_with_tools = model.bind_tools(
-        [
-            *state.get("tools", []), # bind tools defined by ag-ui
-            *backend_tools,
-            # your_tool_here
-        ],
-
-        # 2.1 Disable parallel tool calls to avoid race conditions,
-        #     enable this for faster performance if you want to manage
-        #     the complexity of running tool calls in parallel.
-        parallel_tool_calls=False,
+def get_connections(server_name: str) -> dict[str, Connection]:
+    connections: dict[str, Connection] = {}
+    connections[server_name] = StreamableHttpConnection(
+        transport = 'streamable_http',
+        url=os.environ["MCP_SERVER_URL"]
     )
+    return connections
 
-    # 3. Define the system message by which the chat model will be run
-    system_message = SystemMessage(
-        content=f"You are a helpful assistant. The current proverbs are {state.get('proverbs', [])}."
+def get_client(server_name: str) -> MultiServerMCPClient:
+    connections = get_connections(server_name=server_name)
+    client = MultiServerMCPClient(
+        connections=connections
     )
+    return client
 
-    # 4. Run the model to generate a response
-    response = await model_with_tools.ainvoke([
-        system_message,
-        *state["messages"],
-    ], config)
-
-    # only route to tool node if tool is not in the tools list
-    if route_to_tool_node(response):
-        print("routing to tool node")
-        return Command(
-            goto="tool_node",
-            update={
-                "messages": [response],
-            }
-        )
-
-    # 5. We've handled all tool calls, so we can end the graph.
-    return Command(
-        goto=END,
-        update={
-            "messages": [response],
-        }
+def get_agent_connections(server_name: str, prompt: Prompt) -> dict[str, Connection]:
+    connections: dict[str, Connection] = {}
+    connections[server_name] = StreamableHttpConnection(
+        transport = 'streamable_http',
+        url=os.environ["MCP_SERVER_URL_FORMAT"].format(prompt)
     )
+    return connections
 
-def route_to_tool_node(response: BaseMessage):
-    """
-    Route to tool node if any tool call in the response matches a backend tool name.
-    """
-    tool_calls = getattr(response, "tool_calls", None)
-    if not tool_calls:
-        return False
+def get_agent_client(server_name: str, prompt: Prompt) -> MultiServerMCPClient:
+    connections = get_agent_connections(server_name=server_name, prompt=prompt)
+    client = MultiServerMCPClient(
+        connections=connections
+    )
+    return client
 
-    for tool_call in tool_calls:
-        if tool_call.get("name") in backend_tool_names:
-            return True
-    return False
+async def load_tools(client: MultiServerMCPClient, server_name: str) -> list[BaseTool]:
+    tools: list[BaseTool] = []
+    async with client.session(server_name=server_name) as session:
+        tools = await load_mcp_tools(session=session,server_name=server_name)
+    return tools
 
-# Define the workflow graph
-workflow = StateGraph(AgentState)
-workflow.add_node("chat_node", chat_node)
-workflow.add_node("tool_node", ToolNode(tools=backend_tools))
-workflow.add_edge("tool_node", "chat_node")
-workflow.set_entry_point("chat_node")
+async def list_prompts(client: MultiServerMCPClient, server_name: str) -> list[Prompt]:
+    prompts: list[Prompt] = []
+    async with client.session(server_name=server_name) as session:
+        list_prompts_result = await session.list_prompts()
+        prompts = list_prompts_result.prompts
+    return prompts
 
-graph = workflow.compile()
+async def get_graph() -> CompiledStateGraph[AgentState, AgentContext, AgentInput, AgentOutput]:
+    model = get_model()
+    default_server_name = "default"
+    default_prompt_name = "default"
+    default_agent_name = "default"
+    default_client = get_client(server_name=default_server_name)
+    tools: list[BaseTool] = []
+    prompts = await list_prompts(client=default_client,server_name=default_server_name)
+    for prompt in prompts:
+        if(prompt.name != default_prompt_name):
+            agent_name = prompt.name
+            agent_server_name = prompt.name
+            agent_prompt = await default_client.get_prompt(server_name=agent_server_name,prompt_name=prompt.name)
+            agent_client = get_agent_client(server_name=agent_server_name,prompt=prompt)
+            agent_tools = await load_tools(client=agent_client,server_name=agent_server_name)
+            agent = create_agent(model=model,tools=agent_tools,system_prompt=agent_prompt[0].content,name=agent_name)
+            tool = agent.as_tool(name=agent_name,description=prompt.description)
+            tools.append(tool)
+
+    default_prompt = await default_client.get_prompt(server_name=default_server_name,prompt_name=default_prompt_name)
+    default_system_prompt: str = default_prompt[0].content
+    return create_agent(
+        model=model,
+        tools=tools,
+        system_prompt=default_system_prompt,
+        state_schema=AgentState,
+        context_schema=AgentContext,
+        name=default_agent_name)
+
+graph = asyncio.run(get_graph())
