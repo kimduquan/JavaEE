@@ -8,3 +8,4 @@ python-dotenv
 langgraph-cli[inmem]
 langchain-openai
 langchain-mcp-adapters
+langgraph-supervisor
