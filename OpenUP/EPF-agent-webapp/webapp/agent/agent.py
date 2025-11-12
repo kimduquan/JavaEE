@@ -57,9 +57,8 @@ def get_agent_client(server_name: str, prompt: Prompt) -> MultiServerMCPClient:
     return client
 
 async def load_tools(client: MultiServerMCPClient, server_name: str) -> list[BaseTool]:
-    tools: list[BaseTool] = []
-    async with client.session(server_name=server_name) as session:
-        tools = await load_mcp_tools(session=session,server_name=server_name)
+    connection = client.connections[server_name]
+    tools = await load_mcp_tools(session=None,connection=connection,server_name=server_name)
     return tools
 
 async def list_prompts(client: MultiServerMCPClient, server_name: str) -> list[Prompt]:
@@ -69,7 +68,7 @@ async def list_prompts(client: MultiServerMCPClient, server_name: str) -> list[P
         prompts = list_prompts_result.prompts
     return prompts
 
-async def get_graph() -> CompiledStateGraph[AgentState, AgentContext, AgentInput, AgentOutput]:
+async def create_mcp_agent() -> CompiledStateGraph[AgentState, AgentContext, AgentInput, AgentOutput]:
     model = get_model()
     default_server_name = "default"
     default_prompt_name = "default"
@@ -98,4 +97,4 @@ async def get_graph() -> CompiledStateGraph[AgentState, AgentContext, AgentInput
         context_schema=AgentContext,
         name=default_agent_name)
 
-graph = asyncio.run(get_graph())
+graph = asyncio.run(create_mcp_agent())
