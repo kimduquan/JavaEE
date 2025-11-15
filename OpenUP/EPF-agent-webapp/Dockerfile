@@ -4,8 +4,8 @@ RUN apt-get update && apt-get upgrade && apt-get install -y python3 python3-pip 
 
 WORKDIR /webapp
 
-COPY webapp/.next/standalone /webapp
-COPY webapp/agent /webapp
+COPY webapp/.next/standalone /webapp/standalone
+COPY webapp/agent /webapp/agent
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DEBUG=1
@@ -15,9 +15,9 @@ RUN adduser --system --uid 1001 nextjs
 
 #RUN npm install --verbose && npm run build --verbose && npm run dev:agent --verbose
 
-RUN cd /webapp/agent && npx @langchain/langgraph-cli dev --port 8123 --no-browser
+#RUN ls /webapp && cd /webapp/agent && npx @langchain/langgraph-cli dev --port 8123 --no-browser
 
-WORKDIR /standalone
+WORKDIR /webapp/standalone
 
 USER nextjs
 
@@ -26,4 +26,4 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["node", "server.js"]
+CMD ["node", "server.js", "&&", "cd", "/webapp/agent", "&&", "npx", "@langchain/langgraph-cli", "dev", "--port", "8123", "--no-browser"]
