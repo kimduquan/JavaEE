@@ -135,7 +135,16 @@ async def create_supervisor_agent(context: AgentContext) -> CompiledStateGraph[E
     return supervisor_agent.compile()
 
 def authenticate(state: EPFAgentState, config: RunnableConfig, runtime: Runtime[AgentContext]) -> str:
-    auth_token = config.configurable.get("copilotkit_auth")
+    print("state items:")
+    for (name, value) in state.items():
+        print(name)
+    print("config items:")
+    for (name, value) in config.items():
+        print(name)
+    print("configurable items:")
+    for (name, value) in config.configurable.items():
+        print(name)
+    auth_token = config.configurable.get("authorization")
     if auth_token:
         runtime.context.authorization = "Bearer " + auth_token
         return "OK"
