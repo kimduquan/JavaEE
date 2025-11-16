@@ -1,11 +1,10 @@
 FROM node:lts-slim
 
-RUN apt-get update && apt-get upgrade && apt-get install -y python3 python3-pip python3-venv && ln -sf python3 /usr/bin/python
+RUN apt-get update && apt-get upgrade -y && apt-get install -y python3 python3-pip python3-venv && ln -sf python3 /usr/bin/python
 
-WORKDIR /webapp
+#COPY --exclude=*node_modules* --exclude=*src* webapp /webapp
 
-COPY webapp/.next/standalone /webapp/standalone
-COPY webapp/agent /webapp/agent
+COPY webapp /webapp
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DEBUG=1
@@ -17,13 +16,13 @@ RUN adduser --system --uid 1001 nextjs
 
 #RUN ls /webapp && cd /webapp/agent && npx @langchain/langgraph-cli dev --port 8123 --no-browser
 
-WORKDIR /webapp/standalone
+WORKDIR /webapp
 
-USER nextjs
+#USER nextjs
 
 EXPOSE 3000
 
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["node", "server.js", "&&", "cd", "/webapp/agent", "&&", "npx", "@langchain/langgraph-cli", "dev", "--port", "8123", "--no-browser"]
+CMD ["npm", "run", "start", "--verbose"]
