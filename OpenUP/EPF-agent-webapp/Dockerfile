@@ -2,9 +2,7 @@ FROM node:lts-slim
 
 RUN apt-get update && apt-get upgrade -y && apt-get install -y python3 python3-pip python3-venv && ln -sf python3 /usr/bin/python
 
-#COPY --exclude=*node_modules* --exclude=*src* webapp /webapp
-
-COPY webapp /webapp
+COPY --exclude=*agent* --exclude=*src* webapp /webapp
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DEBUG=1
