@@ -55,7 +55,7 @@ spec:
             - name: ISSUER
               value: https://chipmunk-capable-prawn.ngrok-free.app/auth/realms/EPF-dev
             - name: NEXTAUTH_URL
-              value: http://gateway.docker.internal/agent/webapp
+              value: https://touching-pika-enabled.ngrok-free.app
             - name: NEXTAUTH_SECRET
               valueFrom:
                 secretKeyRef:
