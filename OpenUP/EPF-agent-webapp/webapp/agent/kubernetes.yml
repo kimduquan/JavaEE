@@ -42,6 +42,19 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
+            - name: OPENAI_MODEL
+              value: neuralmagic/granite-3.1-8b-instruct-quantized.w4a16
+            - name: OPENAI_BASE_URL
+              value: http://vllm.default.svc.cluster.local:8000/v1
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: VLLM_API_KEY
+                  name: vllm
+            - name: MCP_SERVER_URL
+              value: http://epf-mcp-gateway.default.svc.cluster.local:9197/mcp
+            - name: MCP_SERVER_URL_FORMAT
+              value: "http://epf-mcp-gateway.default.svc.cluster.local:9197/{name}/mcp"
           image: docker.io/epf-agent
           imagePullPolicy: IfNotPresent
           name: epf-agent

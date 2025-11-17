@@ -1,6 +1,6 @@
 FROM python:3.13
 
-COPY --exclude=Dockerfile --exclude=*venv --exclude=kubernetes.yml --exclude=*.sh / /agent
+COPY --exclude=Dockerfile --exclude=*venv --exclude=kubernetes.yml --exclude=*.sh --exclude=.env / /agent
 
 WORKDIR /agent
 
