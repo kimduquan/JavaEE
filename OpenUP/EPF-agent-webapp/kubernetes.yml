@@ -118,7 +118,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: gateway.docker.internal
+    - host: touching-pika-enabled.ngrok-free.app
       http:
         paths:
           - backend:
@@ -126,5 +126,5 @@ spec:
                 name: epf-agent-webapp
                 port:
                   name: http
-            path: /agent/webapp
+            path: /
             pathType: Prefix
