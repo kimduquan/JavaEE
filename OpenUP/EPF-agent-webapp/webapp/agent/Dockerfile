@@ -1,6 +1,6 @@
-FROM python:3.14-slim
+FROM python:3.13
 
-COPY --exclude=Dockerfile / /agent
+COPY --exclude=Dockerfile --exclude=*venv / /agent
 
 WORKDIR /agent
 
