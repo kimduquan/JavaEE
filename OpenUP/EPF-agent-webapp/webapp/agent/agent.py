@@ -24,7 +24,7 @@ class AgentInput(TypedDict):
 class AgentOutput(TypedDict):
     """"""
 
-class AgentContext:
+class AgentContext(TypedDict):
     authorization: str = None
 
 class EPFAgentMiddleware(AgentMiddleware[EPFAgentState, AgentContext]):
@@ -141,13 +141,19 @@ def authenticate(state: EPFAgentState, config: RunnableConfig, runtime: Runtime[
     print("config items:")
     for (name, value) in config.items():
         print(name)
-    print("configurable items:")
-    for (name, value) in config.configurable.items():
-        print(name)
-    auth_token = config.configurable.get("authorization")
-    if auth_token:
-        runtime.context.authorization = "Bearer " + auth_token
-        return "OK"
+    if(config["configurable"]):
+        print("configurable items:")
+        for (name, value) in config["configurable"].items():
+            print(name)
+            auth_token = config["configurable"].get("authorization")
+            if auth_token:
+                print("has token")
+                runtime.context.authorization = "Bearer " + auth_token
+                return "OK"
+    if(runtime.context):
+        print("context items:")
+        for (name, value) in runtime.context.items():
+            print(name)
     return "N/A"
 
 async def gateway(state: EPFAgentState, config: RunnableConfig, runtime: Runtime[AgentContext]) -> dict[str, Any] | Any:

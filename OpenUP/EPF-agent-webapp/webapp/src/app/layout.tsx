@@ -16,11 +16,11 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  await getServerSession(authOptions);
+  const session = await getServerSession(authOptions);
   return (
     <html lang="en">
       <body className={"antialiased"}>
-        <CopilotKit runtimeUrl="/api/copilotkit" agent="sample_agent">
+        <CopilotKit runtimeUrl="/api/copilotkit" agent="sample_agent" headers={{"Authorization": "Bearer " + session?._accessToken}} properties={{"authorization": session?._accessToken}}>
           {children}
         </CopilotKit>
       </body>
