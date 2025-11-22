@@ -3,8 +3,6 @@ import type { Metadata } from "next";
 import { CopilotKit } from "@copilotkit/react-core";
 import "./globals.css";
 import "@copilotkit/react-ui/styles.css";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,12 +14,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession(authOptions);
-  console.log("token=" + (session?._accessToken ?? ""));
   return (
     <html lang="en">
       <body className={"antialiased"}>
-        <CopilotKit runtimeUrl="/api/copilotkit" agent="sample_agent" headers={{"Authorization": "Bearer " + (session?._accessToken ?? "")}} properties={{"authorization": session?._accessToken ?? ""}}>
+        <CopilotKit runtimeUrl="/api/copilotkit" agent="sample_agent">
           {children}
         </CopilotKit>
       </body>
