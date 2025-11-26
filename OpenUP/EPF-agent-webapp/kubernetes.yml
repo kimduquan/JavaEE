@@ -61,7 +61,7 @@ spec:
                 secretKeyRef:
                   key: NEXTAUTH_SECRET
                   name: nextauth
-            - name: LANGGRAPH_DEPLOYMENT_URL
+            - name: EPF_AGENT_URL
               value: http://epf-agent.default.svc.cluster.local:8123
           image: docker.io/epf-agent-webapp
           imagePullPolicy: IfNotPresent

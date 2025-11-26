@@ -6,4 +6,4 @@ WORKDIR /agent
 
 RUN pip install -r requirements.txt
 
-CMD ["langgraph", "dev", "--host", "0.0.0.0", "--port", "8123", "--no-reload", "--no-browser"]
+CMD ["python", "-m", "uvicorn", "--host", "0.0.0.0", "--port", "8123", "agent:app"]

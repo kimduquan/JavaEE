@@ -9,4 +9,5 @@ langgraph-cli[inmem]
 langchain-openai
 langchain-mcp-adapters
 langgraph-supervisor
-langgraph-api==0.5.14
+langgraph-api
+ag-ui-langgraph
