@@ -67,7 +67,6 @@ def get_connections(server_name: str, context: AgentContext) -> dict[str, Connec
     connections: dict[str, Connection] = {}
     headers: dict[str, Any] = {}
     headers["Authorization"] = context.authorization
-    print("Authorization=" + context.authorization)
     for (mcp_server_name, mcp_server_url) in mcp_server_urls.items():
         if(mcp_server_name == server_name):
             connections[mcp_server_name] = StreamableHttpConnection(
