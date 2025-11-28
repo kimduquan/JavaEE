@@ -7,6 +7,7 @@ import epf.naming.Naming;
 import epf.query.schema.NativeQuery;
 import epf.query.schema.ResultList;
 import epf.query.schema.SingleResult;
+import io.quarkiverse.mcp.server.McpServer;
 import io.quarkiverse.mcp.server.ResourceTemplate;
 import io.quarkiverse.mcp.server.Tool;
 import io.quarkiverse.mcp.server.ToolArg;
@@ -29,7 +30,8 @@ public class Query {
 	@Inject
 	JsonWebToken jwt;
 
-	@Tool(name = "query.executeQuerySingleResult", description = "Execute a JPQL query which return a single result object", structuredContent = true)
+	@McpServer(Naming.QUERY)
+	@Tool(name = "executeQuerySingleResult", description = "Execute a JPQL query which return a single result object", structuredContent = true)
 	@RunOnVirtualThread
     SingleResult executeQuerySingleResult(
     		@ToolArg(name = "query", description = "The JPQL query")
@@ -44,7 +46,8 @@ public class Query {
         return singleResult;
     }
 	
-	@Tool(name = "query.executeQueryResultList", description = "Execute a JPQL query which return a list of object", structuredContent = true)
+	@McpServer(Naming.QUERY)
+	@Tool(name = "executeQueryResultList", description = "Execute a JPQL query which return a list of object", structuredContent = true)
 	@RunOnVirtualThread
 	ResultList executeQueryResultList(
     		@ToolArg(name = "query", description = "The JPQL query")
@@ -63,7 +66,8 @@ public class Query {
         return resultList;
     }
 	
-	@Tool(name = "query.countEntity", description = "Count entity", structuredContent = true)
+	@McpServer(Naming.QUERY)
+	@Tool(name = "countEntity", description = "Count entity", structuredContent = true)
 	@RunOnVirtualThread
 	Integer countEntity(
 			@ToolArg(name = "schema", description = "The schema")
@@ -75,6 +79,7 @@ public class Query {
 		return Integer.valueOf(response.getHeaderString(Naming.Query.COUNT));
 	}
 	
+	@McpServer(Naming.QUERY)
 	@ResourceTemplate(uriTemplate = "query://{schema}/{entity}/{id}")
 	@RunOnVirtualThread
 	Object getEntity(final String schema, final String entity, final String id) throws Exception {

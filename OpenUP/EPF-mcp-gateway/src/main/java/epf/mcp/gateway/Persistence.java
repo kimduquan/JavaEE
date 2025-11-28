@@ -3,6 +3,8 @@ package epf.mcp.gateway;
 import java.util.Map;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
+import epf.naming.Naming;
+import io.quarkiverse.mcp.server.McpServer;
 import io.quarkiverse.mcp.server.Tool;
 import io.quarkiverse.mcp.server.ToolArg;
 import io.quarkus.security.Authenticated;
@@ -23,7 +25,8 @@ public class Persistence {
 	@Inject
 	JsonWebToken jwt;
 	
-	@Tool(name = "persistence.persist", description = "Persist an entity", structuredContent = true)
+	@McpServer(Naming.PERSISTENCE)
+	@Tool(name = "persist", description = "Persist an entity", structuredContent = true)
 	@RunOnVirtualThread
 	String persist(
 			@ToolArg(name = "schema", description = "The schema of entity")
@@ -39,7 +42,8 @@ public class Persistence {
 		return String.format(QueryClient.QUERY_URI_FORMAT, schema, entity, id);
 	}
 	
-	@Tool(name = "persistence.merge", description = "Merge an entity", structuredContent = true)
+	@McpServer(Naming.PERSISTENCE)
+	@Tool(name = "merge", description = "Merge an entity", structuredContent = true)
 	@RunOnVirtualThread
 	String merge(
 			@ToolArg(name = "schema", description = "The schema of entity")
@@ -55,7 +59,8 @@ public class Persistence {
 		return String.format(QueryClient.QUERY_URI_FORMAT, schema, entity, id);
 	}
 	
-	@Tool(name = "persistence.remove", description = "Remove an entity", structuredContent = true)
+	@McpServer(Naming.PERSISTENCE)
+	@Tool(name = "remove", description = "Remove an entity", structuredContent = true)
 	@RunOnVirtualThread
 	boolean remove(
 			@ToolArg(name = "schema", description = "The schema of entity")
