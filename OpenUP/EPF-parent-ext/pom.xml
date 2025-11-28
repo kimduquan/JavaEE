@@ -13,7 +13,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
 		<quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-		<quarkus.platform.version>3.29.2</quarkus.platform.version>
+		<quarkus.platform.version>3.29.4</quarkus.platform.version>
 		<skipITs>true</skipITs>
 		<surefire-plugin.version>3.5.3</surefire-plugin.version>
 		<narayana.version>7.2.2.Final</narayana.version>
@@ -159,17 +159,17 @@
 			<artifactId>quarkus-hazelcast-client</artifactId>
 			<version>4.0.0</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/io.quarkiverse.mcp/quarkus-mcp-server-sse -->
+		<!-- https://mvnrepository.com/artifact/io.quarkiverse.mcp/quarkus-mcp-server-http -->
 		<dependency>
-			<groupId>io.quarkiverse.mcp</groupId>
-			<artifactId>quarkus-mcp-server-sse</artifactId>
-			<version>1.7.0</version>
+		    <groupId>io.quarkiverse.mcp</groupId>
+		    <artifactId>quarkus-mcp-server-http</artifactId>
+		    <version>1.8.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.quarkiverse.mcp/quarkus-mcp-server-hibernate-validator -->
 		<dependency>
 		    <groupId>io.quarkiverse.mcp</groupId>
 		    <artifactId>quarkus-mcp-server-hibernate-validator</artifactId>
-		    <version>1.7.0</version>
+		    <version>1.8.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/jakarta.nosql/jakarta.nosql-api -->
 		<dependency>
