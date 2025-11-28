@@ -31,19 +31,22 @@ export const POST = async (req: NextRequest) => {
   const session = await getServerSession(authOptions);
   if (!session) return new NextResponse("Unauthorized", { status: 401 });
 
-  const token = await getToken({ req : req, raw: true });
+  const token = await getToken({ req : req });
   const runtime = new CopilotRuntime({
     agents: {
       "sample_agent": new LangGraphHttpAgent({
         url: process.env.EPF_AGENT_URL || "http://localhost:8123",
-        headers: { "Authorization": "Bearer " + token }
+        headers: { "Authorization": "Bearer " + token?.accessToken },
       }),
     }
   });
   const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
     runtime, 
     serviceAdapter,
-    endpoint: "/api/copilotkit"
+    endpoint: "/api/copilotkit",
+    properties: {
+      "authorization" : token?.accessToken ?? ""
+    }
   });
   return handleRequest(req);
 };
