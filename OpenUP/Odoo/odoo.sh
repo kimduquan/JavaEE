@@ -1,3 +1,1 @@
-helm repo add bitnami https://charts.bitnami.com/bitnami
-helm repo update
-helm install odoo bitnami/odoo -f values.yaml
+helm install odoo oci://registry-1.docker.io/bitnamicharts/odoo -f values-odoo.yaml
