@@ -25,7 +25,7 @@ global:
   ##
   security:
     ## @param global.security.allowInsecureImages Allows skipping image verification
-    allowInsecureImages: false
+    allowInsecureImages: true
   ## Compatibility adaptations for Kubernetes platforms
   ##
   compatibility:
@@ -88,8 +88,8 @@ diagnosticMode:
 ##
 image:
   registry: docker.io
-  repository: bitnami/odoo
-  tag: 18.0.20250805-debian-12-r8
+  repository: bitnamilegacy/odoo
+  tag: 18.0.20250805-debian-12-r9
   digest: ""
   ## Specify a imagePullPolicy
   ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
