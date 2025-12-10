@@ -510,7 +510,7 @@ ingress:
   apiVersion: ""
   ## @param ingress.hostname Default host for the ingress record
   ##
-  hostname: "*.localhost"
+  hostname: localhost
   ## @param ingress.path Default path for the ingress record
   ## NOTE: You may need to set this to '/*' in order to use this with ALB ingress controllers
   ##
@@ -593,7 +593,17 @@ ingress:
   ##           port:
   ##             name: http
   ##
-  extraRules: []
+  extraRules:
+    - host: "*.localhost"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: odoo
+                port:
+                  name: http
 ## @section Persistence Parameters
 ##
 
