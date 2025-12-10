@@ -595,8 +595,6 @@ ingress:
       path: /
     - name: localhost
       path: /
-    - name: "*.localhost"
-      path: /
   ## @param ingress.extraPaths [array] An array with additional arbitrary paths that may need to be added to the ingress under the main host
   ## e.g:
   ## extraPaths:
