@@ -122,7 +122,7 @@ odooEmail: kimduquan@gmail.com
 odooPassword: "123456"
 ## @param odooSkipInstall Skip Odoo installation wizard
 ##
-odooSkipInstall: false
+odooSkipInstall: true
 ## @param odooDatabaseFilter Filter odoo database by using a regex
 ##
 odooDatabaseFilter: "^%d$"
