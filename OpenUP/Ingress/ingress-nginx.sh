@@ -1,1 +1,2 @@
-helm install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx --namespace default --set controller.allowSnippetAnnotations=true --set controller.config.annotations-risk-level=Critical
+kubectl apply -f tcp-services.yaml
+helm install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx --namespace default --set controller.allowSnippetAnnotations=true --set controller.config.annotations-risk-level=Critical --tcp-services-configmap=ingress-nginx/tcp-services
