@@ -1,2 +1,1 @@
-kubectl apply -f tcp-services.yaml
-helm install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx --namespace default --set controller.allowSnippetAnnotations=true --set controller.config.annotations-risk-level=Critical --set controller.extraArgs.tcp-services-configmap="default/tcp-services"
+helm install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx --namespace default --set controller.allowSnippetAnnotations=true --set controller.config.annotations-risk-level=Critical --set tcp.5452="default/supavisor:5452" --set tcp.6543="default/supavisor:6543"
