@@ -1308,7 +1308,7 @@ postgresql:
 ## @param externalDatabase.extraParams Additional JDBC connection parameters appended to the JDBC URL (KC_DB_URL).
 ##
 externalDatabase:
-  host: "postgresql-primary.default.svc.cluster.local"
+  host: "postgresql-primary"
   port: 5432
   user: keycloak
   database: keycloak
