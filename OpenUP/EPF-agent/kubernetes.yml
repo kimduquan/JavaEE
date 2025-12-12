@@ -50,13 +50,13 @@ spec:
             - name: MODEL_NAME
               value: "neuralmagic/granite-3.1-8b-instruct-quantized.w4a16"
             - name: MODEL_BASE_URL
-              value: "http://vllm.default.svc.cluster.local:8000/v1"
+              value: "http://vllm:8000/v1"
             - name: MCP_SERVER_URL
-              value: "http://epf-mcp-gateway.default.svc.cluster.local:9197/mcp"
+              value: "http://epf-mcp-gateway:9197/mcp"
             - name: SESSION_TTL
               value: "600"
             - name: REDIS_HOST
-              value: "redis-master.default.svc.cluster.local"
+              value: "redis-master"
             - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
