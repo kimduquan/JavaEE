@@ -181,6 +181,8 @@ args: []
 ##     value: "bar"
 ##
 extraEnvVars:
+  - name: PGSSLMODE
+    value: "disable"
   - name: PGSSLCERT
     value: "/supavisor-tls/tls.crt"
   - name: PGSSLKEY
