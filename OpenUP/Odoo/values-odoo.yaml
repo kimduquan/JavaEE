@@ -781,7 +781,7 @@ externalDatabase:
   user: "postgres.odoo"
   password: "090323508"
   database: odoo
-  create: true
+  create: false
   postgresqlPostgresUser: "postgres.odoo"
   postgresqlPostgresPassword: "090323508"
   existingSecret: ""
