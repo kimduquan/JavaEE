@@ -56,7 +56,7 @@ spec:
             - name: PROXY_PORT_TRANSACTION
               value: "6543"
             - name: DATABASE_URL
-              value: "ecto://postgres:090323508@postgresql-primary.default.svc.cluster.local:5432/postgres"
+              value: "ecto://postgres:090323508@postgresql-primary:5432/postgres"
             - name: CLUSTER_POSTGRES
               value: "true"
             - name: SECRET_KEY_BASE
