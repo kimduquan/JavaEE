@@ -183,6 +183,12 @@ args: []
 extraEnvVars:
   - name: PGSSLMODE
     value: "disable"
+  - name: PGSSLCERT
+    value: "/supavisor-tls/tls.crt"
+  - name: PGSSLKEY
+    value: "/supavisor-tls/tls.key"
+  - name: PGSSLROOTCERT
+    value: "/supavisor-tls/ca.crt"
 ## @param extraEnvVarsCM Name of existing ConfigMap containing extra env vars
 ##
 extraEnvVarsCM: ""
@@ -412,10 +418,16 @@ updateStrategy:
   rollingUpdate: null
 ## @param extraVolumes Optionally specify extra list of additional volumes for Odoo pods
 ##
-extraVolumes: []
+extraVolumes:
+  - name: supavisor-tls
+    secret:
+      secretName: supavisor-tls
 ## @param extraVolumeMounts Optionally specify extra list of additional volumeMounts for Odoo container(s)
 ##
-extraVolumeMounts: []
+extraVolumeMounts:
+  - mountPath: /supavisor-tls
+    name: supavisor-tls
+    readOnly: true
 ## @param sidecars Add additional sidecar containers to the Odoo pod
 ## e.g:
 ## sidecars:
