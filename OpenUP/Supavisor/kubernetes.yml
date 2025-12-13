@@ -23,6 +23,10 @@ metadata:
 spec:
   isCA: true
   commonName: osm-system
+  dnsNames:
+    - "supavisor.default.svc.cluster.local"
+    - "supavisor"
+    - "localhost"
   secretName: supavisor-tls
   issuerRef:
     name: supavisor-tls
