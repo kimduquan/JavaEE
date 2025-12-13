@@ -92,11 +92,11 @@ spec:
             - name: DATABASE_URL
               value: "ecto://postgres:090323508@postgresql-primary:5432/postgres"
             - name: CLUSTER_POSTGRES
-              value: "true"
-            - name: GLOBAL_DOWNSTREAM_CERT_PATH
-              value: "/supavisor-tls/tls.crt"
-            - name: GLOBAL_DOWNSTREAM_KEY_PATH
-              value: "/supavisor-tls/tls.key"
+              value: "false"
+            #- name: GLOBAL_DOWNSTREAM_CERT_PATH
+            #  value: "/supavisor-tls/tls.crt"
+            #- name: GLOBAL_DOWNSTREAM_KEY_PATH
+            #  value: "/supavisor-tls/tls.key"
             - name: SECRET_KEY_BASE
               valueFrom:
                 secretKeyRef:
