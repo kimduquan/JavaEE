@@ -2,30 +2,30 @@
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: supavisor
+  name: supavisor-tls
 spec:
   selfSigned: {}
 ---
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
-  name: supavisor
+  name: supavisor-tls
   namespace: default
 spec:
   ca:
-    secretName: supavisor
+    secretName: supavisor-tls
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: supavisor
+  name: supavisor-tls
   namespace: default
 spec:
   isCA: true
   commonName: osm-system
-  secretName: supavisor
+  secretName: supavisor-tls
   issuerRef:
-    name: supavisor
+    name: supavisor-tls
     kind: ClusterIssuer
     group: cert-manager.io
 ---
@@ -89,6 +89,10 @@ spec:
               value: "ecto://postgres:090323508@postgresql-primary:5432/postgres"
             - name: CLUSTER_POSTGRES
               value: "true"
+            - name: GLOBAL_DOWNSTREAM_CERT_PATH: 
+              value: "/supavisor-tls/tls.crt"
+            - name: GLOBAL_DOWNSTREAM_KEY_PATH: 
+              value: "/supavisor-tls/tls.key"
             - name: SECRET_KEY_BASE
               valueFrom:
                 secretKeyRef:
@@ -134,6 +138,14 @@ spec:
             requests:
               cpu: 50m
               memory: 128Mi
+          volumeMounts:
+            - mountPath: /supavisor-tls
+              name: supavisor-tls
+              readOnly: true
+      volumes:
+        - name: supavisor-tls
+          secret:
+            secretName: supavisor-tls
           readinessProbe:
             tcpSocket:
               port: 4000
