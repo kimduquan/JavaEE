@@ -105,7 +105,7 @@ image:
   pullSecrets: []
   ## Enable debug mode
   ##
-  debug: false
+  debug: true
 ## @section Odoo Configuration parameters
 ## Odoo settings based on environment variables
 ## ref: https://github.com/bitnami/containers/tree/main/bitnami/odoo#environment-variables
@@ -778,8 +778,8 @@ postgresql:
 externalDatabase:
   host: "supavisor"
   port: 6543
-  user: "odoo.odoo"
-  password: "123456"
+  user: "postgres.odoo"
+  password: "090323508"
   database: odoo
   create: true
   postgresqlPostgresUser: "postgres.odoo"
