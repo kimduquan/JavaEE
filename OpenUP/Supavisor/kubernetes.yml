@@ -142,10 +142,6 @@ spec:
             - mountPath: /supavisor-tls
               name: supavisor-tls
               readOnly: true
-      volumes:
-        - name: supavisor-tls
-          secret:
-            secretName: supavisor-tls
           readinessProbe:
             tcpSocket:
               port: 4000
@@ -155,3 +151,7 @@ spec:
           livenessProbe:
             tcpSocket:
               port: 6543
+      volumes:
+        - name: supavisor-tls
+          secret:
+            secretName: supavisor-tls
