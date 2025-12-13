@@ -762,13 +762,13 @@ postgresql:
 ## @param externalDatabase.existingSecretPostgresPasswordKey Name of an existing secret key containing the admin credentials
 ##
 externalDatabase:
-  host: "postgresql-primary"
-  port: 5432
-  user: odoo
+  host: "keycloak"
+  port: 6543
+  user: odoo.odoo
   password: "123456"
   database: odoo
   create: true
-  postgresqlPostgresUser: "postgres"
+  postgresqlPostgresUser: "postgres.odoo"
   postgresqlPostgresPassword: "090323508"
   existingSecret: ""
   existingSecretPasswordKey: ""
