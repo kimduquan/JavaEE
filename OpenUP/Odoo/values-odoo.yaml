@@ -524,7 +524,7 @@ ingress:
   apiVersion: ""
   ## @param ingress.hostname Default host for the ingress record
   ##
-  hostname: localhost
+  hostname: odoo.localhost
   ## @param ingress.path Default path for the ingress record
   ## NOTE: You may need to set this to '/*' in order to use this with ALB ingress controllers
   ##
@@ -633,7 +633,7 @@ persistence:
   subPath: ""
   ## @param persistence.resourcePolicy Setting it to "keep" to avoid removing PVCs during a helm delete operation. Leaving it empty will delete PVCs after the chart deleted
   ##
-  resourcePolicy: "keep"
+  resourcePolicy: ""
   ## @param persistence.storageClass Persistent Volume storage class
   ## If defined, storageClassName: <storageClass>
   ## If set to "-", storageClassName: "", which disables dynamic provisioning
@@ -778,10 +778,10 @@ postgresql:
 externalDatabase:
   host: "supavisor"
   port: 6543
-  user: "postgres.odoo"
+  user: "odoo.odoo"
   password: "090323508"
   database: odoo
-  create: false
+  create: true
   postgresqlPostgresUser: "postgres.odoo"
   postgresqlPostgresPassword: "090323508"
   existingSecret: ""
