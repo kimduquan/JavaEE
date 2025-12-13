@@ -619,7 +619,7 @@ persistence:
   subPath: ""
   ## @param persistence.resourcePolicy Setting it to "keep" to avoid removing PVCs during a helm delete operation. Leaving it empty will delete PVCs after the chart deleted
   ##
-  resourcePolicy: ""
+  resourcePolicy: "keep"
   ## @param persistence.storageClass Persistent Volume storage class
   ## If defined, storageClassName: <storageClass>
   ## If set to "-", storageClassName: "", which disables dynamic provisioning
@@ -762,7 +762,7 @@ postgresql:
 ## @param externalDatabase.existingSecretPostgresPasswordKey Name of an existing secret key containing the admin credentials
 ##
 externalDatabase:
-  host: "keycloak"
+  host: "supavisor"
   port: 6543
   user: odoo.odoo
   password: "123456"
