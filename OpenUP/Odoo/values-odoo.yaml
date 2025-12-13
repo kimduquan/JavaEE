@@ -778,7 +778,7 @@ postgresql:
 externalDatabase:
   host: "supavisor"
   port: 6543
-  user: odoo.odoo
+  user: "odoo.odoo"
   password: "123456"
   database: odoo
   create: true
