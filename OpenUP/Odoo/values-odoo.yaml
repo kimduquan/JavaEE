@@ -290,7 +290,7 @@ containerSecurityContext:
 ##
 livenessProbe:
   enabled: true
-  initialDelaySeconds: 900
+  initialDelaySeconds: 1200
   periodSeconds: 30
   timeoutSeconds: 5
   failureThreshold: 6
