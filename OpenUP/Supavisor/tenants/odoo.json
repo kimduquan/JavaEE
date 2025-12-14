@@ -12,8 +12,8 @@
     "require_user": true,
     "users": [
       {
-        "db_password": "123456",
-        "db_user": "odoo",
+        "db_password": "090323508",
+        "db_user": "postgres",
         "max_clients": 25000,
         "mode_type": "transaction",
         "pool_checkout_timeout": 1000,
@@ -21,9 +21,10 @@
       },
       {
         "db_password": "090323508",
-        "db_user": "postgres",
+        "db_user": "odoo.odoo",
+        "db_user_alias": "odoo",
         "max_clients": 25000,
-        "mode_type": "session",
+        "mode_type": "transaction",
         "pool_checkout_timeout": 1000,
         "pool_size": 10
       }
