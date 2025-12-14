@@ -782,7 +782,7 @@ postgresql:
 ## @param externalDatabase.existingSecretPostgresPasswordKey Name of an existing secret key containing the admin credentials
 ##
 externalDatabase:
-  host: "ingress-nginx-controller"
+  host: "supavisor"
   port: 6543
   user: "odoo.odoo"
   password: "090323508"
