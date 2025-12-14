@@ -22,11 +22,11 @@ metadata:
   namespace: default
 spec:
   isCA: true
-  commonName: osm-system
+  commonName: supavisor
   dnsNames:
     - "supavisor.default.svc.cluster.local"
     - "supavisor"
-    - "localhost"
+    - "*.localhost.direct"
   secretName: supavisor-tls
   issuerRef:
     name: supavisor-tls
