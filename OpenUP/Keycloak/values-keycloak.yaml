@@ -1312,7 +1312,7 @@ externalDatabase:
   port: 6543
   user: keycloak.keycloak
   database: keycloak
-  schema: public
+  schema: auth
   password: "090323508"
   existingSecret: ""
   existingSecretUserKey: ""
