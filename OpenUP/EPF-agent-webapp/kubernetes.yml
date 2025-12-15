@@ -116,7 +116,7 @@ metadata:
     app.kubernetes.io/version: 1.0.0
   name: epf-agent-webapp
 spec:
-  ingressClassName: nginx
+  ingressClassName: haproxy
   rules:
     - host: touching-pika-enabled.ngrok-free.app
       http:

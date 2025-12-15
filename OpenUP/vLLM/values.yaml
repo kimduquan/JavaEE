@@ -368,7 +368,7 @@ routerSpec:
     enabled: false
 
     # -- IngressClass that will be used to implement the Ingress
-    className: "nginx"
+    className: "haproxy"
 
     # -- Additional annotations for the Ingress resource
     annotations:

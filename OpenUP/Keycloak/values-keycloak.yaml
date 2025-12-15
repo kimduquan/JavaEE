@@ -642,7 +642,7 @@ ingress:
   ## @param ingress.ingressClassName IngressClass that will be be used to implement the Ingress (evaluated as template)
   ## Required if you have more than one IngressClass marked as the default for your cluster
   ##
-  ingressClassName: "nginx"
+  ingressClassName: "haproxy"
   ## @param ingress.controller The ingress controller type. Currently supports `default` and `gce`
   ## leave as `default` for most ingress controllers.
   ## set to `gce` if using the GCE ingress controller
@@ -664,7 +664,7 @@ ingress:
   ##   cert-manager.io/cluster-issuer: cluster-issuer-name
   ##
   annotations:
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    haproxy.org/server-ssl: "true"
   ## @param ingress.labels Additional labels for the Ingress resource.
   ## e.g:
   ## labels:
