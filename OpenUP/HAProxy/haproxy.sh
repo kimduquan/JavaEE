@@ -1,2 +1,2 @@
 helm repo add haproxy-ingress https://haproxy-ingress.github.io/charts
-helm install haproxy-ingress haproxy-ingress/haproxy-ingress --namespace default
+helm install haproxy-ingress haproxy-ingress/haproxy-ingress --namespace default --set tcp.5452="default/supavisor:5452" --set tcp.6543="default/supavisor:6543" 
