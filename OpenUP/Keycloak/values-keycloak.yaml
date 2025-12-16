@@ -106,7 +106,7 @@ image:
   ##   - myRegistryKeySecretName
   ##
   pullSecrets: []
-  debug: false
+  debug: true
 ## Keycloak authentication parameters
 ## ref: https://github.com/bitnami/containers/tree/main/bitnami/keycloak#admin-credentials
 ##
@@ -220,7 +220,7 @@ cache:
 ##
 logging:
   output: default
-  level: INFO
+  level: DEBUG
 ## @param configuration Keycloak Configuration. Auto-generated based on other parameters when not specified
 ## NOTE: This will override configuring Keycloak based on environment variables (including those set by the chart)
 ## The keycloak.conf is auto-generated based on other parameters when this parameter is not specified
@@ -414,7 +414,7 @@ customStartupProbe:
     path: /auth/health
     port: 9000
     scheme: HTTPS
-  initialDelaySeconds: 130
+  initialDelaySeconds: 480
 
 ## @section Keycloak StatefulSet parameters
 
