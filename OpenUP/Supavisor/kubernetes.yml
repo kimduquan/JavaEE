@@ -135,6 +135,8 @@ spec:
               value: "/supavisor-tls/tls.crt"
             - name: GLOBAL_DOWNSTREAM_KEY_PATH
               value: "/supavisor-tls/tls.key"
+            - name: NAMED_PREPARED_STATEMENTS_ENABLED
+              value: "true"
             - name: SECRET_KEY_BASE
               valueFrom:
                 secretKeyRef:
