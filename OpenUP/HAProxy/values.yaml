@@ -25,7 +25,7 @@ podSecurityPolicy:
     # apparmor.security.beta.kubernetes.io/defaultProfileName: runtime/default
     # seccomp.security.alpha.kubernetes.io/allowedProfileNames: runtime/default
     # seccomp.security.alpha.kubernetes.io/defaultProfileName: runtime/default
-  enabled: false
+  enabled: true
 
 ## Enable RBAC Authorization
 ## ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
@@ -67,7 +67,7 @@ controller:
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/
   kind: Deployment    # can be 'Deployment' or 'DaemonSet'
-  replicaCount: 2
+  replicaCount: 1
 
   ## minReadySeconds setting of Deployment or DaemonSet
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#min-ready-seconds
@@ -223,16 +223,16 @@ controller:
   #    cpu: 250m
   #    memory: 400Mi
     requests:
-      cpu: 250m
-      memory: 400Mi
+      cpu: 50m
+      memory: 128Mi
 
   ## Horizontal Pod Scaler
   ## Only to be used with Deployment kind
   ## ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
   autoscaling:
-    enabled: false
-    minReplicas: 2
-    maxReplicas: 20
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 1
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
 
@@ -390,7 +390,7 @@ controller:
   service:
     enabled: true     # set to false when controller.kind is 'DaemonSet' and controller.daemonset.useHostPorts is true
 
-    type: NodePort    # can be 'ClusterIP', 'NodePort' or 'LoadBalancer'
+    type: LoadBalancer    # can be 'ClusterIP', 'NodePort' or 'LoadBalancer'
 
     ## Service annotations
     ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
