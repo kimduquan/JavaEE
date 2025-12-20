@@ -179,7 +179,7 @@ controller:
   # ref: https://gateway-api.sigs.k8s.io/
   # ref: https://gateway-api.sigs.k8s.io/guides/#installing-a-gateway-controller
   kubernetesGateway:
-    enabled: false
+    enabled: true
     gatewayControllerName: haproxy.org/gateway-controller
 
   ## Additional labels to add to the deployment or daemonset metadata
@@ -293,7 +293,7 @@ controller:
   ## Only to be used with Deployment kind
   ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
   PodDisruptionBudget:
-    enable: false
+    enable: true
     # maxUnavailable: 1
     # minAvailable: 1
 
