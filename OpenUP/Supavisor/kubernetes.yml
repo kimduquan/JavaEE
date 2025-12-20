@@ -38,11 +38,12 @@ kind: Ingress
 metadata:
   name: supavisor-transaction
   annotations:
-    haproxy.org/ssl-passthrough: "true"
+    ingress.kubernetes.io/ssl-passthrough: "true"
+    ingress.kubernetes.io/send-proxy-protocol: proxy-v2-ssl-cn
 spec:
   ingressClassName: haproxy
   rules:
-  - host: odoo.localhost.direct
+  - host: "*.localhost.direct"
     http:
       paths:
       - path: /
@@ -58,11 +59,12 @@ kind: Ingress
 metadata:
   name: supavisor-session
   annotations:
-    haproxy.org/ssl-passthrough: "true"
+    ingress.kubernetes.io/ssl-passthrough: "true"
+    ingress.kubernetes.io/send-proxy-protocol: proxy-v2-ssl-cn
 spec:
   ingressClassName: haproxy
   rules:
-  - host: odoo.localhost.direct
+  - host: "*.localhost.direct"
     http:
       paths:
       - path: /
