@@ -368,7 +368,7 @@ controller:
   logging:
     ## Controller logging level
     ## This only relevant to Controller logs
-    level: debug
+    level: info
 
     ## HAProxy traffic logs
     ## ref: https://github.com/haproxytech/kubernetes-ingress/tree/master/documentation#logging
