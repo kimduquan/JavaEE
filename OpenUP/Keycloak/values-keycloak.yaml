@@ -220,7 +220,7 @@ cache:
 ##
 logging:
   output: default
-  level: DEBUG
+  level: INFO
 ## @param configuration Keycloak Configuration. Auto-generated based on other parameters when not specified
 ## NOTE: This will override configuring Keycloak based on environment variables (including those set by the chart)
 ## The keycloak.conf is auto-generated based on other parameters when this parameter is not specified
@@ -277,7 +277,6 @@ extraEnvVarsSecret: ""
 ## @param containerPorts.management Keycloak management container port
 ##
 containerPorts:
-  http: 8080
   https: 8443
   management: 9000
 ## @param extraContainerPorts Optionally specify extra list of additional ports for Keycloak container
@@ -569,7 +568,6 @@ service:
   ## @param service.ports.https Keycloak service HTTPS port
   ##
   ports:
-    http: 8080
     https: 8443
   ## Node ports to expose
   ## @param service.nodePorts.http Node port for HTTP
