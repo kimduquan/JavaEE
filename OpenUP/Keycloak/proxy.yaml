@@ -4,8 +4,8 @@ metadata:
   name: keycloak-proxy
   namespace: default
   annotations:
-    haproxy.org/server-ssl: "true"
-    haproxy.org/ssl-redirect: "false"
+    ingress.kubernetes.io/server-ssl: "true"
+    ingress.kubernetes.io/ssl-redirect: "false"
 
 spec:
   ingressClassName: "haproxy"
