@@ -429,9 +429,9 @@ controller:
     enablePorts:
       http: true
       https: true
-      quic: true
-      stat: true
-      admin: true
+      quic: false
+      stat: false
+      admin: false
 
     ## Target port mappings for http, https and stat
     ## ref: https://kubernetes.io/docs/concepts/services-networking/service/
@@ -445,7 +445,15 @@ controller:
     ## Additional tcp ports to expose
     ## This is especially useful for TCP services:
     ## https://github.com/haproxytech/kubernetes-ingress/blob/master/documentation/controller.md
-    tcpPorts: []
+    tcpPorts:
+    - name: supavisor-transaction
+      port: 5452
+      targetPort: 5452
+      protocol: TCP
+    - name: supavisor-session
+      port: 6543
+      targetPort: 6543
+      protocol: TCP
     #  - name: http-alt
     #    port: 8080
     #    targetPort: http-alt
