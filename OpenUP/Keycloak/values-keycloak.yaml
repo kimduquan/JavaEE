@@ -666,7 +666,7 @@ ingress:
   ##   cert-manager.io/cluster-issuer: cluster-issuer-name
   ##
   annotations:
-    ingress.kubernetes.io/server-ssl: "true"
+    #ingress.kubernetes.io/server-ssl: "true"
     ingress.kubernetes.io/ssl-redirect: "false"
   ## @param ingress.labels Additional labels for the Ingress resource.
   ## e.g:
