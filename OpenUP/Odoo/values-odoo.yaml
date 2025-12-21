@@ -105,7 +105,7 @@ image:
   pullSecrets: []
   ## Enable debug mode
   ##
-  debug: true
+  debug: false
 ## @section Odoo Configuration parameters
 ## Odoo settings based on environment variables
 ## ref: https://github.com/bitnami/containers/tree/main/bitnami/odoo#environment-variables
