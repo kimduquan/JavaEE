@@ -290,7 +290,7 @@ containerSecurityContext:
 ##
 livenessProbe:
   enabled: true
-  initialDelaySeconds: 1800
+  initialDelaySeconds: 3600
   periodSeconds: 30
   timeoutSeconds: 5
   failureThreshold: 6
@@ -530,7 +530,7 @@ ingress:
   apiVersion: ""
   ## @param ingress.hostname Default host for the ingress record
   ##
-  hostname: localhost
+  hostname: localhost.direct
   ## @param ingress.path Default path for the ingress record
   ## NOTE: You may need to set this to '/*' in order to use this with ALB ingress controllers
   ##
@@ -614,7 +614,7 @@ ingress:
   ##             name: http
   ##
   extraRules:
-    - host: "*.localhost"
+    - host: "*.localhost.direct"
       http:
         paths:
           - path: /
