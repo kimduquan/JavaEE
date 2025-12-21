@@ -196,7 +196,7 @@ proxyHeaders: "forwarded"
 hostnameStrict: true
 ## @param httpEnabled Force enabling HTTP endpoint (by default is only enabled if TLS is disabled)
 ##
-httpEnabled: false
+httpEnabled: true
 ## @param httpRelativePath Set the path relative to '/' for serving resources
 ##
 httpRelativePath: "/auth"
@@ -278,6 +278,7 @@ extraEnvVarsSecret: ""
 ##
 containerPorts:
   https: 8443
+  http: 8080
   management: 9000
 ## @param extraContainerPorts Optionally specify extra list of additional ports for Keycloak container
 ## e.g:
@@ -563,12 +564,13 @@ service:
   ## @param service.http.enabled Enable http port on service
   ##
   http:
-    enabled: false
+    enabled: true
   ## @param service.ports.http Keycloak service HTTP port
   ## @param service.ports.https Keycloak service HTTPS port
   ##
   ports:
     https: 8443
+    http: 8080
   ## Node ports to expose
   ## @param service.nodePorts.http Node port for HTTP
   ## @param service.nodePorts.https Node port for HTTPS
@@ -613,8 +615,7 @@ service:
   externalTrafficPolicy: Cluster
   ## @param service.annotations Additional custom annotations for Keycloak service
   ##
-  annotations:
-    ingress.kubernetes.io/server-ssl: "true"
+  annotations: {}
   ## Headless service properties
   ##
   headless:
@@ -666,7 +667,7 @@ ingress:
   ##
   annotations:
     ingress.kubernetes.io/server-ssl: "true"
-    ssl-redirect: "false"
+    ingress.kubernetes.io/ssl-redirect: "false"
   ## @param ingress.labels Additional labels for the Ingress resource.
   ## e.g:
   ## labels:
