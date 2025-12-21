@@ -521,7 +521,7 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "**********",
+      "secret": "cIkzKJZ4A7jXKpXfaxC4GaLxJAmmEqhP",
       "redirectUris": [
         "/*",
         "/realms/EPF-dev/account/*",
@@ -679,7 +679,7 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "**********",
+      "secret": "CS47Hwm4v0MKaZqmT62Os0eizGQfERTI",
       "redirectUris": [],
       "webOrigins": [],
       "notBefore": 0,
