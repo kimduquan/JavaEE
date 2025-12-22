@@ -1,55 +1,55 @@
 dependencies:
-- name: epf-cache
-  version: "1.0.0"
-  repository: "file://../EPF-cache/target/helm/kubernetes/epf-cache"
+#- name: epf-cache
+#  version: "1.0.0"
+#  repository: "file://../EPF-cache/target/helm/kubernetes/epf-cache"
 - name: epf-concurrent
   version: "1.0.0"
   repository: "file://../EPF-concurrent/target/helm/kubernetes/epf-concurrent"
 - name: epf-config
   version: "1.0.0"
   repository: "file://../EPF-config/target/helm/kubernetes/epf-config"
-- name: epf-event
-  version: "1.0.0"
-  repository: "file://../EPF-event/target/helm/kubernetes/epf-event"
-- name: epf-file
-  version: "1.0.0"
-  repository: "file://../EPF-file/target/helm/kubernetes/epf-file"
+#- name: epf-event
+#  version: "1.0.0"
+#  repository: "file://../EPF-event/target/helm/kubernetes/epf-event"
+#- name: epf-file
+#  version: "1.0.0"
+#  repository: "file://../EPF-file/target/helm/kubernetes/epf-file"
 - name: epf-gateway
   version: "1.0.0"
   repository: "file://../EPF-gateway/target/helm/kubernetes/epf-gateway"
-- name: epf-lang
-  version: "1.0.0"
-  repository: "file://../EPF-lang/target/helm/kubernetes/epf-lang"
-- name: epf-logging
-  version: "1.0.0"
-  repository: "file://../EPF-logging/target/helm/kubernetes/epf-logging"
+#- name: epf-lang
+#  version: "1.0.0"
+#  repository: "file://../EPF-lang/target/helm/kubernetes/epf-lang"
+#- name: epf-logging
+#  version: "1.0.0"
+#  repository: "file://../EPF-logging/target/helm/kubernetes/epf-logging"
 - name: epf-management
   version: "1.0.0"
   repository: "file://../EPF-management/target/helm/kubernetes/epf-management"
-- name: epf-mcp-gateway
-  version: "1.0.0"
-  repository: "file://../EPF-mcp-gateway/target/helm/kubernetes/epf-mcp-gateway"
+#- name: epf-mcp-gateway
+#  version: "1.0.0"
+#  repository: "file://../EPF-mcp-gateway/target/helm/kubernetes/epf-mcp-gateway"
 - name: epf-messaging
   version: "1.0.0"
   repository: "file://../EPF-messaging/target/helm/kubernetes/epf-messaging"
-- name: epf-net
-  version: "1.0.0"
-  repository: "file://../EPF-net/target/helm/kubernetes/epf-net"
-- name: epf-persistence
-  version: "1.0.0"
-  repository: "file://../EPF-persistence/target/helm/kubernetes/epf-persistence"
-- name: epf-query
-  version: "1.0.0"
-  repository: "file://../EPF-query/target/helm/kubernetes/epf-query"
+#- name: epf-net
+#  version: "1.0.0"
+#  repository: "file://../EPF-net/target/helm/kubernetes/epf-net"
+#- name: epf-persistence
+#  version: "1.0.0"
+#  repository: "file://../EPF-persistence/target/helm/kubernetes/epf-persistence"
+#- name: epf-query
+#  version: "1.0.0"
+#  repository: "file://../EPF-query/target/helm/kubernetes/epf-query"
 - name: epf-registry
   version: "1.0.0"
   repository: "file://../EPF-registry/target/helm/kubernetes/epf-registry"
-- name: epf-transaction
-  version: "1.0.0"
-  repository: "file://../EPF-transaction/target/helm/kubernetes/epf-transaction"
-- name: epf-workflow-management
-  version: "1.0.0"
-  repository: "file://../EPF-workflow-management/target/helm/kubernetes/epf-workflow-management"
-- name: epf-workflow
-  version: "1.0.0"
-  repository: "file://../EPF-workflow-v1/target/helm/kubernetes/epf-workflow"
+#- name: epf-transaction
+#  version: "1.0.0"
+#  repository: "file://../EPF-transaction/target/helm/kubernetes/epf-transaction"
+#- name: epf-workflow-management
+#  version: "1.0.0"
+#  repository: "file://../EPF-workflow-management/target/helm/kubernetes/epf-workflow-management"
+#- name: epf-workflow
+#  version: "1.0.0"
+#  repository: "file://../EPF-workflow-v1/target/helm/kubernetes/epf-workflow"
