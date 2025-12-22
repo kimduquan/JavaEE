@@ -68,7 +68,7 @@ public class Application {
     	final Optional<URI> uri = registry.lookup(Naming.CONCURRENT);
     	try {
     		LOGGER.info("connect to server:" + uri.get().resolve(Naming.Concurrent.SYNCHRONIZED));
-			concurrent.connectToServer(uri.get());
+			concurrent.connectToServer(uri.get().resolve(Naming.Concurrent.SYNCHRONIZED));
 		} 
     	catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "postConstruct", e);
