@@ -119,7 +119,7 @@ public class Application {
         	final Link self = HATEOAS.selfLink(uriInfo, req, service);
         	final boolean isPartial = isPartial(response);
         	final MediaType mediaType = response.getMediaType();
-        	response = buildLinkRequests(client, response, entity, mediaType, headers, self, isPartial, organizationId);
+        	response = buildLinkRequests(client, feature, response, entity, mediaType, headers, self, isPartial, organizationId);
     	}
     	response = ResponseUtil.buildResponse(response, entity, uriInfo.getBaseUri());
     	client.close();
@@ -225,7 +225,7 @@ public class Application {
 		}
     }
     
-    private Response buildLinkRequests(final Client client, final Response response, final Optional<Object> entity, final MediaType mediaType, final HttpHeaders headers, final Link self, final boolean isPartial, final Optional<String> organizationId) throws Exception {
+    private Response buildLinkRequests(final Client client, final dev.openfeature.sdk.Client feature, final Response response, final Optional<Object> entity, final MediaType mediaType, final HttpHeaders headers, final Link self, final boolean isPartial, final Optional<String> organizationId) throws Exception {
     	Response prevLinkResponse = response;
     	Optional<Object> prevLinkEntity = entity;
     	MediaType prevMediaType = mediaType;
@@ -261,7 +261,7 @@ public class Application {
     				streams.put(volatile_.get(), linkStream);
     			}
     			else {
-        			Response linkResponse = HATEOAS.buildLinkRequest(client, serviceUrl, headers, prevLinkResponse, prevLinkEntity, prevMediaType, targetLink, organizationId);
+        			Response linkResponse = HATEOAS.buildLinkRequest(client, serviceUrl, feature, headers, prevLinkResponse, prevLinkEntity, prevMediaType, targetLink, organizationId);
         			if(isSuccessful(linkResponse)) {
         				final boolean isPartialLink = isPartial(linkResponse);
         				if(HATEOAS.hasEntity(link)) {
@@ -269,7 +269,7 @@ public class Application {
             				prevMediaType = linkResponse.getMediaType();
         				}
         				
-        				linkResponse = buildLinkRequests(client, linkResponse, prevLinkEntity, prevMediaType, headers, targetLink, isPartialLink, organizationId);
+        				linkResponse = buildLinkRequests(client, feature, linkResponse, prevLinkEntity, prevMediaType, headers, targetLink, isPartialLink, organizationId);
         				
         				if(isSuccessful(linkResponse)) {
                 			linkResponses.add(linkResponse);

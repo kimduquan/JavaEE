@@ -35,6 +35,10 @@
 		<groupId>io.quarkiverse.helm</groupId>
 		<artifactId>quarkus-helm</artifactId>
 	</dependency>
+	<dependency>
+	    <groupId>io.quarkus</groupId>
+	    <artifactId>quarkus-opentelemetry</artifactId>
+	</dependency>
 
 	<dependency>
         <groupId>openup</groupId>

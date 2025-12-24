@@ -27,6 +27,7 @@ public interface HATEOAS {
     static Response buildLinkRequest(
     		final Client client,
     		final URI serviceUrl,
+    		final dev.openfeature.sdk.Client feature,
     		final HttpHeaders headers,
     		final Response response,
     		final Optional<Object> entity,
@@ -42,7 +43,7 @@ public interface HATEOAS {
     	final URI targetUrl = serviceUrl.resolve(link.getUri());
 		final WebTarget target = client.target(targetUrl);
 		Invocation.Builder builder = target.request();
-		builder = RequestUtil.buildHeaders(builder, headers, targetUrl, true, organizationId);
+		builder = RequestUtil.buildHeaders(builder, headers, targetUrl, feature, true, organizationId);
 		builder = RequestUtil.buildLRAHeaders(builder, response);
 		switch(link.getType()) {
 			case HttpMethod.GET:
@@ -67,6 +68,7 @@ public interface HATEOAS {
     static CompletionStage<InputStream> buildStreamRequest(
     		final Client client,
     		final URI serviceUrl,
+    		final dev.openfeature.sdk.Client feature,
     		final HttpHeaders headers,
     		final Response response,
     		final Object entity,
@@ -82,7 +84,7 @@ public interface HATEOAS {
     	final URI targetUrl = serviceUrl.resolve(link.getUri());
 		final WebTarget target = client.target(targetUrl);
 		Invocation.Builder builder = target.request();
-		builder = RequestUtil.buildHeaders(builder, headers, targetUrl, true, organizationId);
+		builder = RequestUtil.buildHeaders(builder, headers, targetUrl, feature, true, organizationId);
 		builder = RequestUtil.buildLRAHeaders(builder, response);
 		switch(link.getType()) {
 			case HttpMethod.GET:
