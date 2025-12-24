@@ -90,7 +90,7 @@ public interface RequestUtil {
     	return webTarget;
     }
     
-    static Builder buildHeaders(final Builder input, final HttpHeaders headers, final URI targetUrl, final boolean buildForwardedHeaders, final Optional<String> organizationId){
+    static Builder buildHeaders(final Builder input, final HttpHeaders headers, final URI targetUrl, final dev.openfeature.sdk.Client feature, final boolean buildForwardedHeaders, final Optional<String> organizationId){
     	Builder builder = input;
     	final MultivaluedMap<String, String> requestHeaders = headers.getRequestHeaders();
         final MultivaluedHashMap<String, Object> forwardHeaders = new MultivaluedHashMap<String, Object>(requestHeaders);

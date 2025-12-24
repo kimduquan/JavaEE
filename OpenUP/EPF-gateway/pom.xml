@@ -67,6 +67,14 @@
 	    <groupId>io.quarkus</groupId>
 	    <artifactId>quarkus-opentelemetry</artifactId>
 	</dependency>
+	<dependency>
+	    <groupId>dev.openfeature</groupId>
+	    <artifactId>sdk</artifactId>
+	</dependency>
+	<dependency>
+	    <groupId>dev.openfeature.contrib.providers</groupId>
+	    <artifactId>flagd</artifactId>
+	</dependency>
 
     <dependency>
         <groupId>openup</groupId>

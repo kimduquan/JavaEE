@@ -914,6 +914,7 @@
         <module>EPF-shell</module>
 		<module>EPF-utility</module>
 		<module>EPF-logging-utility</module>
+		<module>EPF-feature-utility</module>
 		<module>EPF-websocket-utility</module>
 		<module>EPF-websocket-utility-ext</module>
 		<module>EPF-concurrent-utility</module>

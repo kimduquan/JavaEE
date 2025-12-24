@@ -63,6 +63,9 @@ public class Application {
     @Inject
     transient Concurrent concurrent;
     
+    @Inject
+    transient dev.openfeature.sdk.Client feature;
+    
     @PostConstruct
     protected void postConstruct() {
     	final Optional<URI> uri = registry.lookup(Naming.CONCURRENT);
@@ -109,7 +112,7 @@ public class Application {
     	final URI serviceUrl = registry.lookup(service).orElseThrow(NotFoundException::new);
     	final Optional<String> organizationId = OrganizationUtil.getOrganizationId(jwt);
     	final Client client = ClientBuilder.newClient();
-    	final RequestBuilder builder = new RequestBuilder(client, serviceUrl, req.getMethod(), headers, uriInfo, body, true, organizationId);
+    	final RequestBuilder builder = new RequestBuilder(feature, client, serviceUrl, req.getMethod(), headers, uriInfo, body, true, organizationId);
     	Response response = builder.build();
     	final Optional<Object> entity = HATEOAS.readEntity(response);
     	if(isSuccessful(response)) {

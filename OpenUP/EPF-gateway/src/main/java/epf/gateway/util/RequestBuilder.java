@@ -11,6 +11,7 @@ import jakarta.ws.rs.core.UriInfo;
 
 public class RequestBuilder {
 	
+	private transient final dev.openfeature.sdk.Client feature;
 	private transient final jakarta.ws.rs.client.Client client;
 	private final URI serviceUrl;
 	private transient final HttpHeaders headers;
@@ -20,7 +21,8 @@ public class RequestBuilder {
 	private final boolean buildForwardHeaders;
 	private final Optional<String> organizationId;
 	
-	public RequestBuilder(final jakarta.ws.rs.client.Client client, final URI serviceUrl, final String method, final HttpHeaders headers, final UriInfo uriInfo, final InputStream body, final boolean buildForwardHeaders, final Optional<String> organizationId) {
+	public RequestBuilder(final dev.openfeature.sdk.Client feature, final jakarta.ws.rs.client.Client client, final URI serviceUrl, final String method, final HttpHeaders headers, final UriInfo uriInfo, final InputStream body, final boolean buildForwardHeaders, final Optional<String> organizationId) {
+		this.feature = feature;
 		this.client = client;
 		this.serviceUrl = serviceUrl;
 		this.headers = headers;
@@ -36,7 +38,7 @@ public class RequestBuilder {
 		WebTarget target = client.target(serviceUrl);
 		target = RequestUtil.buildTarget(target, uriInfo);
 		Invocation.Builder builder = target.request();
-		builder = RequestUtil.buildHeaders(builder, headers, serviceUrl, buildForwardHeaders, organizationId);
+		builder = RequestUtil.buildHeaders(builder, headers, serviceUrl, feature, buildForwardHeaders, organizationId);
 		response = RequestUtil.buildInvoke(builder, method, headers.getMediaType(), body);
 		return response;
 	}
