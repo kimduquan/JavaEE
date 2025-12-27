@@ -214,17 +214,12 @@
 		    <artifactId>sdk</artifactId>
 		    <version>1.19.2</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/dev.openfeature.contrib.providers/flagd -->
+		<!-- https://mvnrepository.com/artifact/dev.openfeature.contrib.providers/env-var -->
 		<dependency>
 		    <groupId>dev.openfeature.contrib.providers</groupId>
-		    <artifactId>flagd</artifactId>
-		    <version>0.11.18</version>
+		    <artifactId>env-var</artifactId>
+		    <version>0.0.12</version>
 		</dependency>
-		<dependency>
-			<groupId>io.netty</groupId>
-			<artifactId>netty-transport-native-epoll</artifactId>
-			<version>4.2.6.Final</version>
-	</dependency>
     </dependencies>
   </dependencyManagement>
   <build>
