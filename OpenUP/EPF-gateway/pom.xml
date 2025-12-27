@@ -78,11 +78,7 @@
 	</dependency>
 	<dependency>
 	    <groupId>dev.openfeature.contrib.providers</groupId>
-	    <artifactId>flagd</artifactId>
-	</dependency>
-	<dependency>
-		<groupId>io.netty</groupId>
-		<artifactId>netty-transport-native-epoll</artifactId>
+	    <artifactId>env-var</artifactId>
 	</dependency>
 
     <dependency>

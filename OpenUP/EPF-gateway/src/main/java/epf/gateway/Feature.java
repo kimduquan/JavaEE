@@ -1,6 +1,6 @@
 package epf.gateway;
 
-import dev.openfeature.contrib.providers.flagd.FlagdProvider;
+import dev.openfeature.contrib.providers.envvar.EnvVarProvider;
 import dev.openfeature.sdk.Client;
 import dev.openfeature.sdk.OpenFeatureAPI;
 import jakarta.annotation.PostConstruct;
@@ -13,7 +13,7 @@ public class Feature {
 	
 	@PostConstruct
 	void postConstruct() {
-		OpenFeatureAPI.getInstance().setProvider(new FlagdProvider());
+		OpenFeatureAPI.getInstance().setProvider(new EnvVarProvider());
 	}
 
 	@Produces @ApplicationScoped
