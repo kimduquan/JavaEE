@@ -1,5 +1,5 @@
 import asyncio
-from typing import Annotated, Any, TypedDict
+from typing import Annotated, Any
 from fastapi import Depends, FastAPI, Request
 from fastapi.responses import StreamingResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -30,6 +30,7 @@ import jwt
 from jwt import PyJWKClient
 from copilotkit import CopilotKitState
 from copilotkit.langgraph import copilotkit_messages_to_langchain, langchain_messages_to_copilotkit, copilotkit_customize_config
+from ag_ui_langgraph import add_langgraph_fastapi_endpoint
 
 class UIAgentState(CopilotKitState):
     """"""
@@ -194,8 +195,10 @@ def add_agent_endpoint(app: FastAPI, name: str, graph: CompiledStateGraph[UIAgen
         config = copilotkit_customize_config(base_config=config)
         agent = LangGraphAgent(name=name, graph=graph, config=config)
 
+        # Get the accept header from the request
         accept_header = request.headers.get("accept")
 
+        # Create an event encoder to properly format SSE events
         encoder = EventEncoder(accept=accept_header)
 
         async def event_generator():
@@ -209,8 +212,12 @@ def add_agent_endpoint(app: FastAPI, name: str, graph: CompiledStateGraph[UIAgen
 
     @app.get(f"{path}/health")
     def health():
+        """Health check."""
         return {
-            "status": "ok"
+            "status": "ok",
+            "agent": {
+                "name": name,
+            }
         }
 
 load_servers()
