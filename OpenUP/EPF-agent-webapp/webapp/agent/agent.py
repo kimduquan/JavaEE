@@ -28,14 +28,13 @@ from langgraph.cache.base import BaseCache
 from uuid import UUID
 import jwt
 from jwt import PyJWKClient
+from copilotkit import CopilotKitState
+from copilotkit.langgraph import copilotkit_messages_to_langchain, langchain_messages_to_copilotkit, copilotkit_customize_config
+
+class UIAgentState(CopilotKitState):
+    """"""
 
 class EPFAgentState(AgentState):
-    """"""
-
-class AgentInput(TypedDict):
-    """"""
-
-class AgentOutput(TypedDict):
     """"""
 
 class AgentContext():
@@ -60,8 +59,9 @@ mcp_servers: list[str] = [
 ]
 
 EPF_AGENT_NAME = "epf-agent"
-SUPERVISOR_AGENT_NAME = "supervisor"
-SUPERVISOR_AGENT_GRAPH: CompiledStateGraph[EPFAgentState, AgentContext, AgentInput, AgentOutput] = None
+SUPERVISOR_AGENT_NAME = "supervisor_agent"
+SUPERVISOR_NODE_NAME = "supervisor"
+SUPERVISOR_AGENT_GRAPH: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState] = None
 SUPERVISOR_AGENT_CONTEXT: AgentContext = AgentContext()
 SUPERVISOR_AGENT_CONTEXT.cache = InMemoryCache()
 SUPERVISOR_AGENT_CONTEXT.checkpointer = InMemorySaver()
@@ -110,7 +110,7 @@ async def list_prompts(client: MultiServerMCPClient, server_name: str) -> list[P
         prompts = list_prompts_result.prompts
     return prompts
 
-async def create_sub_agent(server_name: str, agent_name: str, prompt: Prompt, context: AgentContext) -> CompiledStateGraph[EPFAgentState, AgentContext, AgentInput, AgentOutput]:
+async def create_sub_agent(server_name: str, agent_name: str, prompt: Prompt, context: AgentContext) -> CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]:
     client = get_client(server_name=server_name,context=context)
     tools: list[BaseTool] = await load_tools(client=client,server_name=server_name)
     system_prompt: str = prompt[0].content
@@ -126,7 +126,7 @@ async def create_sub_agent(server_name: str, agent_name: str, prompt: Prompt, co
         name=agent_name,
         cache=context.cache)
 
-def as_tool(name: str, prompt: Prompt, agent: CompiledStateGraph[EPFAgentState, AgentContext, AgentInput, AgentOutput]) -> BaseTool:
+def as_tool(name: str, prompt: Prompt, agent: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]) -> BaseTool:
     arg_types: dict[str, type] = {}
     for argument in prompt.arguments:
         if(argument.required == True):
@@ -136,7 +136,7 @@ def as_tool(name: str, prompt: Prompt, agent: CompiledStateGraph[EPFAgentState, 
     tool = agent.as_tool(name=name, description=prompt.description, arg_types=arg_types)
     return tool
 
-async def create_supervisor_agent(supervisor_agent_name: str, server_name: str, context: AgentContext) -> CompiledStateGraph[EPFAgentState, AgentContext, AgentInput, AgentOutput]:
+async def create_supervisor_agent(supervisor_agent_name: str, server_name: str, context: AgentContext) -> CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]:
     client = get_client(server_name=server_name, context=context)
     prompts = await list_prompts(client=client, server_name=server_name)
     system_prompt: str | None = None
@@ -148,7 +148,7 @@ async def create_supervisor_agent(supervisor_agent_name: str, server_name: str, 
         else:
             sub_agent_prompts.append(agent_prompt)
 
-    sub_agents: list[CompiledStateGraph[EPFAgentState, AgentContext, AgentInput, AgentOutput]] = []
+    sub_agents: list[CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]] = []
     tools: list[BaseTool] = []
     for sub_agent_prompt in sub_agent_prompts:
         sub_agent_name = agent_prompt.name
@@ -170,7 +170,7 @@ async def create_supervisor_agent(supervisor_agent_name: str, server_name: str, 
         name=supervisor_agent_name,
         cache=context.cache)
 
-async def supervisor_node(state: EPFAgentState, config: RunnableConfig, runtime: Runtime[AgentContext]) -> dict[str, Any] | Any:
+async def supervisor_node(state: UIAgentState, config: RunnableConfig, runtime: Runtime[AgentContext]) -> dict[str, Any] | Any:
     context = AgentContext()
     context.authorization = config["configurable"]["authorization"]
     context.claims = config["configurable"]["claims"]
@@ -178,16 +178,20 @@ async def supervisor_node(state: EPFAgentState, config: RunnableConfig, runtime:
     context.cache = InMemoryCache()
     context.checkpointer = InMemorySaver()
     context.store = InMemoryStore()
-    output = await SUPERVISOR_AGENT_GRAPH.ainvoke(input=AgentInput(state),config=config,context=context)
+    messages = copilotkit_messages_to_langchain(state["messages"])
+    agent_state = EPFAgentState(messages=messages)
+    output = await SUPERVISOR_AGENT_GRAPH.ainvoke(input=agent_state, config=config, context=context)
+    output["messages"] = langchain_messages_to_copilotkit(output["messages"])
     return output
 
-def add_agent_endpoint(app: FastAPI, name: str, graph: CompiledStateGraph[EPFAgentState, AgentContext, AgentInput, AgentOutput], path: str = "/"):
+def add_agent_endpoint(app: FastAPI, name: str, graph: CompiledStateGraph[UIAgentState, AgentContext, UIAgentState, UIAgentState], path: str = "/"):
 
     @app.post(path)
     async def agent_endpoint(input_data: RunAgentInput, request: Request, credentials: Annotated[HTTPAuthorizationCredentials, Depends(security)]):
         key = jwk_client.get_signing_key_from_jwt(token=credentials.credentials)
         claims = jwt.decode(jwt=credentials.credentials, key=key)
         config = RunnableConfig(configurable={"authorization": credentials, "claims": claims}, run_id=UUID(input_data.run_id))
+        config = copilotkit_customize_config(base_config=config)
         agent = LangGraphAgent(name=name, graph=graph, config=config)
 
         accept_header = request.headers.get("accept")
@@ -213,14 +217,14 @@ load_servers()
 
 SUPERVISOR_AGENT_GRAPH = asyncio.run(create_supervisor_agent(supervisor_agent_name=SUPERVISOR_AGENT_NAME,server_name=DEFAULT_SERVER_NAME,context=SUPERVISOR_AGENT_CONTEXT))
 builder = StateGraph(
-    state_schema=EPFAgentState,
+    state_schema=UIAgentState,
     context_schema=AgentContext,
-    input_schema=AgentInput,
-    output_schema=AgentOutput)
+    input_schema=UIAgentState,
+    output_schema=UIAgentState)
 builder.add_node(SUPERVISOR_AGENT_NAME, supervisor_node)
 builder.set_entry_point(SUPERVISOR_AGENT_NAME)
 builder.set_finish_point(SUPERVISOR_AGENT_NAME)
-supervisor_graph = builder.compile(checkpointer=SUPERVISOR_AGENT_CONTEXT.checkpointer,cache=SUPERVISOR_AGENT_CONTEXT.cache,store=SUPERVISOR_AGENT_CONTEXT.store)
+supervisor_graph = builder.compile(checkpointer=SUPERVISOR_AGENT_CONTEXT.checkpointer, cache=SUPERVISOR_AGENT_CONTEXT.cache, store=SUPERVISOR_AGENT_CONTEXT.store, name=SUPERVISOR_NODE_NAME)
 
 app = FastAPI()
 add_agent_endpoint(app=app, name=EPF_AGENT_NAME, graph=supervisor_graph)
