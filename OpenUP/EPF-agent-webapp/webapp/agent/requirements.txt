@@ -5,9 +5,7 @@ openai
 fastapi
 uvicorn
 python-dotenv
-langgraph-cli[inmem]
 langchain-openai
 langchain-mcp-adapters
-langgraph-supervisor
 langgraph-api
 ag-ui-langgraph

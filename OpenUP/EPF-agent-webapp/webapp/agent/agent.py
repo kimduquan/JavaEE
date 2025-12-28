@@ -113,10 +113,11 @@ async def list_prompts(client: MultiServerMCPClient, server_name: str) -> list[P
 async def create_sub_agent(server_name: str, agent_name: str, prompt: Prompt, context: AgentContext) -> CompiledStateGraph[EPFAgentState, AgentContext, AgentInput, AgentOutput]:
     client = get_client(server_name=server_name,context=context)
     tools: list[BaseTool] = await load_tools(client=client,server_name=server_name)
+    system_prompt: str = prompt[0].content
     return create_agent(
         model=context.model,
         tools=tools,
-        system_prompt=prompt[0].content,
+        system_prompt=system_prompt,
         middleware=EPFAgentMiddleware(),
         state_schema=EPFAgentState,
         context_schema=AgentContext,
