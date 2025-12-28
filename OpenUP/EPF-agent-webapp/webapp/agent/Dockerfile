@@ -4,8 +4,10 @@ COPY --exclude=Dockerfile --exclude=*venv --exclude=kubernetes.yml --exclude=*.s
 
 WORKDIR /agent
 
-RUN python -m pip install uv
+RUN python -m venv .venv
 
-RUN python -m uv sync
+RUN .venv/bin/python -m pip install uv
 
-CMD ["python", "-m", "uvicorn", "--host", "0.0.0.0", "--port", "8123", "agent:app"]
+RUN .venv/bin/python -m uv sync
+
+CMD [".venv/bin/python", "-m", "uvicorn", "--host", "0.0.0.0", "--port", "8123", "agent:app"]
