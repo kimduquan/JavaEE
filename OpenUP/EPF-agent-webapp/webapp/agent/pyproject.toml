@@ -15,4 +15,5 @@ dependencies = [
     "langchain-openai>=1.1.0",
     "copilotkit>=0.1.74",
     "langgraph-api>=0.6.0",
+    "langchain-mcp-adapters==0.2.1"
 ]
