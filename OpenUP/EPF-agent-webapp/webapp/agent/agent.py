@@ -1,7 +1,8 @@
 import asyncio
-from typing import Any, TypedDict
-from fastapi import FastAPI, Request
+from typing import Annotated, Any, TypedDict
+from fastapi import Depends, FastAPI, Request
 from fastapi.responses import StreamingResponse
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from langchain_openai import ChatOpenAI
 from langchain.agents import AgentState
 from langgraph.graph.state import CompiledStateGraph, StateGraph
@@ -25,6 +26,8 @@ from langgraph.types import Checkpointer
 from langgraph.store.base import BaseStore
 from langgraph.cache.base import BaseCache
 from uuid import UUID
+import jwt
+from jwt import PyJWKClient
 
 class EPFAgentState(AgentState):
     """"""
@@ -36,7 +39,8 @@ class AgentOutput(TypedDict):
     """"""
 
 class AgentContext():
-    authorization: str
+    authorization: HTTPAuthorizationCredentials
+    claims: Any
     model: ChatOpenAI
     checkpointer: Checkpointer
     store: BaseStore
@@ -49,7 +53,7 @@ class EPFAgentMiddleware(AgentMiddleware[EPFAgentState, AgentContext]):
 DEFAULT_SERVER_NAME = "epf-mcp-server"
 
 mcp_server_urls: dict[str, str] = {
-    DEFAULT_SERVER_NAME: os.environ["EPF_MCP_SERVER_URL"],
+    DEFAULT_SERVER_NAME: os.environ["MCP_SERVER_URL"],
 }
 mcp_servers: list[str] = [
     DEFAULT_SERVER_NAME
@@ -63,6 +67,9 @@ SUPERVISOR_AGENT_CONTEXT.cache = InMemoryCache()
 SUPERVISOR_AGENT_CONTEXT.checkpointer = InMemorySaver()
 SUPERVISOR_AGENT_CONTEXT.store = InMemoryStore()
 
+security = HTTPBearer()
+jwk_client = PyJWKClient(uri=os.environ["JWT_KEY_URL"])
+
 def get_model() -> ChatOpenAI:
     return ChatOpenAI(model=os.environ["OPENAI_MODEL"],base_url=os.environ["OPENAI_BASE_URL"])
 
@@ -74,7 +81,7 @@ def load_servers():
 def get_connections(server_name: str, context: AgentContext) -> dict[str, Connection]:
     connections: dict[str, Connection] = {}
     headers: dict[str, Any] = {}
-    headers["Authorization"] = context.authorization
+    headers["Authorization"] = context.authorization.scheme + " " + context.authorization.credentials
     for (mcp_server_name, mcp_server_url) in mcp_server_urls.items():
         if(mcp_server_name == server_name):
             connections[mcp_server_name] = StreamableHttpConnection(
@@ -165,6 +172,7 @@ async def create_supervisor_agent(supervisor_agent_name: str, server_name: str, 
 async def supervisor_node(state: EPFAgentState, config: RunnableConfig, runtime: Runtime[AgentContext]) -> dict[str, Any] | Any:
     context = AgentContext()
     context.authorization = config["configurable"]["authorization"]
+    context.claims = config["configurable"]["claims"]
     context.model = get_model()
     context.cache = InMemoryCache()
     context.checkpointer = InMemorySaver()
@@ -172,13 +180,14 @@ async def supervisor_node(state: EPFAgentState, config: RunnableConfig, runtime:
     output = await SUPERVISOR_AGENT_GRAPH.ainvoke(input=AgentInput(state),config=config,context=context)
     return output
 
-def add_agent_endpoint(app: FastAPI, graph: CompiledStateGraph[EPFAgentState, AgentContext, AgentInput, AgentOutput], path: str = "/"):
+def add_agent_endpoint(app: FastAPI, name: str, graph: CompiledStateGraph[EPFAgentState, AgentContext, AgentInput, AgentOutput], path: str = "/"):
 
     @app.post(path)
-    async def agent_endpoint(input_data: RunAgentInput, request: Request):
-        authorization: str = request.headers.get("authorization")
-        config = RunnableConfig(configurable={"authorization": authorization},run_id=UUID(input_data.run_id))
-        agent = LangGraphAgent(name=EPF_AGENT_NAME, graph=graph, config=config)
+    async def agent_endpoint(input_data: RunAgentInput, request: Request, credentials: Annotated[HTTPAuthorizationCredentials, Depends(security)]):
+        key = jwk_client.get_signing_key_from_jwt(token=credentials.credentials)
+        claims = jwt.decode(jwt=credentials.credentials, key=key)
+        config = RunnableConfig(configurable={"authorization": credentials, "claims": claims}, run_id=UUID(input_data.run_id))
+        agent = LangGraphAgent(name=name, graph=graph, config=config)
 
         accept_header = request.headers.get("accept")
 
@@ -213,4 +222,4 @@ builder.set_finish_point(SUPERVISOR_AGENT_NAME)
 supervisor_graph = builder.compile(checkpointer=SUPERVISOR_AGENT_CONTEXT.checkpointer,cache=SUPERVISOR_AGENT_CONTEXT.cache,store=SUPERVISOR_AGENT_CONTEXT.store)
 
 app = FastAPI()
-add_agent_endpoint(app=app,graph=supervisor_graph)
+add_agent_endpoint(app=app, name=EPF_AGENT_NAME, graph=supervisor_graph)
