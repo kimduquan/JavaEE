@@ -3,6 +3,7 @@ from typing import Annotated, Any
 from fastapi import Depends, FastAPI, Request
 from fastapi.responses import StreamingResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+import uvicorn
 from langchain_openai import ChatOpenAI
 from langchain.agents import AgentState
 from langgraph.graph.state import CompiledStateGraph, StateGraph
@@ -30,7 +31,7 @@ import jwt
 from jwt import PyJWKClient
 from copilotkit import CopilotKitState
 from copilotkit.langgraph import copilotkit_messages_to_langchain, langchain_messages_to_copilotkit, copilotkit_customize_config
-from ag_ui_langgraph import add_langgraph_fastapi_endpoint
+from langchain_mcp_adapters.interceptors import MCPToolCallRequest, ToolCallInterceptor
 
 class UIAgentState(CopilotKitState):
     """"""
@@ -48,6 +49,21 @@ class AgentContext():
 
 class EPFAgentMiddleware(AgentMiddleware[EPFAgentState, AgentContext]):
     """"""
+
+class EPFToolCallInterceptor(ToolCallInterceptor):
+    """"""
+
+    async def __call__(
+        self,
+        request: MCPToolCallRequest,
+        handler,
+    ):
+        context: AgentContext = request.runtime.context
+        if(context.authorization):
+            headers = { "Authorization": context.authorization.scheme + " " + context.authorization.credentials }
+            new_request = request.override(headers=headers)
+            return await handler(new_request)
+        return await handler(request)
 
 
 DEFAULT_SERVER_NAME = "epf-mcp-server"
@@ -81,21 +97,20 @@ def load_servers():
 
 def get_connections(server_name: str, context: AgentContext) -> dict[str, Connection]:
     connections: dict[str, Connection] = {}
-    headers: dict[str, Any] = {}
-    headers["Authorization"] = context.authorization.scheme + " " + context.authorization.credentials
     for (mcp_server_name, mcp_server_url) in mcp_server_urls.items():
         if(mcp_server_name == server_name):
             connections[mcp_server_name] = StreamableHttpConnection(
             transport = 'streamable_http',
-            url=mcp_server_url,
-            headers=headers
+            url=mcp_server_url
         )
     return connections
 
 def get_client(server_name: str, context: AgentContext) -> MultiServerMCPClient:
     connections = get_connections(server_name=server_name,context=context)
+    tool_interceptors = [EPFToolCallInterceptor()]
     client = MultiServerMCPClient(
-        connections=connections
+        connections=connections,
+        tool_interceptors=tool_interceptors
     )
     return client
 
@@ -235,3 +250,6 @@ supervisor_graph = builder.compile(checkpointer=SUPERVISOR_AGENT_CONTEXT.checkpo
 
 app = FastAPI()
 add_agent_endpoint(app=app, name=EPF_AGENT_NAME, graph=supervisor_graph)
+
+if __name__ == "__main__":
+    uvicorn.run(app=app, host="0.0.0.0", port=8123)
