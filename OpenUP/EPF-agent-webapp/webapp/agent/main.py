@@ -80,15 +80,15 @@ mcp_servers: list[str] = [
 
 MODEL_CALL_THREAD_LIMIT = int(os.environ["MODEL_CALL_THREAD_LIMIT"])
 MODEL_CALL_RUN_LIMIT = int(os.environ["MODEL_CALL_RUN_LIMIT"])
-MODEL_CALL_LIMIT = ModelCallLimitMiddleware(thread_limit=MODEL_CALL_THREAD_LIMIT, run_limit=MODEL_CALL_RUN_LIMIT, exit_behavior=Literal["error"])
+MODEL_CALL_LIMIT = ModelCallLimitMiddleware(thread_limit=MODEL_CALL_THREAD_LIMIT, run_limit=MODEL_CALL_RUN_LIMIT, exit_behavior="error")
 TOOL_CALL_THREAD_LIMIT = int(os.environ["TOOL_CALL_THREAD_LIMIT"])
 TOOL_CALL_RUN_LIMIT = int(os.environ["TOOL_CALL_RUN_LIMIT"])
 TOOL_CALL_LIMIT = ToolCallLimitMiddleware(thread_limit=TOOL_CALL_THREAD_LIMIT, run_limit=TOOL_CALL_RUN_LIMIT, exit_behavior="error")
-PII = PIIMiddleware(pii_type=Literal['email', 'credit_card', 'ip', 'mac_address', 'url'])
+PII = PIIMiddleware(pii_type="email")
 TOOL_RETRY = ToolRetryMiddleware()
 MODEL_RETRY = ModelRetryMiddleware()
 CONTEXT_EDITING = ContextEditingMiddleware(edits=[ClearToolUsesEdit()])
-HUMAN_IN_THE_LOOP = HumanInTheLoopMiddleware(interrupt_on=InterruptOnConfig(allowed_decisions=[Literal["approve"],Literal["edit"],Literal["reject"]]))
+HUMAN_IN_THE_LOOP = HumanInTheLoopMiddleware(interrupt_on=InterruptOnConfig(allowed_decisions=["approve","edit","reject"]))
 
 EPF_AGENT_NAME = "epf-agent"
 SUPERVISOR_AGENT_NAME = "supervisor_agent"
