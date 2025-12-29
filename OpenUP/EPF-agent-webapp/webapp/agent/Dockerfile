@@ -10,4 +10,4 @@ RUN .venv/bin/python -m pip install uv
 
 RUN .venv/bin/python -m uv sync
 
-CMD [".venv/bin/python", "-m", "uvicorn", "--host", "0.0.0.0", "--port", "8123", "agent:app"]
+CMD [".venv/bin/python", "main.py"]
