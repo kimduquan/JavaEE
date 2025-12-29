@@ -88,7 +88,7 @@ PII = PIIMiddleware(pii_type="email")
 TOOL_RETRY = ToolRetryMiddleware()
 MODEL_RETRY = ModelRetryMiddleware()
 CONTEXT_EDITING = ContextEditingMiddleware(edits=[ClearToolUsesEdit()])
-HUMAN_IN_THE_LOOP = HumanInTheLoopMiddleware(interrupt_on=InterruptOnConfig(allowed_decisions=["approve","edit","reject"]))
+HUMAN_IN_THE_LOOP = HumanInTheLoopMiddleware(interrupt_on={"persistence": InterruptOnConfig(allowed_decisions=["approve","edit","reject"])})
 
 EPF_AGENT_NAME = "epf-agent"
 SUPERVISOR_AGENT_NAME = "supervisor_agent"
