@@ -1,5 +1,5 @@
 import asyncio
-from typing import Annotated, Any
+from typing import Annotated, Any, Literal
 from fastapi import Depends, FastAPI, Request
 from fastapi.responses import StreamingResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -16,7 +16,8 @@ from langchain_mcp_adapters.tools import load_mcp_tools
 from mcp.types import Prompt
 from langgraph.config import RunnableConfig
 from langgraph.runtime import Runtime
-from langchain.agents.middleware.types import AgentMiddleware
+from langchain.agents.middleware import AgentMiddleware, SummarizationMiddleware, ModelCallLimitMiddleware, HumanInTheLoopMiddleware, ToolCallLimitMiddleware, PIIMiddleware, ToolRetryMiddleware, ModelRetryMiddleware, ContextEditingMiddleware, ClearToolUsesEdit
+from langchain.agents.middleware.human_in_the_loop import InterruptOnConfig
 from ag_ui_langgraph import LangGraphAgent
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.store.memory import InMemoryStore
@@ -72,8 +73,22 @@ mcp_server_urls: dict[str, str] = {
     DEFAULT_SERVER_NAME: os.environ["MCP_SERVER_URL"],
 }
 mcp_servers: list[str] = [
-    DEFAULT_SERVER_NAME
+    DEFAULT_SERVER_NAME,
+    "query",
+    "persistence"
 ]
+
+MODEL_CALL_THREAD_LIMIT = int(os.environ["MODEL_CALL_THREAD_LIMIT"])
+MODEL_CALL_RUN_LIMIT = int(os.environ["MODEL_CALL_RUN_LIMIT"])
+MODEL_CALL_LIMIT = ModelCallLimitMiddleware(thread_limit=MODEL_CALL_THREAD_LIMIT, run_limit=MODEL_CALL_RUN_LIMIT, exit_behavior=Literal["error"])
+TOOL_CALL_THREAD_LIMIT = int(os.environ["TOOL_CALL_THREAD_LIMIT"])
+TOOL_CALL_RUN_LIMIT = int(os.environ["TOOL_CALL_RUN_LIMIT"])
+TOOL_CALL_LIMIT = ToolCallLimitMiddleware(thread_limit=TOOL_CALL_THREAD_LIMIT, run_limit=TOOL_CALL_RUN_LIMIT, exit_behavior="error")
+PII = PIIMiddleware(pii_type=Literal['email', 'credit_card', 'ip', 'mac_address', 'url'])
+TOOL_RETRY = ToolRetryMiddleware()
+MODEL_RETRY = ModelRetryMiddleware()
+CONTEXT_EDITING = ContextEditingMiddleware(edits=[ClearToolUsesEdit()])
+HUMAN_IN_THE_LOOP = HumanInTheLoopMiddleware(interrupt_on=InterruptOnConfig(allowed_decisions=[Literal["approve"],Literal["edit"],Literal["reject"]]))
 
 EPF_AGENT_NAME = "epf-agent"
 SUPERVISOR_AGENT_NAME = "supervisor_agent"
@@ -95,7 +110,7 @@ def load_servers():
         if(mcp_server_urls.get(server) == None):
             mcp_server_urls[server] = os.environ["MCP_SERVER_URL_FORMAT"].format(server)
 
-def get_connections(server_name: str, context: AgentContext) -> dict[str, Connection]:
+def get_connections(server_name: str) -> dict[str, Connection]:
     connections: dict[str, Connection] = {}
     for (mcp_server_name, mcp_server_url) in mcp_server_urls.items():
         if(mcp_server_name == server_name):
@@ -105,8 +120,8 @@ def get_connections(server_name: str, context: AgentContext) -> dict[str, Connec
         )
     return connections
 
-def get_client(server_name: str, context: AgentContext) -> MultiServerMCPClient:
-    connections = get_connections(server_name=server_name,context=context)
+def get_client(server_name: str) -> MultiServerMCPClient:
+    connections = get_connections(server_name=server_name)
     tool_interceptors = [EPFToolCallInterceptor()]
     client = MultiServerMCPClient(
         connections=connections,
@@ -127,7 +142,7 @@ async def list_prompts(client: MultiServerMCPClient, server_name: str) -> list[P
     return prompts
 
 async def create_sub_agent(server_name: str, agent_name: str, prompt: Prompt, context: AgentContext) -> CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]:
-    client = get_client(server_name=server_name,context=context)
+    client = get_client(server_name=server_name)
     tools: list[BaseTool] = await load_tools(client=client,server_name=server_name)
     system_prompt: str = prompt[0].content
     return create_agent(
@@ -153,7 +168,7 @@ def as_tool(name: str, prompt: Prompt, agent: CompiledStateGraph[EPFAgentState, 
     return tool
 
 async def create_supervisor_agent(supervisor_agent_name: str, server_name: str, context: AgentContext) -> CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]:
-    client = get_client(server_name=server_name, context=context)
+    client = get_client(server_name=server_name)
     prompts = await list_prompts(client=client, server_name=server_name)
     system_prompt: str | None = None
     sub_agent_prompts: list[Prompt] = []
@@ -173,12 +188,21 @@ async def create_supervisor_agent(supervisor_agent_name: str, server_name: str, 
         sub_agents.append(sub_agent)
         tool = as_tool(name=sub_agent_name, prompt=agent_prompt, agent=sub_agent)
         tools.append(tool)
-
     return create_agent(
         model=context.model,
         tools=tools,
         system_prompt=system_prompt,
-        middleware=EPFAgentMiddleware(),
+        middleware=[
+            MODEL_CALL_LIMIT,
+            TOOL_CALL_LIMIT,
+            PII,
+            TOOL_RETRY,
+            MODEL_RETRY,
+            CONTEXT_EDITING,
+            HUMAN_IN_THE_LOOP,
+            SummarizationMiddleware(model=context.model),
+            EPFAgentMiddleware()
+            ],
         state_schema=EPFAgentState,
         context_schema=AgentContext,
         checkpointer=context.checkpointer,

@@ -56,7 +56,15 @@ spec:
             - name: MCP_SERVER_URL_FORMAT
               value: "http://epf-mcp-gateway:9197/{name}/mcp"
             - name: JWT_KEY_URL
-              value: ""
+              value: "https://chipmunk-capable-prawn.ngrok-free.app/auth/realms/EPF-dev/protocol/openid-connect/certs"
+            - name: MODEL_CALL_THREAD_LIMIT
+              value: "10"
+            - name: MODEL_CALL_RUN_LIMIT
+              value: "5"
+            - name: TOOL_CALL_THREAD_LIMIT
+              value: "10"
+            - name: TOOL_CALL_RUN_LIMIT
+              value: "5"
           image: docker.io/epf-agent
           imagePullPolicy: IfNotPresent
           name: epf-agent
