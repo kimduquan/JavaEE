@@ -75,6 +75,8 @@ mcp_servers: list[str] = [
     "persistence"
 ]
 
+DEBUG = ("true" == os.getenv("DEBUG", "false"))
+
 MODEL_CALL_THREAD_LIMIT = int(os.environ["MODEL_CALL_THREAD_LIMIT"])
 MODEL_CALL_RUN_LIMIT = int(os.environ["MODEL_CALL_RUN_LIMIT"])
 MODEL_CALL_LIMIT = ModelCallLimitMiddleware(thread_limit=MODEL_CALL_THREAD_LIMIT, run_limit=MODEL_CALL_RUN_LIMIT, exit_behavior="error")
@@ -157,6 +159,7 @@ async def create_sub_agent(organization: str, server_name: str, agent_name: str,
         context_schema=AgentContext,
         checkpointer=checkpointer,
         store=store,
+        debug=DEBUG,
         name=agent_name,
         cache=cache)
 
@@ -223,6 +226,7 @@ async def create_supervisor_agent(organization: str) -> CompiledStateGraph[EPFAg
         context_schema=AgentContext,
         checkpointer=checkpointer,
         store=store,
+        debug=DEBUG,
         name=supervisor_agent_name,
         cache=cache)
 
@@ -241,7 +245,7 @@ async def create_supervisor(organization: str) -> CompiledStateGraph[UIAgentStat
     checkpointer = get_checkpointer(organization=organization)
     store = get_store(organization=organization)
     cache = get_cache(organization=organization)
-    return builder.compile(checkpointer=checkpointer, cache=cache, store=store, name=organization)
+    return builder.compile(checkpointer=checkpointer, cache=cache, store=store, debug=DEBUG, name=organization)
 
 async def supervisor_node(state: UIAgentState, config: RunnableConfig, runtime: Runtime[AgentContext]) -> dict[str, Any] | Any:
     context = AgentContext()
@@ -251,7 +255,7 @@ async def supervisor_node(state: UIAgentState, config: RunnableConfig, runtime: 
     context.organization = organization
     messages = copilotkit_messages_to_langchain(state["messages"])
     agent_state = EPFAgentState(messages=messages)
-    supervisor_agent = create_supervisor_agent(organization=organization)
+    supervisor_agent: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState] = create_supervisor_agent(organization=organization)
     output = await supervisor_agent.ainvoke(input=agent_state, config=config, context=context)
     output["messages"] = langchain_messages_to_copilotkit(output["messages"])
     return output

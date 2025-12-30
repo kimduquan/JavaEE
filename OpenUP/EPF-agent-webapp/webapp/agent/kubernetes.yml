@@ -65,6 +65,8 @@ spec:
               value: "10"
             - name: TOOL_CALL_RUN_LIMIT
               value: "5"
+            - name: DEBUG
+              value: "true"
           image: docker.io/epf-agent
           imagePullPolicy: IfNotPresent
           name: epf-agent
