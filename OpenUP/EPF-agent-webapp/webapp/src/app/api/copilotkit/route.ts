@@ -3,9 +3,6 @@ import {
   ExperimentalEmptyAdapter,
   copilotRuntimeNextJSAppRouterEndpoint,
 } from "@copilotkit/runtime";
-import { LangGraphAgent } from "@copilotkit/runtime/langgraph";
-import { NextRequest } from "next/server";
-
 import { LangGraphHttpAgent } from "@ag-ui/langgraph"
 import { NextRequest } from "next/server";
 import { getServerSession } from "next-auth";
@@ -13,6 +10,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
  
+const debug = ("true" == process.env.DEBUG);
 // 1. You can use any service adapter here for multi-agent support. We use
 //    the empty adapter since we're only using one agent.
 const serviceAdapter = new ExperimentalEmptyAdapter();
@@ -42,6 +40,8 @@ export const POST = async (req: NextRequest) => {
       "sample_agent": new LangGraphHttpAgent({
         url: process.env.EPF_AGENT_URL || "http://localhost:8123",
         headers: { "Authorization": "Bearer " + token?.accessToken },
+        threadId: token?.sub,
+        debug: debug
       }),
     }
   });
