@@ -57,6 +57,8 @@ spec:
               value: "http://epf-mcp-gateway:9197/{}/mcp"
             - name: JWT_KEY_URL
               value: "https://chipmunk-capable-prawn.ngrok-free.app/auth/realms/EPF-dev/protocol/openid-connect/certs"
+            - name: JWT_ISSUER
+              value: "https://chipmunk-capable-prawn.ngrok-free.app/auth/realms/EPF-dev"
             - name: MODEL_CALL_THREAD_LIMIT
               value: "10"
             - name: MODEL_CALL_RUN_LIMIT

@@ -266,7 +266,7 @@ def add_agent_endpoint(app: FastAPI, name: str, path: str = "/"):
     async def agent_endpoint(input_data: RunAgentInput, request: Request, credentials: Annotated[HTTPAuthorizationCredentials, Depends(security)]):
 
         key = jwk_client.get_signing_key_from_jwt(token=credentials.credentials)
-        claims = jwt.decode(jwt=credentials.credentials, key=key)
+        claims = jwt.decode(jwt=credentials.credentials, key=key, issuer=os.environ["JWT_ISSUER"])
         organization_claim: dict[str, Any] = claims["organization"]
         organization = list(organization_claim.keys())[0]
         config = RunnableConfig(configurable={"authorization": credentials, "claims": claims, "organization": organization}, run_id=UUID(input_data.run_id))
