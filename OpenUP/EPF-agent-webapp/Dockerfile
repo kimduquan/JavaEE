@@ -1,6 +1,7 @@
-FROM node:lts-slim
+FROM node:lts-alpine
 
-COPY --exclude=*agent* --exclude=*src* webapp /webapp
+COPY ./webapp/.next/standalone /webapp/
+COPY ./webapp/.next/static /webapp/.next/static
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DEBUG=1
@@ -10,11 +11,11 @@ RUN adduser --system --uid 1001 nextjs
 
 WORKDIR /webapp
 
-#USER nextjs
+USER nextjs
 
 EXPOSE 3000
 
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["npm", "run", "start", "--verbose"]
+CMD ["node", "server.js"]
