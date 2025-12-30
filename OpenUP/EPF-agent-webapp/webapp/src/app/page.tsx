@@ -12,6 +12,7 @@ import {
 } from "@copilotkit/react-core";
 import { CopilotKitCSSProperties, CopilotSidebar } from "@copilotkit/react-ui";
 import { useState } from "react";
+import { SessionProvider, useSession } from "next-auth/react"
 
 export default function CopilotKitPage() {
   const [themeColor, setThemeColor] = useState("#6366f1");
@@ -37,6 +38,7 @@ export default function CopilotKitPage() {
         { "--copilot-kit-primary-color": themeColor } as CopilotKitCSSProperties
       }
     >
+      <SessionProvider>
       <CopilotSidebar
         disableSystemMessage={true}
         clickOutsideToClose={false}
@@ -74,11 +76,13 @@ export default function CopilotKitPage() {
       >
         <YourMainContent themeColor={themeColor} />
       </CopilotSidebar>
+      </SessionProvider>
     </main>
   );
 }
 
 function YourMainContent({ themeColor }: { themeColor: string }) {
+  useSession({ required: true });
   // 🪁 Shared State: https://docs.copilotkit.ai/pydantic-ai/shared-state
   const { state, setState } = useCoAgent<AgentState>({
     name: "sample_agent",
