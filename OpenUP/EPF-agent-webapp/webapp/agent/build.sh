@@ -1,3 +1,3 @@
 . ../../../env.sh
 docker build -t epf/epf-agent:1.0.0 .
-mvn clean install -U
+mvn clean package -U
