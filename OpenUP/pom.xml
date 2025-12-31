@@ -1030,7 +1030,7 @@
 		<module>EPF-event-client</module>
 		<module>EPF-mail</module>
 		<module>EPF-agent-webapp</module>
-		<module>./EPF-agent-webapp/webapp/agent/EPF-agent</module>
+		<module>EPF-agent-webapp/webapp/agent</module>
 		<module>EPF-rules</module>
 		<module>EPF-lang</module>
 		<module>EPF-planning</module>
