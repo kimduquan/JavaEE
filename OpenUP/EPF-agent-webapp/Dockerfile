@@ -1,4 +1,4 @@
-FROM node:lts-alpine
+FROM node:22.21.1-alpine
 
 COPY ./webapp/.next/standalone /webapp/
 COPY ./webapp/.next/static /webapp/.next/static
