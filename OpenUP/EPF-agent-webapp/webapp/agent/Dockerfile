@@ -1,4 +1,4 @@
-FROM python:3.13
+FROM python:3.13-alpine
 
 COPY --exclude=Dockerfile --exclude=*venv --exclude=kubernetes.yml --exclude=*.sh --exclude=.env --exclude=src / /agent
 
