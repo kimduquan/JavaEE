@@ -4,4 +4,4 @@ npm run build --verbose
 cd ../
 docker build -t epf/epf-agent-webapp:1.0.0 .
 . ../env.sh
-mvn clean install -U
+mvn clean package -U
