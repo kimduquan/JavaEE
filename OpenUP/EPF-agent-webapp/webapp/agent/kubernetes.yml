@@ -52,7 +52,7 @@ spec:
                   key: VLLM_API_KEY
                   name: vllm
             - name: MCP_SERVER_URL
-              value: http://epf-mcp-gateway:9197/mcp
+              value: "http://epf-mcp-gateway:9197/mcp"
             - name: MCP_SERVER_URL_FORMAT
               value: "http://epf-mcp-gateway:9197/{}/mcp"
             - name: JWT_KEY_URL
