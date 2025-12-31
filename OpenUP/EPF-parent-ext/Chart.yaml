@@ -3,9 +3,9 @@ name: epf-parent
 version: 1.0.0
 apiVersion: v2
 dependencies:
-#- name: epf-cache
-#  version: "1.0.0"
-#  repository: "file://../EPF-cache/target/helm/kubernetes/epf-cache"
+- name: epf-cache
+  version: "1.0.0"
+  repository: "file://../EPF-cache/target/helm/kubernetes/epf-cache"
 - name: epf-concurrent
   version: "1.0.0"
   repository: "file://../EPF-concurrent/target/helm/kubernetes/epf-concurrent"
@@ -30,9 +30,9 @@ dependencies:
 - name: epf-management
   version: "1.0.0"
   repository: "file://../EPF-management/target/helm/kubernetes/epf-management"
-#- name: epf-mcp-gateway
-#  version: "1.0.0"
-#  repository: "file://../EPF-mcp-gateway/target/helm/kubernetes/epf-mcp-gateway"
+- name: epf-mcp-gateway
+  version: "1.0.0"
+  repository: "file://../EPF-mcp-gateway/target/helm/kubernetes/epf-mcp-gateway"
 - name: epf-messaging
   version: "1.0.0"
   repository: "file://../EPF-messaging/target/helm/kubernetes/epf-messaging"
