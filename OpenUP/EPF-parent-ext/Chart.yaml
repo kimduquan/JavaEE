@@ -57,3 +57,9 @@ dependencies:
 #- name: epf-workflow
 #  version: "1.0.0"
 #  repository: "file://../EPF-workflow-v1/target/helm/kubernetes/epf-workflow"
+- name: epf-agent-webapp
+  version: "1.0.0"
+  repository: "file://../EPF-agent-webapp/target/helm/kubernetes/epf-agent-webapp"
+- name: epf-agent
+  version: "1.0.0"
+  repository: "file://../EPF-agent-webapp/webapp/agent/target/helm/kubernetes/epf-agent"
