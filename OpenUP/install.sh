@@ -1,12 +1,2 @@
-cd EPF-persistence-portlet
-mvn clean install -U
-cd ../
-cd EPF-security-portlet
-mvn clean install -U
-cd ../
-cd EPF-file-portlet
-mvn clean install -U
-cd ../
-cd EPF-messaging-portlet
-mvn clean install -U
-cd ../
+helm dependency build EPF-parent-ext
+helm install epf-parent EPF-parent-ext --wait
