@@ -85,7 +85,7 @@ function YourMainContent({ themeColor }: { themeColor: string }) {
   useSession({ required: true });
   // 🪁 Shared State: https://docs.copilotkit.ai/pydantic-ai/shared-state
   const { state, setState } = useCoAgent<AgentState>({
-    name: "sample_agent",
+    name: "epf-agent",
     initialState: {
       proverbs: [
         "CopilotKit may be new, but its the best thing since sliced bread.",
