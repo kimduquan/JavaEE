@@ -48,9 +48,9 @@ dependencies:
 - name: epf-registry
   version: "1.0.0"
   repository: "file://../EPF-registry/target/helm/kubernetes/epf-registry"
-#- name: epf-transaction
-#  version: "1.0.0"
-#  repository: "file://../EPF-transaction/target/helm/kubernetes/epf-transaction"
+- name: epf-transaction
+  version: "1.0.0"
+  repository: "file://../EPF-transaction/target/helm/kubernetes/epf-transaction"
 #- name: epf-workflow-management
 #  version: "1.0.0"
 #  repository: "file://../EPF-workflow-management/target/helm/kubernetes/epf-workflow-management"
