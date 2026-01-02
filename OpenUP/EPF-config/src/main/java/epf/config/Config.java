@@ -55,10 +55,6 @@ public class Config {
 	@Inject
 	transient String googleClientSecret;
     
-    @ConfigProperty(name = Naming.Security.Auth.AUTH_URL)
-    @Inject
-    transient String authUrl;
-    
     @ConfigProperty(name = Naming.Security.Auth.FACEBOOK_PROVIDER)
 	@Inject
 	transient String facebookOpenIDDiscoveryUrl;
@@ -86,7 +82,6 @@ public class Config {
     	configs.put(Naming.Security.Auth.FACEBOOK_PROVIDER, facebookOpenIDDiscoveryUrl);
     	configs.put(Naming.Security.Auth.FACEBOOK_CLIENT_ID, facebookClientId);
     	configs.put(Naming.Security.Auth.FACEBOOK_CLIENT_SECRET, facebookClientSecret);
-    	configs.put(Naming.Security.Auth.AUTH_URL, authUrl);
     	configs.put(Naming.WebApp.Messaging.MESSAGES_LIMIT, String.valueOf(messagesLimit));
     	try {
         	configs.put(Naming.Security.JWT.VERIFIER_PUBLIC_KEY, FileUtil.readString(publicKeyLocation, "UTF-8"));
