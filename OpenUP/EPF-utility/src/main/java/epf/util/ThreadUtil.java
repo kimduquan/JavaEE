@@ -18,7 +18,7 @@ public interface ThreadUtil {
 			Thread.sleep(duration.toMillis());
 		} 
 		catch (Exception e) {
-			e.toString();
+			e.printStackTrace();
 		}
 	}
 }
