@@ -1,0 +1,1 @@
+docker run --name ollama --runtime nvidia --gpus all -v ollama:/root/.ollama -p 11434:11434 ollama/ollama
