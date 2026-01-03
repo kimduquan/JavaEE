@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
-
 import { CopilotKit } from "@copilotkit/react-core";
-import "./globals.css";
-import "@copilotkit/react-ui/styles.css";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
