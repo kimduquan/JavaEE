@@ -52,7 +52,6 @@ public class TokenBuilder {
 	    jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.RSA_USING_SHA256);
 		jws.setPayload(claims.toJson());
 	    jws.setKey(privateKey);
-	    privateKey.getAlgorithm();
 	    try {
 			final String jwt = jws.getCompactSerialization();
 		    token.setRawToken(jwt);
