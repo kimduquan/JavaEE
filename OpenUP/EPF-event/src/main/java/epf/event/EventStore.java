@@ -126,7 +126,6 @@ public class EventStore implements Event {
 		final SelectQuery query = null;
 		final Stream<CommunicationEntity> entities = manager.select(query);
 		event.setTime(String.valueOf(Instant.now().toEpochMilli()));
-		entities.map(entity -> eventEntity(entity, event));
 		final Iterable<CommunicationEntity> updatedEntities = manager.update(entities.collect(Collectors.toList()));
 		int index = 0;
 		for(CommunicationEntity eventEntity : updatedEntities) {
