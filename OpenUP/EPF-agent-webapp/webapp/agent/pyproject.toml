@@ -14,5 +14,7 @@ dependencies = [
     "copilotkit>=0.1.74",
     "langgraph-api>=0.6.0",
     "langchain-mcp-adapters==0.2.1",
-    "aiocache==0.12.3"
+    "aiocache==0.12.3",
+    "langgraph-checkpoint-redis==0.3.1",
+    "langchain-redis==0.2.5"
 ]

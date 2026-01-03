@@ -18,9 +18,6 @@ from langgraph.runtime import Runtime
 from langchain.agents.middleware import AgentMiddleware, SummarizationMiddleware, ModelCallLimitMiddleware, HumanInTheLoopMiddleware, ToolCallLimitMiddleware, PIIMiddleware, ToolRetryMiddleware, ModelRetryMiddleware, ContextEditingMiddleware, ClearToolUsesEdit
 from langchain.agents.middleware.human_in_the_loop import InterruptOnConfig
 from ag_ui_langgraph import LangGraphAgent
-from langgraph.checkpoint.memory import InMemorySaver
-from langgraph.store.memory import InMemoryStore
-from langgraph.cache.memory import InMemoryCache
 from ag_ui.core.types import RunAgentInput
 from ag_ui.encoder import EventEncoder
 from langgraph.types import Checkpointer
@@ -33,6 +30,11 @@ from copilotkit import CopilotKitState
 from copilotkit.langgraph import copilotkit_messages_to_langchain, langchain_messages_to_copilotkit, copilotkit_customize_config
 from langchain_mcp_adapters.interceptors import MCPToolCallRequest, ToolCallInterceptor
 from aiocache import cached
+from langgraph.checkpoint.redis import RedisSaver
+from langgraph.checkpoint.redis.base import CHECKPOINT_PREFIX, CHECKPOINT_BLOB_PREFIX, CHECKPOINT_WRITE_PREFIX
+from langgraph.store.redis import RedisStore
+from langgraph.store.redis.base import STORE_PREFIX, STORE_VECTOR_PREFIX
+from langchain_redis import RedisCache
 
 class UIAgentState(CopilotKitState):
     """"""
@@ -169,15 +171,29 @@ def get_model(organization: str) -> ChatOpenAI:
 
 @cached
 def get_checkpointer(organization: str) -> Checkpointer:
-    return InMemorySaver()
+    redis_url = os.environ["CHECKPOINTER_PERSISTENCE_URL_FORMAT"].format(organization)
+    checkpoint_prefix = CHECKPOINT_PREFIX + "-" + organization
+    checkpoint_blob_prefix = CHECKPOINT_BLOB_PREFIX + "-" + organization
+    checkpoint_write_prefix = CHECKPOINT_WRITE_PREFIX + "-" + organization
+    with RedisSaver.from_conn_string(redis_url=redis_url, checkpoint_prefix=checkpoint_prefix, checkpoint_blob_prefix=checkpoint_blob_prefix, checkpoint_write_prefix=checkpoint_write_prefix) as checkpointer:
+        checkpointer.setup()
+        return checkpointer
 
 @cached
 def get_store(organization: str) -> BaseStore:
-    return InMemoryStore()
+    conn_string = os.environ["STORE_PERSISTENCE_URL_FORMAT"].format(organization)
+    store_prefix = STORE_PREFIX + "-" + organization
+    vector_prefix = STORE_VECTOR_PREFIX + "-" + organization
+    with RedisStore.from_conn_string(conn_string=conn_string, store_prefix=store_prefix, vector_prefix=vector_prefix) as store:
+        store.setup()
+        return store
 
 @cached
 def get_cache(organization: str) -> BaseCache:
-    return InMemoryCache()
+    redis_url = os.environ["CACHE_PERSISTENCE_URL_FORMAT"].format(organization)
+    prefix = "redis-" + organization
+    redis_cache = RedisCache(redis_url=redis_url, prefix=prefix)
+    return redis_cache
 
 @cached
 async def create_supervisor_agent(organization: str) -> CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]:
