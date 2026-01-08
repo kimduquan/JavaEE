@@ -12,6 +12,7 @@
 ## @param global.defaultStorageClass Global default StorageClass for Persistent Volume(s)
 ## @param global.storageClass DEPRECATED: use global.defaultStorageClass instead
 ## @param global.namespaceOverride Override the namespace for resource deployed by the chart, but can itself be overridden by the local namespaceOverride
+## @param global.defaultFips Default value for the FIPS configuration (allowed values: '', restricted, relaxed, off). Can be overriden by the 'fips' object
 ##
 global:
   imageRegistry: ""
@@ -26,7 +27,7 @@ global:
   ##
   security:
     ## @param global.security.allowInsecureImages Allows skipping image verification
-    allowInsecureImages: true
+    allowInsecureImages: false
   namespaceOverride: ""
   ## Compatibility adaptations for Kubernetes platforms
   ##
@@ -37,6 +38,9 @@ global:
       ## @param global.compatibility.openshift.adaptSecurityContext Adapt the securityContext sections of the deployment to make them compatible with Openshift restricted-v2 SCC: remove runAsUser, runAsGroup and fsGroup and let the platform use their allowed default IDs. Possible values: auto (apply if the detected running cluster is Openshift), force (perform the adaptation always), disabled (do not perform adaptation)
       ##
       adaptSecurityContext: auto
+  ##  Configure FIPS mode: '', 'restricted', 'relaxed', 'off'
+  ##
+  defaultFips: restricted
 ## @section Common parameters
 ##
 
@@ -137,8 +141,8 @@ diagnosticMode:
 ## @param image.debug Set to true if you would like to see extra information on logs
 ##
 image:
-  registry: docker.io
-  repository: bitnamisecure/mongodb
+  registry: registry-1.docker.io
+  repository: bitnami/mongodb
   tag: latest
   digest: ""
   ## Specify a imagePullPolicy
@@ -263,8 +267,8 @@ tls:
   ## @param tls.extraDnsNames Add extra dns names to the CA, can solve x509 auth issue for pod clients
   ##
   image:
-    registry: docker.io
-    repository: bitnamisecure/nginx
+    registry: registry-1.docker.io
+    repository: bitnami/nginx
     tag: latest
     digest: ""
     pullPolicy: IfNotPresent
@@ -312,6 +316,10 @@ tls:
     limits:
       cpu: 150m
       memory: 192Mi
+  ## @param tls.fips.openssl Configure OpenSSL FIPS mode: '', 'restricted', 'relaxed', 'off'. If empty (""), 'global.defaultFips' would be used
+  ##
+  fips:
+    openssl: ""
   ## Init Container securityContext
   ## ref: https://kubernetes.io/docs/concepts/security/pod-security-policy/
   ## @param tls.securityContext Init container generate-tls-cert Security context
@@ -634,6 +642,10 @@ resources:
   limits:
     cpu: 500m
     memory: 768Mi
+## @param fips.openssl Configure OpenSSL FIPS mode: '', 'restricted', 'relaxed', 'off'. If empty (""), 'global.defaultFips' would be used
+##
+fips:
+  openssl: ""
 ## @param containerPorts.mongodb MongoDB(&reg;) container port
 ##
 containerPorts:
@@ -822,12 +834,11 @@ service:
   ## ref https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
   ##
   externalTrafficPolicy: Local
-  ## @param service.sessionAffinity Control where client requests go, to the same pod or round-robin
-  ## Values: ClientIP or None
+  ## @param service.sessionAffinity Control where client requests go, to the same pod or round-robin. Allowed values: `ClientIP` or `None`
   ## ref: https://kubernetes.io/docs/concepts/services-networking/service/
   ##
   sessionAffinity: None
-  ## @param service.sessionAffinityConfig Additional settings for the sessionAffinity
+  ## @param service.sessionAffinityConfig Additional settings for the sessionAffinity. Ignored if `service.sessionAffinity` is `None`
   ## sessionAffinityConfig:
   ##   clientIP:
   ##     timeoutSeconds: 300
@@ -867,8 +878,8 @@ externalAccess:
     ## @param externalAccess.autoDiscovery.image.pullSecrets Init container auto-discovery image pull secrets
     ##
     image:
-      registry: docker.io
-      repository: bitnamisecure/kubectl
+      registry: registry-1.docker.io
+      repository: bitnami/kubectl
       tag: latest
       digest: ""
       ## Specify a imagePullPolicy
@@ -903,6 +914,10 @@ externalAccess:
     ##     memory: 1024Mi
     ##
     resources: {}
+    ## @param externalAccess.autoDiscovery.fips.openssl Configure OpenSSL FIPS mode: '', 'restricted', 'relaxed', 'off'. If empty (""), 'global.defaultFips' would be used
+    ##
+    fips:
+      openssl: ""
   ## Init container what mission is ensure public names can be resolved.
   ##
   dnsCheck:
@@ -916,8 +931,8 @@ externalAccess:
     ## @param externalAccess.dnsCheck.image.pullSecrets Init container dns-check image pull secrets
     ##
     image:
-      registry: docker.io
-      repository: bitnamisecure/os-shell
+      registry: registry-1.docker.io
+      repository: bitnami/os-shell
       tag: latest
       digest: ""
       ## Specify a imagePullPolicy
@@ -952,6 +967,10 @@ externalAccess:
     ##     memory: 1024Mi
     ##
     resources: {}
+    ## @param externalAccess.dnsCheck.fips.openssl Configure OpenSSL FIPS mode: '', 'restricted', 'relaxed', 'off'. If empty (""), 'global.defaultFips' would be used
+    ##
+    fips:
+      openssl: ""
   ## Parameters to configure a set of Pods that connect to an existing MongoDB(&reg;) deployment that lies outside of Kubernetes.
   ## @param externalAccess.externalMaster.enabled Use external master for bootstrapping
   ## @param externalAccess.externalMaster.host External master host to bootstrap from
@@ -1029,12 +1048,11 @@ externalAccess:
     ##     - external-dns.alpha.kubernetes.io/hostname: mongodb-1.example.com
     ##
     annotationsList: []
-    ## @param externalAccess.service.sessionAffinity Control where client requests go, to the same pod or round-robin
-    ## Values: ClientIP or None
+    ## @param externalAccess.service.sessionAffinity Control where client requests go, to the same pod or round-robin. Allowed values: `ClientIP` or `None`
     ## ref: https://kubernetes.io/docs/concepts/services-networking/service/
     ##
     sessionAffinity: None
-    ## @param externalAccess.service.sessionAffinityConfig Additional settings for the sessionAffinity
+    ## @param externalAccess.service.sessionAffinityConfig Additional settings for the sessionAffinity. Ignored if `externalAccess.service.sessionAffinity` is `None`
     ## sessionAffinityConfig:
     ##   clientIP:
     ##     timeoutSeconds: 300
@@ -1104,12 +1122,11 @@ externalAccess:
       ## @param externalAccess.hidden.service.annotations Service annotations for external access
       ##
       annotations: {}
-      ## @param externalAccess.hidden.service.sessionAffinity Control where client requests go, to the same pod or round-robin
-      ## Values: ClientIP or None
+      ## @param externalAccess.hidden.service.sessionAffinity Control where client requests go, to the same pod or round-robin. Allowed values: `ClientIP` or `None`
       ## ref: https://kubernetes.io/docs/concepts/services-networking/service/
       ##
       sessionAffinity: None
-      ## @param externalAccess.hidden.service.sessionAffinityConfig Additional settings for the sessionAffinity
+      ## @param externalAccess.hidden.service.sessionAffinityConfig Additional settings for the sessionAffinity. Ignored if `externalAccess.hidden.service.sessionAffinity` is `None`
       ## sessionAffinityConfig:
       ##   clientIP:
       ##     timeoutSeconds: 300
@@ -1205,7 +1222,7 @@ passwordUpdateJob:
   ## @param passwordUpdateJob.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if passwordUpdateJob.resources is set (passwordUpdateJob.resources is recommended for production).
   ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
   ##
-  resourcesPreset: "nano"
+  resourcesPreset: "micro"
   ## @param passwordUpdateJob.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
   ## Example:
   ## resources:
@@ -1217,6 +1234,10 @@ passwordUpdateJob:
   ##     memory: 1024Mi
   ##
   resources: {}
+  ## @param passwordUpdateJob.fips.openssl Configure OpenSSL FIPS mode: '', 'restricted', 'relaxed', 'off'. If empty (""), 'global.defaultFips' would be used
+  ##
+  fips:
+    openssl: ""
   ## @param passwordUpdateJob.customLivenessProbe Custom livenessProbe that overrides the default one
   ##
   customLivenessProbe: {}
@@ -1244,8 +1265,6 @@ passwordUpdateJob:
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
   ##
   podAnnotations: {}
-
-
 ## @section Network policy parameters
 ##
 
@@ -1479,6 +1498,10 @@ backup:
     ##     memory: 1024Mi
     ##
     resources: {}
+    ## @param backup.cronjob.fips.openssl Configure OpenSSL FIPS mode: '', 'restricted', 'relaxed', 'off'. If empty (""), 'global.defaultFips' would be used
+    ##
+    fips:
+      openssl: ""
     ## @param backup.cronjob.command Set backup container's command to run
     ##
     command: []
@@ -1645,8 +1668,8 @@ volumePermissions:
   ## @param volumePermissions.image.pullSecrets Specify docker-registry secret names as an array
   ##
   image:
-    registry: docker.io
-    repository: bitnamisecure/os-shell
+    registry: registry-1.docker.io
+    repository: bitnami/os-shell
     tag: latest
     digest: ""
     ## Specify a imagePullPolicy
@@ -1681,6 +1704,10 @@ volumePermissions:
   ##     memory: 1024Mi
   ##
   resources: {}
+  ## @param volumePermissions.fips.openssl Configure OpenSSL FIPS mode: '', 'restricted', 'relaxed', 'off'. If empty (""), 'global.defaultFips' would be used
+  ##
+  fips:
+    openssl: ""
   ## Init container Security Context
   ## Note: the chown of the data folder is done to containerSecurityContext.runAsUser
   ## and not the below volumePermissions.securityContext.runAsUser
@@ -1905,6 +1932,10 @@ arbiter:
     limits:
       cpu: 150m
       memory: 192Mi
+  ## @param arbiter.fips.openssl Configure OpenSSL FIPS mode: '', 'restricted', 'relaxed', 'off'. If empty (""), 'global.defaultFips' would be used
+  ##
+  fips:
+    openssl: ""
   ## @param arbiter.containerPorts.mongodb MongoDB(&reg;) arbiter container port
   ##
   containerPorts:
@@ -2248,6 +2279,10 @@ hidden:
   ##     memory: 1024Mi
   ##
   resources: {}
+  ## @param hidden.fips.openssl Configure OpenSSL FIPS mode: '', 'restricted', 'relaxed', 'off'. If empty (""), 'global.defaultFips' would be used
+  ##
+  fips:
+    openssl: ""
   ## @param hidden.containerPorts.mongodb MongoDB(&reg;) hidden container port
   ##
   containerPorts:
@@ -2451,8 +2486,8 @@ metrics:
   ## @param metrics.image.pullSecrets Specify docker-registry secret names as an array
   ##
   image:
-    registry: docker.io
-    repository: bitnamisecure/mongodb-exporter
+    registry: registry-1.docker.io
+    repository: bitnami/mongodb-exporter
     tag: latest
     digest: ""
     pullPolicy: IfNotPresent
@@ -2527,6 +2562,12 @@ metrics:
   ##     memory: 1024Mi
   ##
   resources: {}
+  ## @param metrics.fips.openssl Configure OpenSSL FIPS mode: '', 'restricted', 'relaxed', 'off'. If empty (""), 'global.defaultFips' would be used
+  ## @param metrics.fips.golang Configure Golang FIPS mode: '', 'restricted', 'relaxed', 'off'. If empty (""), 'global.defaultFips' would be used
+  ##
+  fips:
+    openssl: ""
+    golang: relaxed
   ## @param metrics.containerPort Port of the Prometheus metrics container
   ##
   containerPort: 9216
