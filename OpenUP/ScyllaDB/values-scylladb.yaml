@@ -160,7 +160,7 @@ cluster:
   name: scylladb
   seedCount: 1
   numTokens: 256
-  datacenter: datacenter1
+  datacenter: dc1
   rack: rack1
   endpointSnitch: SimpleSnitch
   ## eg:
