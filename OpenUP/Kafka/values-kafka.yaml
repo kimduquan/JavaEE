@@ -22,7 +22,7 @@ global:
   ##
   security:
     ## @param global.security.allowInsecureImages Allows skipping image verification
-    allowInsecureImages: false
+    allowInsecureImages: true
   ## Compatibility adaptations for Kubernetes platforms
   ##
   compatibility:
@@ -96,7 +96,7 @@ serviceBindings:
 ##
 image:
   registry: docker.io
-  repository: bitnami/kafka
+  repository: bitnamilegacy/kafka
   tag: 4.0.0-debian-12-r10
   digest: ""
   ## Specify a imagePullPolicy
@@ -487,8 +487,8 @@ defaultInitContainers:
     ##
     image:
       registry: docker.io
-      repository: bitnami/os-shell
-      tag: 12-debian-12-r51
+      repository: bitnamisecure/os-shell
+      tag: latest
       digest: ""
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
@@ -614,8 +614,8 @@ defaultInitContainers:
     ##
     image:
       registry: docker.io
-      repository: bitnami/kubectl
-      tag: 1.33.4-debian-12-r0
+      repository: bitnamisecure/kubectl
+      tag: latest
       digest: ""
       ## Specify a imagePullPolicy
       ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
@@ -1120,7 +1120,7 @@ controller:
   logPersistence:
     ## @param controller.logPersistence.enabled Enable Kafka logs persistence using PVC
     ##
-    enabled: false
+    enabled: true
     ## @param controller.logPersistence.existingClaim A manually managed Persistent Volume and Claim
     ## If defined, PVC must be created manually before volume will be bound
     ## The value is evaluated as a template
@@ -2024,8 +2024,8 @@ metrics:
     ##
     image:
       registry: docker.io
-      repository: bitnami/jmx-exporter
-      tag: 1.4.0-debian-12-r0
+      repository: bitnamisecure/jmx-exporter
+      tag: latest
       digest: ""
       ## Specify a imagePullPolicy
       ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
