@@ -660,7 +660,7 @@ containerPorts:
 ## @param livenessProbe.successThreshold Success threshold for livenessProbe
 ##
 livenessProbe:
-  enabled: true
+  enabled: false
   initialDelaySeconds: 30
   periodSeconds: 20
   timeoutSeconds: 10
@@ -676,7 +676,7 @@ livenessProbe:
 ## @param readinessProbe.successThreshold Success threshold for readinessProbe
 ##
 readinessProbe:
-  enabled: true
+  enabled: false
   initialDelaySeconds: 5
   periodSeconds: 10
   timeoutSeconds: 5
@@ -1351,7 +1351,7 @@ persistence:
   existingClaim: ""
   ## @param persistence.resourcePolicy Setting it to "keep" to avoid removing PVCs during a helm delete operation. Leaving it empty will delete PVCs after the chart deleted
   ##
-  resourcePolicy: ""
+  resourcePolicy: "keep"
   ## @param persistence.storageClass PVC Storage Class for MongoDB(&reg;) data volume
   ## If defined, storageClassName: <storageClass>
   ## If set to "-", storageClassName: "", which disables dynamic provisioning
@@ -1520,7 +1520,7 @@ backup:
       existingClaim: ""
       ## @param backup.cronjob.storage.resourcePolicy Setting it to "keep" to avoid removing PVCs during a helm delete operation. Leaving it empty will delete PVCs after the chart deleted
       ##
-      resourcePolicy: ""
+      resourcePolicy: "keep"
       ## @param backup.cronjob.storage.storageClass PVC Storage Class for the backup data volume
       ## If defined, storageClassName: <storageClass>
       ## If set to "-", storageClassName: "", which disables dynamic provisioning
