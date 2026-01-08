@@ -22,7 +22,7 @@ global:
   ##
   security:
     ## @param global.security.allowInsecureImages Allows skipping image verification
-    allowInsecureImages: true
+    allowInsecureImages: false
   ## Compatibility adaptations for Kubernetes platforms
   ##
   compatibility:
@@ -96,7 +96,7 @@ serviceBindings:
 ##
 image:
   registry: docker.io
-  repository: bitnamilegacy/kafka
+  repository: bitnami/kafka
   tag: 4.0.0-debian-12-r10
   digest: ""
   ## Specify a imagePullPolicy
@@ -113,7 +113,7 @@ image:
   pullSecrets: []
   ## Set to true if you would like to see extra information on logs
   ##
-  debug: true
+  debug: false
 
 ## @param clusterId Kafka Kraft cluster ID (ignored if existingKraftSecret is set). A random cluster ID will be generated the 1st time Kraft is initialized if not set.
 ## NOTE: Already initialized Kafka nodes will use cluster ID stored in their persisted storage.
@@ -487,8 +487,8 @@ defaultInitContainers:
     ##
     image:
       registry: docker.io
-      repository: bitnamisecure/os-shell
-      tag: latest
+      repository: bitnami/os-shell
+      tag: 12-debian-12-r51
       digest: ""
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
@@ -614,8 +614,8 @@ defaultInitContainers:
     ##
     image:
       registry: docker.io
-      repository: bitnamisecure/kubectl
-      tag: latest
+      repository: bitnami/kubectl
+      tag: 1.33.4-debian-12-r0
       digest: ""
       ## Specify a imagePullPolicy
       ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
@@ -2024,8 +2024,8 @@ metrics:
     ##
     image:
       registry: docker.io
-      repository: bitnamisecure/jmx-exporter
-      tag: latest
+      repository: bitnami/jmx-exporter
+      tag: 1.4.0-debian-12-r0
       digest: ""
       ## Specify a imagePullPolicy
       ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
