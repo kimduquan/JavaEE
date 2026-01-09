@@ -277,8 +277,8 @@ extraEnvVarsSecret: ""
 ## @param containerPorts.management Keycloak management container port
 ##
 containerPorts:
-  https: 8443
   http: 8080
+  https: 8443
   management: 9000
 ## @param extraContainerPorts Optionally specify extra list of additional ports for Keycloak container
 ## e.g:
@@ -1321,9 +1321,9 @@ postgresql:
 ## @param externalDatabase.extraParams Additional JDBC connection parameters appended to the JDBC URL (KC_DB_URL).
 ##
 externalDatabase:
-  host: "supavisor"
-  port: 6543
-  user: keycloak.keycloak
+  host: "postgresql-primary"
+  port: 5432
+  user: keycloak
   database: keycloak
   schema: public
   password: "090323508"
