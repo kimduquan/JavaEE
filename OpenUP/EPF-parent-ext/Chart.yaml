@@ -39,12 +39,12 @@ dependencies:
 #- name: epf-net
 #  version: "1.0.0"
 #  repository: "file://../EPF-net/target/helm/kubernetes/epf-net"
-#- name: epf-persistence
-#  version: "1.0.0"
-#  repository: "file://../EPF-persistence/target/helm/kubernetes/epf-persistence"
-#- name: epf-query
-#  version: "1.0.0"
-#  repository: "file://../EPF-query/target/helm/kubernetes/epf-query"
+- name: epf-persistence
+  version: "1.0.0"
+  repository: "file://../EPF-persistence/target/helm/kubernetes/epf-persistence"
+- name: epf-query
+  version: "1.0.0"
+  repository: "file://../EPF-query/target/helm/kubernetes/epf-query"
 - name: epf-registry
   version: "1.0.0"
   repository: "file://../EPF-registry/target/helm/kubernetes/epf-registry"
