@@ -13,7 +13,8 @@
     "users": [
       {
         "db_password": "090323508",
-        "db_user": "keycloak",
+        "db_user": "keycloak.keycloak",
+        "db_user_alias": "keycloak",
         "max_clients": 25000,
         "mode_type": "session",
         "pool_checkout_timeout": 1000,
