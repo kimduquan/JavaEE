@@ -1,4 +1,4 @@
-#kubectl delete secret supavisor
+kubectl delete secret supavisor
 kubectl delete hpa supavisor
 kubectl create secret generic supavisor --from-literal=SECRET_KEY_BASE="$(openssl rand -hex 32)" --from-literal=API_JWT_SECRET="$(openssl rand -hex 32)" --from-literal=METRICS_JWT_SECRET="$(openssl rand -hex 32)" --from-literal=VAULT_ENC_KEY="$(openssl rand -hex 16)"
 kubectl apply -f kubernetes.yml
