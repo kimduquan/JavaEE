@@ -4,3 +4,7 @@ kubectl delete cm oidc
 kubectl create cm oidc --from-literal=OIDC_PROVIDER_URI='https://chipmunk-capable-prawn.ngrok-free.app/auth/realms/EPF-dev/.well-known/openid-configuration'
 helm install wildfly oci://registry-1.docker.io/bitnamicharts/wildfly -f values-wildfly.yaml
 #/opt/bitnami/wildfly/bin/jboss-cli.sh --connect --controller=127.0.0.1:9990
+#/opt/bitnami/wildfly/bin/jboss-cli.sh --connect '/subsystem=undertow/application-security-domain=other:write-attribute(name=integrated-jaspi, value=false)'
+#/opt/bitnami/wildfly/bin/jboss-cli.sh --connect '/subsystem=undertow/server=default-server/host=default-host/location="\/":remove()'
+#/opt/bitnami/wildfly/bin/jboss-cli.sh --connect '/subsystem=undertow/configuration=handler/file=welcome-content:remove()'
+#/opt/bitnami/wildfly/bin/jboss-cli.sh --connect ':reload'
