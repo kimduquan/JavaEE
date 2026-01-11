@@ -1,5 +1,6 @@
 package epf.persistence.internal;
 
+import java.util.Optional;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import epf.naming.Naming;
 import epf.persistence.util.PersistenceConnectionResolver;
@@ -27,6 +28,14 @@ public class ConnectionResolver extends PersistenceConnectionResolver<QuarkusCon
 	@Inject
     @ConfigProperty(name = Naming.Persistence.Internal.CONNECTION_POOL_SIZE)
 	int connectionPoolSize;
+	
+	@Inject
+    @ConfigProperty(name = Naming.Persistence.Internal.DEFAULT_USER)
+	Optional<String> user;
+	
+	@Inject
+    @ConfigProperty(name = Naming.Persistence.Internal.DEFAULT_PASSWORD)
+	Optional<String> password;
 	
 	@Inject
 	transient TransactionManager transactionManager;
@@ -57,5 +66,15 @@ public class ConnectionResolver extends PersistenceConnectionResolver<QuarkusCon
 	@Override
 	protected int getConnectionPoolSize() {
 		return connectionPoolSize;
+	}
+
+	@Override
+	protected Optional<String> getDefaultPassword() {
+		return user;
+	}
+
+	@Override
+	protected Optional<String> getDefaultUser() {
+		return password;
 	}
 }

@@ -1,3 +1,4 @@
 kubectl create secret generic smtp --from-literal=smtp-password=""
+kubectl create secret generic odoo --from-literal=user="odoo.odoo" --from-literal=password="090323508" --from-literal=postgres-password="090323508"
 helm install odoo oci://registry-1.docker.io/bitnamicharts/odoo -f values-odoo.yaml
 #helm install odoo oci://registry-1.docker.io/bitnamicharts/odoo -f values-odoo.yaml --set externalDatabase.host=postgresql-primary --set externalDatabase.port=5432 --set externalDatabase.postgresqlPostgresUser=postgres --set externalDatabase.database=odoo_template --set externalDatabase.create=false --set loadDemoData=false --set persistence.resourcePolicy=""

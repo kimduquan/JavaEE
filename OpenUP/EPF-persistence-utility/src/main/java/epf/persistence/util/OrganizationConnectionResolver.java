@@ -1,6 +1,7 @@
 package epf.persistence.util;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import epf.management.util.OrganizationUtil;
 import io.agroal.api.AgroalDataSource;
@@ -22,20 +23,28 @@ public abstract class OrganizationConnectionResolver<Connection> {
 	protected abstract String getJdbcUrlFormat();
 	protected abstract int getConnectionPoolSize();
 	protected abstract String getExternalId(final String organizationId);
+	protected abstract Optional<String> getDefaultPassword();
+	protected abstract Optional<String> getDefaultUser();
 	
 	public Connection resolve(final String tenantId) {
 		return connections.computeIfAbsent(tenantId, organizationId -> {
 			final String externalId = getExternalId(tenantId);
 			final String database = OrganizationUtil.getDefaultDatabase(organizationId);
-			final String userName = OrganizationUtil.getDefaultUserName(organizationId);
-			final String password = OrganizationUtil.getDefaultPassword(organizationId);
+			String userName = getDefaultUser().orElse(null);
+			if(userName == null) {
+				userName = OrganizationUtil.getDefaultUserName(organizationId) + "." + externalId;
+			}
+			String password = getDefaultPassword().orElse(null);
+			if(password == null) {
+				OrganizationUtil.getDefaultPassword(organizationId);
+			}
 			final String jdbcUrl = String.format(getJdbcUrlFormat(), database);
 			final AgroalDataSourceConfigurationSupplier supplier = new AgroalDataSourceConfigurationSupplier();
 			final TransactionIntegration transactionIntegration = getTransactionIntegration();
 			final AgroalConnectionPoolConfigurationSupplier connectionSupplier = supplier.connectionPoolConfiguration();
 			connectionSupplier.maxSize(getConnectionPoolSize())
 			.connectionFactoryConfiguration()
-			.credential(new NamePrincipal(userName + "." + externalId))
+			.credential(new NamePrincipal(userName))
 			.credential(new SimplePassword(password))
 			.jdbcUrl(jdbcUrl);
 			if(transactionIntegration != null) {

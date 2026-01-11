@@ -3,6 +3,7 @@ package epf.management.internal;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -25,6 +26,14 @@ public class PersistenceManagement {
 	@Inject
 	@ConfigProperty(name = Naming.Management.Internal.PERSISTENCE_TEMPLATE)
 	String databaseTemplate;
+	
+	@Inject
+	@ConfigProperty(name = Naming.Persistence.Internal.DEFAULT_USER)
+	Optional<String> defaultUser;
+	
+	@Inject
+	@ConfigProperty(name = Naming.Persistence.Internal.DEFAULT_PASSWORD)
+	Optional<String> defaultPassword;
 	
 	@Inject
 	@ConfigProperty(name = Naming.Management.Internal.PERSISTENCE_DATASOURCE_HOST)
@@ -52,14 +61,20 @@ public class PersistenceManagement {
 
 	public void createPersistence(final Organization organization, final Principal principal) throws Exception {
 		final String databaseName = OrganizationUtil.getDefaultDatabase(organization.getId());
-		final String defaultUserName = OrganizationUtil.getDefaultUserName(organization.getId());
-		final String defaultPassword = OrganizationUtil.getDefaultPassword(organization.getId());
+		
+		String userName = defaultUser.orElse(null);
+		if(userName == null) {
+			userName = OrganizationUtil.getDefaultUserName(organization.getId());
+		}
+		
+		String password = defaultPassword.orElse(null);
+		if(password == null) {
+			password = OrganizationUtil.getDefaultPassword(organization.getId());
+		}
 		
 		try(Connection connection = managementDataSource.getConnection()) {
 			try(Statement statement = connection.createStatement()){
-				final String createDefaultUserSql = "CREATE USER \"" + defaultUserName + "\" WITH PASSWORD '" + defaultPassword + "';";
-				statement.execute(createDefaultUserSql);
-				final String createDatabaseSql = "CREATE DATABASE \"" + databaseName + "\" OWNER \"" + defaultUserName + "\" TEMPLATE " + databaseTemplate + ";";
+				final String createDatabaseSql = "CREATE DATABASE \"" + databaseName + "\" OWNER \"" + userName + "\" TEMPLATE " + databaseTemplate + ";";
 				statement.execute(createDatabaseSql);
 			}
 		}
@@ -74,8 +89,8 @@ public class PersistenceManagement {
 		persistenceTenant.setUsers(new ArrayList<>());
 		
 		final PersistenceUser defaultPersistenceUser = new PersistenceUser();
-		defaultPersistenceUser.setDb_password(defaultPassword);
-		defaultPersistenceUser.setDb_user(defaultUserName);
+		defaultPersistenceUser.setDb_password(password);
+		defaultPersistenceUser.setDb_user(userName);
 		defaultPersistenceUser.setMode_type("transaction");
 		defaultPersistenceUser.setPool_size(1);
 		
@@ -101,8 +116,8 @@ public class PersistenceManagement {
 		queryTenant.setUsers(new ArrayList<>());
 		
 		final PersistenceUser defaultQueryUser = new PersistenceUser();
-		defaultQueryUser.setDb_password(defaultPassword);
-		defaultQueryUser.setDb_user(defaultUserName);
+		defaultQueryUser.setDb_password(password);
+		defaultQueryUser.setDb_user(userName);
 		defaultQueryUser.setMode_type("session");
 		defaultQueryUser.setPool_size(3);
 		

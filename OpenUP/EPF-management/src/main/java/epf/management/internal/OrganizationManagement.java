@@ -47,7 +47,7 @@ public class OrganizationManagement {
 	private final ConfigPath config = new ConfigPath("/epf/config/management");
 
 	@CacheResult(cacheName = Naming.Management.ORGANIZATION_MANAGEMENT)
-	public Organization createOrganization(@CacheKey final String tokenId, final Principal principal) throws Exception {
+	public Organization createOrganization(@CacheKey final String subject, final Principal principal) throws Exception {
 		
 		final String clientSecret = config.getValue(Naming.Management.Internal.AUTH_CLIENT_SECRET);
 		final ClientCredential credential = new ClientCredential();

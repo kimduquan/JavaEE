@@ -58,7 +58,7 @@ public class Management {
 			organization = organizationClaim.get();
 		}
 		else {
-			organization = organizationManagement.createOrganization(jwt.getTokenID(), principal);
+			organization = organizationManagement.createOrganization(jwt.getSubject(), principal);
 		}
 		
 		final Session session = new Session();

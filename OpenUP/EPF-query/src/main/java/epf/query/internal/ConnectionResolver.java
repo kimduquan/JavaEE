@@ -1,5 +1,6 @@
 package epf.query.internal;
 
+import java.util.Optional;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import epf.naming.Naming;
 import epf.persistence.util.QueryConnectionResolver;
@@ -23,6 +24,14 @@ public class ConnectionResolver extends QueryConnectionResolver<QuarkusConnectio
 	@Inject
     @ConfigProperty(name = Naming.Persistence.Internal.CONNECTION_POOL_SIZE)
 	int connectionPoolSize;
+	
+	@Inject
+    @ConfigProperty(name = Naming.Persistence.Internal.DEFAULT_USER)
+	Optional<String> user;
+	
+	@Inject
+    @ConfigProperty(name = Naming.Persistence.Internal.DEFAULT_PASSWORD)
+	Optional<String> password;
 
 	@Override
 	protected AgroalDataSource newDataSource(final AgroalDataSourceConfiguration config) {
@@ -42,5 +51,15 @@ public class ConnectionResolver extends QueryConnectionResolver<QuarkusConnectio
 	@Override
 	protected int getConnectionPoolSize() {
 		return connectionPoolSize;
+	}
+
+	@Override
+	protected Optional<String> getDefaultPassword() {
+		return password;
+	}
+
+	@Override
+	protected Optional<String> getDefaultUser() {
+		return user;
 	}
 }

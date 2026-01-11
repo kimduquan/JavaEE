@@ -785,14 +785,14 @@ externalDatabase:
   host: "supavisor"
   port: 6543
   user: "odoo.odoo"
-  password: "090323508"
+  password: ""
   database: odoo
   create: false
   postgresqlPostgresUser: "postgres.odoo"
-  postgresqlPostgresPassword: "090323508"
-  existingSecret: ""
-  existingSecretPasswordKey: ""
-  existingSecretPostgresPasswordKey: ""
+  postgresqlPostgresPassword: ""
+  existingSecret: "odoo"
+  existingSecretPasswordKey: "password"
+  existingSecretPostgresPasswordKey: "postgres-password"
 ## @section NetworkPolicy parameters
 ##
 

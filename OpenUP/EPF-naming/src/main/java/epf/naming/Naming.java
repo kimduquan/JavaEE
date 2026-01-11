@@ -771,6 +771,16 @@ public interface Naming {
 			 * 
 			 */
 			String CONNECTION_POOL_SIZE = "epf.datasource.connection.pool.size";
+			
+			/**
+			 * 
+			 */
+			String DEFAULT_USER = "epf.datasource.user.default";
+			
+			/**
+			 * 
+			 */
+			String DEFAULT_PASSWORD = "epf.datasource.password.default";
 		}
 	}
 	

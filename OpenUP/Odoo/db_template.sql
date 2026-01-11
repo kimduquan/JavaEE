@@ -1,1 +1,2 @@
+CREATE DATABASE odoo_template WITH OWNER = odoo.odoo ENCODING = 'UTF8' LOCALE_PROVIDER = 'libc' CONNECTION LIMIT = -1 IS_TEMPLATE = False;
 ALTER DATABASE odoo_template WITH is_template TRUE;
