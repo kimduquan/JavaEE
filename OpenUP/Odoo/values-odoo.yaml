@@ -791,7 +791,7 @@ externalDatabase:
   postgresqlPostgresUser: "postgres.odoo"
   postgresqlPostgresPassword: ""
   existingSecret: "odoo"
-  existingSecretPasswordKey: "password"
+  existingSecretPasswordKey: "odoo-password"
   existingSecretPostgresPasswordKey: "postgres-password"
 ## @section NetworkPolicy parameters
 ##
