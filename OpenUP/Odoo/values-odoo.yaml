@@ -159,7 +159,7 @@ smtpProtocol: ""
 ## NOTE: Must contain key `odoo-password`
 ## NOTE: When it's set, the `odooPassword` parameter is ignored
 ##
-existingSecret: ""
+existingSecret: "odoo"
 ## @param smtpExistingSecret The name of an existing secret with SMTP credentials
 ## NOTE: Must contain key `smtp-password`
 ## NOTE: When it's set, the `smtpPassword` parameter is ignored
