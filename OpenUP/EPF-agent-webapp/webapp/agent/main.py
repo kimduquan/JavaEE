@@ -284,7 +284,8 @@ def add_agent_endpoint(app: FastAPI, name: str, path: str = "/"):
         key = jwk_client.get_signing_key_from_jwt(token=credentials.credentials)
         claims = jwt.decode(jwt=credentials.credentials, key=key, issuer=os.environ["JWT_ISSUER"])
         organization_claim: dict[str, Any] = claims["organization"]
-        organization = list(organization_claim.keys())[0]
+        organization_name: str = list(organization_claim.keys())[0]
+        organization: str = organization_claim.get(organization_name)["id"]
         config = RunnableConfig(configurable={"authorization": credentials, "claims": claims, "organization": organization}, run_id=UUID(input_data.run_id))
         config = copilotkit_customize_config(base_config=config)
         supervisor_graph = create_supervisor(organization=organization)
