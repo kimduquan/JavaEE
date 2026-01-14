@@ -1,5 +1,6 @@
+from datetime import datetime, timezone
 from typing import Annotated, Any
-from fastapi import Depends, FastAPI, Request
+from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import StreamingResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from redis import Redis
@@ -37,6 +38,9 @@ from langgraph.store.redis import RedisStore
 from langgraph.store.redis.base import STORE_PREFIX, STORE_VECTOR_PREFIX
 from langchain_redis import RedisCache
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+import logging
+from jwt.exceptions import PyJWTError
+from starlette.status import HTTP_403_FORBIDDEN
 
 class UIAgentState(CopilotKitState):
     """"""
@@ -99,6 +103,7 @@ SUPERVISOR_NODE_NAME = "supervisor"
 
 security = HTTPBearer()
 jwk_client = PyJWKClient(uri=os.environ["JWT_KEY_URL"])
+logger = logging.getLogger(__name__)
 
 def load_servers():
     for server in mcp_servers:
@@ -285,8 +290,13 @@ def add_agent_endpoint(app: FastAPI, name: str, path: str = "/"):
     @app.post(path)
     async def agent_endpoint(input_data: RunAgentInput, request: Request, credentials: Annotated[HTTPAuthorizationCredentials, Depends(security)]):
 
-        key = jwk_client.get_signing_key_from_jwt(token=credentials.credentials)
-        claims = jwt.decode(jwt=credentials.credentials, key=key, issuer=os.environ["JWT_ISSUER"])
+        claims: Any = None
+        try:
+            key = jwk_client.get_signing_key_from_jwt(token=credentials.credentials)
+            claims = jwt.decode(jwt=credentials.credentials, key=key, issuer=os.environ["JWT_ISSUER"])
+        except PyJWTError as ex:
+            logger.error("[%f]jwt:%s", datetime.now(tz=timezone.utc).timestamp(), credentials.credentials)
+            raise HTTPException(status_code=HTTP_403_FORBIDDEN, detail=ex.args)
         organization_claim: dict[str, Any] = claims["organization"]
         organization_name: str = list(organization_claim.keys())[0]
         organization: str = organization_claim.get(organization_name)["id"]
