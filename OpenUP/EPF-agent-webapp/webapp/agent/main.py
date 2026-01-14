@@ -36,6 +36,7 @@ from langgraph.checkpoint.redis.base import CHECKPOINT_PREFIX, CHECKPOINT_BLOB_P
 from langgraph.store.redis import RedisStore
 from langgraph.store.redis.base import STORE_PREFIX, STORE_VECTOR_PREFIX
 from langchain_redis import RedisCache
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
 class UIAgentState(CopilotKitState):
     """"""
@@ -309,7 +310,7 @@ def add_agent_endpoint(app: FastAPI, name: str, path: str = "/"):
             media_type=encoder.get_content_type()
         )
 
-    @app.get(f"/health")
+    @app.get("/health")
     def health():
         """Health check."""
         return {
@@ -322,6 +323,7 @@ def add_agent_endpoint(app: FastAPI, name: str, path: str = "/"):
 load_servers()
 app = FastAPI()
 add_agent_endpoint(app=app, name=EPF_AGENT_NAME)
+FastAPIInstrumentor.instrument_app(app=app, excluded_urls="/health")
 
 if __name__ == "__main__":
     uvicorn.run(app=app, host="0.0.0.0", port=8123)
