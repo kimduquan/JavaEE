@@ -2,6 +2,7 @@ from typing import Annotated, Any
 from fastapi import Depends, FastAPI, Request
 from fastapi.responses import StreamingResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from redis import Redis
 import uvicorn
 from langchain_openai import ChatOpenAI
 from langchain.agents import AgentState
@@ -175,7 +176,8 @@ def get_checkpointer(organization: str) -> Checkpointer:
     checkpoint_prefix = CHECKPOINT_PREFIX + "-" + organization
     checkpoint_blob_prefix = CHECKPOINT_BLOB_PREFIX + "-" + organization
     checkpoint_write_prefix = CHECKPOINT_WRITE_PREFIX + "-" + organization
-    with RedisSaver.from_conn_string(redis_url=redis_url, checkpoint_prefix=checkpoint_prefix, checkpoint_blob_prefix=checkpoint_blob_prefix, checkpoint_write_prefix=checkpoint_write_prefix) as checkpointer:
+    redis_client = Redis(host=os.environ["REDIS_HOST"], password=os.environ["REDIS_PASSWORD"])
+    with RedisSaver.from_conn_string(redis_url=redis_url, redis_client=redis_client, checkpoint_prefix=checkpoint_prefix, checkpoint_blob_prefix=checkpoint_blob_prefix, checkpoint_write_prefix=checkpoint_write_prefix) as checkpointer:
         checkpointer.setup()
         return checkpointer
 
@@ -192,7 +194,8 @@ def get_store(organization: str) -> BaseStore:
 def get_cache(organization: str) -> BaseCache:
     redis_url = os.environ["CACHE_PERSISTENCE_URL_FORMAT"].format(organization)
     prefix = "redis-" + organization
-    redis_cache = RedisCache(redis_url=redis_url, prefix=prefix)
+    redis_client = Redis(host=os.environ["REDIS_HOST"], password=os.environ["REDIS_PASSWORD"])
+    redis_cache = RedisCache(redis_url=redis_url, prefix=prefix, redis_client=redis_client)
     return redis_cache
 
 @cached
@@ -306,7 +309,7 @@ def add_agent_endpoint(app: FastAPI, name: str, path: str = "/"):
             media_type=encoder.get_content_type()
         )
 
-    @app.get(f"{path}/health")
+    @app.get(f"/health")
     def health():
         """Health check."""
         return {
