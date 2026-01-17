@@ -26,7 +26,7 @@ stunner:
           readLoopsPerUDPListener: 16
         resources:
           limits:
-            cpu: 2
+            cpu: 1
             memory: 512Mi
           requests:
             cpu: 50m
@@ -61,7 +61,7 @@ stunner:
           value: configmap
         resources:
           limits:
-            cpu: 500m
+            cpu: 250m
             memory: 500Mi
           requests:
             cpu: 10m
