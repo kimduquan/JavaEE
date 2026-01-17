@@ -28,7 +28,7 @@ from langgraph.cache.base import BaseCache
 from uuid import UUID
 import jwt
 from jwt import PyJWKClient
-from copilotkit import CopilotKitState
+from copilotkit import CopilotKitMiddleware, CopilotKitState
 from copilotkit.langgraph import copilotkit_messages_to_langchain, langchain_messages_to_copilotkit, copilotkit_customize_config
 from langchain_mcp_adapters.interceptors import MCPToolCallRequest, ToolCallInterceptor
 from aiocache import cached
@@ -163,7 +163,9 @@ async def create_sub_agent(organization: str, server_name: str, agent_name: str,
         model=model,
         tools=tools,
         system_prompt=system_prompt,
-        middleware=EPFAgentMiddleware(),
+        middleware=[
+            EPFAgentMiddleware()
+            ],
         state_schema=EPFAgentState,
         context_schema=AgentContext,
         checkpointer=checkpointer,
@@ -237,6 +239,7 @@ async def create_supervisor_agent(organization: str) -> CompiledStateGraph[EPFAg
         tools=tools,
         system_prompt=system_prompt,
         middleware=[
+            CopilotKitMiddleware(),
             MODEL_CALL_LIMIT,
             TOOL_CALL_LIMIT,
             PII,

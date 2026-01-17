@@ -4,15 +4,15 @@ version = "0.1.0"
 description = "EPF agent"
 requires-python = ">=3.12"
 dependencies = [
-    "langchain==1.2.0",
-    "langgraph==1.0.5",
+    "langchain==1.2.6",
+    "langgraph==1.0.6",
     "openai>=1.68.2,<2.0.0",
-    "fastapi>=0.115.5,<1.0.0",
-    "uvicorn>=0.29.0,<1.0.0",
-    "python-dotenv>=1.0.0,<2.0.0",
-    "langchain-openai>=1.1.0",
-    "copilotkit>=0.1.74",
-    "langgraph-api>=0.6.0",
+    "fastapi>=0.115.0,<0.116.0",
+    "uvicorn>=0.40.0,<1.0.0",
+    "python-dotenv>=1.2.1,<2.0.0",
+    "langchain-openai>=1.1.7",
+    "copilotkit>=0.1.76",
+    "langgraph-api>=0.6.39",
     "langchain-mcp-adapters==0.2.1",
     "aiocache==0.12.3",
     "langgraph-checkpoint-redis==0.3.1",
