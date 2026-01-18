@@ -191,12 +191,15 @@ spec:
               name: supavisor-tls
               readOnly: true
           readinessProbe:
+            initialDelaySeconds: 20
             tcpSocket:
               port: 4000
           startupProbe:
+            initialDelaySeconds: 20
             tcpSocket:
               port: 4000
           livenessProbe:
+            initialDelaySeconds: 20
             tcpSocket:
               port: 6543
       volumes:
