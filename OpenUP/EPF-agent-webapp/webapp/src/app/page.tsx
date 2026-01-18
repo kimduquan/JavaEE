@@ -7,6 +7,7 @@ export default function CopilotKitPage() {
   return (
     <main>
       <SessionProvider>
+        <CopilotChat />
         <MainContent />
       </SessionProvider>
     </main>
@@ -18,7 +19,6 @@ function MainContent() {
 
   return (
     <div>
-      <CopilotChat />
     </div>
   );
 }

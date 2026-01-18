@@ -7,7 +7,6 @@ import { LangGraphHttpAgent } from "@ag-ui/langgraph"
 import { NextRequest } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
  
 const debug = ("true" == process.env.DEBUG);
@@ -31,16 +30,14 @@ const serviceAdapter = new ExperimentalEmptyAdapter();
 // 3. Build a Next.js API route that handles the CopilotKit runtime requests.
 export const POST = async (req: NextRequest) => {
   
-  const session = await getServerSession(authOptions);
-  if (!session) return new NextResponse("Unauthorized", { status: 401 });
-
-  const token = await getToken({ req : req });
+  await getServerSession(authOptions);
+  const jwt = await getToken({ req : req });
   const runtime = new CopilotRuntime({
     agents: {
       "epf-agent": new LangGraphHttpAgent({
         url: process.env.EPF_AGENT_URL || "http://localhost:8123",
-        headers: { "Authorization": "Bearer " + token?.accessToken },
-        threadId: token?.sub,
+        headers: { "Authorization": "Bearer " + jwt?.accessToken },
+        threadId: jwt?.sub,
         debug: debug
       }),
     }
