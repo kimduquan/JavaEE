@@ -7,7 +7,6 @@ export default function CopilotKitPage() {
   return (
     <main>
       <SessionProvider>
-        <CopilotChat />
         <MainContent />
       </SessionProvider>
     </main>
@@ -16,9 +15,10 @@ export default function CopilotKitPage() {
 
 function MainContent() {
   useSession({ required: true });
-
+  
   return (
     <div>
+        <CopilotChat />
     </div>
   );
 }
