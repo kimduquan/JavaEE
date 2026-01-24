@@ -266,8 +266,6 @@ args: []
 extraEnvVars:
   - name: KC_HEALTH_ENABLED
     value: "true"
-  - name: KC_HTTP_MANAGEMENT_SCHEME
-    value: "http"
   - name: KC_HTTPS_MANAGEMENT_KEY_STORE_FILE
     value: ""
   - name: KC_HTTPS_MANAGEMENT_KEY_STORE_PASSWORD
