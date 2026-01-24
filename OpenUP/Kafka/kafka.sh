@@ -1,1 +1,1 @@
-helm install kafka oci://registry-1.docker.io/bitnamicharts/kafka -f values-kafka.yaml
+helm install kafka oci://registry-1.docker.io/bitnamicharts/kafka -f values-kafka.yaml --wait

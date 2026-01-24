@@ -1,1 +1,1 @@
-helm install neo4j oci://registry-1.docker.io/bitnamicharts/neo4j -f values-neo4j.yaml
+helm install neo4j oci://registry-1.docker.io/bitnamicharts/neo4j -f values-neo4j.yaml --wait

@@ -1,1 +1,1 @@
-helm install mongodb oci://registry-1.docker.io/bitnamicharts/mongodb -f values-mongodb.yaml
+helm install mongodb oci://registry-1.docker.io/bitnamicharts/mongodb -f values-mongodb.yaml --wait
