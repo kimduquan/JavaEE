@@ -7,6 +7,9 @@ export const authOptions: AuthOptions = {
       clientId: process.env.CLIENT_ID!,
       clientSecret: process.env.CLIENT_SECRET!,
       issuer: process.env.ISSUER,
+      httpOptions: {
+        timeout: process.env.AUTH_REQUEST_TIMEOUT? parseInt(process.env.AUTH_REQUEST_TIMEOUT) : undefined
+      }
     })
   ],
   session: {
