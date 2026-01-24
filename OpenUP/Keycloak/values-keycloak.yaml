@@ -402,21 +402,21 @@ customLivenessProbe:
   httpGet:
     path: /auth/health/live
     port: 9000
-    scheme: HTTPS
+    scheme: HTTP
 ## @param customReadinessProbe Custom Readiness probes Keycloak
 ##
 customReadinessProbe: 
   httpGet:
     path: /auth/health/ready
     port: 9000
-    scheme: HTTPS
+    scheme: HTTP
 ## @param customStartupProbe Custom Startup probes for Keycloak
 ##
 customStartupProbe: 
   httpGet:
     path: /auth/health/started
     port: 9000
-    scheme: HTTPS
+    scheme: HTTP
   initialDelaySeconds: 300
 
 ## @section Keycloak StatefulSet parameters
