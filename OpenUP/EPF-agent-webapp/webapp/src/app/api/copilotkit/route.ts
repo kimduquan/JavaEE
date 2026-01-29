@@ -42,6 +42,9 @@ export const POST = async (req: NextRequest) => {
       }),
     }
   });
+  if(debug){
+    console.log("getServerSession:%s", jwt?.accessToken);
+  }
   const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
     runtime,
     serviceAdapter,
