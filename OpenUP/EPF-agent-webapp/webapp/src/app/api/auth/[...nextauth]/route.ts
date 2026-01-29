@@ -1,6 +1,8 @@
 import NextAuth, { AuthOptions } from "next-auth"
 import KeycloakProvider from "next-auth/providers/keycloak";
 
+const debug = ("true" == process.env.DEBUG);
+
 export const authOptions: AuthOptions = {
   providers: [
     KeycloakProvider({
@@ -22,6 +24,9 @@ export const authOptions: AuthOptions = {
     async jwt({ token, user, account, profile }) {
       if(account){
         token.accessToken = account?.access_token;
+        if(debug){
+          console.log("jwt:%s", account.access_token);
+        }
       }
       return token
     }
