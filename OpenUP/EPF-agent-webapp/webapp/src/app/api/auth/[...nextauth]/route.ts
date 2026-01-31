@@ -20,13 +20,20 @@ export const authOptions: AuthOptions = {
   callbacks: {
     async session({ session, token, user }) {
       if(debug){
-        console.log("session:%s\n%s", session._accessToken, token.accessToken);
+        console.log("[BEGIN]session");
+        console.log("session._accessToken:%s", session._accessToken);
+        console.log("token.accessToken:%s", token.accessToken);
+        console.log("[END]session");
       }
       return session
     },
     async jwt({ token, user, account, profile }) {
       if(debug){
-        console.log("jwt:%s\n%s\n%s", token.accessToken, account?.access_token, profile?.name);
+        console.log("[BEGIN]jwt");
+        console.log("token._accessToken:%s", token._accessToken);
+        console.log("account.accessToken:%s", account?.access_token);
+        console.log("account.expires_at:%s", account?.expires_at);
+        console.log("[END]jwt");
       }
       if(account){
         token.accessToken = account?.access_token;
