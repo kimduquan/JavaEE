@@ -17,6 +17,9 @@ export const authOptions: AuthOptions = {
   session: {
     strategy: "jwt",
   },
+  jwt: {
+    maxAge: process.env.JWT_MAX_AGE? parseInt(process.env.JWT_MAX_AGE) : undefined
+  },
   callbacks: {
     async session({ session, token, user }) {
       if(debug){
