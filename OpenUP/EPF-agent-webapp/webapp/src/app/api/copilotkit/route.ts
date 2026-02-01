@@ -30,7 +30,7 @@ const serviceAdapter = new ExperimentalEmptyAdapter();
 // 3. Build a Next.js API route that handles the CopilotKit runtime requests.
 export const POST = async (req: NextRequest) => {
   
-  await getServerSession(authOptions);
+  const session = await getServerSession(authOptions);
   const jwt = await getToken({ req : req });
   const runtime = new CopilotRuntime({
     agents: {
@@ -43,7 +43,11 @@ export const POST = async (req: NextRequest) => {
     }
   });
   if(debug){
-    console.log("getServerSession:%s", jwt?.accessToken);
+    console.log("[BEGIN]POST");
+    console.log("session._accessToken:%s", session?._accessToken);
+    console.log("session.expires:%s", session?.expires);
+    console.log("jwt.accessToken:%s", jwt?.accessToken);
+    console.log("[END]POST");
   }
   const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
     runtime,
