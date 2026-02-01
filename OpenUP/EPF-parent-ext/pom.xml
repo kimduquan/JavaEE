@@ -163,13 +163,13 @@
 		<dependency>
 		    <groupId>io.quarkiverse.mcp</groupId>
 		    <artifactId>quarkus-mcp-server-http</artifactId>
-		    <version>1.8.1</version>
+		    <version>1.9.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.quarkiverse.mcp/quarkus-mcp-server-hibernate-validator -->
 		<dependency>
 		    <groupId>io.quarkiverse.mcp</groupId>
 		    <artifactId>quarkus-mcp-server-hibernate-validator</artifactId>
-		    <version>1.8.1</version>
+		    <version>1.9.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/jakarta.nosql/jakarta.nosql-api -->
 		<dependency>
@@ -212,7 +212,7 @@
 		<dependency>
 		    <groupId>dev.openfeature</groupId>
 		    <artifactId>sdk</artifactId>
-		    <version>1.19.2</version>
+		    <version>1.20.1</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/dev.openfeature.contrib.providers/env-var -->
 		<dependency>
