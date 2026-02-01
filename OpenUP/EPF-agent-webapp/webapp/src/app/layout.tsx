@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: "EPF Agent",
   description: "",
 };
-
+const debug = ("true" == process.env.DEBUG);
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -23,7 +23,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={"antialiased"}>
-        <CopilotKit runtimeUrl="/api/copilotkit" agent="epf-agent" showDevConsole={true}>
+        <CopilotKit runtimeUrl="/api/copilotkit" agent="epf-agent" showDevConsole={debug}>
           {children}
         </CopilotKit>
       </body>
