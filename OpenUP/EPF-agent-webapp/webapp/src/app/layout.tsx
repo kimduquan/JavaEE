@@ -16,7 +16,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  await getServerSession(authOptions);
+  const session = await getServerSession(authOptions);
+  console.log("[BEGIN]RootLayout");
+  console.log("session.expires:%s", session != null ? session.expires : "");
+  console.log("[END]RootLayout");
   return (
     <html lang="en">
       <body className={"antialiased"}>
