@@ -11,14 +11,16 @@ export const authOptions: AuthOptions = {
       issuer: process.env.ISSUER,
       httpOptions: {
         timeout: process.env.AUTH_REQUEST_TIMEOUT? parseInt(process.env.AUTH_REQUEST_TIMEOUT) : undefined
-      }
+      },
     })
   ],
   session: {
     strategy: "jwt",
+    maxAge: process.env.JWT_MAX_AGE? parseInt(process.env.JWT_MAX_AGE) : undefined,
+    updateAge: 10,
   },
   jwt: {
-    maxAge: process.env.JWT_MAX_AGE? parseInt(process.env.JWT_MAX_AGE) : undefined
+    maxAge: process.env.JWT_MAX_AGE? parseInt(process.env.JWT_MAX_AGE) : undefined,
   },
   callbacks: {
     async session({ session, token, user }) {
@@ -26,6 +28,7 @@ export const authOptions: AuthOptions = {
         console.log("[BEGIN]session");
         console.log("session._accessToken:%s", session._accessToken);
         console.log("token.accessToken:%s", token.accessToken);
+        console.log("session.expires:%s", session.expires);
         console.log("[END]session");
       }
       return session
