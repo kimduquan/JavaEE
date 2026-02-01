@@ -14,8 +14,11 @@ export default function CopilotKitPage() {
 }
 
 function MainContent() {
-  useSession({ required: true });
-  
+  const session = useSession({ required: true });
+  console.log("[BEGIN]MainContent");
+  console.log("session.status:%s", session.status);
+  console.log("session.data.expires:%s", session.data != null? session.data.expires : "");
+  console.log("[END]MainContent");
   return (
     <div>
         <CopilotChat />
