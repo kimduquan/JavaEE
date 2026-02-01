@@ -5,7 +5,6 @@ import "./globals.css";
 import "@copilotkit/react-ui/styles.css";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { SessionProvider } from "next-auth/react";
 
 export const metadata: Metadata = {
   title: "EPF Agent",
@@ -24,11 +23,9 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={"antialiased"}>
-        <SessionProvider>
-          <CopilotKit runtimeUrl="/api/copilotkit" agent="epf-agent">
-            {children}
-          </CopilotKit>
-        </SessionProvider>
+        <CopilotKit runtimeUrl="/api/copilotkit" agent="epf-agent" showDevConsole={true}>
+          {children}
+        </CopilotKit>
       </body>
     </html>
   );
