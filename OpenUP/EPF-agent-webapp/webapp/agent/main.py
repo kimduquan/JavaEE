@@ -155,10 +155,10 @@ async def create_sub_agent(organization: str, server_name: str, agent_name: str,
     client = get_client(server_name=server_name)
     tools: list[BaseTool] = await load_tools(client=client,server_name=server_name)
     system_prompt: str = prompt[0].content
-    model = get_model(organization=organization)
-    checkpointer = get_checkpointer(organization=organization)
-    store = get_store(organization=organization)
-    cache = get_cache(organization=organization)
+    model = await get_model(organization)
+    checkpointer = await get_checkpointer(organization)
+    store = await get_store(organization)
+    cache = await get_cache(organization)
     return create_agent(
         model=model,
         tools=tools,
@@ -174,12 +174,12 @@ async def create_sub_agent(organization: str, server_name: str, agent_name: str,
         name=agent_name,
         cache=cache)
 
-@cached
-def get_model(organization: str) -> ChatOpenAI:
+@cached()
+async def get_model(organization: str) -> ChatOpenAI:
     return ChatOpenAI(model=os.environ["OPENAI_MODEL"],base_url=os.environ["OPENAI_BASE_URL"])
 
-@cached
-def get_checkpointer(organization: str) -> Checkpointer:
+@cached()
+async def get_checkpointer(organization: str) -> Checkpointer:
     redis_url = os.environ["CHECKPOINTER_PERSISTENCE_URL_FORMAT"].format(organization)
     checkpoint_prefix = CHECKPOINT_PREFIX + "-" + organization
     checkpoint_blob_prefix = CHECKPOINT_BLOB_PREFIX + "-" + organization
@@ -189,8 +189,8 @@ def get_checkpointer(organization: str) -> Checkpointer:
         checkpointer.setup()
         return checkpointer
 
-@cached
-def get_store(organization: str) -> BaseStore:
+@cached()
+async def get_store(organization: str) -> BaseStore:
     conn_string = os.environ["STORE_PERSISTENCE_URL_FORMAT"].format(organization)
     store_prefix = STORE_PREFIX + "-" + organization
     vector_prefix = STORE_VECTOR_PREFIX + "-" + organization
@@ -198,15 +198,15 @@ def get_store(organization: str) -> BaseStore:
         store.setup()
         return store
 
-@cached
-def get_cache(organization: str) -> BaseCache:
+@cached()
+async def get_cache(organization: str) -> BaseCache:
     redis_url = os.environ["CACHE_PERSISTENCE_URL_FORMAT"].format(organization)
     prefix = "redis-" + organization
     redis_client = Redis(host=os.environ["REDIS_HOST"], password=os.environ["REDIS_PASSWORD"])
     redis_cache = RedisCache(redis_url=redis_url, prefix=prefix, redis_client=redis_client)
     return redis_cache
 
-@cached
+@cached()
 async def create_supervisor_agent(organization: str) -> CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]:
     supervisor_agent_name = SUPERVISOR_AGENT_NAME + "-" + organization
     server_name = DEFAULT_SERVER_NAME
@@ -226,14 +226,14 @@ async def create_supervisor_agent(organization: str) -> CompiledStateGraph[EPFAg
     for sub_agent_prompt in sub_agent_prompts:
         sub_agent_name = agent_prompt.name
         sub_agent_server_name = sub_agent_name
-        sub_agent = create_sub_agent(server_name=sub_agent_server_name, agent_name=sub_agent_name, prompt=sub_agent_prompt)
+        sub_agent = await create_sub_agent(server_name=sub_agent_server_name, agent_name=sub_agent_name, prompt=sub_agent_prompt)
         sub_agents.append(sub_agent)
         tool = as_tool(name=sub_agent_name, prompt=agent_prompt, agent=sub_agent)
         tools.append(tool)
-    model = get_model(organization=organization)
-    checkpointer = get_checkpointer(organization=organization)
-    store = get_store(organization=organization)
-    cache = get_cache(organization=organization)
+    model = await get_model(organization)
+    checkpointer = await get_checkpointer(organization)
+    store = await get_store(organization)
+    cache = await get_cache(organization)
     return create_agent(
         model=model,
         tools=tools,
@@ -258,7 +258,7 @@ async def create_supervisor_agent(organization: str) -> CompiledStateGraph[EPFAg
         name=supervisor_agent_name,
         cache=cache)
 
-@cached
+@cached()
 async def create_supervisor(organization: str) -> CompiledStateGraph[UIAgentState, AgentContext, UIAgentState, UIAgentState]:
     builder = StateGraph(
         state_schema=UIAgentState,
@@ -270,9 +270,9 @@ async def create_supervisor(organization: str) -> CompiledStateGraph[UIAgentStat
     builder.add_node(supervisor_node_name, supervisor_node)
     builder.set_entry_point(supervisor_node_name)
     builder.set_finish_point(supervisor_node_name)
-    checkpointer = get_checkpointer(organization)
-    store = get_store(organization)
-    cache = get_cache(organization)
+    checkpointer = await get_checkpointer(organization)
+    store = await get_store(organization)
+    cache = await get_cache(organization)
     return builder.compile(checkpointer=checkpointer, cache=cache, store=store, debug=DEBUG, name=organization)
 
 async def supervisor_node(state: UIAgentState, config: RunnableConfig, runtime: Runtime[AgentContext]) -> dict[str, Any] | Any:
@@ -305,7 +305,7 @@ def add_agent_endpoint(app: FastAPI, name: str, path: str = "/"):
         organization: str = organization_claim.get(organization_name)["id"]
         config = RunnableConfig(configurable={"authorization": credentials, "claims": claims, "organization": organization}, run_id=UUID(input_data.run_id))
         config = copilotkit_customize_config(base_config=config)
-        supervisor_graph = create_supervisor(organization)
+        supervisor_graph = await create_supervisor(organization)
         agent = LangGraphAgent(name=name, graph=supervisor_graph, config=config)
 
         # Get the accept header from the request
