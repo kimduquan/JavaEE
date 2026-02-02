@@ -191,7 +191,7 @@ async def get_checkpointer(organization: str) -> Checkpointer:
 
 @cached()
 async def get_store(organization: str) -> BaseStore:
-    conn_string = os.environ["STORE_PERSISTENCE_URL_FORMAT"].format(organization)
+    conn_string = os.environ["STORE_PERSISTENCE_URL_FORMAT"].format(os.environ["REDIS_PASSWORD"], organization)
     store_prefix = STORE_PREFIX + "-" + organization
     vector_prefix = STORE_VECTOR_PREFIX + "-" + organization
     with RedisStore.from_conn_string(conn_string=conn_string, store_prefix=store_prefix, vector_prefix=vector_prefix) as store:
