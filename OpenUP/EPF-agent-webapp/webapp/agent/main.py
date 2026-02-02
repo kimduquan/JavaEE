@@ -270,9 +270,9 @@ async def create_supervisor(organization: str) -> CompiledStateGraph[UIAgentStat
     builder.add_node(supervisor_node_name, supervisor_node)
     builder.set_entry_point(supervisor_node_name)
     builder.set_finish_point(supervisor_node_name)
-    checkpointer = get_checkpointer(organization=organization)
-    store = get_store(organization=organization)
-    cache = get_cache(organization=organization)
+    checkpointer = get_checkpointer(organization)
+    store = get_store(organization)
+    cache = get_cache(organization)
     return builder.compile(checkpointer=checkpointer, cache=cache, store=store, debug=DEBUG, name=organization)
 
 async def supervisor_node(state: UIAgentState, config: RunnableConfig, runtime: Runtime[AgentContext]) -> dict[str, Any] | Any:
@@ -305,7 +305,7 @@ def add_agent_endpoint(app: FastAPI, name: str, path: str = "/"):
         organization: str = organization_claim.get(organization_name)["id"]
         config = RunnableConfig(configurable={"authorization": credentials, "claims": claims, "organization": organization}, run_id=UUID(input_data.run_id))
         config = copilotkit_customize_config(base_config=config)
-        supervisor_graph = create_supervisor(organization=organization)
+        supervisor_graph = await create_supervisor(organization)
         agent = LangGraphAgent(name=name, graph=supervisor_graph, config=config)
 
         # Get the accept header from the request
