@@ -183,7 +183,7 @@ async def get_checkpointer(organization: str) -> Checkpointer:
     checkpoint_blob_prefix = CHECKPOINT_BLOB_PREFIX + "-" + organization
     checkpoint_write_prefix = CHECKPOINT_WRITE_PREFIX + "-" + organization
     redis_client = Redis(host=os.environ["REDIS_HOST"], password=os.environ["REDIS_PASSWORD"])
-    async with AsyncRedisSaver.from_conn_string(redis_url=redis_url, redis_client=redis_client, checkpoint_prefix=checkpoint_prefix, checkpoint_blob_prefix=checkpoint_blob_prefix, checkpoint_write_prefix=checkpoint_write_prefix) as checkpointer:
+    with AsyncRedisSaver.from_conn_string(redis_url=redis_url, redis_client=redis_client, checkpoint_prefix=checkpoint_prefix, checkpoint_blob_prefix=checkpoint_blob_prefix, checkpoint_write_prefix=checkpoint_write_prefix) as checkpointer:
         await checkpointer.asetup()
         return checkpointer
 
