@@ -319,7 +319,7 @@ async def supervisor_node(state: UIAgentState, config: RunnableConfig) -> dict[s
     context.checkpointer = await get_checkpointer(organization)
     context.model = await get_model(organization)
     context.store = await get_store(organization)
-    messages = copilotkit_messages_to_langchain(state["messages"])
+    messages = copilotkit_messages_to_langchain()(state["messages"])
     agent_state = EPFAgentState(messages=messages)
     supervisor_agent: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState] = await create_supervisor_agent(organization=organization, context=context)
     output = await supervisor_agent.ainvoke(input=agent_state, config=config, context=context)
