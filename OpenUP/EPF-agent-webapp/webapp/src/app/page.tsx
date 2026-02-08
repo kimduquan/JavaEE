@@ -1,7 +1,8 @@
 "use client";
 
 import { CopilotChat } from "@copilotkit/react-ui";
-import { SessionProvider, useSession } from "next-auth/react"
+import { SessionProvider, useSession } from "next-auth/react";
+import { useLangGraphInterrupt } from "@copilotkit/react-core";
 
 export default function CopilotKitPage() {
   return (
@@ -17,8 +18,15 @@ function MainContent() {
   const session = useSession({ required: true });
   console.log("[BEGIN]MainContent");
   console.log("session.status:%s", session.status);
-  console.log("session.data.expires:%s", session.data != null? session.data.expires : undefined);
+  console.log("session.data.user.id:%s", session.data?.user?.id);
+  console.log("session.data.expires:%s", session.data?.expires);
   console.log("[END]MainContent");
+  useLangGraphInterrupt({
+    render: ({ event, resolve }) => {
+      resolve("reject")
+      return (<div>{event.name}</div>);
+    }
+  })
   return (
     <div>
         <CopilotChat />
