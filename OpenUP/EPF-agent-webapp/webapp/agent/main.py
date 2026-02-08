@@ -209,11 +209,11 @@ async def create_sub_agent(server_name: str, agent_name: str, context: AgentCont
         name=agent_name + "-" + context.organization,
         cache=context.cache)
 
-@cached(cache=CACHE)
+@cached()
 async def get_model(organization: str) -> ChatOpenAI:
     return ChatOpenAI(model=os.environ["OPENAI_MODEL"],base_url=os.environ["OPENAI_BASE_URL"])
 
-@cached(cache=CACHE)
+@cached()
 async def get_checkpointer(organization: str) -> Checkpointer:
     redis_url = os.environ["CHECKPOINTER_PERSISTENCE_URL_FORMAT"].format(organization)
     checkpoint_prefix = CHECKPOINT_PREFIX + "-" + organization
@@ -224,7 +224,7 @@ async def get_checkpointer(organization: str) -> Checkpointer:
         await checkpointer.asetup()
         return checkpointer
 
-@cached(cache=CACHE)
+@cached()
 async def get_store(organization: str) -> BaseStore:
     conn_string = os.environ["STORE_PERSISTENCE_URL_FORMAT"].format(os.environ["REDIS_PASSWORD"], organization)
     store_prefix = STORE_PREFIX + "-" + organization
@@ -233,7 +233,7 @@ async def get_store(organization: str) -> BaseStore:
         await store.setup()
         return store
 
-@cached(cache=CACHE)
+@cached()
 async def get_cache(organization: str) -> BaseCache:
     redis_url = os.environ["CACHE_PERSISTENCE_URL_FORMAT"].format(organization)
     prefix = "redis-" + organization
@@ -245,7 +245,7 @@ def organization_key_builder(func, *args, **kwargs):
     organization = kwargs.get("organization") or args[1]
     return organization
 
-@cached(cache=CACHE, key_builder=organization_key_builder)
+@cached(key_builder=organization_key_builder)
 async def create_supervisor_agent(organization: str, context: AgentContext) -> CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]:
     supervisor_agent_name = SUPERVISOR_AGENT_NAME + "-" + organization
     server_name = DEFAULT_SERVER_NAME
@@ -292,7 +292,7 @@ async def create_supervisor_agent(organization: str, context: AgentContext) -> C
         name=supervisor_agent_name,
         cache=context.cache)
 
-@cached(cache=CACHE)
+@cached()
 async def create_supervisor(organization: str) -> CompiledStateGraph[UIAgentState, AgentContext, UIAgentState, UIAgentState]:
     builder = StateGraph(
         state_schema=UIAgentState,
@@ -372,9 +372,9 @@ def add_agent_endpoint(app: FastAPI, name: str, path: str = "/"):
         }
 
 load_servers()
-app = FastAPI()
-add_agent_endpoint(app=app, name=EPF_AGENT_NAME)
-FastAPIInstrumentor.instrument_app(app=app, excluded_urls="/health")
+APP = FastAPI()
+add_agent_endpoint(app=APP, name=EPF_AGENT_NAME)
+FastAPIInstrumentor.instrument_app(app=APP, excluded_urls="/health")
 
 if __name__ == "__main__":
-    uvicorn.run(app=app, host="0.0.0.0", port=8123)
+    uvicorn.run(app=APP, host="0.0.0.0", port=8123)
