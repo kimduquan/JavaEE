@@ -18,12 +18,13 @@ export default async function RootLayout({
 }>) {
   const session = await getServerSession(authOptions);
   console.log("[BEGIN]RootLayout");
-  console.log("session.expires:%s", session != null ? session.expires : undefined);
+  console.log("session.user.id:%s", session?.user.id);
+  console.log("session.expires:%s", session?.expires);
   console.log("[END]RootLayout");
   return (
     <html lang="en">
       <body className={"antialiased"}>
-        <CopilotKit runtimeUrl="/api/copilotkit" agent="epf-agent" showDevConsole={debug}>
+        <CopilotKit runtimeUrl="/api/copilotkit" agent="epf-agent" showDevConsole={debug} threadId={session?.user.id}>
           {children}
         </CopilotKit>
       </body>

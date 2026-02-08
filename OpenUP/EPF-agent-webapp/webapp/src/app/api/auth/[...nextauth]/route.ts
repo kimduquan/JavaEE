@@ -26,17 +26,19 @@ export const authOptions: AuthOptions = {
     async session({ session, token, user }) {
       if(debug){
         console.log("[BEGIN]session");
-        console.log("session._accessToken:%s", session._accessToken);
+        console.log("token.sub:%s", token.sub);
         console.log("token.accessToken:%s", token.accessToken);
         console.log("session.expires:%s", session.expires);
         console.log("[END]session");
       }
+      session.user.id = token.sub
       return session
     },
     async jwt({ token, user, account, profile }) {
       if(debug){
         console.log("[BEGIN]jwt");
-        console.log("token._accessToken:%s", token._accessToken);
+        console.log("token.sub:%s", token?.sub);
+        console.log("account.userId:%s", account?.userId);
         console.log("account.accessToken:%s", account?.access_token);
         console.log("account.expires_at:%s", account?.expires_at);
         console.log("[END]jwt");

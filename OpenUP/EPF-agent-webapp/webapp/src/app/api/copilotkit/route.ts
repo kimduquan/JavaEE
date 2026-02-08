@@ -44,9 +44,10 @@ export const POST = async (req: NextRequest) => {
   });
   if(debug){
     console.log("[BEGIN]POST");
-    console.log("session._accessToken:%s", session?._accessToken);
+    console.log("session.user.id:%s", session?.user.id);
     console.log("session.expires:%s", session?.expires);
     console.log("jwt.accessToken:%s", jwt?.accessToken);
+    console.log("jwt.sub:%s", jwt?.sub);
     console.log("[END]POST");
   }
   const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
