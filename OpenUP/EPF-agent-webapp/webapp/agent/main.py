@@ -31,7 +31,7 @@ from uuid import UUID
 import jwt
 from jwt import PyJWKClient
 from copilotkit import CopilotKitMiddleware, CopilotKitState
-from copilotkit.langgraph import copilotkit_messages_to_langchain, langchain_messages_to_copilotkit, copilotkit_customize_config
+from copilotkit.langgraph import copilotkit_customize_config
 from langchain_mcp_adapters.interceptors import MCPToolCallRequest, ToolCallInterceptor
 from aiocache import cached, Cache
 from langgraph.checkpoint.redis import AsyncRedisSaver
@@ -319,11 +319,9 @@ async def supervisor_node(state: UIAgentState, config: RunnableConfig) -> dict[s
     context.checkpointer = await get_checkpointer(organization)
     context.model = await get_model(organization)
     context.store = await get_store(organization)
-    messages = copilotkit_messages_to_langchain()(state["messages"])
-    agent_state = EPFAgentState(messages=messages)
+    agent_state = EPFAgentState(state)
     supervisor_agent: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState] = await create_supervisor_agent(organization=organization, context=context)
     output = await supervisor_agent.ainvoke(input=agent_state, config=config, context=context)
-    output["messages"] = langchain_messages_to_copilotkit(output["messages"])
     return output
 
 def add_agent_endpoint(app: FastAPI, name: str, path: str = "/"):
