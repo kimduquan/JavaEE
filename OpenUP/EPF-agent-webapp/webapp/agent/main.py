@@ -11,6 +11,7 @@ from langchain.agents import AgentState
 from langgraph.graph.state import CompiledStateGraph, StateGraph
 from langchain.agents.factory import create_agent
 import os
+from langchain_core.messages import HumanMessage, AIMessage
 from langchain_core.tools.base import BaseTool
 from langchain_mcp_adapters.client import MultiServerMCPClient
 from langchain_mcp_adapters.sessions import Connection, StreamableHttpConnection
@@ -161,10 +162,9 @@ def as_tool(name: str, prompt: Prompt, agent: CompiledStateGraph[EPFAgentState, 
     tool = agent.as_tool(name=name, description=prompt.description, arg_types=arg_types)
     return tool
 
-async def create_sub_agent(server_name: str, agent_name: str, prompt: Prompt, context: AgentContext) -> CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]:
+async def create_sub_agent(server_name: str, agent_name: str, prompt_content: list[HumanMessage | AIMessage], context: AgentContext) -> CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]:
     client = get_client(server_name=server_name, context=context)
     tools: list[BaseTool] = await load_tools(client=client,server_name=server_name)
-    prompt_content = await client.get_prompt(server_name=server_name, prompt_name=prompt.name)
     system_prompt: str = prompt_content[-1].content
     return create_agent(
         model=context.model,
@@ -235,11 +235,12 @@ async def create_supervisor_agent(organization: str, context: AgentContext) -> C
     sub_agents: list[CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]] = []
     tools: list[BaseTool] = []
     for sub_agent_prompt in sub_agent_prompts:
-        sub_agent_name = agent_prompt.name
-        sub_agent_server_name = agent_prompt.name
-        sub_agent = await create_sub_agent(server_name=sub_agent_server_name, agent_name=sub_agent_name, prompt=sub_agent_prompt, context=context)
+        sub_agent_name = sub_agent_prompt.name
+        sub_agent_server_name = sub_agent_prompt.name
+        prompt_content = await client.get_prompt(server_name=server_name, prompt_name=sub_agent_prompt.name)
+        sub_agent = await create_sub_agent(server_name=sub_agent_server_name, agent_name=sub_agent_name, prompt_content=prompt_content, context=context)
         sub_agents.append(sub_agent)
-        tool = as_tool(name=sub_agent_name, prompt=agent_prompt, agent=sub_agent)
+        tool = as_tool(name=sub_agent_name, prompt=sub_agent_prompt, agent=sub_agent)
         tools.append(tool)
     return create_agent(
         model=context.model,
