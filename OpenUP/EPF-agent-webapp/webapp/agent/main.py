@@ -3,7 +3,8 @@ from typing import Annotated, Any
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import StreamingResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from redis.asyncio import Redis
+from redis.asyncio import Redis as AsyncRedis
+from redis import Redis as SyncRedis
 import uvicorn
 from langchain_openai import ChatOpenAI
 from langchain.agents import AgentState
@@ -34,7 +35,7 @@ from langchain_mcp_adapters.interceptors import MCPToolCallRequest, ToolCallInte
 from aiocache import cached
 from langgraph.checkpoint.redis import AsyncRedisSaver
 from langgraph.checkpoint.redis.base import CHECKPOINT_PREFIX, CHECKPOINT_BLOB_PREFIX, CHECKPOINT_WRITE_PREFIX
-from langgraph.store.redis import RedisStore
+from langgraph.store.redis.aio import AsyncRedisStore
 from langgraph.store.redis.base import STORE_PREFIX, STORE_VECTOR_PREFIX
 from langchain_redis import RedisCache
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
@@ -189,7 +190,7 @@ async def get_checkpointer(organization: str) -> Checkpointer:
     checkpoint_prefix = CHECKPOINT_PREFIX + "-" + organization
     checkpoint_blob_prefix = CHECKPOINT_BLOB_PREFIX + "-" + organization
     checkpoint_write_prefix = CHECKPOINT_WRITE_PREFIX + "-" + organization
-    redis_client = Redis(host=os.environ["REDIS_HOST"], password=os.environ["REDIS_PASSWORD"])
+    redis_client = AsyncRedis(host=os.environ["REDIS_HOST"], password=os.environ["REDIS_PASSWORD"])
     async with AsyncRedisSaver.from_conn_string(redis_url=redis_url, redis_client=redis_client, checkpoint_prefix=checkpoint_prefix, checkpoint_blob_prefix=checkpoint_blob_prefix, checkpoint_write_prefix=checkpoint_write_prefix) as checkpointer:
         await checkpointer.asetup()
         return checkpointer
@@ -199,15 +200,15 @@ async def get_store(organization: str) -> BaseStore:
     conn_string = os.environ["STORE_PERSISTENCE_URL_FORMAT"].format(os.environ["REDIS_PASSWORD"], organization)
     store_prefix = STORE_PREFIX + "-" + organization
     vector_prefix = STORE_VECTOR_PREFIX + "-" + organization
-    with RedisStore.from_conn_string(conn_string=conn_string, store_prefix=store_prefix, vector_prefix=vector_prefix) as store:
-        store.setup()
+    async with AsyncRedisStore.from_conn_string(conn_string=conn_string, store_prefix=store_prefix, vector_prefix=vector_prefix) as store:
+        await store.setup()
         return store
 
 @cached()
 async def get_cache(organization: str) -> BaseCache:
     redis_url = os.environ["CACHE_PERSISTENCE_URL_FORMAT"].format(organization)
     prefix = "redis-" + organization
-    redis_client = Redis(host=os.environ["REDIS_HOST"], password=os.environ["REDIS_PASSWORD"])
+    redis_client = SyncRedis(host=os.environ["REDIS_HOST"], password=os.environ["REDIS_PASSWORD"])
     redis_cache = RedisCache(redis_url=redis_url, prefix=prefix, redis_client=redis_client)
     return redis_cache
 
