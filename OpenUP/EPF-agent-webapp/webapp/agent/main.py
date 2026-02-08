@@ -52,6 +52,10 @@ class AgentContext():
     authorization: HTTPAuthorizationCredentials
     claims: Any
     organization: str
+    checkpointer: Checkpointer
+    model: ChatOpenAI
+    store: BaseStore
+    cache: BaseCache
 
 class EPFAgentMiddleware(AgentMiddleware[EPFAgentState, AgentContext]):
     """"""
@@ -131,7 +135,8 @@ def get_client(server_name: str) -> MultiServerMCPClient:
 
 async def load_tools(client: MultiServerMCPClient, server_name: str) -> list[BaseTool]:
     connection = client.connections[server_name]
-    tools = await load_mcp_tools(session=None,connection=connection,server_name=server_name)
+    tool_interceptors = [EPFToolCallInterceptor()]
+    tools = await load_mcp_tools(session=None,connection=connection,server_name=server_name, tool_interceptors=tool_interceptors)
     return tools
 
 async def list_prompts(client: MultiServerMCPClient, server_name: str) -> list[Prompt]:
@@ -155,10 +160,10 @@ async def create_sub_agent(organization: str, server_name: str, agent_name: str,
     client = get_client(server_name=server_name)
     tools: list[BaseTool] = await load_tools(client=client,server_name=server_name)
     system_prompt: str = prompt[0].content
-    model = get_model(organization)
+    model = await get_model(organization)
     checkpointer = await get_checkpointer(organization)
     store = await get_store(organization)
-    cache = get_cache(organization)
+    cache = await get_cache(organization)
     return create_agent(
         model=model,
         tools=tools,
@@ -174,9 +179,11 @@ async def create_sub_agent(organization: str, server_name: str, agent_name: str,
         name=agent_name,
         cache=cache)
 
-def get_model(organization: str) -> ChatOpenAI:
+@cached()
+async def get_model(organization: str) -> ChatOpenAI:
     return ChatOpenAI(model=os.environ["OPENAI_MODEL"],base_url=os.environ["OPENAI_BASE_URL"])
 
+@cached()
 async def get_checkpointer(organization: str) -> Checkpointer:
     redis_url = os.environ["CHECKPOINTER_PERSISTENCE_URL_FORMAT"].format(organization)
     checkpoint_prefix = CHECKPOINT_PREFIX + "-" + organization
@@ -187,6 +194,7 @@ async def get_checkpointer(organization: str) -> Checkpointer:
         await checkpointer.asetup()
         return checkpointer
 
+@cached()
 async def get_store(organization: str) -> BaseStore:
     conn_string = os.environ["STORE_PERSISTENCE_URL_FORMAT"].format(os.environ["REDIS_PASSWORD"], organization)
     store_prefix = STORE_PREFIX + "-" + organization
@@ -195,7 +203,8 @@ async def get_store(organization: str) -> BaseStore:
         store.setup()
         return store
 
-def get_cache(organization: str) -> BaseCache:
+@cached()
+async def get_cache(organization: str) -> BaseCache:
     redis_url = os.environ["CACHE_PERSISTENCE_URL_FORMAT"].format(organization)
     prefix = "redis-" + organization
     redis_client = Redis(host=os.environ["REDIS_HOST"], password=os.environ["REDIS_PASSWORD"])
@@ -226,10 +235,10 @@ async def create_supervisor_agent(organization: str) -> CompiledStateGraph[EPFAg
         sub_agents.append(sub_agent)
         tool = as_tool(name=sub_agent_name, prompt=agent_prompt, agent=sub_agent)
         tools.append(tool)
-    model = get_model(organization)
+    model = await get_model(organization)
     checkpointer = await get_checkpointer(organization)
     store = await get_store(organization)
-    cache = get_cache(organization)
+    cache = await get_cache(organization)
     return create_agent(
         model=model,
         tools=tools,
@@ -268,7 +277,7 @@ async def create_supervisor(organization: str) -> CompiledStateGraph[UIAgentStat
     builder.set_finish_point(supervisor_node_name)
     checkpointer = await get_checkpointer(organization)
     store = await get_store(organization)
-    cache = get_cache(organization)
+    cache = await get_cache(organization)
     return builder.compile(checkpointer=checkpointer, cache=cache, store=store, debug=DEBUG, name=organization)
 
 async def supervisor_node(state: UIAgentState, config: RunnableConfig, runtime: Runtime[AgentContext]) -> dict[str, Any] | Any:
@@ -277,6 +286,10 @@ async def supervisor_node(state: UIAgentState, config: RunnableConfig, runtime: 
     context.claims = config["configurable"]["claims"]
     organization: str = config["configurable"]["organization"]
     context.organization = organization
+    context.cache = await get_cache(organization)
+    context.checkpointer = await get_checkpointer(organization)
+    context.model = await get_model(organization)
+    context.store = await get_store(organization)
     messages = copilotkit_messages_to_langchain(state["messages"])
     agent_state = EPFAgentState(messages=messages)
     supervisor_agent: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState] = await create_supervisor_agent(organization=organization)
