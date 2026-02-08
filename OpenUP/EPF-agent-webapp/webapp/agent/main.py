@@ -161,7 +161,7 @@ def as_tool(name: str, prompt: Prompt, agent: CompiledStateGraph[EPFAgentState, 
     tool = agent.as_tool(name=name, description=prompt.description, arg_types=arg_types)
     return tool
 
-async def create_sub_agent(organization: str, server_name: str, agent_name: str, prompt: Prompt, context: AgentContext) -> CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]:
+async def create_sub_agent(server_name: str, agent_name: str, prompt: Prompt, context: AgentContext) -> CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]:
     client = get_client(server_name=server_name, context=context)
     tools: list[BaseTool] = await load_tools(client=client,server_name=server_name)
     system_prompt: str = prompt[0].content
@@ -177,7 +177,7 @@ async def create_sub_agent(organization: str, server_name: str, agent_name: str,
         checkpointer=context.checkpointer,
         store=context.store,
         debug=DEBUG,
-        name=agent_name,
+        name=agent_name + "-" + context.organization,
         cache=context.cache)
 
 @cached()
@@ -235,7 +235,7 @@ async def create_supervisor_agent(organization: str, context: AgentContext) -> C
     tools: list[BaseTool] = []
     for sub_agent_prompt in sub_agent_prompts:
         sub_agent_name = agent_prompt.name
-        sub_agent_server_name = sub_agent_name
+        sub_agent_server_name = agent_prompt.name
         sub_agent = await create_sub_agent(server_name=sub_agent_server_name, agent_name=sub_agent_name, prompt=sub_agent_prompt, context=context)
         sub_agents.append(sub_agent)
         tool = as_tool(name=sub_agent_name, prompt=agent_prompt, agent=sub_agent)
