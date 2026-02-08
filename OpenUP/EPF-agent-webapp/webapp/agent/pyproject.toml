@@ -7,7 +7,7 @@ dependencies = [
     "langchain==1.2.9",
     "langgraph==1.0.8",
     "openai>=1.68.2,<2.0.0",
-    "fastapi>=0.115.0,<0.128.4",
+    "fastapi>=0.115.0,<=0.128.4",
     "uvicorn>=0.40.0,<1.0.0",
     "python-dotenv>=1.2.1,<2.0.0",
     "langchain-openai==1.1.7",
