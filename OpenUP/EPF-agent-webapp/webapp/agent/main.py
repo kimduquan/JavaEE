@@ -115,18 +115,22 @@ def load_servers():
         if(mcp_server_urls.get(server) == None):
             mcp_server_urls[server] = os.environ["MCP_SERVER_URL_FORMAT"].format(server)
 
-def get_connections(server_name: str) -> dict[str, Connection]:
+def get_connections(server_name: str, headers: dict[str, Any] | None) -> dict[str, Connection]:
     connections: dict[str, Connection] = {}
     for (mcp_server_name, mcp_server_url) in mcp_server_urls.items():
         if(mcp_server_name == server_name):
             connections[mcp_server_name] = StreamableHttpConnection(
             transport = 'streamable_http',
-            url=mcp_server_url
+            url=mcp_server_url,
+            headers=headers
         )
     return connections
 
-def get_client(server_name: str) -> MultiServerMCPClient:
-    connections = get_connections(server_name=server_name)
+def get_client(server_name: str, context: AgentContext) -> MultiServerMCPClient:
+    headers: dict[str, Any] = {}
+    if(context.authorization):
+        headers["Authorization"] = context.authorization.scheme + " " + context.authorization.credentials
+    connections = get_connections(server_name=server_name, headers=headers)
     tool_interceptors = [EPFToolCallInterceptor()]
     client = MultiServerMCPClient(
         connections=connections,
@@ -157,16 +161,12 @@ def as_tool(name: str, prompt: Prompt, agent: CompiledStateGraph[EPFAgentState, 
     tool = agent.as_tool(name=name, description=prompt.description, arg_types=arg_types)
     return tool
 
-async def create_sub_agent(organization: str, server_name: str, agent_name: str, prompt: Prompt) -> CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]:
-    client = get_client(server_name=server_name)
+async def create_sub_agent(organization: str, server_name: str, agent_name: str, prompt: Prompt, context: AgentContext) -> CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]:
+    client = get_client(server_name=server_name, context=context)
     tools: list[BaseTool] = await load_tools(client=client,server_name=server_name)
     system_prompt: str = prompt[0].content
-    model = await get_model(organization)
-    checkpointer = await get_checkpointer(organization)
-    store = await get_store(organization)
-    cache = await get_cache(organization)
     return create_agent(
-        model=model,
+        model=context.model,
         tools=tools,
         system_prompt=system_prompt,
         middleware=[
@@ -174,11 +174,11 @@ async def create_sub_agent(organization: str, server_name: str, agent_name: str,
             ],
         state_schema=EPFAgentState,
         context_schema=AgentContext,
-        checkpointer=checkpointer,
-        store=store,
+        checkpointer=context.checkpointer,
+        store=context.store,
         debug=DEBUG,
         name=agent_name,
-        cache=cache)
+        cache=context.cache)
 
 @cached()
 async def get_model(organization: str) -> ChatOpenAI:
@@ -212,11 +212,15 @@ async def get_cache(organization: str) -> BaseCache:
     redis_cache = RedisCache(redis_url=redis_url, prefix=prefix, redis_client=redis_client)
     return redis_cache
 
-@cached()
-async def create_supervisor_agent(organization: str) -> CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]:
+def organization_key_builder(func, *args, **kwargs):
+    organization = kwargs.get("organization") or args[1]
+    return organization
+
+@cached(key_builder=organization_key_builder)
+async def create_supervisor_agent(organization: str, context: AgentContext) -> CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]:
     supervisor_agent_name = SUPERVISOR_AGENT_NAME + "-" + organization
     server_name = DEFAULT_SERVER_NAME
-    client = get_client(server_name=server_name)
+    client = get_client(server_name=server_name, context=context)
     prompts = await list_prompts(client=client, server_name=server_name)
     system_prompt: str | None = None
     sub_agent_prompts: list[Prompt] = []
@@ -232,16 +236,12 @@ async def create_supervisor_agent(organization: str) -> CompiledStateGraph[EPFAg
     for sub_agent_prompt in sub_agent_prompts:
         sub_agent_name = agent_prompt.name
         sub_agent_server_name = sub_agent_name
-        sub_agent = await create_sub_agent(server_name=sub_agent_server_name, agent_name=sub_agent_name, prompt=sub_agent_prompt)
+        sub_agent = await create_sub_agent(server_name=sub_agent_server_name, agent_name=sub_agent_name, prompt=sub_agent_prompt, context=context)
         sub_agents.append(sub_agent)
         tool = as_tool(name=sub_agent_name, prompt=agent_prompt, agent=sub_agent)
         tools.append(tool)
-    model = await get_model(organization)
-    checkpointer = await get_checkpointer(organization)
-    store = await get_store(organization)
-    cache = await get_cache(organization)
     return create_agent(
-        model=model,
+        model=context.model,
         tools=tools,
         system_prompt=system_prompt,
         middleware=[
@@ -253,16 +253,16 @@ async def create_supervisor_agent(organization: str) -> CompiledStateGraph[EPFAg
             MODEL_RETRY,
             CONTEXT_EDITING,
             HUMAN_IN_THE_LOOP,
-            SummarizationMiddleware(model=model),
+            SummarizationMiddleware(model=context.model),
             EPFAgentMiddleware()
             ],
         state_schema=EPFAgentState,
         context_schema=AgentContext,
-        checkpointer=checkpointer,
-        store=store,
+        checkpointer=context.checkpointer,
+        store=context.store,
         debug=DEBUG,
         name=supervisor_agent_name,
-        cache=cache)
+        cache=context.cache)
 
 @cached()
 async def create_supervisor(organization: str) -> CompiledStateGraph[UIAgentState, AgentContext, UIAgentState, UIAgentState]:
@@ -293,7 +293,7 @@ async def supervisor_node(state: UIAgentState, config: RunnableConfig, runtime: 
     context.store = await get_store(organization)
     messages = copilotkit_messages_to_langchain(state["messages"])
     agent_state = EPFAgentState(messages=messages)
-    supervisor_agent: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState] = await create_supervisor_agent(organization=organization)
+    supervisor_agent: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState] = await create_supervisor_agent(organization=organization, context=context)
     output = await supervisor_agent.ainvoke(input=agent_state, config=config, context=context)
     output["messages"] = langchain_messages_to_copilotkit(output["messages"])
     return output
