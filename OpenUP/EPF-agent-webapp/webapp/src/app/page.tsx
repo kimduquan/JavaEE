@@ -27,9 +27,14 @@ function MainContent() {
       return (<div>{event.name}</div>);
     }
   })
+  if(session.status == "authenticated"){
+    return (
+      <div>
+          <CopilotChat />
+      </div>
+    );
+  }
   return (
-    <div>
-        <CopilotChat />
-    </div>
-  );
+      <p>{session.status}</p>
+    );
 }
