@@ -164,7 +164,8 @@ def as_tool(name: str, prompt: Prompt, agent: CompiledStateGraph[EPFAgentState, 
 async def create_sub_agent(server_name: str, agent_name: str, prompt: Prompt, context: AgentContext) -> CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]:
     client = get_client(server_name=server_name, context=context)
     tools: list[BaseTool] = await load_tools(client=client,server_name=server_name)
-    system_prompt: str = prompt[0].content
+    prompt_content = await client.get_prompt(server_name=server_name, prompt_name=prompt.name)
+    system_prompt: str = prompt_content[-1].content
     return create_agent(
         model=context.model,
         tools=tools,
