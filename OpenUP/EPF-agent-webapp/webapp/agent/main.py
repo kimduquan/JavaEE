@@ -11,7 +11,7 @@ from langchain.agents import AgentState
 from langgraph.graph.state import CompiledStateGraph, StateGraph
 from langchain.agents.factory import create_agent
 import os
-from langchain_core.messages import HumanMessage, AIMessage
+from langchain_core.messages import SystemMessage, AnyMessage
 from langchain_core.tools.base import BaseTool
 from langchain_mcp_adapters.client import MultiServerMCPClient
 from langchain_mcp_adapters.sessions import Connection, StreamableHttpConnection
@@ -33,7 +33,7 @@ from jwt import PyJWKClient
 from copilotkit import CopilotKitMiddleware, CopilotKitState
 from copilotkit.langgraph import copilotkit_messages_to_langchain, langchain_messages_to_copilotkit, copilotkit_customize_config
 from langchain_mcp_adapters.interceptors import MCPToolCallRequest, ToolCallInterceptor
-from aiocache import cached
+from aiocache import cached, Cache
 from langgraph.checkpoint.redis import AsyncRedisSaver
 from langgraph.checkpoint.redis.base import CHECKPOINT_PREFIX, CHECKPOINT_BLOB_PREFIX, CHECKPOINT_WRITE_PREFIX
 from langgraph.store.redis.aio import AsyncRedisStore
@@ -63,8 +63,6 @@ class EPFAgentMiddleware(AgentMiddleware[EPFAgentState, AgentContext]):
     """"""
 
 class EPFToolCallInterceptor(ToolCallInterceptor):
-    """"""
-
     async def __call__(
         self,
         request: MCPToolCallRequest,
@@ -80,10 +78,10 @@ class EPFToolCallInterceptor(ToolCallInterceptor):
 
 DEFAULT_SERVER_NAME = "epf-mcp-server"
 
-mcp_server_urls: dict[str, str] = {
+MCP_SERVER_URLS: dict[str, str] = {
     DEFAULT_SERVER_NAME: os.environ["MCP_SERVER_URL"],
 }
-mcp_servers: list[str] = [
+MCP_SERVERS: list[str] = [
     DEFAULT_SERVER_NAME,
     "query",
     "persistence"
@@ -106,19 +104,21 @@ HUMAN_IN_THE_LOOP = HumanInTheLoopMiddleware(interrupt_on={"persistence": Interr
 EPF_AGENT_NAME = "epf-agent"
 SUPERVISOR_AGENT_NAME = "supervisor_agent"
 SUPERVISOR_NODE_NAME = "supervisor"
+AGENT_NODE_NAME = "agent_node"
 
-security = HTTPBearer()
-jwk_client = PyJWKClient(uri=os.environ["JWT_KEY_URL"])
-logger = logging.getLogger(__name__)
+SECURITY = HTTPBearer()
+JWK_CLIENT = PyJWKClient(uri=os.environ["JWT_KEY_URL"])
+LOGGER = logging.getLogger(__name__)
+CACHE = Cache(Cache.MEMORY)
 
 def load_servers():
-    for server in mcp_servers:
-        if(mcp_server_urls.get(server) == None):
-            mcp_server_urls[server] = os.environ["MCP_SERVER_URL_FORMAT"].format(server)
+    for server in MCP_SERVERS:
+        if(MCP_SERVER_URLS.get(server) == None):
+            MCP_SERVER_URLS[server] = os.environ["MCP_SERVER_URL_FORMAT"].format(server)
 
 def get_connections(server_name: str, headers: dict[str, Any] | None) -> dict[str, Connection]:
     connections: dict[str, Connection] = {}
-    for (mcp_server_name, mcp_server_url) in mcp_server_urls.items():
+    for (mcp_server_name, mcp_server_url) in MCP_SERVER_URLS.items():
         if(mcp_server_name == server_name):
             connections[mcp_server_name] = StreamableHttpConnection(
             transport = 'streamable_http',
@@ -152,24 +152,52 @@ async def list_prompts(client: MultiServerMCPClient, server_name: str) -> list[P
         prompts = list_prompts_result.prompts
     return prompts
 
-def as_tool(name: str, prompt: Prompt, agent: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]) -> BaseTool:
-    arg_types: dict[str, type] = {}
-    for argument in prompt.arguments:
-        if(argument.required == True):
-            arg_types[argument.name] = str
-        else:
-            arg_types[argument.name] = str | None
+async def invoke_agent(input: dict[str, Any] | None, state: EPFAgentState, config: RunnableConfig, runtime: Runtime[AgentContext]):
+    server_name: str = config["metadata"]["server_name"]
+    prompt_name: str = config["metadata"]["prompt_name"]
+    client = get_client(server_name=server_name, context=runtime.context)
+    prompt_contents = await client.get_prompt(server_name=server_name, prompt_name=prompt_name, arguments=input)
+    sub_state = EPFAgentState(state)
+    messages: list[AnyMessage] = []
+    for prompt_content in prompt_contents:
+        messages.append(SystemMessage(content=prompt_content.content))
+    messages.append(state["messages"][-1])
+    sub_state["messages"] = messages
+    agent_name: str = config["metadata"]["agent_name"]
+    agent: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState] = await CACHE.get(key=agent_name)
+    output = await agent.ainvoke(input=sub_state, config=config, context=runtime.context)
+    return output
+
+async def create_sub_agent_node(server_name: str, prompt_name: str, agent: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState], context: AgentContext) -> CompiledStateGraph[EPFAgentState, AgentContext, dict[str, Any], EPFAgentState]:
+    await CACHE.set(key=agent.name, value=agent)
+    graph: StateGraph[EPFAgentState, AgentContext, dict[str, Any], EPFAgentState] = StateGraph(state_schema=EPFAgentState, context_schema=AgentContext, input_schema=dict[str, Any], output_schema=EPFAgentState)
+    metadata: dict[str, Any] = {}
+    metadata["agent_name"] = agent.name
+    metadata["server_name"] = server_name
+    metadata["prompt_name"] = prompt_name
+    graph.add_node("invoke_agent", invoke_agent, metadata=metadata, input_schema=dict[str, Any])
+    graph.set_entry_point("invoke_agent")
+    graph.set_finish_point("invoke_agent")
+    return graph.compile(checkpointer=context.checkpointer, cache=context.cache, store=context.store, debug=DEBUG, name=AGENT_NODE_NAME + "-" + context.organization)
+
+def as_tool(name: str, prompt: Prompt, agent: CompiledStateGraph[EPFAgentState, AgentContext, dict[str, Any], EPFAgentState]) -> BaseTool:
+    arg_types: dict[str, type] | None = None
+    if prompt.arguments:
+        arg_types = {}
+        for argument in prompt.arguments:
+            if(argument.required == True):
+                arg_types[argument.name] = str
+            else:
+                arg_types[argument.name] = str | None
     tool = agent.as_tool(name=name, description=prompt.description, arg_types=arg_types)
     return tool
 
-async def create_sub_agent(server_name: str, agent_name: str, prompt_content: list[HumanMessage | AIMessage], context: AgentContext) -> CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]:
+async def create_sub_agent(server_name: str, agent_name: str, context: AgentContext) -> CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]:
     client = get_client(server_name=server_name, context=context)
     tools: list[BaseTool] = await load_tools(client=client,server_name=server_name)
-    system_prompt: str = prompt_content[-1].content
     return create_agent(
         model=context.model,
         tools=tools,
-        system_prompt=system_prompt,
         middleware=[
             EPFAgentMiddleware()
             ],
@@ -181,11 +209,11 @@ async def create_sub_agent(server_name: str, agent_name: str, prompt_content: li
         name=agent_name + "-" + context.organization,
         cache=context.cache)
 
-@cached()
+@cached(cache=CACHE)
 async def get_model(organization: str) -> ChatOpenAI:
     return ChatOpenAI(model=os.environ["OPENAI_MODEL"],base_url=os.environ["OPENAI_BASE_URL"])
 
-@cached()
+@cached(cache=CACHE)
 async def get_checkpointer(organization: str) -> Checkpointer:
     redis_url = os.environ["CHECKPOINTER_PERSISTENCE_URL_FORMAT"].format(organization)
     checkpoint_prefix = CHECKPOINT_PREFIX + "-" + organization
@@ -196,7 +224,7 @@ async def get_checkpointer(organization: str) -> Checkpointer:
         await checkpointer.asetup()
         return checkpointer
 
-@cached()
+@cached(cache=CACHE)
 async def get_store(organization: str) -> BaseStore:
     conn_string = os.environ["STORE_PERSISTENCE_URL_FORMAT"].format(os.environ["REDIS_PASSWORD"], organization)
     store_prefix = STORE_PREFIX + "-" + organization
@@ -205,7 +233,7 @@ async def get_store(organization: str) -> BaseStore:
         await store.setup()
         return store
 
-@cached()
+@cached(cache=CACHE)
 async def get_cache(organization: str) -> BaseCache:
     redis_url = os.environ["CACHE_PERSISTENCE_URL_FORMAT"].format(organization)
     prefix = "redis-" + organization
@@ -217,7 +245,7 @@ def organization_key_builder(func, *args, **kwargs):
     organization = kwargs.get("organization") or args[1]
     return organization
 
-@cached(key_builder=organization_key_builder)
+@cached(cache=CACHE, key_builder=organization_key_builder)
 async def create_supervisor_agent(organization: str, context: AgentContext) -> CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]:
     supervisor_agent_name = SUPERVISOR_AGENT_NAME + "-" + organization
     server_name = DEFAULT_SERVER_NAME
@@ -232,15 +260,13 @@ async def create_supervisor_agent(organization: str, context: AgentContext) -> C
         else:
             sub_agent_prompts.append(agent_prompt)
 
-    sub_agents: list[CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]] = []
     tools: list[BaseTool] = []
     for sub_agent_prompt in sub_agent_prompts:
         sub_agent_name = sub_agent_prompt.name
         sub_agent_server_name = sub_agent_prompt.name
-        prompt_content = await client.get_prompt(server_name=server_name, prompt_name=sub_agent_prompt.name)
-        sub_agent = await create_sub_agent(server_name=sub_agent_server_name, agent_name=sub_agent_name, prompt_content=prompt_content, context=context)
-        sub_agents.append(sub_agent)
-        tool = as_tool(name=sub_agent_name, prompt=sub_agent_prompt, agent=sub_agent)
+        sub_agent = await create_sub_agent(server_name=sub_agent_server_name, agent_name=sub_agent_name, context=context)
+        sub_agent_node = await create_sub_agent_node(server_name=server_name, prompt_name=sub_agent_prompt.name, agent=sub_agent, context=context)
+        tool = as_tool(name=sub_agent_name, prompt=sub_agent_prompt, agent=sub_agent_node)
         tools.append(tool)
     return create_agent(
         model=context.model,
@@ -266,7 +292,7 @@ async def create_supervisor_agent(organization: str, context: AgentContext) -> C
         name=supervisor_agent_name,
         cache=context.cache)
 
-@cached()
+@cached(cache=CACHE)
 async def create_supervisor(organization: str) -> CompiledStateGraph[UIAgentState, AgentContext, UIAgentState, UIAgentState]:
     builder = StateGraph(
         state_schema=UIAgentState,
@@ -283,7 +309,7 @@ async def create_supervisor(organization: str) -> CompiledStateGraph[UIAgentStat
     cache = await get_cache(organization)
     return builder.compile(checkpointer=checkpointer, cache=cache, store=store, debug=DEBUG, name=organization)
 
-async def supervisor_node(state: UIAgentState, config: RunnableConfig, runtime: Runtime[AgentContext]) -> dict[str, Any] | Any:
+async def supervisor_node(state: UIAgentState, config: RunnableConfig) -> dict[str, Any] | Any:
     context = AgentContext()
     context.authorization = config["configurable"]["authorization"]
     context.claims = config["configurable"]["claims"]
@@ -303,14 +329,14 @@ async def supervisor_node(state: UIAgentState, config: RunnableConfig, runtime: 
 def add_agent_endpoint(app: FastAPI, name: str, path: str = "/"):
 
     @app.post(path)
-    async def agent_endpoint(input_data: RunAgentInput, request: Request, credentials: Annotated[HTTPAuthorizationCredentials, Depends(security)]):
+    async def agent_endpoint(input_data: RunAgentInput, request: Request, credentials: Annotated[HTTPAuthorizationCredentials, Depends(SECURITY)]):
 
         claims: Any = None
         try:
-            key = jwk_client.get_signing_key_from_jwt(token=credentials.credentials)
+            key = JWK_CLIENT.get_signing_key_from_jwt(token=credentials.credentials)
             claims = jwt.decode(jwt=credentials.credentials, key=key, issuer=os.environ["JWT_ISSUER"])
         except PyJWTError as ex:
-            logger.error("[%f]jwt:%s", datetime.now(tz=timezone.utc).timestamp(), credentials.credentials)
+            LOGGER.error("[%f]jwt:%s", datetime.now(tz=timezone.utc).timestamp(), credentials.credentials)
             raise HTTPException(status_code=HTTP_403_FORBIDDEN, detail=ex.args)
         organization_claim: dict[str, Any] = claims["organization"]
         organization_name: str = list(organization_claim.keys())[0]
