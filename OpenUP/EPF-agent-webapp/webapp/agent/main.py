@@ -3,7 +3,7 @@ from typing import Annotated, Any
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import StreamingResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from redis import Redis
+from redis.asyncio import Redis
 import uvicorn
 from langchain_openai import ChatOpenAI
 from langchain.agents import AgentState
