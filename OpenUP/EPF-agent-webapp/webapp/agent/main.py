@@ -30,7 +30,7 @@ from langgraph.cache.base import BaseCache
 from uuid import UUID
 import jwt
 from jwt import PyJWKClient
-from copilotkit import CopilotKitMiddleware, CopilotKitState
+from copilotkit import CopilotKitState
 from copilotkit.langgraph import copilotkit_customize_config
 from langchain_mcp_adapters.interceptors import MCPToolCallRequest, ToolCallInterceptor
 from aiocache import cached, Cache
@@ -102,9 +102,9 @@ CONTEXT_EDITING = ContextEditingMiddleware(edits=[ClearToolUsesEdit()])
 HUMAN_IN_THE_LOOP = HumanInTheLoopMiddleware(interrupt_on={"persistence": InterruptOnConfig(allowed_decisions=["approve","edit","reject"])})
 
 EPF_AGENT_NAME = "epf-agent"
-SUPERVISOR_AGENT_NAME = "supervisor_agent"
+SUPERVISOR_AGENT_NAME = "supervisor-agent"
 SUPERVISOR_NODE_NAME = "supervisor"
-AGENT_NODE_NAME = "agent_node"
+AGENT_NODE_NAME = "agent-node"
 
 SECURITY = HTTPBearer()
 JWK_CLIENT = PyJWKClient(uri=os.environ["JWT_KEY_URL"])
@@ -152,7 +152,7 @@ async def list_prompts(client: MultiServerMCPClient, server_name: str) -> list[P
         prompts = list_prompts_result.prompts
     return prompts
 
-async def invoke_agent(input: dict[str, Any] | None, state: EPFAgentState, config: RunnableConfig, runtime: Runtime[AgentContext]):
+async def invoke_agent(input: dict[str, Any] | None, state: EPFAgentState, config: RunnableConfig, runtime: Runtime[AgentContext]) -> dict[str, Any] | Any:
     server_name: str = config["metadata"]["server_name"]
     prompt_name: str = config["metadata"]["prompt_name"]
     client = get_client(server_name=server_name, context=runtime.context)
@@ -273,7 +273,6 @@ async def create_supervisor_agent(organization: str, context: AgentContext) -> C
         tools=tools,
         system_prompt=system_prompt,
         middleware=[
-            CopilotKitMiddleware(),
             MODEL_CALL_LIMIT,
             TOOL_CALL_LIMIT,
             PII,
@@ -307,7 +306,7 @@ async def create_supervisor(organization: str) -> CompiledStateGraph[UIAgentStat
     checkpointer = await get_checkpointer(organization)
     store = await get_store(organization)
     cache = await get_cache(organization)
-    return builder.compile(checkpointer=checkpointer, cache=cache, store=store, debug=DEBUG, name=organization)
+    return builder.compile(checkpointer=checkpointer, cache=cache, store=store, debug=DEBUG, name=supervisor_node_name)
 
 async def supervisor_node(state: UIAgentState, config: RunnableConfig) -> dict[str, Any] | Any:
     context = AgentContext()
