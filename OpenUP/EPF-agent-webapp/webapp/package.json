@@ -14,9 +14,9 @@
     "postinstall": "npm run install:agent"
   },
   "dependencies": {
-    "@copilotkit/react-core": "1.51.3",
-    "@copilotkit/react-ui": "1.51.3",
-    "@copilotkit/runtime": "1.51.3",
+    "@copilotkit/react-core": "1.51.2",
+    "@copilotkit/react-ui": "1.51.2",
+    "@copilotkit/runtime": "1.51.2",
     "next": "16.1.6",
     "next-auth": "^4.24.13",
     "react": "^19.2.4",
@@ -28,7 +28,7 @@
     "@tailwindcss/postcss": "^4.1.18",
     "@types/node": "^20",
     "@types/react": "^19.2.13",
-    "@types/react-dom": "^19.2.4",
+    "@types/react-dom": "^19.2.3",
     "concurrently": "^9.2.1",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
