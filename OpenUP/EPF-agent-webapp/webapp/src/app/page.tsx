@@ -29,7 +29,11 @@ function MainContent() {
   });
   useCoAgentStateRender<AgentState>({
     name: "epf-agent",
-    render: ({ state }) => (<progress max={state.progress.max} value={state.progress.value}></progress>)
+    render: ({ state }) => {
+      if(state.progress) {
+        return (<progress max={state.progress?.max} value={state.progress?.value}></progress>)
+      }
+    }
   });
   useLangGraphInterrupt({
     render: ({ event, resolve }) => {
