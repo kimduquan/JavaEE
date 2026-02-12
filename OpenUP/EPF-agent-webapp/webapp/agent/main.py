@@ -338,7 +338,8 @@ def add_agent_endpoint(app: FastAPI, name: str, path: str = "/"):
         organization_claim: dict[str, Any] = claims["organization"]
         organization_name: str = list(organization_claim.keys())[0]
         organization: str = organization_claim.get(organization_name)["id"]
-        config = RunnableConfig(configurable={"authorization": credentials, "claims": claims, "organization": organization}, run_id=UUID(input_data.run_id))
+        LOGGER.info("thread_id:%s", input_data.thread_id)
+        config = RunnableConfig(configurable={"authorization": credentials, "claims": claims, "organization": organization, "thread_id": input_data.thread_id}, run_id=UUID(input_data.run_id))
         config = copilotkit_customize_config(base_config=config)
         supervisor_graph = await create_supervisor(organization)
         agent = LangGraphAgent(name=name, graph=supervisor_graph, config=config)
