@@ -2,7 +2,8 @@
 
 import { CopilotChat } from "@copilotkit/react-ui";
 import { SessionProvider, useSession } from "next-auth/react";
-import { useLangGraphInterrupt, useDefaultTool } from "@copilotkit/react-core";
+import { useLangGraphInterrupt, useDefaultTool, useCoAgentStateRender } from "@copilotkit/react-core";
+import { AgentState } from "@/lib/types";
 
 export default function CopilotKitPage() {
   return (
@@ -25,6 +26,10 @@ function MainContent() {
     render: ({name, status, args, result}) => {
       return (<p>{name}</p>);
     }
+  });
+  useCoAgentStateRender<AgentState>({
+    name: "epf-agent",
+    render: ({ state }) => (<progress max={state.progress.max} value={state.progress.value}></progress>)
   });
   useLangGraphInterrupt({
     render: ({ event, resolve }) => {
