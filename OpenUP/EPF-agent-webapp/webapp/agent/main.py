@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from typing import Annotated, Any
+from typing import Annotated, Any, TypedDict
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import StreamingResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -31,7 +31,7 @@ from uuid import UUID
 import jwt
 from jwt import PyJWKClient
 from copilotkit import CopilotKitState
-from copilotkit.langgraph import copilotkit_customize_config
+from copilotkit.langgraph import copilotkit_customize_config, copilotkit_emit_state
 from langchain_mcp_adapters.interceptors import MCPToolCallRequest, ToolCallInterceptor
 from aiocache import cached, Cache
 from langgraph.checkpoint.redis import AsyncRedisSaver
@@ -44,8 +44,12 @@ import logging
 from jwt.exceptions import PyJWTError
 from starlette.status import HTTP_403_FORBIDDEN
 
+class Progress(TypedDict):
+    max: float | None = None
+    value: float | None = None
+
 class UIAgentState(CopilotKitState):
-    """"""
+    progress: Progress | None = None
 
 class EPFAgentState(AgentState):
     """"""
@@ -246,7 +250,7 @@ def organization_key_builder(func, *args, **kwargs):
     return organization
 
 @cached(key_builder=organization_key_builder)
-async def create_supervisor_agent(organization: str, context: AgentContext) -> CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]:
+async def create_supervisor_agent(organization: str, context: AgentContext) -> CompiledStateGraph[UIAgentState, AgentContext, UIAgentState, UIAgentState]:
     supervisor_agent_name = SUPERVISOR_AGENT_NAME + "-" + organization
     server_name = DEFAULT_SERVER_NAME
     client = get_client(server_name=server_name, context=context)
@@ -283,7 +287,7 @@ async def create_supervisor_agent(organization: str, context: AgentContext) -> C
             SummarizationMiddleware(model=context.model),
             EPFAgentMiddleware()
             ],
-        state_schema=EPFAgentState,
+        state_schema=UIAgentState,
         context_schema=AgentContext,
         checkpointer=context.checkpointer,
         store=context.store,
@@ -318,9 +322,12 @@ async def supervisor_node(state: UIAgentState, config: RunnableConfig) -> dict[s
     context.checkpointer = await get_checkpointer(organization)
     context.model = await get_model(organization)
     context.store = await get_store(organization)
-    agent_state = EPFAgentState(state)
-    supervisor_agent: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState] = await create_supervisor_agent(organization=organization, context=context)
-    output = await supervisor_agent.ainvoke(input=agent_state, config=config, context=context)
+    supervisor_agent: CompiledStateGraph[UIAgentState, AgentContext, UIAgentState, UIAgentState] = await create_supervisor_agent(organization=organization, context=context)
+    state["progress"] = Progress(max=1, value=0)
+    await copilotkit_emit_state(config=config, state=state)
+    output = await supervisor_agent.ainvoke(input=state, config=config, context=context)
+    state["progress"]["value"] = state["progress"]["max"]
+    await copilotkit_emit_state(config=config, state=state)
     return output
 
 def add_agent_endpoint(app: FastAPI, name: str, path: str = "/"):
