@@ -156,11 +156,11 @@ async def list_prompts(client: MultiServerMCPClient, server_name: str) -> list[P
         prompts = list_prompts_result.prompts
     return prompts
 
-async def invoke_agent(input: dict[str, Any] | None, state: EPFAgentState, config: RunnableConfig, runtime: Runtime[AgentContext]) -> dict[str, Any] | Any:
+async def invoke_agent(state: dict[str, Any] | None, config: RunnableConfig, runtime: Runtime[AgentContext]) -> dict[str, Any] | Any:
     server_name: str = config["metadata"]["server_name"]
     prompt_name: str = config["metadata"]["prompt_name"]
     client = get_client(server_name=server_name, context=runtime.context)
-    prompt_contents = await client.get_prompt(server_name=server_name, prompt_name=prompt_name, arguments=input)
+    prompt_contents = await client.get_prompt(server_name=server_name, prompt_name=prompt_name, arguments=state)
     sub_state = EPFAgentState(state)
     messages: list[AnyMessage] = []
     for prompt_content in prompt_contents:
