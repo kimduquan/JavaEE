@@ -25,11 +25,11 @@ public class Gateway {
 	
 	@Prompt(name = Naming.PERSISTENCE)
 	@RunOnVirtualThread
-	String getPersistencePrompt(@PromptArg(name = Naming.SCHEMA) final String schema) throws Exception {
+	String getPersistencePrompt(@PromptArg(name = "schema_name") final String schemaName) throws Exception {
 		final StringBuilder prompt = new StringBuilder();
 		final SchemaBuilder schemaBuilder = new SchemaBuilder();
 		final String authorization = "Bearer " + jwt.getRawToken();
-		final List<EntityType> entities = schemaClient.getEntities(authorization).stream().filter(entity -> entity.getTable().getSchema().equals(schema)).collect(Collectors.toList());
+		final List<EntityType> entities = schemaClient.getEntities(authorization).stream().filter(entity -> entity.getTable().getSchema().equals(schemaName)).collect(Collectors.toList());
 		schemaBuilder.entities(entities);
 		prompt.append("""
 		Given below Java Persistence API entity classes :
@@ -40,11 +40,11 @@ public class Gateway {
 
 	@Prompt(name = Naming.QUERY)
 	@RunOnVirtualThread
-	String getQueryPrompt(@PromptArg(name = Naming.SCHEMA) final String schema) throws Exception {
+	String getQueryPrompt(@PromptArg(name = "schema_name") final String schemaName) throws Exception {
 		final StringBuilder prompt = new StringBuilder();
 		final SchemaBuilder schemaBuilder = new SchemaBuilder();
 		final String authorization = "Bearer " + jwt.getRawToken();
-		final List<EntityType> entities = schemaClient.getEntities(authorization).stream().filter(entity -> entity.getTable().getSchema().equals(schema)).collect(Collectors.toList());
+		final List<EntityType> entities = schemaClient.getEntities(authorization).stream().filter(entity -> entity.getTable().getSchema().equals(schemaName)).collect(Collectors.toList());
 		schemaBuilder.entities(entities);
 		prompt.append("""
 		Given below Java Persistence API entity classes :

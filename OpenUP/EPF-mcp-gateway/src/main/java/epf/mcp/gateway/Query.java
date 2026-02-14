@@ -15,7 +15,6 @@ import io.quarkus.security.Authenticated;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.core.Response;
 
 @ApplicationScoped
 @Authenticated
@@ -31,12 +30,12 @@ public class Query {
 	JsonWebToken jwt;
 
 	@McpServer(Naming.QUERY)
-	@Tool(name = "executeQuerySingleResult", description = "Execute a JPQL query which return a single result object", structuredContent = true)
+	@Tool(name = "executeQuerySingleResult", description = "Execute a SELECT query that returns a single result.", structuredContent = true)
 	@RunOnVirtualThread
     SingleResult executeQuerySingleResult(
-    		@ToolArg(name = "query", description = "The JPQL query")
+    		@ToolArg(name = "query", description = "a Jakarta Persistence query string")
     		final String query,
-    		@ToolArg(name = "parameters", description = "The input parameters", required = false)
+    		@ToolArg(name = "parameters", description = "Bind argument values to named parameters.", required = false)
     		final Map<String, Object> parameters) throws Exception {
 		final NativeQuery nativeQuery = new NativeQuery();
 		nativeQuery.setQuery(query);
@@ -47,16 +46,16 @@ public class Query {
     }
 	
 	@McpServer(Naming.QUERY)
-	@Tool(name = "executeQueryResultList", description = "Execute a JPQL query which return a list of object", structuredContent = true)
+	@Tool(name = "executeQueryResultList", description = "Execute a SELECT query and return the query results as an List.", structuredContent = true)
 	@RunOnVirtualThread
 	ResultList executeQueryResultList(
-    		@ToolArg(name = "query", description = "The JPQL query")
+    		@ToolArg(name = "query", description = "a Jakarta Persistence query string")
     		final String query,
-    		@ToolArg(name = "parameters", description = "The input parameters", required = false)
+    		@ToolArg(name = "parameters", description = "Bind argument values to named parameters.", required = false)
     		final Map<String, Object> parameters,
-    		@ToolArg(name = "firstResult", description = "The first result position", required = false)
+    		@ToolArg(name = "firstResult", description = "Set the position of the first result to retrieve.", required = false)
     		final Integer firstResult,
-    		@ToolArg(name = "maxResults", description = "The first result position", required = false)
+    		@ToolArg(name = "maxResults", description = "Set the maximum number of results to retrieve.", required = false)
     		final Integer maxResults) throws Exception {
 		final NativeQuery nativeQuery = new NativeQuery();
 		nativeQuery.setQuery(query);
@@ -65,19 +64,6 @@ public class Query {
 		final ResultList resultList = queryClient.executeQueryResultList(authorization, maxResults, firstResult, nativeQuery);
         return resultList;
     }
-	
-	@McpServer(Naming.QUERY)
-	@Tool(name = "countEntity", description = "Count entity", structuredContent = true)
-	@RunOnVirtualThread
-	Integer countEntity(
-			@ToolArg(name = "schema", description = "The schema")
-			final String schema,
-			@ToolArg(name = "entity", description = "The entity")
-			final String entity) throws Exception {
-		final String authorization = "Bearer " + jwt.getRawToken();
-		final Response response = queryClient.countEntity(authorization, schema, entity);
-		return Integer.valueOf(response.getHeaderString(Naming.Query.COUNT));
-	}
 	
 	@McpServer(Naming.QUERY)
 	@ResourceTemplate(uriTemplate = "query://{schema}/{entity}/{id}")
