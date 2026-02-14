@@ -1,14 +1,14 @@
 package epf.query.schema;
 
 public class SingleResult {
+	
+	private Object singleResult;
 
-	private Object result;
-
-	public Object getResult() {
-		return result;
+	public Object getSingleResult() {
+		return singleResult;
 	}
 
-	public void setResult(Object result) {
-		this.result = result;
+	public void setSingleResult(Object singleResult) {
+		this.singleResult = singleResult;
 	}
 }

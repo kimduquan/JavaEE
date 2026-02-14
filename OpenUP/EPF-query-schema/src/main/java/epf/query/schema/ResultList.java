@@ -4,13 +4,13 @@ import java.util.List;
 
 public class ResultList {
 
-	private List<?> result;
+	private List<?> resultList;
 
-	public List<?> getResult() {
-		return result;
+	public List<?> getResultList() {
+		return resultList;
 	}
 
-	public void setResult(List<?> result) {
-		this.result = result;
+	public void setResultList(List<?> resultList) {
+		this.resultList = resultList;
 	}
 }
