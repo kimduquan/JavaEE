@@ -234,6 +234,12 @@
 		    <artifactId>handlebars</artifactId>
 		    <version>4.5.0</version>
 		</dependency>
+		<!-- Source: https://mvnrepository.com/artifact/com.github.victools/jsonschema-module-jackson -->
+		<dependency>
+		    <groupId>com.github.victools</groupId>
+		    <artifactId>jsonschema-module-jackson</artifactId>
+		    <version>5.0.0</version>
+		</dependency>
     </dependencies>
   </dependencyManagement>
   <build>
