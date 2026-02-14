@@ -167,18 +167,6 @@
 			<artifactId>quarkus-hazelcast-client</artifactId>
 			<version>4.0.0</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/io.quarkiverse.mcp/quarkus-mcp-server-http -->
-		<dependency>
-		    <groupId>io.quarkiverse.mcp</groupId>
-		    <artifactId>quarkus-mcp-server-http</artifactId>
-		    <version>1.9.0</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/io.quarkiverse.mcp/quarkus-mcp-server-hibernate-validator -->
-		<dependency>
-		    <groupId>io.quarkiverse.mcp</groupId>
-		    <artifactId>quarkus-mcp-server-hibernate-validator</artifactId>
-		    <version>1.9.0</version>
-		</dependency>
 		<!-- https://mvnrepository.com/artifact/jakarta.nosql/jakarta.nosql-api -->
 		<dependency>
 		    <groupId>jakarta.nosql</groupId>
