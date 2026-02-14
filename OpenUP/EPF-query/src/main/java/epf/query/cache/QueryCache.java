@@ -156,7 +156,7 @@ public class QueryCache {
 		}
 		final Object result = query.getSingleResultOrNull();
 		final SingleResult queryResult = new SingleResult();
-		queryResult.setResult(result);
+		queryResult.setSingleResult(result);
 		return queryResult;
 	}
 	
@@ -175,7 +175,7 @@ public class QueryCache {
 		}
 		final List<?> results = query.getResultList();
 		final ResultList queryResult = new ResultList();
-		queryResult.setResult(results);
+		queryResult.setResultList(results);
 		return queryResult;
 	}
 }
