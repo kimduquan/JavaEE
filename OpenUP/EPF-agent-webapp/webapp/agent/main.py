@@ -80,7 +80,7 @@ class EPFToolCallInterceptor(ToolCallInterceptor):
         return await handler(request)
 
 
-DEFAULT_SERVER_NAME = "epf-mcp-server"
+DEFAULT_SERVER_NAME = "gateway"
 
 MCP_SERVER_URLS: dict[str, str] = {
     DEFAULT_SERVER_NAME: os.environ["MCP_SERVER_URL"],
@@ -258,7 +258,7 @@ async def create_supervisor_agent(organization: str, context: AgentContext) -> C
     system_prompt: str | None = None
     sub_agent_prompts: list[Prompt] = []
     for agent_prompt in prompts:
-        if (agent_prompt.name == supervisor_agent_name):
+        if (agent_prompt.name == DEFAULT_SERVER_NAME):
             prompt = await client.get_prompt(server_name=server_name, prompt_name=agent_prompt.name)
             system_prompt = prompt[0].content
         else:
