@@ -10,11 +10,14 @@
     <name>Eclipse Process Framework Query Schema</name>
     <packaging>jar</packaging>
     <dependencies>
-		<!-- https://mvnrepository.com/artifact/jakarta.validation/jakarta.validation-api -->
 		<dependency>
 		    <groupId>jakarta.validation</groupId>
 		    <artifactId>jakarta.validation-api</artifactId>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-annotations</artifactId>
 		</dependency>
     </dependencies>
 </project>
