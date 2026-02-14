@@ -53,6 +53,10 @@
 	    <groupId>com.github.jknack</groupId>
 	    <artifactId>handlebars</artifactId>
 	</dependency>
+	<dependency>
+	    <groupId>com.github.victools</groupId>
+	    <artifactId>jsonschema-module-jackson</artifactId>
+	</dependency>
 	
 	<dependency>
         <groupId>openup</groupId>
