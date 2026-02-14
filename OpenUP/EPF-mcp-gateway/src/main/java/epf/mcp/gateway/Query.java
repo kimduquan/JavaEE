@@ -61,7 +61,7 @@ public class Query {
 		nativeQuery.setQuery(query);
 		nativeQuery.setParameters(parameters);
 		final String authorization = "Bearer " + jwt.getRawToken();
-		final ResultList resultList = queryClient.executeQueryResultList(authorization, maxResults, firstResult, nativeQuery);
+		final ResultList resultList = queryClient.executeQueryResultList(authorization, firstResult, maxResults, nativeQuery);
         return resultList;
     }
 	

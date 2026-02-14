@@ -1,6 +1,7 @@
 package epf.mcp.gateway;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -23,6 +24,21 @@ public class Gateway {
 	@RestClient
 	transient SchemaClient schemaClient;
 	
+	@Prompt(name = Naming.GATEWAY)
+	@RunOnVirtualThread
+	String getGatewayPrompt() throws Exception {
+		final StringBuilder prompt = new StringBuilder();
+		final String authorization = "Bearer " + jwt.getRawToken();
+		final Set<String> schemas = schemaClient.getEntities(authorization).stream().map(entityType -> entityType.getTable().getSchema()).collect(Collectors.toSet());
+		prompt.append("""
+		Given below schemas : \n
+		""");
+		schemas.forEach(schema -> {
+			prompt.append(String.format("\t - '%s'\n", schema));
+		});
+		return prompt.toString();
+	}
+	
 	@Prompt(name = Naming.PERSISTENCE)
 	@RunOnVirtualThread
 	String getPersistencePrompt(@PromptArg(name = "schema_name") final String schemaName) throws Exception {
@@ -32,7 +48,7 @@ public class Gateway {
 		final List<EntityType> entities = schemaClient.getEntities(authorization).stream().filter(entity -> entity.getTable().getSchema().equals(schemaName)).collect(Collectors.toList());
 		schemaBuilder.entities(entities);
 		prompt.append("""
-		Given below Java Persistence API entity classes :
+		Given below Jakarta Persistence API entity classes :
 				""");
 		prompt.append(schemaBuilder.build());
 		return prompt.toString();
@@ -47,7 +63,7 @@ public class Gateway {
 		final List<EntityType> entities = schemaClient.getEntities(authorization).stream().filter(entity -> entity.getTable().getSchema().equals(schemaName)).collect(Collectors.toList());
 		schemaBuilder.entities(entities);
 		prompt.append("""
-		Given below Java Persistence API entity classes :
+		Given below Jakarta Persistence API entity classes :
 				""");
 		prompt.append(schemaBuilder.build());
 		return prompt.toString();

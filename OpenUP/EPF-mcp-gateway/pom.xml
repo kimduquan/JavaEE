@@ -50,6 +50,11 @@
 	</dependency>
 	
 	<dependency>
+	    <groupId>com.github.jknack</groupId>
+	    <artifactId>handlebars</artifactId>
+	</dependency>
+	
+	<dependency>
         <groupId>openup</groupId>
         <artifactId>EPF-naming</artifactId>
         <version>${project.version}</version>
