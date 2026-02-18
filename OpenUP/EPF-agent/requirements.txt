@@ -1,8 +1,0 @@
-fastapi[standard]
-pydantic
-openai
-openai-agents[encrypt,redis]
-python-jose
-aiocache
-mcp
-ag-ui-protocol
