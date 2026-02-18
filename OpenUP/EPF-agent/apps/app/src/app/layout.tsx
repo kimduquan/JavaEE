@@ -1,41 +1,27 @@
-"use client";
 
 import "./globals.css";
 
 import { CopilotKit } from "@copilotkit/react-core";
 import "@copilotkit/react-ui/v2/styles.css";
-import { useEffect } from "react";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-export default function RootLayout({
+const debug = ("true" == process.env.DEBUG);
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  useEffect(() => {
-    // Detect system preference and apply dark mode
-    const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    }
-
-    // Listen for system preference changes
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleChange = (e: MediaQueryListEvent) => {
-      if (e.matches) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-    };
-
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, []);
-
+  const session = await getServerSession(authOptions);
+  console.log("[BEGIN]RootLayout");
+  console.log("session.user.id:%s", session?.user.id);
+  console.log("session.expires:%s", session?.expires);
+  console.log("[END]RootLayout");
   return (
     <html lang="en">
       <body className={`antialiased`}>
-        <CopilotKit runtimeUrl="/api/copilotkit">
+        <CopilotKit runtimeUrl="/api/copilotkit" agent="epf-agent" showDevConsole={debug} threadId={session?.user.id}>
           {children}
         </CopilotKit>
       </body>
