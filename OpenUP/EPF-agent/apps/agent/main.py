@@ -1,27 +1,385 @@
-"""
-This is the main entry point for the agent.
-It defines the workflow graph, state, tools, nodes and edges.
-"""
-
-from langchain.agents import create_agent
-from copilotkit import CopilotKitMiddleware
+from datetime import datetime, timezone
+from typing import Annotated, Any, TypedDict
+from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi.responses import StreamingResponse
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from redis.asyncio import Redis as AsyncRedis
+from redis import Redis as SyncRedis
+import uvicorn
 from langchain_openai import ChatOpenAI
-from src.query import query_data
-from src.todos import todo_tools, AgentState
-from src.middleware import DisableParallelToolCallsMiddleware
+from langchain.agents import AgentState
+from langgraph.graph.state import CompiledStateGraph, StateGraph
+from langchain.agents.factory import create_agent
+import os
+from langchain_core.messages import SystemMessage, AnyMessage
+from langchain_core.tools.base import BaseTool
+from langchain_mcp_adapters.client import MultiServerMCPClient
+from langchain_mcp_adapters.sessions import Connection, StreamableHttpConnection
+from langchain_mcp_adapters.tools import load_mcp_tools
+from mcp.types import Prompt
+from langgraph.config import RunnableConfig
+from langgraph.runtime import Runtime
+from langchain.agents.middleware import AgentMiddleware, SummarizationMiddleware, ModelCallLimitMiddleware, HumanInTheLoopMiddleware, ToolCallLimitMiddleware, PIIMiddleware, ToolRetryMiddleware, ModelRetryMiddleware, ContextEditingMiddleware, ClearToolUsesEdit
+from langchain.agents.middleware.human_in_the_loop import InterruptOnConfig
+from ag_ui_langgraph import LangGraphAgent
+from ag_ui.core.types import RunAgentInput
+from ag_ui.encoder import EventEncoder
+from langgraph.types import Checkpointer
+from langgraph.store.base import BaseStore
+from langgraph.cache.base import BaseCache
+from uuid import UUID
+import jwt
+from jwt import PyJWKClient
+from copilotkit import CopilotKitState
+from copilotkit.langgraph import copilotkit_customize_config, copilotkit_emit_state
+from langchain_mcp_adapters.interceptors import MCPToolCallRequest, ToolCallInterceptor
+from aiocache import cached, Cache
+from langgraph.checkpoint.redis import AsyncRedisSaver
+from langgraph.checkpoint.redis.base import CHECKPOINT_PREFIX, CHECKPOINT_BLOB_PREFIX, CHECKPOINT_WRITE_PREFIX
+from langgraph.store.redis.aio import AsyncRedisStore
+from langgraph.store.redis.base import STORE_PREFIX, STORE_VECTOR_PREFIX
+from langchain_redis import RedisCache
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+import logging
+from jwt.exceptions import PyJWTError
+from starlette.status import HTTP_403_FORBIDDEN
 
-agent = create_agent(
-    model=ChatOpenAI(model="gpt-4.1-mini"),
-    tools=[query_data, *todo_tools],
-    middleware=[DisableParallelToolCallsMiddleware(), CopilotKitMiddleware()],
-    state_schema=AgentState,
-    system_prompt=f"""
-        You are a helpful assistant that helps users understand CopilotKit and LangGraph used together.
+class Progress(TypedDict):
+    max: float | None = None
+    value: float | None = None
 
-        Be brief in your explanations of CopilotKit and LangGraph, 1 to 2 sentences.
+class UIAgentState(CopilotKitState):
+    progress: Progress | None = None
 
-        When demonstrating charts, always call the query_data tool to fetch all data from the database first.
-    """
-)
+class EPFAgentState(AgentState):
+    """"""
 
-graph = agent
+class AgentContext():
+    authorization: HTTPAuthorizationCredentials
+    claims: Any
+    organization: str
+    checkpointer: Checkpointer
+    model: ChatOpenAI
+    store: BaseStore
+    cache: BaseCache
+
+class EPFAgentMiddleware(AgentMiddleware[EPFAgentState, AgentContext]):
+    """"""
+
+class EPFToolCallInterceptor(ToolCallInterceptor):
+    async def __call__(
+        self,
+        request: MCPToolCallRequest,
+        handler,
+    ):
+        context: AgentContext = request.runtime.context
+        if(context.authorization):
+            headers = { "Authorization": context.authorization.scheme + " " + context.authorization.credentials }
+            new_request = request.override(headers=headers)
+            return await handler(new_request)
+        return await handler(request)
+
+
+DEFAULT_SERVER_NAME = "gateway"
+
+MCP_SERVER_URLS: dict[str, str] = {
+    DEFAULT_SERVER_NAME: os.environ["MCP_SERVER_URL"],
+}
+MCP_SERVERS: list[str] = [
+    DEFAULT_SERVER_NAME,
+    "query",
+    "persistence"
+]
+
+DEBUG = ("true" == os.getenv("DEBUG", "false"))
+
+MODEL_CALL_THREAD_LIMIT = int(os.environ["MODEL_CALL_THREAD_LIMIT"])
+MODEL_CALL_RUN_LIMIT = int(os.environ["MODEL_CALL_RUN_LIMIT"])
+MODEL_CALL_LIMIT = ModelCallLimitMiddleware(thread_limit=MODEL_CALL_THREAD_LIMIT, run_limit=MODEL_CALL_RUN_LIMIT, exit_behavior="error")
+TOOL_CALL_THREAD_LIMIT = int(os.environ["TOOL_CALL_THREAD_LIMIT"])
+TOOL_CALL_RUN_LIMIT = int(os.environ["TOOL_CALL_RUN_LIMIT"])
+TOOL_CALL_LIMIT = ToolCallLimitMiddleware(thread_limit=TOOL_CALL_THREAD_LIMIT, run_limit=TOOL_CALL_RUN_LIMIT, exit_behavior="error")
+PII = PIIMiddleware(pii_type="email")
+TOOL_RETRY = ToolRetryMiddleware()
+MODEL_RETRY = ModelRetryMiddleware()
+CONTEXT_EDITING = ContextEditingMiddleware(edits=[ClearToolUsesEdit()])
+HUMAN_IN_THE_LOOP = HumanInTheLoopMiddleware(interrupt_on={"persistence": InterruptOnConfig(allowed_decisions=["approve","edit","reject"])})
+
+EPF_AGENT_NAME = "epf-agent"
+SUPERVISOR_AGENT_NAME = "supervisor-agent"
+SUPERVISOR_NODE_NAME = "supervisor"
+AGENT_NODE_NAME = "agent-node"
+
+SECURITY = HTTPBearer()
+JWK_CLIENT = PyJWKClient(uri=os.environ["JWT_KEY_URL"])
+LOGGER = logging.getLogger(__name__)
+CACHE = Cache(Cache.MEMORY)
+
+def load_servers():
+    for server in MCP_SERVERS:
+        if(MCP_SERVER_URLS.get(server) == None):
+            MCP_SERVER_URLS[server] = os.environ["MCP_SERVER_URL_FORMAT"].format(server)
+
+def get_connections(server_name: str, headers: dict[str, Any] | None) -> dict[str, Connection]:
+    connections: dict[str, Connection] = {}
+    for (mcp_server_name, mcp_server_url) in MCP_SERVER_URLS.items():
+        if(mcp_server_name == server_name):
+            connections[mcp_server_name] = StreamableHttpConnection(
+            transport = 'streamable_http',
+            url=mcp_server_url,
+            headers=headers
+        )
+    return connections
+
+def get_client(server_name: str, context: AgentContext) -> MultiServerMCPClient:
+    headers: dict[str, Any] = {}
+    if(context.authorization):
+        headers["Authorization"] = context.authorization.scheme + " " + context.authorization.credentials
+    connections = get_connections(server_name=server_name, headers=headers)
+    tool_interceptors = [EPFToolCallInterceptor()]
+    client = MultiServerMCPClient(
+        connections=connections,
+        tool_interceptors=tool_interceptors
+    )
+    return client
+
+async def load_tools(client: MultiServerMCPClient, server_name: str) -> list[BaseTool]:
+    connection = client.connections[server_name]
+    tool_interceptors = [EPFToolCallInterceptor()]
+    tools = await load_mcp_tools(session=None,connection=connection,server_name=server_name, tool_interceptors=tool_interceptors)
+    return tools
+
+async def list_prompts(client: MultiServerMCPClient, server_name: str) -> list[Prompt]:
+    prompts: list[Prompt] = []
+    async with client.session(server_name=server_name) as session:
+        list_prompts_result = await session.list_prompts()
+        prompts = list_prompts_result.prompts
+    return prompts
+
+async def invoke_agent(state: dict[str, Any] | None, config: RunnableConfig, runtime: Runtime[AgentContext]) -> dict[str, Any] | Any:
+    server_name: str = config["metadata"]["server_name"]
+    prompt_name: str = config["metadata"]["prompt_name"]
+    client = get_client(server_name=server_name, context=runtime.context)
+    prompt_contents = await client.get_prompt(server_name=server_name, prompt_name=prompt_name, arguments=state)
+    sub_state = EPFAgentState(state)
+    messages: list[AnyMessage] = []
+    for prompt_content in prompt_contents:
+        messages.append(SystemMessage(content=prompt_content.content))
+    messages.append(state["messages"][-1])
+    sub_state["messages"] = messages
+    agent_name: str = config["metadata"]["agent_name"]
+    agent: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState] = await CACHE.get(key=agent_name)
+    output = await agent.ainvoke(input=sub_state, config=config, context=runtime.context)
+    return output
+
+async def create_sub_agent_node(server_name: str, prompt_name: str, agent: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState], context: AgentContext) -> CompiledStateGraph[EPFAgentState, AgentContext, dict[str, Any], EPFAgentState]:
+    await CACHE.set(key=agent.name, value=agent)
+    graph: StateGraph[EPFAgentState, AgentContext, dict[str, Any], EPFAgentState] = StateGraph(state_schema=EPFAgentState, context_schema=AgentContext, input_schema=dict[str, Any], output_schema=EPFAgentState)
+    metadata: dict[str, Any] = {}
+    metadata["agent_name"] = agent.name
+    metadata["server_name"] = server_name
+    metadata["prompt_name"] = prompt_name
+    graph.add_node("invoke_agent", invoke_agent, metadata=metadata, input_schema=dict[str, Any])
+    graph.set_entry_point("invoke_agent")
+    graph.set_finish_point("invoke_agent")
+    return graph.compile(checkpointer=context.checkpointer, cache=context.cache, store=context.store, debug=DEBUG, name=AGENT_NODE_NAME + "-" + context.organization)
+
+def as_tool(name: str, prompt: Prompt, agent: CompiledStateGraph[EPFAgentState, AgentContext, dict[str, Any], EPFAgentState]) -> BaseTool:
+    arg_types: dict[str, type] | None = None
+    if prompt.arguments:
+        arg_types = {}
+        for argument in prompt.arguments:
+            if(argument.required == True):
+                arg_types[argument.name] = str
+            else:
+                arg_types[argument.name] = str | None
+    tool = agent.as_tool(name=name, description=prompt.description, arg_types=arg_types)
+    return tool
+
+async def create_sub_agent(server_name: str, agent_name: str, context: AgentContext) -> CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]:
+    client = get_client(server_name=server_name, context=context)
+    tools: list[BaseTool] = await load_tools(client=client,server_name=server_name)
+    return create_agent(
+        model=context.model,
+        tools=tools,
+        middleware=[
+            EPFAgentMiddleware()
+            ],
+        state_schema=EPFAgentState,
+        context_schema=AgentContext,
+        checkpointer=context.checkpointer,
+        store=context.store,
+        debug=DEBUG,
+        name=agent_name + "-" + context.organization,
+        cache=context.cache)
+
+@cached()
+async def get_model(organization: str) -> ChatOpenAI:
+    return ChatOpenAI(model=os.environ["OPENAI_MODEL"],base_url=os.environ["OPENAI_BASE_URL"])
+
+@cached()
+async def get_checkpointer(organization: str) -> Checkpointer:
+    redis_url = os.environ["CHECKPOINTER_PERSISTENCE_URL_FORMAT"].format(organization)
+    checkpoint_prefix = CHECKPOINT_PREFIX + "-" + organization
+    checkpoint_blob_prefix = CHECKPOINT_BLOB_PREFIX + "-" + organization
+    checkpoint_write_prefix = CHECKPOINT_WRITE_PREFIX + "-" + organization
+    redis_client = AsyncRedis(host=os.environ["REDIS_HOST"], password=os.environ["REDIS_PASSWORD"])
+    async with AsyncRedisSaver.from_conn_string(redis_url=redis_url, redis_client=redis_client, checkpoint_prefix=checkpoint_prefix, checkpoint_blob_prefix=checkpoint_blob_prefix, checkpoint_write_prefix=checkpoint_write_prefix) as checkpointer:
+        await checkpointer.asetup()
+        return checkpointer
+
+@cached()
+async def get_store(organization: str) -> BaseStore:
+    conn_string = os.environ["STORE_PERSISTENCE_URL_FORMAT"].format(os.environ["REDIS_PASSWORD"], organization)
+    store_prefix = STORE_PREFIX + "-" + organization
+    vector_prefix = STORE_VECTOR_PREFIX + "-" + organization
+    async with AsyncRedisStore.from_conn_string(conn_string=conn_string, store_prefix=store_prefix, vector_prefix=vector_prefix) as store:
+        await store.setup()
+        return store
+
+@cached()
+async def get_cache(organization: str) -> BaseCache:
+    redis_url = os.environ["CACHE_PERSISTENCE_URL_FORMAT"].format(organization)
+    prefix = "redis-" + organization
+    redis_client = SyncRedis(host=os.environ["REDIS_HOST"], password=os.environ["REDIS_PASSWORD"])
+    redis_cache = RedisCache(redis_url=redis_url, prefix=prefix, redis_client=redis_client)
+    return redis_cache
+
+def organization_key_builder(func, *args, **kwargs):
+    organization = kwargs.get("organization") or args[1]
+    return organization
+
+@cached(key_builder=organization_key_builder)
+async def create_supervisor_agent(organization: str, context: AgentContext) -> CompiledStateGraph[UIAgentState, AgentContext, UIAgentState, UIAgentState]:
+    supervisor_agent_name = SUPERVISOR_AGENT_NAME + "-" + organization
+    server_name = DEFAULT_SERVER_NAME
+    client = get_client(server_name=server_name, context=context)
+    prompts = await list_prompts(client=client, server_name=server_name)
+    system_prompt: str | None = None
+    sub_agent_prompts: list[Prompt] = []
+    for agent_prompt in prompts:
+        if (agent_prompt.name == DEFAULT_SERVER_NAME):
+            prompt = await client.get_prompt(server_name=server_name, prompt_name=agent_prompt.name)
+            system_prompt = prompt[0].content
+        else:
+            sub_agent_prompts.append(agent_prompt)
+
+    tools: list[BaseTool] = []
+    for sub_agent_prompt in sub_agent_prompts:
+        sub_agent_name = sub_agent_prompt.name
+        sub_agent_server_name = sub_agent_prompt.name
+        sub_agent = await create_sub_agent(server_name=sub_agent_server_name, agent_name=sub_agent_name, context=context)
+        sub_agent_node = await create_sub_agent_node(server_name=server_name, prompt_name=sub_agent_prompt.name, agent=sub_agent, context=context)
+        tool = as_tool(name=sub_agent_name, prompt=sub_agent_prompt, agent=sub_agent_node)
+        tools.append(tool)
+    return create_agent(
+        model=context.model,
+        tools=tools,
+        system_prompt=system_prompt,
+        middleware=[
+            MODEL_CALL_LIMIT,
+            TOOL_CALL_LIMIT,
+            PII,
+            TOOL_RETRY,
+            MODEL_RETRY,
+            CONTEXT_EDITING,
+            HUMAN_IN_THE_LOOP,
+            SummarizationMiddleware(model=context.model),
+            EPFAgentMiddleware()
+            ],
+        state_schema=UIAgentState,
+        context_schema=AgentContext,
+        checkpointer=context.checkpointer,
+        store=context.store,
+        debug=DEBUG,
+        name=supervisor_agent_name,
+        cache=context.cache)
+
+@cached()
+async def create_supervisor(organization: str) -> CompiledStateGraph[UIAgentState, AgentContext, UIAgentState, UIAgentState]:
+    builder = StateGraph(
+        state_schema=UIAgentState,
+        context_schema=AgentContext,
+        input_schema=UIAgentState,
+        output_schema=UIAgentState
+    )
+    supervisor_node_name = SUPERVISOR_NODE_NAME + "-" + organization
+    builder.add_node(supervisor_node_name, supervisor_node)
+    builder.set_entry_point(supervisor_node_name)
+    builder.set_finish_point(supervisor_node_name)
+    checkpointer = await get_checkpointer(organization)
+    store = await get_store(organization)
+    cache = await get_cache(organization)
+    return builder.compile(checkpointer=checkpointer, cache=cache, store=store, debug=DEBUG, name=supervisor_node_name)
+
+async def supervisor_node(state: UIAgentState, config: RunnableConfig) -> dict[str, Any] | Any:
+    context = AgentContext()
+    context.authorization = config["configurable"]["authorization"]
+    context.claims = config["configurable"]["claims"]
+    organization: str = config["configurable"]["organization"]
+    context.organization = organization
+    context.cache = await get_cache(organization)
+    context.checkpointer = await get_checkpointer(organization)
+    context.model = await get_model(organization)
+    context.store = await get_store(organization)
+    supervisor_agent: CompiledStateGraph[UIAgentState, AgentContext, UIAgentState, UIAgentState] = await create_supervisor_agent(organization=organization, context=context)
+    state["progress"] = Progress(max=1, value=0)
+    await copilotkit_emit_state(config=config, state=state)
+    output = await supervisor_agent.ainvoke(input=state, config=config, context=context)
+    state["progress"]["value"] = state["progress"]["max"]
+    await copilotkit_emit_state(config=config, state=state)
+    return output
+
+def add_agent_endpoint(app: FastAPI, name: str, path: str = "/"):
+
+    @app.post(path)
+    async def agent_endpoint(input_data: RunAgentInput, request: Request, credentials: Annotated[HTTPAuthorizationCredentials, Depends(SECURITY)]):
+
+        claims: Any = None
+        try:
+            key = JWK_CLIENT.get_signing_key_from_jwt(token=credentials.credentials)
+            claims = jwt.decode(jwt=credentials.credentials, key=key, issuer=os.environ["JWT_ISSUER"])
+        except PyJWTError as ex:
+            LOGGER.error("[%f]jwt:%s", datetime.now(tz=timezone.utc).timestamp(), credentials.credentials)
+            raise HTTPException(status_code=HTTP_403_FORBIDDEN, detail=ex.args)
+        organization_claim: dict[str, Any] = claims["organization"]
+        organization_name: str = list(organization_claim.keys())[0]
+        organization: str = organization_claim.get(organization_name)["id"]
+        LOGGER.info("thread_id:%s", input_data.thread_id)
+        config = RunnableConfig(configurable={"authorization": credentials, "claims": claims, "organization": organization, "thread_id": input_data.thread_id}, run_id=UUID(input_data.run_id))
+        config = copilotkit_customize_config(base_config=config)
+        supervisor_graph = await create_supervisor(organization)
+        agent = LangGraphAgent(name=name, graph=supervisor_graph, config=config)
+
+        # Get the accept header from the request
+        accept_header = request.headers.get("accept")
+
+        # Create an event encoder to properly format SSE events
+        encoder = EventEncoder(accept=accept_header)
+
+        async def event_generator():
+            async for event in agent.run(input_data):
+                yield encoder.encode(event)
+
+        return StreamingResponse(
+            event_generator(),
+            media_type=encoder.get_content_type()
+        )
+
+    @app.get("/health")
+    def health():
+        """Health check."""
+        return {
+            "status": "ok",
+            "agent": {
+                "name": name,
+            }
+        }
+
+load_servers()
+APP = FastAPI()
+add_agent_endpoint(app=APP, name=EPF_AGENT_NAME)
+FastAPIInstrumentor.instrument_app(app=APP, excluded_urls="/health")
+
+if __name__ == "__main__":
+    uvicorn.run(app=APP, host="0.0.0.0", port=8123)
