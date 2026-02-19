@@ -28,14 +28,16 @@ public class EntityBuilder {
 		final AttributeComparator comparator = new AttributeComparator();
 		identifiableType.setHasSingleIdAttribute(type.hasSingleIdAttribute());
 		identifiableType.setHasVersionAttribute(type.hasVersionAttribute());
-		identifiableType.setIdClassAttributes(
-				type
-				.getIdClassAttributes()
-				.stream()
-				.map(builder::buildSingularAttribute)
-				.sorted(comparator)
-				.collect(Collectors.toSet())
-				);
+		if(!type.hasSingleIdAttribute()) {
+			identifiableType.setIdClassAttributes(
+					type
+					.getIdClassAttributes()
+					.stream()
+					.map(builder::buildSingularAttribute)
+					.sorted(comparator)
+					.collect(Collectors.toSet())
+					);
+		}
 		if(type.getIdType() != null) {
 			final epf.persistence.schema.Type idType = new epf.persistence.schema.Type();
 			buildType(type.getIdType(), idType);
