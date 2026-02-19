@@ -182,7 +182,7 @@ async def create_sub_agent_node(server_name: str, prompt_name: str, agent: Compi
     graph.add_node("invoke_agent", invoke_agent, metadata=metadata, input_schema=dict[str, Any])
     graph.set_entry_point("invoke_agent")
     graph.set_finish_point("invoke_agent")
-    return graph.compile(checkpointer=context.checkpointer, cache=context.cache, store=context.store, debug=DEBUG, name=AGENT_NODE_NAME + "-" + context.organization)
+    return graph.compile(debug=DEBUG, name=AGENT_NODE_NAME + "-" + context.organization)
 
 def as_tool(name: str, prompt: Prompt, agent: CompiledStateGraph[EPFAgentState, AgentContext, dict[str, Any], EPFAgentState]) -> BaseTool:
     arg_types: dict[str, type] | None = None
@@ -207,11 +207,8 @@ async def create_sub_agent(server_name: str, agent_name: str, context: AgentCont
             ],
         state_schema=EPFAgentState,
         context_schema=AgentContext,
-        checkpointer=context.checkpointer,
-        store=context.store,
         debug=DEBUG,
-        name=agent_name + "-" + context.organization,
-        cache=context.cache)
+        name=agent_name + "-" + context.organization)
 
 @cached()
 async def get_model(organization: str) -> ChatOpenAI:
