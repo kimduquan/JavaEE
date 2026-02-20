@@ -3,15 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"npm run dev:ui\" \"npm run dev:agent\" --names ui,agent --prefix-colors blue,green --kill-others",
-    "dev:debug": "LOG_LEVEL=debug npm run dev",
-    "dev:agent": "cd agent && npx @langchain/langgraph-cli dev --port 8123 --no-browser",
-    "dev:ui": "next dev --turbopack",
+    "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint .",
-    "install:agent": "sh ./scripts/setup-agent.sh || scripts\\setup-agent.bat",
-    "postinstall": "npm run install:agent"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@copilotkit/react-core": "1.51.2",
@@ -21,7 +16,9 @@
     "next-auth": "^4.24.13",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "react18-json-view": "^0.2.9"
+    "react-rnd": "^10.5.2",
+    "react18-json-view": "^0.2.9",
+    "recharts": "^3.7.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.3",
@@ -29,10 +26,10 @@
     "@types/node": "^20",
     "@types/react": "^19.2.13",
     "@types/react-dom": "^19.2.3",
-    "concurrently": "^9.2.1",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "tailwindcss": "^4.1.18",
     "typescript": "^5.9.3"
+    "zod": "^3.23.8"
   }
 }
