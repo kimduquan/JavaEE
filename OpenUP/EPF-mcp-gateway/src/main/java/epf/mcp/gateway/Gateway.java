@@ -9,6 +9,7 @@ import epf.naming.Naming;
 import epf.persistence.schema.EntityType;
 import io.quarkiverse.mcp.server.Prompt;
 import io.quarkiverse.mcp.server.PromptArg;
+import io.quarkiverse.mcp.server.PromptMessage;
 import io.quarkus.security.Authenticated;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -26,7 +27,7 @@ public class Gateway {
 	
 	@Prompt(name = Naming.GATEWAY)
 	@RunOnVirtualThread
-	String getGatewayPrompt() throws Exception {
+	PromptMessage getGatewayPrompt() throws Exception {
 		final StringBuilder prompt = new StringBuilder();
 		final String authorization = "Bearer " + jwt.getRawToken();
 		final Set<String> schemas = schemaClient.getEntities(authorization).stream().map(entityType -> entityType.getTable().getSchema()).collect(Collectors.toSet());
@@ -36,12 +37,12 @@ public class Gateway {
 		schemas.forEach(schema -> {
 			prompt.append(String.format("\t - '%s'\n", schema));
 		});
-		return prompt.toString();
+		return PromptMessage.withUserRole(prompt.toString());
 	}
 	
 	@Prompt(name = Naming.PERSISTENCE)
 	@RunOnVirtualThread
-	String getPersistencePrompt(@PromptArg(name = "schema_name") final String schemaName) throws Exception {
+	PromptMessage getPersistencePrompt(@PromptArg(name = "schema_name") final String schemaName) throws Exception {
 		final StringBuilder prompt = new StringBuilder();
 		final SchemaBuilder schemaBuilder = new SchemaBuilder();
 		final String authorization = "Bearer " + jwt.getRawToken();
@@ -51,12 +52,12 @@ public class Gateway {
 		Given below Jakarta Persistence API entity classes :
 				""");
 		prompt.append(schemaBuilder.build());
-		return prompt.toString();
+		return PromptMessage.withUserRole(prompt.toString());
 	}
 
 	@Prompt(name = Naming.QUERY)
 	@RunOnVirtualThread
-	String getQueryPrompt(@PromptArg(name = "schema_name") final String schemaName) throws Exception {
+	PromptMessage getQueryPrompt(@PromptArg(name = "schema_name") final String schemaName) throws Exception {
 		final StringBuilder prompt = new StringBuilder();
 		final SchemaBuilder schemaBuilder = new SchemaBuilder();
 		final String authorization = "Bearer " + jwt.getRawToken();
@@ -66,6 +67,6 @@ public class Gateway {
 		Given below Jakarta Persistence API entity classes :
 				""");
 		prompt.append(schemaBuilder.build());
-		return prompt.toString();
+		return PromptMessage.withUserRole(prompt.toString());
 	}
 }
