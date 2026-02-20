@@ -13,7 +13,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
 		<quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-		<quarkus.platform.version>3.31.3</quarkus.platform.version>
+		<quarkus.platform.version>3.31.4</quarkus.platform.version>
 		<skipITs>true</skipITs>
 		<surefire-plugin.version>3.5.4</surefire-plugin.version>
 		<narayana.version>7.2.2.Final</narayana.version>
@@ -31,7 +31,7 @@
 		<dependency>
 			<groupId>io.quarkiverse.mcp</groupId>
 			<artifactId>quarkus-mcp-server-bom</artifactId>
-			<version>1.10.0</version>
+			<version>1.10.1</version>
 			<type>pom</type>
 			<scope>import</scope>
 		</dependency>
