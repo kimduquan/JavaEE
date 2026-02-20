@@ -1,6 +1,6 @@
 "use client";
 
-import { CopilotChat } from "@copilotkit/react-ui";
+import { CopilotChat } from "@copilotkit/react-core/v2";
 import { SessionProvider, useSession } from "next-auth/react";
 import { useLangGraphInterrupt, useDefaultTool, useCoAgentStateRender } from "@copilotkit/react-core";
 import { AgentState } from "@/lib/types";
