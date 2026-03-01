@@ -11,7 +11,7 @@ from langchain.agents import AgentState
 from langgraph.graph.state import CompiledStateGraph, StateGraph
 from langchain.agents.factory import create_agent
 import os
-from langchain_core.messages import SystemMessage, AnyMessage
+from langchain_core.messages import SystemMessage
 from langchain_core.tools.base import BaseTool
 from langchain_mcp_adapters.client import MultiServerMCPClient
 from langchain_mcp_adapters.sessions import Connection, StreamableHttpConnection
@@ -62,6 +62,7 @@ class AgentContext():
     model: ChatOpenAI
     store: BaseStore
     cache: BaseCache
+    state: UIAgentState
 
 class EPFAgentMiddleware(AgentMiddleware[EPFAgentState, AgentContext]):
     """"""
@@ -161,16 +162,15 @@ async def invoke_agent(state: dict[str, Any] | None, config: RunnableConfig, run
     prompt_name: str = config["metadata"]["prompt_name"]
     client = get_client(server_name=server_name, context=runtime.context)
     prompt_contents = await client.get_prompt(server_name=server_name, prompt_name=prompt_name, arguments=state)
-    sub_state = EPFAgentState(state)
-    messages: list[AnyMessage] = []
+    messages = runtime.context.state["messages"].copy()
     for prompt_content in prompt_contents:
         messages.append(SystemMessage(content=prompt_content.content))
-    messages.append(state["messages"][-1])
-    sub_state["messages"] = messages
+    sub_state = EPFAgentState(messages=messages)
     agent_name: str = config["metadata"]["agent_name"]
     agent: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState] = await CACHE.get(key=agent_name)
     output = await agent.ainvoke(input=sub_state, config=config, context=runtime.context)
-    return output
+    output_message = output["messages"][-1]
+    return { "messages" : [output_message] }
 
 async def create_sub_agent_node(server_name: str, prompt_name: str, agent: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState], context: AgentContext) -> CompiledStateGraph[EPFAgentState, AgentContext, dict[str, Any], EPFAgentState]:
     await CACHE.set(key=agent.name, value=agent)
@@ -319,6 +319,7 @@ async def supervisor_node(state: UIAgentState, config: RunnableConfig) -> dict[s
     context.checkpointer = await get_checkpointer(organization)
     context.model = await get_model(organization)
     context.store = await get_store(organization)
+    context.state = state
     supervisor_agent: CompiledStateGraph[UIAgentState, AgentContext, UIAgentState, UIAgentState] = await create_supervisor_agent(organization=organization, context=context)
     state["progress"] = Progress(max=1, value=0)
     await copilotkit_emit_state(config=config, state=state)
