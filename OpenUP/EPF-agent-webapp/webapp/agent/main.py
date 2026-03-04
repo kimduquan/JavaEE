@@ -247,7 +247,7 @@ def organization_key_builder(func, *args, **kwargs):
     return organization
 
 @cached(key_builder=organization_key_builder)
-async def create_supervisor_agent(organization: str, context: AgentContext) -> CompiledStateGraph[UIAgentState, AgentContext, UIAgentState, UIAgentState]:
+async def create_supervisor_agent(organization: str, context: AgentContext) -> CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]:
     supervisor_agent_name = SUPERVISOR_AGENT_NAME + "-" + organization
     server_name = DEFAULT_SERVER_NAME
     client = get_client(server_name=server_name, context=context)
@@ -284,7 +284,7 @@ async def create_supervisor_agent(organization: str, context: AgentContext) -> C
             SummarizationMiddleware(model=context.model),
             EPFAgentMiddleware()
             ],
-        state_schema=UIAgentState,
+        state_schema=EPFAgentState,
         context_schema=AgentContext,
         checkpointer=context.checkpointer,
         store=context.store,
@@ -320,13 +320,16 @@ async def supervisor_node(state: UIAgentState, config: RunnableConfig) -> dict[s
     context.model = await get_model(organization)
     context.store = await get_store(organization)
     context.state = state
-    supervisor_agent: CompiledStateGraph[UIAgentState, AgentContext, UIAgentState, UIAgentState] = await create_supervisor_agent(organization=organization, context=context)
+    messages = state["messages"].copy()
+    supervisor_state = EPFAgentState(messages=messages)
+    supervisor_agent: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState] = await create_supervisor_agent(organization=organization, context=context)
     state["progress"] = Progress(max=1, value=0)
     await copilotkit_emit_state(config=config, state=state)
-    output = await supervisor_agent.ainvoke(input=state, config=config, context=context)
+    output = await supervisor_agent.ainvoke(input=supervisor_state, config=config, context=context)
     state["progress"]["value"] = state["progress"]["max"]
     await copilotkit_emit_state(config=config, state=state)
-    return output
+    message = output["messages"][-1]
+    return { "messages": [message] }
 
 def add_agent_endpoint(app: FastAPI, name: str, path: str = "/"):
 
