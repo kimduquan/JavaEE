@@ -48,11 +48,8 @@ class Progress(TypedDict):
     max: float | None = None
     value: float | None = None
 
-class UIAgentState(CopilotKitState):
+class EPFAgentState(CopilotKitState):
     progress: Progress | None = None
-
-class EPFAgentState(AgentState):
-    """"""
 
 class AgentContext():
     authorization: HTTPAuthorizationCredentials
@@ -62,7 +59,7 @@ class AgentContext():
     model: ChatOpenAI
     store: BaseStore
     cache: BaseCache
-    state: UIAgentState
+    state: EPFAgentState
 
 class EPFAgentMiddleware(AgentMiddleware[EPFAgentState, AgentContext]):
     """"""
@@ -165,7 +162,8 @@ async def invoke_agent(state: dict[str, Any] | None, config: RunnableConfig, run
     messages = runtime.context.state["messages"].copy()
     for prompt_content in prompt_contents:
         messages.append(SystemMessage(content=prompt_content.content))
-    sub_state = EPFAgentState(messages=messages)
+    sub_state = EPFAgentState(runtime.context.state)
+    sub_state["messages"] = messages
     agent_name: str = config["metadata"]["agent_name"]
     agent: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState] = await CACHE.get(key=agent_name)
     output = await agent.ainvoke(input=sub_state, config=config, context=runtime.context)
@@ -293,12 +291,12 @@ async def create_supervisor_agent(organization: str, context: AgentContext) -> C
         cache=context.cache)
 
 @cached()
-async def create_supervisor(organization: str) -> CompiledStateGraph[UIAgentState, AgentContext, UIAgentState, UIAgentState]:
+async def create_supervisor(organization: str) -> CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]:
     builder = StateGraph(
-        state_schema=UIAgentState,
+        state_schema=EPFAgentState,
         context_schema=AgentContext,
-        input_schema=UIAgentState,
-        output_schema=UIAgentState
+        input_schema=EPFAgentState,
+        output_schema=EPFAgentState
     )
     supervisor_node_name = SUPERVISOR_NODE_NAME + "-" + organization
     builder.add_node(supervisor_node_name, supervisor_node)
@@ -309,7 +307,7 @@ async def create_supervisor(organization: str) -> CompiledStateGraph[UIAgentStat
     cache = await get_cache(organization)
     return builder.compile(checkpointer=checkpointer, cache=cache, store=store, debug=DEBUG, name=supervisor_node_name)
 
-async def supervisor_node(state: UIAgentState, config: RunnableConfig) -> dict[str, Any] | Any:
+async def supervisor_node(state: EPFAgentState, config: RunnableConfig) -> dict[str, Any] | Any:
     context = AgentContext()
     context.authorization = config["configurable"]["authorization"]
     context.claims = config["configurable"]["claims"]
@@ -320,12 +318,10 @@ async def supervisor_node(state: UIAgentState, config: RunnableConfig) -> dict[s
     context.model = await get_model(organization)
     context.store = await get_store(organization)
     context.state = state
-    messages = state["messages"].copy()
-    supervisor_state = EPFAgentState(messages=messages)
     supervisor_agent: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState] = await create_supervisor_agent(organization=organization, context=context)
     state["progress"] = Progress(max=1, value=0)
     await copilotkit_emit_state(config=config, state=state)
-    output = await supervisor_agent.ainvoke(input=supervisor_state, config=config, context=context)
+    output = await supervisor_agent.ainvoke(input=state, config=config, context=context)
     state["progress"]["value"] = state["progress"]["max"]
     await copilotkit_emit_state(config=config, state=state)
     message = output["messages"][-1]
