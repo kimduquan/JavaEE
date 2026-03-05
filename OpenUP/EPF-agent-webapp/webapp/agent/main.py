@@ -29,7 +29,7 @@ from langgraph.cache.base import BaseCache
 from uuid import UUID
 import jwt
 from jwt import PyJWKClient
-from copilotkit import CopilotKitState
+from copilotkit import CopilotKitState, CopilotKitMiddleware
 from copilotkit.langgraph import copilotkit_customize_config, copilotkit_emit_state
 from langchain_mcp_adapters.interceptors import MCPToolCallRequest, ToolCallInterceptor
 from aiocache import cached, Cache
@@ -271,6 +271,7 @@ async def create_supervisor_agent(organization: str, context: AgentContext) -> C
         tools=tools,
         system_prompt=system_prompt,
         middleware=[
+            CopilotKitMiddleware(),
             MODEL_CALL_LIMIT,
             TOOL_CALL_LIMIT,
             PII,
