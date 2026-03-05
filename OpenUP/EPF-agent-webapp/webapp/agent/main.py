@@ -7,7 +7,6 @@ from redis.asyncio import Redis as AsyncRedis
 from redis import Redis as SyncRedis
 import uvicorn
 from langchain_openai import ChatOpenAI
-from langchain.agents import AgentState
 from langgraph.graph.state import CompiledStateGraph, StateGraph
 from langchain.agents.factory import create_agent
 import os
@@ -21,7 +20,7 @@ from langgraph.config import RunnableConfig
 from langgraph.runtime import Runtime
 from langchain.agents.middleware import AgentMiddleware, SummarizationMiddleware, ModelCallLimitMiddleware, HumanInTheLoopMiddleware, ToolCallLimitMiddleware, PIIMiddleware, ToolRetryMiddleware, ModelRetryMiddleware, ContextEditingMiddleware, ClearToolUsesEdit
 from langchain.agents.middleware.human_in_the_loop import InterruptOnConfig
-from ag_ui_langgraph import LangGraphAgent
+from copilotkit import LangGraphAGUIAgent
 from ag_ui.core.types import RunAgentInput
 from ag_ui.encoder import EventEncoder
 from langgraph.types import Checkpointer
@@ -346,7 +345,7 @@ def add_agent_endpoint(app: FastAPI, name: str, path: str = "/"):
         config = RunnableConfig(configurable={"authorization": credentials, "claims": claims, "organization": organization, "thread_id": input_data.thread_id}, run_id=UUID(input_data.run_id))
         config = copilotkit_customize_config(base_config=config)
         supervisor_graph = await create_supervisor(organization)
-        agent = LangGraphAgent(name=name, graph=supervisor_graph, config=config)
+        agent = LangGraphAGUIAgent(name=name, graph=supervisor_graph, config=config)
 
         # Get the accept header from the request
         accept_header = request.headers.get("accept")
