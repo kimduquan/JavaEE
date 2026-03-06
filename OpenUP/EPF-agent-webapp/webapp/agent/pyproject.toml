@@ -1,22 +1,22 @@
 [project]
 name = "epf-agent"
-version = "0.1.0"
+version = "1.0.0"
 description = "EPF agent"
 requires-python = ">=3.12"
 dependencies = [
     "langchain==1.2.10",
-    "langgraph==1.0.9",
-    "openai>=1.68.2,<=2.21.0",
-    "fastapi>=0.115.0,<=0.129.0",
+    "langgraph==1.0.10",
+    "openai>=1.68.2,<=2.26.0",
+    "fastapi>=0.115.0,<=0.135.1",
     "uvicorn>=0.41.0,<1.0.0",
-    "python-dotenv>=1.2.1,<2.0.0",
+    "python-dotenv>=1.2.2,<2.0.0",
     "langchain-openai==1.1.10",
     "copilotkit==0.1.78",
-    "langgraph-api==0.7.50",
+    "langgraph-api==0.7.66",
     "langchain-mcp-adapters==0.2.1",
     "aiocache==0.12.3",
-    "langgraph-checkpoint-redis==0.3.5",
+    "langgraph-checkpoint-redis==0.3.6",
     "langchain-redis==0.2.5",
-    "opentelemetry-instrumentation-fastapi==0.60b1",
-    "opentelemetry-exporter-otlp-proto-grpc==1.39.1"
+    "opentelemetry-instrumentation-fastapi==0.61b0",
+    "opentelemetry-exporter-otlp-proto-grpc==1.40.0"
 ]
