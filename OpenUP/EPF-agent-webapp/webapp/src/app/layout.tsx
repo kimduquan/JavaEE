@@ -2,7 +2,7 @@
 import "./globals.css";
 
 import { CopilotKit } from "@copilotkit/react-core";
-import "@copilotkit/react-ui/v2/styles.css";
+import "@copilotkit/react-core/v2/styles.css";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
@@ -21,7 +21,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`antialiased`}>
-        <CopilotKit runtimeUrl="/api/copilotkit" agent="epf-agent" showDevConsole={debug} threadId={session?.user.id}>
+        <CopilotKit publicLicenseKey={process.env.COPILOTKIT_PUBLIC_LICENSE_KEY} runtimeUrl="/api/copilotkit" agent="epf-agent" showDevConsole={debug} threadId={session?.user.id}>
           {children}
         </CopilotKit>
       </body>

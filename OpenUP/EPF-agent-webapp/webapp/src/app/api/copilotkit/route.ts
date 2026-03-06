@@ -37,7 +37,7 @@ export const POST = async (req: NextRequest) => {
     serviceAdapter: new ExperimentalEmptyAdapter(),
     runtime: new CopilotRuntime({
       agents: {
-        "epf-agent": new LangGraphHttpAgent({
+        default: new LangGraphHttpAgent({
           url: process.env.EPF_AGENT_URL || "http://localhost:8123",
           headers: { "Authorization": "Bearer " + jwt?.accessToken },
           threadId: jwt?.sub,

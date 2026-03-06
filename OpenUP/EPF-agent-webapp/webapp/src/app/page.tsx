@@ -2,8 +2,7 @@
 
 import { CopilotChat } from "@copilotkit/react-core/v2";
 import { SessionProvider, useSession } from "next-auth/react";
-import { useLangGraphInterrupt, useDefaultTool, useCoAgentStateRender } from "@copilotkit/react-core";
-import { AgentState } from "@/lib/types";
+import { useInterrupt, useDefaultRenderTool } from "@copilotkit/react-core/v2";
 
 export default function CopilotKitPage() {
   return (
@@ -22,20 +21,12 @@ function MainContent() {
   console.log("session.data.user.id:%s", session.data?.user?.id);
   console.log("session.data.expires:%s", session.data?.expires);
   console.log("[END]MainContent");
-  useDefaultTool({
-    render: ({name, status, args, result}) => {
+  useDefaultRenderTool({
+    render: ({name, status, result}) => {
       return (<p>{name}</p>);
     }
   });
-  useCoAgentStateRender<AgentState>({
-    name: "epf-agent",
-    render: ({ state }) => {
-      if(state.progress) {
-        return (<progress max={state.progress?.max} value={state.progress?.value}></progress>)
-      }
-    }
-  });
-  useLangGraphInterrupt({
+  useInterrupt({
     render: ({ event, resolve }) => {
       resolve("reject")
       return (<div>{event.name}</div>);
