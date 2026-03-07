@@ -59,6 +59,18 @@ class AgentContext:
 class EPFAgentMiddleware(AgentMiddleware[EPFAgentState, AgentContext]):
     """"""
 
+class UIAgentMiddleware(CopilotKitMiddleware):
+
+    def before_agent(
+            self,
+            state: CopilotKitState,
+            runtime: Runtime[Any],
+    ) -> dict[str, Any] | None:
+        copilotkit_state = state.get("copilotkit", {})
+        if not copilotkit_state.get("context"):
+            copilotkit_state["context"] = {}
+        return super().before_agent(state=state, runtime=runtime)
+
 class EPFToolCallInterceptor(ToolCallInterceptor):
     async def __call__(
         self,
@@ -273,7 +285,7 @@ async def create_supervisor_agent(organization: str, context: AgentContext) -> C
         tools=tools,
         system_prompt=system_prompt,
         middleware=[
-            CopilotKitMiddleware(),
+            UIAgentMiddleware(),
             MODEL_CALL_LIMIT,
             TOOL_CALL_LIMIT,
             PII,
