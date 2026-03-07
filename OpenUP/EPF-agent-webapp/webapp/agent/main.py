@@ -66,10 +66,10 @@ class UIAgentMiddleware(CopilotKitMiddleware):
             state: CopilotKitState,
             runtime: Runtime[Any],
     ) -> dict[str, Any] | None:
-        copilotkit_state = state.get("copilotkit", {})
-        if not copilotkit_state.get("context"):
-            copilotkit_state["context"] = {}
-        return super().before_agent(state=state, runtime=runtime)
+        try:
+            return super().before_agent(state=state, runtime=runtime)
+        except TypeError:
+            return None
 
 class EPFToolCallInterceptor(ToolCallInterceptor):
     async def __call__(
