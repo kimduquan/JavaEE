@@ -310,12 +310,11 @@ async def create_supervisor(organization: str) -> CompiledStateGraph[EPFAgentSta
     return builder.compile(checkpointer=checkpointer, cache=cache, store=store, debug=DEBUG, name=supervisor_node_name)
 
 async def supervisor_node(state: EPFAgentState, config: RunnableConfig) -> dict[str, Any] | Any:
-    context = AgentContext(
-        authorization=config["configurable"]["authorization"],
-        claims=config["configurable"]["claims"],
-        organization=config["configurable"]["organization"],
-        state=state
-        )
+    context = AgentContext()
+    context.authorization = config["configurable"]["authorization"]
+    context.claims = config["configurable"]["claims"]
+    context.organization = config["configurable"]["organization"]
+    context.state = state
     if not state["copilotkit"]["context"]:
         state["copilotkit"]["context"] = []
     supervisor_agent: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState] = await create_supervisor_agent(context.organization, context)
