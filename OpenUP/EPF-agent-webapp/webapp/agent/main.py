@@ -316,7 +316,7 @@ async def supervisor_node(state: EPFAgentState, config: RunnableConfig) -> dict[
     context.organization = config["configurable"]["organization"]
     context.state = state
     if not state["copilotkit"]["context"]:
-        state["copilotkit"]["context"] = []
+        state["copilotkit"]["context"] = {}
     supervisor_agent: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState] = await create_supervisor_agent(context.organization, context)
     state["progress"] = Progress(max=1, value=0)
     await copilotkit_emit_state(config=config, state=state)
