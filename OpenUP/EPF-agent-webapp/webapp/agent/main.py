@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Annotated, Any, TypedDict
 from fastapi import Depends, FastAPI, HTTPException, Request
@@ -51,8 +50,7 @@ class Progress(TypedDict):
 class EPFAgentState(CopilotKitState):
     progress: Progress | None = None
 
-@dataclass
-class AgentContext():
+class AgentContext(TypedDict):
     authorization: HTTPAuthorizationCredentials
     claims: Any
     organization: str
