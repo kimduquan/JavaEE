@@ -66,8 +66,8 @@ class EPFToolCallInterceptor(ToolCallInterceptor):
         handler,
     ):
         context: AgentContext = request.runtime.context
-        if(context.authorization):
-            headers = { "Authorization": context.authorization.scheme + " " + context.authorization.credentials }
+        if(context["authorization"]):
+            headers = { "Authorization": context["authorization"].scheme + " " + context["authorization"].credentials }
             new_request = request.override(headers=headers)
             return await handler(new_request)
         return await handler(request)
@@ -126,8 +126,8 @@ def get_connections(server_name: str, headers: dict[str, Any] | None) -> dict[st
 
 def get_client(server_name: str, context: AgentContext) -> MultiServerMCPClient:
     headers: dict[str, Any] = {}
-    if(context.authorization):
-        headers["Authorization"] = context.authorization.scheme + " " + context.authorization.credentials
+    if(context["authorization"]):
+        headers["Authorization"] = context["authorization"].scheme + " " + context["authorization"].credentials
     connections = get_connections(server_name=server_name, headers=headers)
     tool_interceptors = [EPFToolCallInterceptor()]
     client = MultiServerMCPClient(
