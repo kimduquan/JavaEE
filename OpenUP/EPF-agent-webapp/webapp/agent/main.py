@@ -311,12 +311,13 @@ async def create_supervisor(organization: str) -> CompiledStateGraph[EPFAgentSta
     return builder.compile(checkpointer=checkpointer, cache=cache, store=store, debug=DEBUG, name=supervisor_node_name)
 
 async def supervisor_node(state: EPFAgentState, config: RunnableConfig) -> dict[str, Any] | Any:
-    context = AgentContext()
-    context.authorization = config["configurable"]["authorization"]
-    context.claims = config["configurable"]["claims"]
     organization: str = config["configurable"]["organization"]
-    context.organization = organization
-    context.state = state
+    context = AgentContext(
+        authorization=config["configurable"]["authorization"], 
+        claims=config["configurable"]["claims"],
+        organization=organization,
+        state=state
+        )
     supervisor_agent: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState] = await create_supervisor_agent(organization=organization, context=context)
     state["progress"] = Progress(max=1, value=0)
     await copilotkit_emit_state(config=config, state=state)
