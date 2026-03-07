@@ -304,7 +304,10 @@ async def create_supervisor(organization: str) -> CompiledStateGraph[EPFAgentSta
     builder.add_node(supervisor_node_name, supervisor_node)
     builder.set_entry_point(supervisor_node_name)
     builder.set_finish_point(supervisor_node_name)
-    return builder.compile(debug=DEBUG, name=supervisor_node_name)
+    checkpointer = await get_checkpointer(organization)
+    store = await get_store(organization)
+    cache = await get_cache(organization)
+    return builder.compile(checkpointer=checkpointer, cache=cache, store=store, debug=DEBUG, name=supervisor_node_name)
 
 async def supervisor_node(state: EPFAgentState, config: RunnableConfig) -> dict[str, Any] | Any:
     context = AgentContext(
