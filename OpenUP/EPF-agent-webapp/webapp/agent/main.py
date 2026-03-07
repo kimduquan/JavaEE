@@ -54,10 +54,6 @@ class AgentContext():
     authorization: HTTPAuthorizationCredentials
     claims: Any
     organization: str
-    checkpointer: Checkpointer
-    model: ChatOpenAI
-    store: BaseStore
-    cache: BaseCache
     state: EPFAgentState
 
 class EPFAgentMiddleware(AgentMiddleware[EPFAgentState, AgentContext]):
@@ -196,8 +192,9 @@ def as_tool(name: str, prompt: Prompt, agent: CompiledStateGraph[EPFAgentState, 
 async def create_sub_agent(server_name: str, agent_name: str, context: AgentContext) -> CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]:
     client = get_client(server_name=server_name, context=context)
     tools: list[BaseTool] = await load_tools(client=client,server_name=server_name)
+    model = await get_model(context.organization)
     return create_agent(
-        model=context.model,
+        model=model,
         tools=tools,
         middleware=[
             EPFAgentMiddleware()
@@ -266,8 +263,12 @@ async def create_supervisor_agent(organization: str, context: AgentContext) -> C
         sub_agent_node = await create_sub_agent_node(server_name=server_name, prompt_name=sub_agent_prompt.name, agent=sub_agent, context=context)
         tool = as_tool(name=sub_agent_name, prompt=sub_agent_prompt, agent=sub_agent_node)
         tools.append(tool)
+    model = await get_model(organization)
+    checkpointer = await get_checkpointer(organization)
+    store = await get_store(organization)
+    cache = await get_cache(organization)
     return create_agent(
-        model=context.model,
+        model=model,
         tools=tools,
         system_prompt=system_prompt,
         middleware=[
@@ -279,16 +280,16 @@ async def create_supervisor_agent(organization: str, context: AgentContext) -> C
             MODEL_RETRY,
             CONTEXT_EDITING,
             HUMAN_IN_THE_LOOP,
-            SummarizationMiddleware(model=context.model),
+            SummarizationMiddleware(model=model),
             EPFAgentMiddleware()
             ],
         state_schema=EPFAgentState,
         context_schema=AgentContext,
-        checkpointer=context.checkpointer,
-        store=context.store,
+        checkpointer=checkpointer,
+        store=store,
         debug=DEBUG,
         name=supervisor_agent_name,
-        cache=context.cache)
+        cache=cache)
 
 @cached()
 async def create_supervisor(organization: str) -> CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]:
@@ -313,10 +314,6 @@ async def supervisor_node(state: EPFAgentState, config: RunnableConfig) -> dict[
     context.claims = config["configurable"]["claims"]
     organization: str = config["configurable"]["organization"]
     context.organization = organization
-    context.cache = await get_cache(organization)
-    context.checkpointer = await get_checkpointer(organization)
-    context.model = await get_model(organization)
-    context.store = await get_store(organization)
     context.state = state
     supervisor_agent: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState] = await create_supervisor_agent(organization=organization, context=context)
     state["progress"] = Progress(max=1, value=0)
