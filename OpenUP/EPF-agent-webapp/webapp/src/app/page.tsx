@@ -19,7 +19,16 @@ export default function CopilotKitPage() {
 }
 
 function MainContent() {
-  const session = useSession({ required: true });
+  const session = useSession({
+    required: true,
+    onUnauthenticated: () => {
+      const url = `${basePath}/signin?${new URLSearchParams({
+          error: "SessionRequired",
+          callbackUrl: window.location.href,
+        })}`
+      window.location.href = url;
+    }
+  });
   console.log("[BEGIN]MainContent");
   console.log("session.status:%s", session.status);
   console.log("session.data.user.id:%s", session.data?.user?.id);
