@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from typing import Annotated, Any, TypedDict
+from typing import Annotated, Any, Optional, TypedDict, Union
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import StreamingResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -87,6 +87,16 @@ class EPFToolCallInterceptor(ToolCallInterceptor):
 
 class EPFAgent(LangGraphAGUIAgent):
 
+    _authorization: HTTPAuthorizationCredentials
+    _claims: Any
+    _organization: str
+
+    def __init__(self, organization: str, claims: Any, authorization: HTTPAuthorizationCredentials, name: str, graph: CompiledStateGraph, description: Optional[str] = None, config: Union[Optional[RunnableConfig], dict] = None):
+        super().__init__(name=name, graph=graph, description=description, config=config)
+        self._authorization = authorization
+        self._claims = claims
+        self._organization = organization
+
     async def get_checkpoint_before_message(self, message_id: str, thread_id: str):
         #try:
         #    return await super().get_checkpoint_before_message(message_id=message_id, thread_id=thread_id)
@@ -134,9 +144,9 @@ class EPFAgent(LangGraphAGUIAgent):
         if len(history_list) > 0:
             empty_snapshot = history_list[0]
             empty_snapshot.values["messages"] = []
-            empty_snapshot.config["configurable"]["authorization"] = self.config["configurable"]["authorization"]
-            empty_snapshot.config["configurable"]["claims"] = self.config["configurable"]["claims"]
-            empty_snapshot.config["configurable"]["organization"] = self.config["configurable"]["organization"]
+            empty_snapshot.config["configurable"]["authorization"] = self._authorization
+            empty_snapshot.config["configurable"]["claims"] = self._claims
+            empty_snapshot.config["configurable"]["organization"] = self._organization
             return empty_snapshot
 
         raise ValueError("Message ID not found in history")
@@ -382,8 +392,6 @@ async def supervisor_node(state: EPFAgentState, config: RunnableConfig) -> dict[
     context.claims = config["configurable"]["claims"]
     context.organization = config["configurable"]["organization"]
     context.state = state
-    if not state["copilotkit"]["context"]:
-        state["copilotkit"]["context"] = {}
     supervisor_agent: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState] = await create_supervisor_agent(context.organization, context)
     state["progress"] = Progress(max=1, value=0)
     await copilotkit_emit_state(config=config, state=state)
@@ -413,7 +421,7 @@ def add_agent_endpoint(app: FastAPI, name: str, path: str = "/"):
         config = RunnableConfig(configurable={"authorization": credentials, "claims": claims, "organization": organization}, run_id=UUID(input_data.run_id))
         config = copilotkit_customize_config(base_config=config)
         supervisor_graph = await create_supervisor(organization)
-        agent = EPFAgent(name=name, graph=supervisor_graph, config=config)
+        agent = EPFAgent(organization=organization, claims=claims, authorization=credentials, name=name, graph=supervisor_graph, config=config)
 
         # Get the accept header from the request
         accept_header = request.headers.get("accept")
