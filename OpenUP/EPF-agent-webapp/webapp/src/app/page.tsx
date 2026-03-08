@@ -4,10 +4,13 @@ import { CopilotChat } from "@copilotkit/react-core/v2";
 import { SessionProvider, useSession } from "next-auth/react";
 import { useInterrupt, useDefaultRenderTool } from "@copilotkit/react-core/v2";
 
+const baseUrl = process.env.NEXT_PUBLIC_NEXT_AUTH_BASE_URL;
+const basePath = process.env.NEXT_PUBLIC_NEXT_AUTH_BASE_PATH;
+
 export default function CopilotKitPage() {
   return (
     <main>
-      <SessionProvider basePath="/agent/api/auth">
+      <SessionProvider baseUrl={baseUrl} basePath={basePath}>
         <MainContent />
       </SessionProvider>
     </main>
