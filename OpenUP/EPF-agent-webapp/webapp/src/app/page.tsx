@@ -47,9 +47,7 @@ function MainContent() {
   })
   if(session.status == "authenticated"){
     return (
-      <div>
-          <CopilotChat threadId={session.data.user.id} />
-      </div>
+      <CopilotChat threadId={session.data.user.id} />
     );
   }
   return (
