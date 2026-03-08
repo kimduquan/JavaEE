@@ -464,14 +464,14 @@ def add_agent_endpoint(app: FastAPI, name: str, path: str = "/"):
         claims = await authenticate(credentials=credentials)
         organization = get_organization(claims=claims)
         thread_id = get_user_id(claims=claims)
-        checkpointer: Checkpointer = get_checkpointer(organization)
+        checkpointer: Checkpointer = await get_checkpointer(organization)
         await checkpointer.adelete_thread(thread_id=thread_id)
 
     @app.delete("/cache")
     async def clear_cache(credentials: Annotated[HTTPAuthorizationCredentials, Depends(SECURITY)]):
         claims = await authenticate(credentials=credentials)
         organization = get_organization(claims=claims)
-        base_cache: BaseCache = get_cache(organization)
+        base_cache: BaseCache = await get_cache(organization)
         await base_cache.aclear()
 
 load_servers()
