@@ -35,7 +35,7 @@ function MainContent() {
   if(session.status == "authenticated"){
     return (
       <div>
-          <CopilotChat />
+          <CopilotChat threadId={session.data.user.id} />
       </div>
     );
   }
