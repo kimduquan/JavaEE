@@ -7,7 +7,7 @@ import { useInterrupt, useDefaultRenderTool } from "@copilotkit/react-core/v2";
 export default function CopilotKitPage() {
   return (
     <main>
-      <SessionProvider>
+      <SessionProvider basePath="/agent/api/auth">
         <MainContent />
       </SessionProvider>
     </main>
