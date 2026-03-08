@@ -21,7 +21,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`antialiased`}>
-        <CopilotKit publicLicenseKey={process.env.COPILOTKIT_PUBLIC_LICENSE_KEY} runtimeUrl="/agent/api/copilotkit" showDevConsole={debug} threadId={session?.user.id}>
+        <CopilotKit publicLicenseKey={process.env.COPILOTKIT_PUBLIC_LICENSE_KEY} runtimeUrl="/api/copilotkit" showDevConsole={debug} threadId={session?.user.id}>
           {children}
         </CopilotKit>
       </body>
