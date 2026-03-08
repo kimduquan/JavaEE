@@ -23,7 +23,7 @@ from langchain.agents.middleware.human_in_the_loop import InterruptOnConfig
 from copilotkit import LangGraphAGUIAgent
 from ag_ui.core.types import RunAgentInput
 from ag_ui.encoder import EventEncoder
-from langgraph.types import Checkpointer
+from langgraph.types import Checkpointer, StateSnapshot
 from langgraph.store.base import BaseStore
 from langgraph.cache.base import BaseCache
 from uuid import UUID
@@ -85,6 +85,58 @@ class EPFToolCallInterceptor(ToolCallInterceptor):
             return await handler(new_request)
         return await handler(request)
 
+class EPFAgent(LangGraphAGUIAgent):
+
+    async def get_checkpoint_before_message(self, message_id: str, thread_id: str):
+        #try:
+        #    return await super().get_checkpoint_before_message(message_id=message_id, thread_id=thread_id)
+        #except ValueError:
+        #    config = {"configurable": {"thread_id": thread_id}}
+        #    empty_snapshot = StateSnapshot(
+        #        values={},
+        #        next=(),
+        #        config=config,
+        #        metadata=None,
+        #        created_at=None,
+        #        parent_config=None,
+        #        tasks=(),
+        #        interrupts=(),
+        #    )
+        #    empty_snapshot.values["messages"] = []
+        #    return empty_snapshot
+        if not thread_id:
+            raise ValueError("Missing thread_id in config")
+
+        history_list: list[StateSnapshot] = []
+        async for snapshot in self.graph.aget_state_history({"configurable": {"thread_id": thread_id}}):
+            history_list.append(snapshot)
+        print("message_id:%s, thread_id:%s, history_list len:%d", message_id, thread_id, len(history_list))
+        history_list.reverse()
+        for idx, snapshot in enumerate(history_list):
+            messages = snapshot.values.get("messages", [])
+            if any(getattr(m, "id", None) == message_id for m in messages):
+                if idx == 0:
+                    # No snapshot before this
+                    # Return synthetic "empty before" version
+                    empty_snapshot = snapshot
+                    empty_snapshot.values["messages"] = []
+                    return empty_snapshot
+
+                snapshot_values_without_messages = snapshot.values.copy()
+                del snapshot_values_without_messages["messages"]
+                checkpoint = history_list[idx - 1]
+
+                merged_values = {**checkpoint.values, **snapshot_values_without_messages}
+                checkpoint = checkpoint._replace(values=merged_values)
+
+                return checkpoint
+
+        if len(history_list) > 0:
+            empty_snapshot = history_list[0]
+            empty_snapshot.values["messages"] = []
+            return empty_snapshot
+
+        raise ValueError("Message ID not found in history")
 
 DEFAULT_SERVER_NAME = "gateway"
 
@@ -358,7 +410,7 @@ def add_agent_endpoint(app: FastAPI, name: str, path: str = "/"):
         config = RunnableConfig(configurable={"authorization": credentials, "claims": claims, "organization": organization}, run_id=UUID(input_data.run_id))
         config = copilotkit_customize_config(base_config=config)
         supervisor_graph = await create_supervisor(organization)
-        agent = LangGraphAGUIAgent(name=name, graph=supervisor_graph, config=config)
+        agent = EPFAgent(name=name, graph=supervisor_graph, config=config)
 
         # Get the accept header from the request
         accept_header = request.headers.get("accept")
