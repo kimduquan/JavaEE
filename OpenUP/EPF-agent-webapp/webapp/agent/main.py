@@ -229,7 +229,10 @@ async def list_prompts(client: MultiServerMCPClient, server_name: str) -> list[P
 async def invoke_agent(state: dict[str, Any] | None, config: RunnableConfig, runtime: Runtime[AgentContext]) -> dict[str, Any] | Any:
     server_name: str = config["metadata"]["server_name"]
     prompt_name: str = config["metadata"]["prompt_name"]
+    agent_name: str = config["metadata"]["agent_name"]
     context = runtime.context
+    print(f"invoke_agent: server_name={server_name},prompt_name={prompt_name},agent_name={agent_name},organization={context.organization}")
+    print(f"invoke_agent: input={state}")
     client = get_client(server_name=server_name, authorization=context.authorization)
     prompt_contents = await client.get_prompt(server_name=server_name, prompt_name=prompt_name, arguments=state)
     messages = context.state["messages"].copy()
@@ -237,10 +240,10 @@ async def invoke_agent(state: dict[str, Any] | None, config: RunnableConfig, run
         messages.append(SystemMessage(content=prompt_content.content))
     sub_state = EPFAgentState(context.state)
     sub_state["messages"] = messages
-    agent_name: str = config["metadata"]["agent_name"]
     agent: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState] = await CACHE.get(key=agent_name)
     output = await agent.ainvoke(input=sub_state, config=config, context=context)
     output_message = output["messages"][-1]
+    print(f"invoke_agent: output={output_message}")
     return { "messages" : [output_message] }
 
 async def create_sub_agent_node(server_name: str, prompt_name: str, agent: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState], organization: str) -> CompiledStateGraph[EPFAgentState, AgentContext, dict[str, Any], EPFAgentState]:
@@ -253,7 +256,10 @@ async def create_sub_agent_node(server_name: str, prompt_name: str, agent: Compi
     graph.add_node("invoke_agent", invoke_agent, metadata=metadata, input_schema=dict[str, Any])
     graph.set_entry_point("invoke_agent")
     graph.set_finish_point("invoke_agent")
-    return graph.compile(debug=DEBUG, name=AGENT_NODE_NAME + "-" + organization)
+    checkpointer = await get_checkpointer(organization)
+    store = await get_store(organization)
+    cache = await get_cache(organization)
+    return graph.compile(checkpointer=checkpointer, cache=cache, store=store, debug=DEBUG, name=AGENT_NODE_NAME + "-" + organization)
 
 def as_tool(name: str, prompt: Prompt, agent: CompiledStateGraph[EPFAgentState, AgentContext, dict[str, Any], EPFAgentState]) -> BaseTool:
     arg_types: dict[str, type] | None = None
@@ -271,6 +277,9 @@ async def create_sub_agent(server_name: str, agent_name: str, organization: str,
     client = get_client(server_name=server_name, authorization=authorization)
     tools: list[BaseTool] = await load_tools(client=client,server_name=server_name)
     model = await get_model(organization)
+    checkpointer = await get_checkpointer(organization)
+    store = await get_store(organization)
+    cache = await get_cache(organization)
     return create_agent(
         model=model,
         tools=tools,
@@ -279,7 +288,10 @@ async def create_sub_agent(server_name: str, agent_name: str, organization: str,
             ],
         state_schema=EPFAgentState,
         context_schema=AgentContext,
+        checkpointer=checkpointer,
+        store=store,
         debug=DEBUG,
+        cache=cache,
         name=agent_name + "-" + organization)
 
 @cached()
