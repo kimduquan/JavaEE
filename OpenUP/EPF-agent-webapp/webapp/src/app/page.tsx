@@ -6,11 +6,12 @@ import { useInterrupt, useDefaultRenderTool } from "@copilotkit/react-core/v2";
 
 const baseUrl = process.env.NEXT_PUBLIC_NEXT_AUTH_BASE_URL;
 const basePath = process.env.NEXT_PUBLIC_NEXT_AUTH_BASE_PATH;
+const refetchInterval = parseInt(process.env.NEXT_PUBLIC_NEXT_AUTH_REFETCH_INTERVAL || "0");
 
 export default function CopilotKitPage() {
   return (
     <main>
-      <SessionProvider baseUrl={baseUrl} basePath={basePath}>
+      <SessionProvider baseUrl={baseUrl} basePath={basePath} refetchInterval={refetchInterval}>
         <MainContent />
       </SessionProvider>
     </main>
