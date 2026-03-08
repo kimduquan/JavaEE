@@ -2,6 +2,10 @@ import NextAuth, { AuthOptions } from "next-auth"
 import KeycloakProvider from "next-auth/providers/keycloak";
 
 const debug = ("true" == process.env.DEBUG);
+const wellKnown = process.env.OIDC_PROVIDER_URL? `${process.env.OIDC_PROVIDER_URL}/.well-known/openid-configuration`: undefined;
+const jwks_endpoint = process.env.OIDC_PROVIDER_URL? `${process.env.OIDC_PROVIDER_URL}/protocol/openid-connect/certs`: undefined;
+const token_endpoint = process.env.OIDC_PROVIDER_URL? `${process.env.OIDC_PROVIDER_URL}/protocol/openid-connect/token`: undefined;
+const userinfo_endpoint = process.env.OIDC_PROVIDER_URL? `${process.env.OIDC_PROVIDER_URL}/protocol/openid-connect/userinfo`: undefined;
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -12,6 +16,10 @@ export const authOptions: AuthOptions = {
       httpOptions: {
         timeout: process.env.AUTH_REQUEST_TIMEOUT? parseInt(process.env.AUTH_REQUEST_TIMEOUT) : undefined
       },
+      wellKnown: wellKnown,
+      jwks_endpoint: jwks_endpoint,
+      token: token_endpoint,
+      userinfo: userinfo_endpoint,
     })
   ],
   session: {
