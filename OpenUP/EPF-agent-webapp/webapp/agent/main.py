@@ -110,7 +110,7 @@ class EPFAgent(LangGraphAGUIAgent):
         history_list: list[StateSnapshot] = []
         async for snapshot in self.graph.aget_state_history({"configurable": {"thread_id": thread_id}}):
             history_list.append(snapshot)
-        print("message_id:%s, thread_id:%s, history_list len:%d", message_id, thread_id, len(history_list))
+        print(f"message_id:{message_id}, thread_id:{thread_id}, history_list len:{len(history_list)}")
         history_list.reverse()
         for idx, snapshot in enumerate(history_list):
             messages = snapshot.values.get("messages", [])
@@ -134,6 +134,9 @@ class EPFAgent(LangGraphAGUIAgent):
         if len(history_list) > 0:
             empty_snapshot = history_list[0]
             empty_snapshot.values["messages"] = []
+            empty_snapshot.config["configurable"]["authorization"] = self.config["configurable"]["authorization"]
+            empty_snapshot.config["configurable"]["claims"] = self.config["configurable"]["claims"]
+            empty_snapshot.config["configurable"]["organization"] = self.config["configurable"]["organization"]
             return empty_snapshot
 
         raise ValueError("Message ID not found in history")
