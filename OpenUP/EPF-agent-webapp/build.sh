@@ -1,5 +1,6 @@
 export NEXT_PUBLIC_NEXT_AUTH_BASE_URL=https://chipmunk-capable-prawn.ngrok-free.app
 export NEXT_PUBLIC_NEXT_AUTH_BASE_PATH=/agent/api/auth
+export NEXT_PUBLIC_NEXT_AUTH_REFETCH_INTERVAL=60
 cd webapp
 npm install --verbose
 npm run build --verbose
