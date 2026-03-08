@@ -403,9 +403,7 @@ async def supervisor_node(state: EPFAgentState, config: RunnableConfig) -> dict[
 
 def add_agent_endpoint(app: FastAPI, name: str, path: str = "/"):
 
-    @app.post(path)
-    async def agent_endpoint(input_data: RunAgentInput, request: Request, credentials: Annotated[HTTPAuthorizationCredentials, Depends(SECURITY)]):
-
+    async def authenticate(credentials: HTTPAuthorizationCredentials) -> Any:
         claims: Any = None
         try:
             key = JWK_CLIENT.get_signing_key_from_jwt(token=credentials.credentials)
@@ -413,11 +411,24 @@ def add_agent_endpoint(app: FastAPI, name: str, path: str = "/"):
         except PyJWTError as ex:
             LOGGER.error("[%f]jwt:%s", datetime.now(tz=timezone.utc).timestamp(), credentials.credentials)
             raise HTTPException(status_code=HTTP_403_FORBIDDEN, detail=ex.args)
+        return claims
+
+    def get_organization(claims: Any) -> str:
         organization_claim: dict[str, Any] = claims["organization"]
         organization_name: str = list(organization_claim.keys())[0]
         organization: str = organization_claim.get(organization_name)["id"]
+        return organization
+
+    def get_user_id(claims: Any) -> str:
+        map: dict[str, Any] = claims
+        return map.get("sub")
+
+    @app.post(path)
+    async def agent_endpoint(input_data: RunAgentInput, request: Request, credentials: Annotated[HTTPAuthorizationCredentials, Depends(SECURITY)]):
+        claims = await authenticate(credentials=credentials)
+        organization = get_organization(claims=claims)
         LOGGER.info("thread_id:%s", input_data.thread_id)
-        print("thread_id:%s", input_data.thread_id)
+        print(f"thread_id:{input_data.thread_id}")
         config = RunnableConfig(configurable={"authorization": credentials, "claims": claims, "organization": organization}, run_id=UUID(input_data.run_id))
         config = copilotkit_customize_config(base_config=config)
         supervisor_graph = await create_supervisor(organization)
@@ -447,6 +458,21 @@ def add_agent_endpoint(app: FastAPI, name: str, path: str = "/"):
                 "name": name,
             }
         }
+
+    @app.delete("/checkpoints")
+    async def delete_checkpoints(credentials: Annotated[HTTPAuthorizationCredentials, Depends(SECURITY)]):
+        claims = await authenticate(credentials=credentials)
+        organization = get_organization(claims=claims)
+        thread_id = get_user_id(claims=claims)
+        checkpointer: Checkpointer = get_checkpointer(organization)
+        await checkpointer.adelete_thread(thread_id=thread_id)
+
+    @app.delete("/cache")
+    async def clear_cache(credentials: Annotated[HTTPAuthorizationCredentials, Depends(SECURITY)]):
+        claims = await authenticate(credentials=credentials)
+        organization = get_organization(claims=claims)
+        base_cache: BaseCache = get_cache(organization)
+        await base_cache.aclear()
 
 load_servers()
 APP = FastAPI()
