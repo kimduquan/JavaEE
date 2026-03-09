@@ -42,6 +42,7 @@ from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 import logging
 from jwt.exceptions import PyJWTError
 from starlette.status import HTTP_403_FORBIDDEN
+from opentelemetry.instrumentation.langchain import LangchainInstrumentor
 
 class Progress(TypedDict):
     max: float | None = None
@@ -490,6 +491,7 @@ load_servers()
 APP = FastAPI()
 add_agent_endpoint(app=APP, name=EPF_AGENT_NAME)
 FastAPIInstrumentor.instrument_app(app=APP, excluded_urls="/health")
+LangchainInstrumentor().instrument()
 
 if __name__ == "__main__":
     uvicorn.run(app=APP, host="0.0.0.0", port=8123)
