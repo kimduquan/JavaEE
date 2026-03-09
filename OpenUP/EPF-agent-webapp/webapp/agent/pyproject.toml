@@ -19,5 +19,6 @@ dependencies = [
     "langchain-redis==0.2.5",
     "opentelemetry-instrumentation-fastapi==0.61b0",
     "opentelemetry-exporter-otlp-proto-grpc==1.40.0",
-    "opentelemetry-instrumentation-langchain==0.53.0"
+    "opentelemetry-instrumentation-langchain[instruments]==0.53.0",
+    "opentelemetry-semantic-conventions==0.61b0"
 ]
