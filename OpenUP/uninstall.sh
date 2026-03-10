@@ -1,0 +1,1 @@
+helm uninstall epf-parent --wait --cascade foreground
