@@ -19,3 +19,10 @@ set OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
 set OTEL_SERVICE_NAME=EPF-agent
 set OTEL_EXPORTER_OTLP_PROTOCOL=grpc
 set OTEL_EXPORTER_OTLP_INSECURE=true
+
+start /B kubectl port-forward svc/epf-mcp-gateway 9197 &
+start /B kubectl port-forward svc/keycloak 8080 &
+start /B kubectl port-forward svc/redis-master 6379 &
+start /B kubectl port-forward svc/jaeger 4317 &
+
+.venv\Scripts\python.exe main.py
