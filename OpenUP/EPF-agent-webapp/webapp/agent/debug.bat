@@ -1,4 +1,3 @@
-call env.bat
 
 start /B kubectl port-forward svc/epf-mcp-gateway 9197 &
 start /B kubectl port-forward svc/keycloak 8080 &
