@@ -310,7 +310,7 @@ async def get_checkpointer(organization: str) -> Checkpointer:
     checkpoint_prefix = CHECKPOINT_PREFIX + "-" + organization
     checkpoint_blob_prefix = CHECKPOINT_BLOB_PREFIX + "-" + organization
     checkpoint_write_prefix = CHECKPOINT_WRITE_PREFIX + "-" + organization
-    redis_client = AsyncRedis(host=os.environ["REDIS_HOST"], password=os.environ["REDIS_PASSWORD"])
+    redis_client = AsyncRedis(host=os.environ["REDIS_HOST"], password=os.environ["REDIS_PASSWORD"], single_connection_client=True)
     async with AsyncRedisSaver.from_conn_string(redis_url=redis_url, redis_client=redis_client, checkpoint_prefix=checkpoint_prefix, checkpoint_blob_prefix=checkpoint_blob_prefix, checkpoint_write_prefix=checkpoint_write_prefix) as checkpointer:
         await checkpointer.asetup()
         return checkpointer
@@ -328,7 +328,7 @@ async def get_store(organization: str) -> BaseStore:
 async def get_cache(organization: str) -> BaseCache:
     redis_url = os.environ["CACHE_PERSISTENCE_URL_FORMAT"].format(organization)
     prefix = "redis-" + organization
-    redis_client = SyncRedis(host=os.environ["REDIS_HOST"], password=os.environ["REDIS_PASSWORD"])
+    redis_client = SyncRedis(host=os.environ["REDIS_HOST"], password=os.environ["REDIS_PASSWORD"], single_connection_client=True)
     redis_cache = RedisCache(redis_url=redis_url, prefix=prefix, redis_client=redis_client)
     return redis_cache
 
