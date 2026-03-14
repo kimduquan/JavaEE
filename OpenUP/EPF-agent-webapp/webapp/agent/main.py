@@ -43,6 +43,9 @@ import logging
 from jwt.exceptions import PyJWTError
 from starlette.status import HTTP_403_FORBIDDEN
 from openinference.instrumentation.langchain import LangChainInstrumentor
+from dotenv import load_dotenv
+
+load_dotenv()
 
 LangChainInstrumentor().instrument()
 
