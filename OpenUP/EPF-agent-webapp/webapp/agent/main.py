@@ -34,7 +34,7 @@ from copilotkit.langgraph import copilotkit_customize_config, copilotkit_emit_st
 from langchain_mcp_adapters.interceptors import MCPToolCallRequest, ToolCallInterceptor
 from aiocache import cached, Cache
 from langgraph.checkpoint.redis import AsyncRedisSaver
-from langgraph.checkpoint.redis.base import CHECKPOINT_PREFIX, CHECKPOINT_BLOB_PREFIX, CHECKPOINT_WRITE_PREFIX
+from langgraph.checkpoint.redis.base import CHECKPOINT_PREFIX, CHECKPOINT_WRITE_PREFIX
 from langgraph.store.redis.aio import AsyncRedisStore
 from langgraph.store.redis.base import STORE_PREFIX, STORE_VECTOR_PREFIX
 from langchain_redis import RedisCache
@@ -308,10 +308,9 @@ async def get_model(organization: str) -> ChatOpenAI:
 async def get_checkpointer(organization: str) -> Checkpointer:
     redis_url = os.environ["CHECKPOINTER_PERSISTENCE_URL_FORMAT"].format(organization)
     checkpoint_prefix = CHECKPOINT_PREFIX + "-" + organization
-    checkpoint_blob_prefix = CHECKPOINT_BLOB_PREFIX + "-" + organization
     checkpoint_write_prefix = CHECKPOINT_WRITE_PREFIX + "-" + organization
     redis_client = AsyncRedis(host=os.environ["REDIS_HOST"], password=os.environ["REDIS_PASSWORD"], single_connection_client=True)
-    async with AsyncRedisSaver.from_conn_string(redis_url=redis_url, redis_client=redis_client, checkpoint_prefix=checkpoint_prefix, checkpoint_blob_prefix=checkpoint_blob_prefix, checkpoint_write_prefix=checkpoint_write_prefix) as checkpointer:
+    async with AsyncRedisSaver.from_conn_string(redis_url=redis_url, redis_client=redis_client, checkpoint_prefix=checkpoint_prefix, checkpoint_write_prefix=checkpoint_write_prefix) as checkpointer:
         await checkpointer.asetup()
         return checkpointer
 
