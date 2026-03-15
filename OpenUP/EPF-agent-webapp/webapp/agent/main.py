@@ -419,27 +419,27 @@ async def supervisor_node(state: EPFAgentState, config: RunnableConfig) -> dict[
     message = output["messages"][-1]
     return { "messages": [message] }
 
+async def authenticate(credentials: HTTPAuthorizationCredentials) -> Any:
+    claims: Any = None
+    try:
+        key = JWK_CLIENT.get_signing_key_from_jwt(token=credentials.credentials)
+        claims = jwt.decode(jwt=credentials.credentials, key=key, issuer=os.environ["JWT_ISSUER"])
+    except PyJWTError as ex:
+        LOGGER.error("[%f]jwt:%s", datetime.now(tz=timezone.utc).timestamp(), credentials.credentials)
+        raise HTTPException(status_code=HTTP_403_FORBIDDEN, detail=ex.args)
+    return claims
+
+def get_organization(claims: Any) -> str:
+    organization_claim: dict[str, Any] = claims["organization"]
+    organization_name: str = list(organization_claim.keys())[0]
+    organization: str = organization_claim.get(organization_name)["id"]
+    return organization
+
+def get_user_id(claims: Any) -> str:
+    map: dict[str, Any] = claims
+    return map.get("sub")
+
 def add_agent_endpoint(app: FastAPI, name: str, path: str = "/"):
-
-    async def authenticate(credentials: HTTPAuthorizationCredentials) -> Any:
-        claims: Any = None
-        try:
-            key = JWK_CLIENT.get_signing_key_from_jwt(token=credentials.credentials)
-            claims = jwt.decode(jwt=credentials.credentials, key=key, issuer=os.environ["JWT_ISSUER"])
-        except PyJWTError as ex:
-            LOGGER.error("[%f]jwt:%s", datetime.now(tz=timezone.utc).timestamp(), credentials.credentials)
-            raise HTTPException(status_code=HTTP_403_FORBIDDEN, detail=ex.args)
-        return claims
-
-    def get_organization(claims: Any) -> str:
-        organization_claim: dict[str, Any] = claims["organization"]
-        organization_name: str = list(organization_claim.keys())[0]
-        organization: str = organization_claim.get(organization_name)["id"]
-        return organization
-
-    def get_user_id(claims: Any) -> str:
-        map: dict[str, Any] = claims
-        return map.get("sub")
 
     @app.post(path)
     async def agent_endpoint(input_data: RunAgentInput, request: Request, credentials: Annotated[HTTPAuthorizationCredentials, Depends(SECURITY)]):
