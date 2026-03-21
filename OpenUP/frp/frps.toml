@@ -1,0 +1,7 @@
+kcpBindPort = 7000
+quicBindPort = 7002
+webServer.port = 7500
+auth.method = "oidc"
+auth.oidc.issuer = "https://chipmunk-capable-prawn.ngrok-free.app/auth/realms/EPF-dev"
+subDomainHost = "localhost.direct"
+sshTunnelGateway.bindPort = 2200
