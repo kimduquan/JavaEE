@@ -3,7 +3,5 @@ kind: ConfigMap
 metadata:
   name: tcp
 data:
-  7000:
-    default/frp:7000
   2200:
     default/frp:2200
