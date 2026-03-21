@@ -26,54 +26,11 @@ spec:
   dnsNames:
     - "supavisor.default.svc.cluster.local"
     - "supavisor"
-    - "*.localhost.direct"
   secretName: supavisor-tls
   issuerRef:
     name: supavisor-tls
     kind: ClusterIssuer
     group: cert-manager.io
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: supavisor-transaction
-  annotations:
-    ingress.kubernetes.io/ssl-passthrough: "true"
-    ingress.kubernetes.io/send-proxy-protocol: proxy-v2-ssl-cn
-spec:
-  ingressClassName: haproxy
-  rules:
-  - host: "*.localhost.direct"
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: supavisor
-            port:
-              number: 5452
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: supavisor-session
-  annotations:
-    ingress.kubernetes.io/ssl-passthrough: "true"
-    ingress.kubernetes.io/send-proxy-protocol: proxy-v2-ssl-cn
-spec:
-  ingressClassName: haproxy
-  rules:
-  - host: "*.localhost.direct"
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: supavisor
-            port:
-              number: 6543
 ---
 apiVersion: v1
 kind: Service
