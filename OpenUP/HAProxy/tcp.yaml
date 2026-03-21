@@ -3,9 +3,7 @@ kind: ConfigMap
 metadata:
   name: tcp
 data:
-  5452:
-    default/supavisor:5452
-  6543:
-    default/supavisor:6543
   7000:
     default/frp:7000
+  2200:
+    default/frp:2200
