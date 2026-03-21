@@ -446,13 +446,9 @@ controller:
     ## This is especially useful for TCP services:
     ## https://github.com/haproxytech/kubernetes-ingress/blob/master/documentation/controller.md
     tcpPorts:
-    - name: supavisor-transaction
-      port: 5452
-      targetPort: 5452
-      protocol: TCP
-    - name: supavisor-session
-      port: 6543
-      targetPort: 6543
+    - name: frp
+      port: 2200
+      targetPort: 2200
       protocol: TCP
     #  - name: http-alt
     #    port: 8080
