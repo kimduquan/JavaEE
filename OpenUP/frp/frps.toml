@@ -1,5 +1,9 @@
 kcpBindPort = 7000
 quicBindPort = 7002
+transport.tls.force = true
+transport.tls.certFile = "/frp-tls/tls.crt"
+transport.tls.keyFile = "/frp-tls/tls.key"
+transport.tls.trustedCaFile = "/frp-tls/ca.crt"
 webServer.port = 7500
 log.level = "trace"
 auth.method = "oidc"
