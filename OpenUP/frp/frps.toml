@@ -7,6 +7,7 @@ transport.tls.trustedCaFile = "/frp-tls/ca.crt"
 webServer.port = 7500
 log.level = "trace"
 auth.method = "oidc"
+auth.additionalScopes = ["HeartBeats", "NewWorkConns"]
 auth.oidc.issuer = "https://chipmunk-capable-prawn.ngrok-free.app/auth/realms/EPF-dev"
 subDomainHost = "localhost.direct"
 sshTunnelGateway.bindPort = 2200
