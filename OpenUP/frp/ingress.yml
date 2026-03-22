@@ -1,0 +1,28 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.kubernetes.io/send-proxy-protocol: proxy-v2-ssl-cn
+    ingress.kubernetes.io/ssl-passthrough: "true"
+  labels:
+    app.kubernetes.io/name: frp
+    app.kubernetes.io/version: 1.0.0
+  name: frp
+spec:
+  ingressClassName: haproxy
+  rules:
+    - host: '*.localhost.direct'
+      http:
+        paths:
+          - backend:
+              service:
+                name: frp
+                port:
+                  name: https
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - '*.localhost.direct'
+      secretName: frp-tls
