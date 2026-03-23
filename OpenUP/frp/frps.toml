@@ -1,5 +1,8 @@
 kcpBindPort = 7000
 quicBindPort = 7002
+vhostHTTPPort = 80
+vhostHTTPSPort = 443
+tcpmuxHTTPConnectPort = 1337
 transport.tls.force = true
 transport.tls.certFile = "/frp-tls/tls.crt"
 transport.tls.keyFile = "/frp-tls/tls.key"
