@@ -22,7 +22,7 @@ metadata:
   namespace: default
 spec:
   isCA: true
-  commonName: supavisor
+  commonName: frp
   dnsNames:
     - "frp.default.svc.cluster.local"
     - "frp"
