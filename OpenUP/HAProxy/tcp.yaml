@@ -5,3 +5,5 @@ metadata:
 data:
   2200:
     default/frp:2200
+  7000:
+    default/frp:7000
