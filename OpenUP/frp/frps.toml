@@ -11,4 +11,5 @@ auth.additionalScopes = ["NewWorkConns"]
 auth.oidc.issuer = "https://chipmunk-capable-prawn.ngrok-free.app/auth/realms/EPF-dev"
 subDomainHost = "localhost.direct"
 sshTunnelGateway.bindPort = 2200
-sshTunnelGateway.authorizedKeysFile = "/frp-ssh/.ssh/authorized_keys"
+sshTunnelGateway.privateKeyFile = "/frp-ssh/ssh-privatekey"
+sshTunnelGateway.authorizedKeysFile = "/frp-ssh-auth/.ssh/authorized_keys"
