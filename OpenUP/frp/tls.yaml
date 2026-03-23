@@ -32,4 +32,42 @@ spec:
     name: frp-tls
     kind: ClusterIssuer
     group: cert-manager.io
+  usages:
+    - server auth
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: frp-client-tls
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: frp-client-tls
+  namespace: default
+spec:
+  ca:
+    secretName: frp-client-tls
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: frp-client-tls
+  namespace: default
+spec:
+  isCA: true
+  commonName: frp-client
+  dnsNames:
+    - "frp.default.svc.cluster.local"
+    - "frp"
+    - "*.localhost.direct"
+  secretName: frp-client-tls
+  issuerRef:
+    name: frp-client-tls
+    kind: ClusterIssuer
+    group: cert-manager.io
+  usages:
+    - client auth
 ---
