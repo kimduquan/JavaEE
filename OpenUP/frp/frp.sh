@@ -11,3 +11,6 @@ docker build --file $FRP_SOURCE_DIR/dockerfiles/Dockerfile-for-frps --tag epf/fr
 mvn clean package -U
 helm install frp target/helm/kubernetes/frp --wait
 kubectl apply -f ingress.yml
+kubectl get secret frp-client-tls -o jsonpath="{.data['tls\.crt']}" | base64 -d > frp-client-tls.crt
+kubectl get secret frp-client-tls -o jsonpath="{.data['tls\.key']}" | base64 -d > frp-client-tls.key
+kubectl get secret frp-client-tls -o jsonpath="{.data['ca\.crt']}" | base64 -d > frp-client-ca.crt

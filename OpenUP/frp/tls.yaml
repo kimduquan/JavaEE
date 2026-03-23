@@ -32,8 +32,6 @@ spec:
     name: frp-tls
     kind: ClusterIssuer
     group: cert-manager.io
-  usages:
-    - server auth
 ---
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
@@ -68,6 +66,4 @@ spec:
     name: frp-client-tls
     kind: ClusterIssuer
     group: cert-manager.io
-  usages:
-    - client auth
 ---
