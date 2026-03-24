@@ -3,6 +3,7 @@ quicBindPort = 7002
 vhostHTTPPort = 80
 vhostHTTPSPort = 443
 tcpmuxHTTPConnectPort = 1337
+tcpmuxPassthrough = true
 transport.tls.force = true
 transport.tls.certFile = "/frp-tls/tls.crt"
 transport.tls.keyFile = "/frp-tls/tls.key"
@@ -16,3 +17,14 @@ subDomainHost = "localhost.direct"
 sshTunnelGateway.bindPort = 2200
 sshTunnelGateway.privateKeyFile = "/frp-ssh/ssh-privatekey"
 sshTunnelGateway.authorizedKeysFile = "/frp-ssh-auth/.ssh/authorized_keys"
+[[httpPlugins]]
+name = "user-manager"
+addr = "127.0.0.1:9000"
+path = "/handler"
+ops = ["Login"]
+
+[[httpPlugins]]
+name = "port-manager"
+addr = "127.0.0.1:9001"
+path = "/handler"
+ops = ["NewProxy"]
