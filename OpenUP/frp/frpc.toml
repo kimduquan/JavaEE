@@ -1,0 +1,12 @@
+serverAddr = "frp.localhost.direct"
+serverPort = 7000
+auth.method = "oidc"
+auth.tokenSource.type = "file"
+auth.tokenSource.file.path = "~/.frp/token"
+
+[[proxies]]
+type = "tcpmux"
+multiplexer = "httpconnect"
+localIP = "127.0.0.1"
+localPort = 8080
+customDomains = ["abc.def"]
