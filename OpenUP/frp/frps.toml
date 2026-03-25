@@ -16,4 +16,4 @@ auth.oidc.issuer = "https://chipmunk-capable-prawn.ngrok-free.app/auth/realms/EP
 subDomainHost = "localhost.direct"
 sshTunnelGateway.bindPort = 2200
 sshTunnelGateway.privateKeyFile = "/frp-ssh/ssh-privatekey"
-sshTunnelGateway.authorizedKeysFile = "/frp-ssh-auth/.ssh/authorized_keys"
+sshTunnelGateway.authorizedKeysFile = {{ .Envs.FRP_SSH_TUNNEL_GATEWAY_AUTHORIZED_KEYS_FILE }}
