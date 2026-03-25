@@ -1,0 +1,1 @@
+ssh -D 1080 -o 'ProxyCommand nc -X connect -x frp.localhost.direct:1337 %h %p' user@organization.localhost.direct
