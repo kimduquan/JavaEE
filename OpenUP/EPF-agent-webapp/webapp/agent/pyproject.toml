@@ -4,7 +4,7 @@ version = "1.0.0"
 description = "EPF agent"
 requires-python = ">=3.12"
 dependencies = [
-    "langchain==1.2.13",
+    "langchain==1.2.10",
     "langgraph==1.0.10",
     "openai>=1.68.2,<=2.30.0",
     "fastapi>=0.115.0,<=0.135.2",
