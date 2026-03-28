@@ -37,10 +37,11 @@ public class Gateway {
 		schemas.forEach(schema -> {
 			prompt.append(String.format("\t - '%s'\n", schema));
 		});
-		return PromptMessage.withUserRole(prompt.toString());
+		prompt.append("\n\nUse provided tools to answer user's question.");
+		return PromptMessage.withAssistantRole(prompt.toString());
 	}
 	
-	@Prompt(name = Naming.PERSISTENCE)
+	@Prompt(name = Naming.PERSISTENCE, description = "create, update, delete data in database")
 	@RunOnVirtualThread
 	PromptMessage getPersistencePrompt(@PromptArg(name = "schema_name") final String schemaName) throws Exception {
 		final StringBuilder prompt = new StringBuilder();
@@ -52,10 +53,10 @@ public class Gateway {
 		Given below Jakarta Persistence API entity classes :
 				""");
 		prompt.append(schemaBuilder.build());
-		return PromptMessage.withUserRole(prompt.toString());
+		return PromptMessage.withAssistantRole(prompt.toString());
 	}
 
-	@Prompt(name = Naming.QUERY)
+	@Prompt(name = Naming.QUERY, description = "read data in database")
 	@RunOnVirtualThread
 	PromptMessage getQueryPrompt(@PromptArg(name = "schema_name") final String schemaName) throws Exception {
 		final StringBuilder prompt = new StringBuilder();
@@ -67,6 +68,14 @@ public class Gateway {
 		Given below Jakarta Persistence API entity classes :
 				""");
 		prompt.append(schemaBuilder.build());
-		return PromptMessage.withUserRole(prompt.toString());
+		return PromptMessage.withAssistantRole(prompt.toString());
+	}
+	
+	@Prompt(name = "chrome_devtools", description = "browsing web content")
+	@RunOnVirtualThread
+	PromptMessage get(@PromptArg(name = "url") final String url) throws Exception {
+		final StringBuilder prompt = new StringBuilder();
+		prompt.append("\n\nUse provided tools to answer user's question.");
+		return PromptMessage.withAssistantRole(prompt.toString());
 	}
 }
