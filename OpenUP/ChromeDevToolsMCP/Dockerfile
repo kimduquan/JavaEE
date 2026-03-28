@@ -2,8 +2,7 @@ FROM node:22.22.2-alpine
 
 RUN apk add --no-cache python3 py3-pip
 
-COPY requirements.txt /chrome-devtools-mcp/
-COPY main.py /chrome-devtools-mcp/
+COPY chrome-devtools-mcp /chrome-devtools-mcp
 
 WORKDIR /chrome-devtools-mcp
 
