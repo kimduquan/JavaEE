@@ -161,11 +161,13 @@ DEFAULT_SERVER_NAME = "gateway"
 
 MCP_SERVER_URLS: dict[str, str] = {
     DEFAULT_SERVER_NAME: os.environ["MCP_SERVER_URL"],
+    "chrome_devtools": os.environ["CHROME_DEVTOOLS_MCP_SERVER_URL"]
 }
 MCP_SERVERS: list[str] = [
     DEFAULT_SERVER_NAME,
     "query",
-    "persistence"
+    "persistence",
+    "chrome_devtools"
 ]
 
 DEBUG = ("true" == os.getenv("DEBUG", "false"))
