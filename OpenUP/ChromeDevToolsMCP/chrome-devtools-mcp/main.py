@@ -1,13 +1,15 @@
 import asyncio
 import os
-from fastmcp import FastMCP
 from fastmcp.server.server import create_proxy
 from fastmcp.mcp_config import MCPConfig, StdioMCPServer
+from opentelemetry.instrumentation import auto_instrumentation
+
+auto_instrumentation.initialize()
 
 CONFIG = MCPConfig(mcpServers={"chrome-devtools": StdioMCPServer(command="npx", args=["-y", "chrome-devtools-mcp@latest"])})
 APP = create_proxy(target=CONFIG)
-HOSTNAME = os.getenv(key="HOSTNAME")
-PORT = int(os.getenv(key="PORT"))
+HOSTNAME = os.environ.get("HOSTNAME", "0.0.0.0")
+PORT = int(os.environ.get("PORT", "8000"))
 
 if __name__ == "__main__":
-    asyncio.run(APP.run_http_async(show_banner=False, host=HOSTNAME, port=PORT))
+    asyncio.run(APP.run_http_async(show_banner=False, transport="streamable-http", host=HOSTNAME, port=PORT, stateless_http=True, stateless=True))
