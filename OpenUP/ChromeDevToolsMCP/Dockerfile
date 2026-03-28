@@ -1,12 +1,12 @@
 FROM node:22.22.2-alpine
 
-RUN npm i chrome-devtools-mcp
-
 RUN apk add --no-cache python3 py3-pip
 
 COPY chrome-devtools-mcp /chrome-devtools-mcp
 
 WORKDIR /chrome-devtools-mcp
+
+RUN npm i chrome-devtools-mcp
 
 RUN python -m venv .venv
 
