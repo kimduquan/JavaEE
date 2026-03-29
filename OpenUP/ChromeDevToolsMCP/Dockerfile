@@ -8,7 +8,7 @@ WORKDIR /chrome-devtools-mcp
 
 RUN npm i --verbose chrome-devtools-mcp
 
-RUN npx @puppeteer/browsers install chrome@stable
+RUN npx -y @puppeteer/browsers install chrome@stable
 
 RUN python -m venv .venv
 
