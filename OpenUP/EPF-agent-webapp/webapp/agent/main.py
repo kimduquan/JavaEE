@@ -130,14 +130,13 @@ CACHE = Cache(Cache.MEMORY)
 
 def load_servers():
     for server in MCP_SERVERS:
-        if(MCP_SERVER_URLS.get(server) == None):
+        if(MCP_SERVER_URLS.get(server) is None):
             MCP_SERVER_URLS[server] = os.environ["MCP_SERVER_URL_FORMAT"].format(server)
 
 def get_connections(server_name: str, headers: dict[str, Any] | None) -> dict[str, Connection]:
     connections: dict[str, Connection] = {}
     for (mcp_server_name, mcp_server_url) in MCP_SERVER_URLS.items():
-        if(mcp_server_name == server_name):
-            connections[mcp_server_name] = StreamableHttpConnection(
+        connections[mcp_server_name] = StreamableHttpConnection(
             transport = 'streamable_http',
             url=mcp_server_url,
             headers=headers
@@ -223,6 +222,7 @@ def as_tool(name: str, prompt: Prompt, agent: CompiledStateGraph[EPFAgentState, 
 async def create_sub_agent(server_name: str, agent_name: str, organization: str, authorization: HTTPAuthorizationCredentials) -> CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]:
     client = get_client(server_name=server_name, authorization=authorization)
     tools: list[BaseTool] = await load_tools(client=client,server_name=server_name)
+    print(f"load tools: server_name={server_name}, agent_name={agent_name}")
     for tool in tools:
         print(f"load tool:{tool.name}")
     model = await get_model(organization)
