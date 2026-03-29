@@ -10,9 +10,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <version.wildfly.maven.plugin>5.1.5.Final</version.wildfly.maven.plugin>
-        <version.wildfly.bom>38.0.1.Final</version.wildfly.bom>
+        <version.wildfly.bom>39.0.1.Final</version.wildfly.bom>
         <version.junit5>6.0.2</version.junit5>
-        <version.compiler.plugin>3.14.1</version.compiler.plugin>
+        <version.compiler.plugin>3.15.0</version.compiler.plugin>
         <version.failsafe.plugin>3.5.4</version.failsafe.plugin>
         <version.war.plugin>3.5.1</version.war.plugin>
         <maven.compiler.release>21</maven.compiler.release>
@@ -107,7 +107,7 @@
 			<dependency>
 			    <groupId>org.primefaces</groupId>
 			    <artifactId>primefaces</artifactId>
-			    <version>15.0.11</version>
+			    <version>15.0.13</version>
 			    <classifier>jakarta</classifier>
 			</dependency>
         </dependencies>
