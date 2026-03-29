@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from typing import Annotated, Any, Optional, TypedDict, Union
+from typing import Annotated, Any, TypedDict
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import StreamingResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -23,7 +23,7 @@ from langchain.agents.middleware.human_in_the_loop import InterruptOnConfig
 from copilotkit import LangGraphAGUIAgent
 from ag_ui.core.types import RunAgentInput
 from ag_ui.encoder import EventEncoder
-from langgraph.types import Checkpointer, StateSnapshot
+from langgraph.types import Checkpointer
 from langgraph.store.base import BaseStore
 from langgraph.cache.base import BaseCache
 from uuid import UUID
@@ -90,72 +90,6 @@ class EPFToolCallInterceptor(ToolCallInterceptor):
             new_request = request.override(headers=headers)
             return await handler(new_request)
         return await handler(request)
-
-class EPFAgent(LangGraphAGUIAgent):
-
-    _authorization: HTTPAuthorizationCredentials
-    _claims: Any
-    _organization: str
-
-    def __init__(self, organization: str, claims: Any, authorization: HTTPAuthorizationCredentials, name: str, graph: CompiledStateGraph, description: Optional[str] = None, config: Union[Optional[RunnableConfig], dict] = None):
-        super().__init__(name=name, graph=graph, description=description, config=config)
-        self._authorization = authorization
-        self._claims = claims
-        self._organization = organization
-
-    async def get_checkpoint_before_message(self, message_id: str, thread_id: str):
-        #try:
-        #    return await super().get_checkpoint_before_message(message_id=message_id, thread_id=thread_id)
-        #except ValueError:
-        #    config = {"configurable": {"thread_id": thread_id}}
-        #    empty_snapshot = StateSnapshot(
-        #        values={},
-        #        next=(),
-        #        config=config,
-        #        metadata=None,
-        #        created_at=None,
-        #        parent_config=None,
-        #        tasks=(),
-        #        interrupts=(),
-        #    )
-        #    empty_snapshot.values["messages"] = []
-        #    return empty_snapshot
-        if not thread_id:
-            raise ValueError("Missing thread_id in config")
-
-        history_list: list[StateSnapshot] = []
-        async for snapshot in self.graph.aget_state_history({"configurable": {"thread_id": thread_id}}):
-            history_list.append(snapshot)
-        print(f"message_id:{message_id}, thread_id:{thread_id}, history_list len:{len(history_list)}")
-        history_list.reverse()
-        for idx, snapshot in enumerate(history_list):
-            messages = snapshot.values.get("messages", [])
-            if any(getattr(m, "id", None) == message_id for m in messages):
-                if idx == 0:
-                    # No snapshot before this
-                    # Return synthetic "empty before" version
-                    empty_snapshot = snapshot
-                    empty_snapshot.values["messages"] = []
-                    return empty_snapshot
-
-                snapshot_values_without_messages = snapshot.values.copy()
-                del snapshot_values_without_messages["messages"]
-                checkpoint = history_list[idx - 1]
-
-                merged_values = {**checkpoint.values, **snapshot_values_without_messages}
-                checkpoint = checkpoint._replace(values=merged_values)
-
-                return checkpoint
-
-        if len(history_list) > 0:
-            empty_snapshot = history_list[0]
-            empty_snapshot.values["messages"] = []
-            empty_snapshot.config["configurable"]["authorization"] = self._authorization
-            empty_snapshot.config["configurable"]["claims"] = self._claims
-            empty_snapshot.config["configurable"]["organization"] = self._organization
-            return empty_snapshot
-
-        raise ValueError("Message ID not found in history")
 
 DEFAULT_SERVER_NAME = "gateway"
 
@@ -249,10 +183,15 @@ async def invoke_agent(state: dict[str, Any] | None, config: RunnableConfig, run
     sub_state = EPFAgentState(context.state)
     sub_state["messages"] = messages
     agent: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState] = await CACHE.get(key=agent_name)
-    output = await agent.ainvoke(input=sub_state, config=config, context=context)
-    output_message = output["messages"][-1]
-    print(f"invoke_agent: output={output_message}")
-    return { "messages" : [output_message] }
+    try:
+        output = await agent.ainvoke(input=sub_state, config=config, context=context)
+        print(f"invoke_agent: output={output}")
+        output_message = output["messages"][-1]
+        print(f"invoke_agent: output_message={output_message}")
+        return { "messages" : [output_message] }
+    except Exception as ex:
+        print(f"error:{ex.args}")
+        raise ex
 
 async def create_sub_agent_node(server_name: str, prompt_name: str, agent: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState], organization: str) -> CompiledStateGraph[EPFAgentState, AgentContext, dict[str, Any], EPFAgentState]:
     await CACHE.set(key=agent.name, value=agent)
@@ -284,6 +223,8 @@ def as_tool(name: str, prompt: Prompt, agent: CompiledStateGraph[EPFAgentState, 
 async def create_sub_agent(server_name: str, agent_name: str, organization: str, authorization: HTTPAuthorizationCredentials) -> CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]:
     client = get_client(server_name=server_name, authorization=authorization)
     tools: list[BaseTool] = await load_tools(client=client,server_name=server_name)
+    for tool in tools:
+        print(f"load tool:{tool.name}")
     model = await get_model(organization)
     checkpointer = await get_checkpointer(organization)
     store = await get_store(organization)
