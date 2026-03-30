@@ -372,10 +372,13 @@ async def authenticate(credentials: HTTPAuthorizationCredentials) -> Any:
     return claims
 
 def get_organization(claims: Any) -> str:
-    organization_claim: dict[str, Any] = claims["organization"]
-    organization_name: str = list(organization_claim.keys())[0]
-    organization: str = organization_claim.get(organization_name)["id"]
-    return organization
+    claims_dict: dict[str, Any] = claims
+    if "organization" in claims_dict.keys():
+        organization_claim: dict[str, Any] = claims_dict["organization"]
+        organization_name: str = list(organization_claim.keys())[0]
+        organization: str = organization_claim.get(organization_name)["id"]
+        return organization
+    raise HTTPException(status_code=HTTP_403_FORBIDDEN)
 
 def get_user_id(claims: Any) -> str:
     map: dict[str, Any] = claims
