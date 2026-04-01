@@ -37,7 +37,6 @@ export const authOptions: AuthOptions = {
       if(debug){
         console.log("[BEGIN]session");
         console.log("token.sub:%s", token.sub);
-        console.log("token.accessToken:%s", token.accessToken);
         console.log("session.expires:%s", session.expires);
         console.log("[END]session");
       }
@@ -49,7 +48,6 @@ export const authOptions: AuthOptions = {
         console.log("[BEGIN]jwt");
         console.log("token.sub:%s", token?.sub);
         console.log("account.userId:%s", account?.userId);
-        console.log("account.accessToken:%s", account?.access_token);
         console.log("account.expires_at:%s", account?.expires_at);
         console.log("[END]jwt");
       }

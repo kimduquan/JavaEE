@@ -39,12 +39,12 @@ function MainContent() {
       return (<p>{name}</p>);
     }
   });
-  useInterrupt({
+  /*useInterrupt({
     render: ({ event, resolve }) => {
       resolve("reject")
       return (<div>{event.name}</div>);
     }
-  })
+  })*/
   if(session.status == "authenticated"){
     return (
       <CopilotChat threadId={session.data.user.id} />
