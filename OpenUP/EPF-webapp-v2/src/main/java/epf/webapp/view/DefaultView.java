@@ -28,4 +28,8 @@ public class DefaultView implements Serializable {
 	public Organization getOrganization() {
 		return session.getOrganization();
 	}
+	
+	public String getOrganizationUrl() {
+		return String.format("http://%s", session.getOrganization().getDomain());
+	}
 }
