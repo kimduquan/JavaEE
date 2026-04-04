@@ -1,3 +1,5 @@
+. ../env.sh
+docker build --file $ODOO_SOURCE_DIR/Dockerfile --tag odoo $ODOO_SOURCE_DIR
 kubectl create secret generic smtp --from-literal=smtp-password=""
 kubectl create secret generic odoo --from-literal=user="odoo.odoo" --from-literal=odoo-password="090323508" --from-literal=postgres-password="090323508"
 helm install odoo oci://registry-1.docker.io/bitnamicharts/odoo -f values-odoo.yaml --wait
