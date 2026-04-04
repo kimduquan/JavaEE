@@ -147,7 +147,7 @@ customPostInitScripts:
   fix_error.sh: |
     #!/bin/bash
     sed -i 's/limit_time_cpu *= *.*/limit_time_cpu = 180/' /opt/bitnami/odoo/conf/odoo.conf
-    sed -i 's/limit_time_real *= *.*/limit_time_real = 360/' /opt/bitnami/odoo/conf/odoo.conf
+    sed -i 's/limit_time_real *= *.*/limit_time_real = 600/' /opt/bitnami/odoo/conf/odoo.conf
 ## SMTP mail delivery configuration
 ## ref: https://github.com/bitnami/containers/tree/main/bitnami/odoo/#smtp-configuration
 ## @param smtpHost SMTP server host
