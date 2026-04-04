@@ -11,6 +11,7 @@ public class Organization implements Serializable {
 	
 	private String id;
 	private String name;
+	private String domain;
 	
 	public String getId() {
 		return id;
@@ -23,5 +24,11 @@ public class Organization implements Serializable {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public String getDomain() {
+		return domain;
+	}
+	public void setDomain(String domain) {
+		this.domain = domain;
 	}
 }
