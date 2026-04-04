@@ -602,7 +602,9 @@
       "redirectUris": [
         "/realms/EPF-dev/account/*"
       ],
-      "webOrigins": [],
+      "webOrigins": [
+        "+"
+      ],
       "notBefore": 0,
       "bearerOnly": false,
       "consentRequired": false,
