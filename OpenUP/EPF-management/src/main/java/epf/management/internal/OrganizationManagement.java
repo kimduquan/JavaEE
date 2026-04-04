@@ -75,6 +75,7 @@ public class OrganizationManagement {
 		final Organization organization = new Organization();
 		organization.setId(id);
 		organization.setName(name);
+		organization.setDomain(String.format(organizationDomain, id));
 		
 		persistenceManagement.createPersistence(organization, principal);
 		return organization;
@@ -88,6 +89,7 @@ public class OrganizationManagement {
 			for(Entry<String, JsonValue> organizationEntry : organizationValue.entrySet()) {
 				organization.setName(organizationEntry.getKey());
 				organization.setId(organizationEntry.getValue().asJsonObject().getString("id"));
+				organization.setDomain(String.format(organizationDomain, organization.getId()));
 			}
 			return Optional.of(organization);
 		}
