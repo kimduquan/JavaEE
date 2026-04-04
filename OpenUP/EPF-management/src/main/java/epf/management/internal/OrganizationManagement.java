@@ -55,18 +55,18 @@ public class OrganizationManagement {
 		credential.setClient_secret(clientSecret);
 		final TokenInfo token = authClient.getToken(credential);
 		
-		epf.management.admin.schema.Organization keycloakOrg = new epf.management.admin.schema.Organization();
+		epf.management.admin.schema.Organization organizationInfo = new epf.management.admin.schema.Organization();
 		
 		final String name = Base64.getEncoder().withoutPadding().encodeToString(principal.getEmail().getBytes(StandardCharsets.UTF_8));
-		keycloakOrg.setName(name);
+		organizationInfo.setName(name);
 		
-		final String domainName = name + "." + organizationDomain;
+		final String domainName = String.format(organizationDomain, name);
 		final Domain domain = new Domain();
 		domain.setName(domainName);
-		keycloakOrg.setDomains(new ArrayList<>());
-		keycloakOrg.getDomains().add(domain);
+		organizationInfo.setDomains(new ArrayList<>());
+		organizationInfo.getDomains().add(domain);
 		
-		final String location = adminClient.createOrganization(token, keycloakOrg);
+		final String location = adminClient.createOrganization(token, organizationInfo);
 		final String id = location.substring(location.lastIndexOf('/') + 1);
 		
 		final String userId = principal.getSubject();
