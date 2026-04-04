@@ -89,7 +89,7 @@ diagnosticMode:
 image:
   registry: docker.io
   repository: bitnamilegacy/odoo
-  #tag: 18.0.20250805-debian-12-r9
+  ##tag: 18.0.20250805-debian-12-r9
   tag: ""
   digest: ""
   ## Specify a imagePullPolicy
