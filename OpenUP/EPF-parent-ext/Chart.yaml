@@ -54,7 +54,7 @@ dependencies:
 - name: epf-workflow-management
   version: "1.0.0"
   repository: "file://../EPF-workflow-management/target/helm/kubernetes/epf-workflow-management"
-- name: epf-workflow-v1
+- name: epf-workflow
   version: "1.0.0"
   repository: "file://../EPF-workflow-v1/target/helm/kubernetes/epf-workflow"
 - name: epf-agent-webapp
