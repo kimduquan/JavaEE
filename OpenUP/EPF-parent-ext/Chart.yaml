@@ -12,9 +12,9 @@ dependencies:
 - name: epf-config
   version: "1.0.0"
   repository: "file://../EPF-config/target/helm/kubernetes/epf-config"
-#- name: epf-event
-#  version: "1.0.0"
-#  repository: "file://../EPF-event/target/helm/kubernetes/epf-event"
+- name: epf-event
+  version: "1.0.0"
+  repository: "file://../EPF-event/target/helm/kubernetes/epf-event"
 #- name: epf-file
 #  version: "1.0.0"
 #  repository: "file://../EPF-file/target/helm/kubernetes/epf-file"
@@ -51,12 +51,12 @@ dependencies:
 - name: epf-transaction
   version: "1.0.0"
   repository: "file://../EPF-transaction/target/helm/kubernetes/epf-transaction"
-#- name: epf-workflow-management
-#  version: "1.0.0"
-#  repository: "file://../EPF-workflow-management/target/helm/kubernetes/epf-workflow-management"
-#- name: epf-workflow
-#  version: "1.0.0"
-#  repository: "file://../EPF-workflow-v1/target/helm/kubernetes/epf-workflow"
+- name: epf-workflow-management
+  version: "1.0.0"
+  repository: "file://../EPF-workflow-management/target/helm/kubernetes/epf-workflow-management"
+- name: epf-workflow-v1
+  version: "1.0.0"
+  repository: "file://../EPF-workflow-v1/target/helm/kubernetes/epf-workflow"
 - name: epf-agent-webapp
   version: "1.0.0"
   repository: "file://../EPF-agent-webapp/target/helm/kubernetes/epf-agent-webapp"
