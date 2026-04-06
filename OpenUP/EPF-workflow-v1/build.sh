@@ -1,2 +1,3 @@
 . ../env.sh
-mvn clean install -U -Dquarkus.container-image.build=true
+. ../native_env.sh
+mvn clean install -U -Dquarkus.native.container-build=true -Dquarkus.container-image.build=true -P native
