@@ -31,8 +31,8 @@
 		<artifactId>quarkus-resteasy-client-jackson</artifactId>
 	</dependency>
 	<dependency>
-		<groupId>org.jboss.resteasy</groupId>
-		<artifactId>resteasy-client</artifactId>
+		<groupId>io.quarkus</groupId>
+		<artifactId>quarkus-resteasy-client</artifactId>
 	</dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
