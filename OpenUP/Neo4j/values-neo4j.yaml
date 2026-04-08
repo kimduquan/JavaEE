@@ -248,8 +248,8 @@ containerSecurityContext:
 ## @param auth.existingSecret Name of a secret containing the neo4j password. Password must be stored under the 'password' key.
 ##
 auth:
-  password: "090323508"
-  existingSecret: ""
+  password: ""
+  existingSecret: "neo4j"
 
 tls:
   bolt:
