@@ -1,1 +1,2 @@
+kubectl create secret generic kafka --from-literal=jaas='org.apache.kafka.common.security.plain.PlainLoginModule required username="user1" password="090323508";'
 helm install kafka oci://registry-1.docker.io/bitnamicharts/kafka -f values-kafka.yaml --wait
