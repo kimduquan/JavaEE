@@ -12,17 +12,17 @@ metadata:
 spec:
   ingressClassName: haproxy
   rules:
-    - host: '*.localhost.direct'
+    - host: '*.localhost'
       http:
         paths:
           - backend:
               service:
                 name: frp
                 port:
-                  name: https
+                  number: 1337
             path: /
             pathType: Prefix
   tls:
     - hosts:
-        - '*.localhost.direct'
+        - '*.localhost'
       secretName: frp-tls
