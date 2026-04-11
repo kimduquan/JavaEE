@@ -1,4 +1,4 @@
-serverAddr = "frp.localhost.direct"
+serverAddr = "frp.lvh.me"
 serverPort = 7000
 auth.method = "oidc"
 auth.tokenSource.type = "file"

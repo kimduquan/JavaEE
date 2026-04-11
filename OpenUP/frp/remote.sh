@@ -1,1 +1,1 @@
-ssh -D 1080 -o 'ProxyCommand nc -X connect -x frp.localhost %h %p' user@organization.localhost
+ssh -D 1080 -o 'ProxyCommand nc -X connect -x frp.lvh.me %h %p' user@organization.lvh.me

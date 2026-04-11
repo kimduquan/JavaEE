@@ -12,7 +12,7 @@ metadata:
 spec:
   ingressClassName: haproxy
   rules:
-    - host: '*.localhost'
+    - host: '*.lvh.me'
       http:
         paths:
           - backend:
@@ -24,5 +24,5 @@ spec:
             pathType: Prefix
   tls:
     - hosts:
-        - '*.localhost'
+        - '*.lvh.me'
       secretName: frp-tls

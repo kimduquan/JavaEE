@@ -26,7 +26,7 @@ spec:
   dnsNames:
     - "frp.default.svc.cluster.local"
     - "frp"
-    - "*.localhost"
+    - "*.lvh.me"
   secretName: frp-tls
   issuerRef:
     name: frp-tls
@@ -60,7 +60,7 @@ spec:
   dnsNames:
     - "frp.default.svc.cluster.local"
     - "frp"
-    - "*.localhost"
+    - "*.lvh.me"
   secretName: frp-client-tls
   issuerRef:
     name: frp-client-tls
