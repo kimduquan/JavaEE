@@ -48,6 +48,11 @@
 	</dependency>
 	
 	<dependency>
+		<groupId>org.eclipse.jnosql.mapping</groupId>
+		<artifactId>jnosql-mapping-reflection</artifactId>
+	</dependency>
+	
+	<dependency>
         <groupId>openup</groupId>
         <artifactId>EPF-workflow-client</artifactId>
         <version>${project.version}</version>
