@@ -14,7 +14,6 @@ import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
-import org.eclipse.microprofile.health.Readiness;
 import epf.naming.Naming;
 import epf.workflow.client.Management;
 import epf.workflow.management.internal.WorkflowCache;
@@ -30,7 +29,6 @@ public class WorkflowManagement implements Management {
 	transient WorkflowPersistence persistence;
 	
 	@Inject
-	@Readiness
 	transient WorkflowCache cache;
 	
 	@Inject
