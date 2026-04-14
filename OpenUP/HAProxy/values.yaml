@@ -223,7 +223,7 @@ controller:
   #    cpu: 250m
   #    memory: 400Mi
     requests:
-      cpu: 50m
+      cpu: 25m
       memory: 128Mi
 
   ## Horizontal Pod Scaler
