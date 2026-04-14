@@ -164,7 +164,7 @@ jaeger:
         cpu: 150m
         memory: 192Mi
       requests:
-        cpu: 25m
+        cpu: 15m
         memory: 128Mi
   nodeSelector: {}
   tolerations: []
