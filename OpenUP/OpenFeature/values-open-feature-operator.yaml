@@ -62,7 +62,7 @@ sidecarConfiguration:
       memory: 64Mi
     requests:
       ## @param sidecarConfiguration.resources.requests.cpu Sets cpu resource requests for kube-rbac-proxy.
-      cpu: 25m
+      cpu: 15m
       ## @param sidecarConfiguration.resources.requests.memory Sets memory resource requests for kube-rbac-proxy.
       memory: 32Mi
 
