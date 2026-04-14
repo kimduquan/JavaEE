@@ -29,7 +29,7 @@ stunnerGatewayOperator:
             cpu: 500m
             memory: 512Mi
           requests:
-            cpu: 25m
+            cpu: 15m
             memory: 128Mi
         args:
           - --health-probe-bind-address=:8081
@@ -62,7 +62,7 @@ stunnerGatewayOperator:
           cpu: 1
           memory: 512Mi
         requests:
-          cpu: 50m
+          cpu: 25m
           memory: 128Mi
       terminationGracePeriodSeconds: 3600
       enableMetricsEndpoint: false
