@@ -1,5 +1,3 @@
-./uninstall.sh
-
 cd EPF-agent-webapp
 git clean -f -d
 ./build.sh
