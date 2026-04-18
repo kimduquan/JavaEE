@@ -6,4 +6,4 @@ kubectl apply -f kubernetes.yml
 kubectl wait deployment --for condition=available --timeout=300s supavisor
 kubectl wait pod --for condition=ready --timeout=300s -l app.kubernetes.io/name=supavisor
 #psql postgres://epf.epf:Password1234@supavisor.default.svc.cluster.local:5452/epf?sslmode=disable
-kubectl autoscale deployment supavisor --max 1
+kubectl autoscale deployment supavisor --max 2
