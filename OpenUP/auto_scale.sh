@@ -1,5 +1,5 @@
 kubectl autoscale deployment epf-agent --max 1
-kubectl autoscale deployment epf-agent-webapp --max 2
+kubectl autoscale deployment epf-agent-webapp --max 1
 kubectl autoscale deployment epf-cache --max 2
 kubectl autoscale deployment epf-concurrent --max 2
 kubectl autoscale deployment epf-config --max 2
