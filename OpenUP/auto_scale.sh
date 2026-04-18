@@ -1,0 +1,17 @@
+kubectl autoscale deployment epf-agent --max 2
+kubectl autoscale deployment epf-agent-webapp --max 2
+kubectl autoscale deployment epf-cache --max 2
+kubectl autoscale deployment epf-concurrent --max 2
+kubectl autoscale deployment epf-config --max 2
+kubectl autoscale deployment epf-event --max 2
+kubectl autoscale deployment epf-gateway --max 2
+kubectl autoscale deployment epf-management --max 2
+kubectl autoscale deployment epf-mcp-gateway --max 2
+kubectl autoscale deployment epf-messaging --max 2
+kubectl autoscale deployment epf-net --max 2
+kubectl autoscale deployment epf-persistence --max 2
+kubectl autoscale deployment epf-query --max 2
+kubectl autoscale deployment epf-registry --max 2
+kubectl autoscale deployment epf-transaction --max 2
+kubectl autoscale deployment epf-workflow-management --max 2
+kubectl autoscale deployment epf-workflow --max 2
