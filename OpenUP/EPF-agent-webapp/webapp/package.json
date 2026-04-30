@@ -9,9 +9,9 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@copilotkit/react-core": "^1.56.2",
-    "@copilotkit/react-ui": "^1.56.2",
-    "@copilotkit/runtime": "^1.56.2",
+    "@copilotkit/react-core": "^1.56.4",
+    "@copilotkit/react-ui": "^1.56.4",
+    "@copilotkit/runtime": "^1.56.4",
     "next": "16.2.4",
     "next-auth": "^4.24.14",
     "react": "^19.2.5",
@@ -22,14 +22,14 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.5",
-    "@tailwindcss/postcss": "^4.2.2",
+    "@tailwindcss/postcss": "^4.2.4",
     "@types/node": "^20",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
-    "tailwindcss": "^4.2.2",
+    "tailwindcss": "^4.2.4",
     "typescript": "^5.9.3",
-    "zod": "^4.3.6"
+    "zod": "^4.4.1"
   }
 }
