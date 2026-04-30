@@ -3,6 +3,7 @@ from typing import Annotated, Any, TypedDict
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import StreamingResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from pydantic import BaseModel
 from redis.asyncio import Redis as AsyncRedis
 from redis import Redis as SyncRedis
 import uvicorn
@@ -57,10 +58,28 @@ class EPFAgentState(CopilotKitState):
     progress: Progress | None = None
 
 class AgentContext:
-    authorization: HTTPAuthorizationCredentials
-    claims: Any
-    organization: str
-    state: EPFAgentState
+    __authorization: HTTPAuthorizationCredentials
+    __claims: Any
+    __organization: str
+    __state: EPFAgentState
+
+    def __init__(self, authorization: HTTPAuthorizationCredentials, claims: Any, organization: str, state: EPFAgentState):
+        self.__authorization = authorization
+        self.__claims = claims
+        self.__organization = organization
+        self.__state = state
+
+    def get_authorization(self) -> HTTPAuthorizationCredentials:
+        return self.__authorization
+    
+    def get_claims(self) -> Any:
+        return self.__claims
+    
+    def get_organization(self) -> str:
+        return self.__organization
+    
+    def get_state(self) -> EPFAgentState:
+        return self.__state
 
 class EPFAgentMiddleware(AgentMiddleware[EPFAgentState, AgentContext]):
     """"""
@@ -84,8 +103,8 @@ class EPFToolCallInterceptor(ToolCallInterceptor):
         handler,
     ):
         context: AgentContext = request.runtime.context
-        if(context and context.authorization):
-            authorization = context.authorization
+        if(context and context.get_authorization()):
+            authorization = context.get_authorization()
             headers = { "Authorization": authorization.scheme + " " + authorization.credentials }
             new_request = request.override(headers=headers)
             return await handler(new_request)
@@ -172,14 +191,15 @@ async def invoke_agent(state: dict[str, Any] | None, config: RunnableConfig, run
     prompt_name: str = config["metadata"]["prompt_name"]
     agent_name: str = config["metadata"]["agent_name"]
     context = runtime.context
-    print(f"invoke_agent: server_name={server_name},prompt_name={prompt_name},agent_name={agent_name},organization={context.organization}")
+    print(f"invoke_agent: server_name={server_name},prompt_name={prompt_name},agent_name={agent_name},organization={context.get_organization()}")
     print(f"invoke_agent: input={state}")
-    client = get_client(server_name=server_name, authorization=context.authorization)
+    client = get_client(server_name=server_name, authorization=context.get_authorization())
     prompt_contents = await client.get_prompt(server_name=server_name, prompt_name=prompt_name, arguments=state)
-    messages = context.state["messages"].copy()
+    context_state = context.get_state()
+    messages = context_state["messages"].copy()
     for prompt_content in prompt_contents:
         messages.append(SystemMessage(content=prompt_content.content))
-    sub_state = EPFAgentState(context.state)
+    sub_state = EPFAgentState(context_state)
     sub_state["messages"] = messages
     agent: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState] = await CACHE.get(key=agent_name)
     try:
@@ -283,7 +303,7 @@ async def create_supervisor_agent(organization: str, context: AgentContext) -> C
     print(f"create supervisor agent: {organization}")
     supervisor_agent_name = SUPERVISOR_AGENT_NAME + "-" + organization
     server_name = DEFAULT_SERVER_NAME
-    client = get_client(server_name=server_name, authorization=context.authorization)
+    client = get_client(server_name=server_name, authorization=context.get_authorization())
     prompts = await list_prompts(client=client, server_name=server_name)
     system_prompt: str | None = None
     sub_agent_prompts: list[Prompt] = []
@@ -298,8 +318,8 @@ async def create_supervisor_agent(organization: str, context: AgentContext) -> C
     for sub_agent_prompt in sub_agent_prompts:
         sub_agent_name = sub_agent_prompt.name
         sub_agent_server_name = sub_agent_prompt.name
-        sub_agent = await create_sub_agent(server_name=sub_agent_server_name, agent_name=sub_agent_name, organization=context.organization, authorization=context.authorization)
-        sub_agent_node = await create_sub_agent_node(server_name=server_name, prompt_name=sub_agent_prompt.name, agent=sub_agent, organization=context.organization)
+        sub_agent = await create_sub_agent(server_name=sub_agent_server_name, agent_name=sub_agent_name, organization=context.get_organization(), authorization=context.get_authorization())
+        sub_agent_node = await create_sub_agent_node(server_name=server_name, prompt_name=sub_agent_prompt.name, agent=sub_agent, organization=context.get_organization())
         tool = as_tool(name=sub_agent_name, prompt=sub_agent_prompt, agent=sub_agent_node)
         tools.append(tool)
     model = await get_model(organization)
@@ -348,11 +368,11 @@ async def create_supervisor(organization: str) -> CompiledStateGraph[EPFAgentSta
     return builder.compile(checkpointer=checkpointer, cache=cache, store=store, debug=DEBUG, name=supervisor_node_name)
 
 async def supervisor_node(state: EPFAgentState, config: RunnableConfig) -> dict[str, Any] | Any:
-    context = AgentContext()
-    context.authorization = config["configurable"]["authorization"]
-    context.claims = config["configurable"]["claims"]
-    context.organization = config["configurable"]["organization"]
-    context.state = state
+    context = AgentContext(
+        authorization=config["configurable"]["authorization"], 
+        claims=config["configurable"]["claims"], 
+        organization=config["configurable"]["organization"], 
+        state=state)
     supervisor_agent: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState] = await create_supervisor_agent(context.organization, context)
     state["progress"] = Progress(max=1, value=0)
     await copilotkit_emit_state(config=config, state=state)
