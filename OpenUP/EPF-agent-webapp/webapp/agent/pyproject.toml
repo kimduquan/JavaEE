@@ -4,20 +4,20 @@ version = "1.0.0"
 description = "EPF agent"
 requires-python = ">=3.12"
 dependencies = [
-    "langchain==1.2.15",
-    "langgraph==1.1.6",
-    "openai>=1.68.2,<=2.31.0",
-    "fastapi>=0.115.0,<=0.135.3",
-    "uvicorn>=0.44.0,<1.0.0",
+    "langchain==1.2.16",
+    "langgraph==1.1.10",
+    "openai>=1.68.2,<=2.33.0",
+    "fastapi>=0.115.0,<=0.136.1",
+    "uvicorn>=0.46.0,<1.0.0",
     "python-dotenv>=1.2.2,<2.0.0",
-    "langchain-openai==1.1.12",
-    "copilotkit==0.1.86",
-    "langgraph-api==0.7.101",
+    "langchain-openai==1.2.1",
+    "copilotkit==0.1.87",
+    "langgraph-api==0.8.3",
     "langchain-mcp-adapters==0.2.2",
     "aiocache==0.12.3",
-    "langgraph-checkpoint-redis==0.4.0",
+    "langgraph-checkpoint-redis==0.4.1",
     "langchain-redis==0.2.5",
-    "opentelemetry-instrumentation-fastapi==0.62b0",
-    "opentelemetry-exporter-otlp-proto-grpc==1.41.0",
-    "openinference-instrumentation-langchain[instruments]==0.1.62"
+    "opentelemetry-instrumentation-fastapi==0.62b1",
+    "opentelemetry-exporter-otlp-proto-grpc==1.41.1",
+    "openinference-instrumentation-langchain[instruments]==0.1.63"
 ]
