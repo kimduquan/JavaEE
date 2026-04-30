@@ -220,9 +220,9 @@ def as_tool(name: str, prompt: Prompt, agent: CompiledStateGraph[EPFAgentState, 
     return tool
 
 async def create_sub_agent(server_name: str, agent_name: str, organization: str, authorization: HTTPAuthorizationCredentials) -> CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]:
+    print(f"crate sub agent: {agent_name}")
     client = get_client(server_name=server_name, authorization=authorization)
     tools: list[BaseTool] = await load_tools(client=client,server_name=server_name)
-    print(f"load tools: server_name={server_name}, agent_name={agent_name}")
     for tool in tools:
         print(f"load tool:{tool.name}")
     model = await get_model(organization)
@@ -280,6 +280,7 @@ def organization_key_builder(func, *args, **kwargs):
 
 @cached(key_builder=organization_key_builder)
 async def create_supervisor_agent(organization: str, context: AgentContext) -> CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState]:
+    print(f"create supervisor agent: {organization}")
     supervisor_agent_name = SUPERVISOR_AGENT_NAME + "-" + organization
     server_name = DEFAULT_SERVER_NAME
     client = get_client(server_name=server_name, authorization=context.authorization)
@@ -292,7 +293,7 @@ async def create_supervisor_agent(organization: str, context: AgentContext) -> C
             system_prompt = prompt[0].content
         else:
             sub_agent_prompts.append(agent_prompt)
-
+    print(f"have {len(sub_agent_prompts)} sub agents")
     tools: list[BaseTool] = []
     for sub_agent_prompt in sub_agent_prompts:
         sub_agent_name = sub_agent_prompt.name
@@ -395,7 +396,6 @@ def add_agent_endpoint(app: FastAPI, name: str, path: str = "/"):
         config = RunnableConfig(configurable={"authorization": credentials, "claims": claims, "organization": organization}, run_id=UUID(input_data.run_id))
         config = copilotkit_customize_config(base_config=config)
         supervisor_graph = await create_supervisor(organization)
-        #agent = EPFAgent(organization=organization, claims=claims, authorization=credentials, name=name, graph=supervisor_graph, config=config)
         agent = LangGraphAGUIAgent(name=name, graph=supervisor_graph, config=config)
         # Get the accept header from the request
         accept_header = request.headers.get("accept")
