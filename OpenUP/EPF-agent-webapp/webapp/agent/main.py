@@ -71,13 +71,13 @@ class AgentContext(BaseModel):
 
     def get_authorization(self) -> HTTPAuthorizationCredentials:
         return self.__authorization
-    
+
     def get_claims(self) -> Any:
         return self.__claims
-    
+
     def get_organization(self) -> str:
         return self.__organization
-    
+
     def get_state(self) -> EPFAgentState:
         return self.__state
 
@@ -303,7 +303,8 @@ async def create_supervisor_agent(organization: str, context: AgentContext) -> C
     print(f"create supervisor agent: {organization}")
     supervisor_agent_name = SUPERVISOR_AGENT_NAME + "-" + organization
     server_name = DEFAULT_SERVER_NAME
-    client = get_client(server_name=server_name, authorization=context.get_authorization())
+    authorization = context.get_authorization()
+    client = get_client(server_name=server_name, authorization=authorization)
     prompts = await list_prompts(client=client, server_name=server_name)
     system_prompt: str | None = None
     sub_agent_prompts: list[Prompt] = []
@@ -318,8 +319,8 @@ async def create_supervisor_agent(organization: str, context: AgentContext) -> C
     for sub_agent_prompt in sub_agent_prompts:
         sub_agent_name = sub_agent_prompt.name
         sub_agent_server_name = sub_agent_prompt.name
-        sub_agent = await create_sub_agent(server_name=sub_agent_server_name, agent_name=sub_agent_name, organization=context.get_organization(), authorization=context.get_authorization())
-        sub_agent_node = await create_sub_agent_node(server_name=server_name, prompt_name=sub_agent_prompt.name, agent=sub_agent, organization=context.get_organization())
+        sub_agent = await create_sub_agent(server_name=sub_agent_server_name, agent_name=sub_agent_name, organization=organization, authorization=authorization)
+        sub_agent_node = await create_sub_agent_node(server_name=server_name, prompt_name=sub_agent_prompt.name, agent=sub_agent, organization=organization)
         tool = as_tool(name=sub_agent_name, prompt=sub_agent_prompt, agent=sub_agent_node)
         tools.append(tool)
     model = await get_model(organization)
@@ -368,12 +369,13 @@ async def create_supervisor(organization: str) -> CompiledStateGraph[EPFAgentSta
     return builder.compile(checkpointer=checkpointer, cache=cache, store=store, debug=DEBUG, name=supervisor_node_name)
 
 async def supervisor_node(state: EPFAgentState, config: RunnableConfig) -> dict[str, Any] | Any:
+    organization: str = config["configurable"]["organization"]
     context = AgentContext(
         authorization=config["configurable"]["authorization"], 
         claims=config["configurable"]["claims"], 
-        organization=config["configurable"]["organization"], 
+        organization=organization, 
         state=state)
-    supervisor_agent: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState] = await create_supervisor_agent(context.organization, context)
+    supervisor_agent: CompiledStateGraph[EPFAgentState, AgentContext, EPFAgentState, EPFAgentState] = await create_supervisor_agent(organization, context)
     state["progress"] = Progress(max=1, value=0)
     await copilotkit_emit_state(config=config, state=state)
     output = await supervisor_agent.ainvoke(input=state, config=config, context=context)
