@@ -57,7 +57,7 @@ class Progress(TypedDict):
 class EPFAgentState(CopilotKitState):
     progress: Progress | None = None
 
-class AgentContext:
+class AgentContext(BaseModel):
     __authorization: HTTPAuthorizationCredentials
     __claims: Any
     __organization: str
