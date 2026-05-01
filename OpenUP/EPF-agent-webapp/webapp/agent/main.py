@@ -295,7 +295,7 @@ async def get_cache(organization: str) -> BaseCache:
     return redis_cache
 
 def organization_key_builder(func, *args, **kwargs):
-    organization = kwargs.get("organization") or args[1]
+    organization = kwargs.get("organization") or args[0]
     return organization
 
 @cached(key_builder=organization_key_builder)
