@@ -165,6 +165,7 @@ public class TaskServiceImpl implements TaskService {
 		}
 		catch(Exception ex) {
 			fireTaskFaultedEvent(arguments, taskURI, ex);
+			return null;
 		}
 	}
 

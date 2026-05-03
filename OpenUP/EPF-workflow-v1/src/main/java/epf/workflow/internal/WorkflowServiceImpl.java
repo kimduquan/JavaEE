@@ -80,7 +80,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 		return null;
 	}
 
-	private RuntimeExpressionArguments createRuntimeExpressionArguments(final Workflow workflow, final Instant startedAt, final UUID uuid) throws Error {
+	private RuntimeExpressionArguments createRuntimeExpressionArguments(final Workflow workflow, final Instant startedAt, final UUID uuid) throws Exception {
 		final DateTimeDescriptor dateTimeDescriptor = DateTimeDescriptor.from(startedAt);
 		final WorkflowDescriptor workflowDescriptor = new WorkflowDescriptor();
 		workflowDescriptor.setId(uuid.toString());
@@ -99,6 +99,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 
 	private void fireWorkflowFaultedEvent(final String workflowName, final Exception ex) throws Exception {
 		final Error error = new Error();
+		error.setDetail(ex.getMessage());
 		final Date faultedAt = Date.from(Instant.now());
 		final WorkflowFaultedEvent workflowFaultedEvent = new WorkflowFaultedEvent();
 		workflowFaultedEvent.setError(error);
