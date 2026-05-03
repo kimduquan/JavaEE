@@ -180,6 +180,7 @@ public class TaskServiceImpl implements TaskService {
 
 	private void fireTaskFaultedEvent(final RuntimeExpressionArguments arguments, final URI taskURI, final Exception ex) throws Exception {
 		final Error error = new Error();
+		error.setDetail(ex.getMessage());
 		final Date faultedAt = Date.from(Instant.now());
 		final TaskFaultedEvent taskFaultedEvent = new TaskFaultedEvent();
 		taskFaultedEvent.setError(error);
