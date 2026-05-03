@@ -1,10 +1,9 @@
 package epf.workflow.task;
 
-import epf.workflow.schema.Error;
+import epf.workflow.schema.Call;
 import epf.workflow.schema.RuntimeExpressionArguments;
-import epf.workflow.task.call.schema.CallTask;
 
 public interface CallService {
 
-	Object call(final RuntimeExpressionArguments arguments, final CallTask task, final Object taskInput) throws Error;
+	Object call(final RuntimeExpressionArguments arguments, final Call<?> task, final Object taskInput) throws Exception;
 }

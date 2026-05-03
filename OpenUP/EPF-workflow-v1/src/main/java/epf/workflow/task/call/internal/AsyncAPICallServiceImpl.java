@@ -2,9 +2,8 @@ package epf.workflow.task.call.internal;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
-
+import epf.workflow.schema.AsyncAPICall;
 import epf.workflow.task.call.AsyncAPICallService;
-import epf.workflow.task.call.schema.AsyncAPI;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -18,7 +17,7 @@ public class AsyncAPICallServiceImpl implements AsyncAPICallService {
     transient ProducerTemplate producer;
 
 	@Override
-	public Object call(final AsyncAPI asyncAPI, final Object input) throws Error {
+	public Object call(final AsyncAPICall asyncAPI, final Object input) throws Exception {
 		return input;
 	}
 }

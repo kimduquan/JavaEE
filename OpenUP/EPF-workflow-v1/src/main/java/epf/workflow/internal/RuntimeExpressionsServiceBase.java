@@ -2,7 +2,6 @@ package epf.workflow.internal;
 
 import java.util.Map;
 import epf.workflow.schema.AuthorizationDescriptor;
-import epf.workflow.schema.ExpressionError;
 import epf.workflow.schema.RuntimeDescriptor;
 import epf.workflow.schema.RuntimeExpressionArguments;
 import epf.workflow.schema.TaskDescriptor;
@@ -14,7 +13,7 @@ public abstract class RuntimeExpressionsServiceBase implements RuntimeExpression
 	protected abstract void evaluate(final String expression, final RuntimeExpressionArguments arguments);
 
 	@Override
-	public Object evaluate(final String rawWorkflowInput, final Map<String, Object> secrets, final WorkflowDescriptor workflow, final RuntimeDescriptor runtime) throws ExpressionError {
+	public Object evaluate(final String rawWorkflowInput, final Map<String, Object> secrets, final WorkflowDescriptor workflow, final RuntimeDescriptor runtime) throws Exception {
 		final RuntimeExpressionArguments arguments = new RuntimeExpressionArguments();
 		arguments.setSecrets(secrets);
 		arguments.setWorkflow(workflow);
@@ -24,7 +23,7 @@ public abstract class RuntimeExpressionsServiceBase implements RuntimeExpression
 	}
 
 	@Override
-	public Object evaluate(final String rawTaskInput, final Map<String, Object> context, final Map<String, Object> secrets, final TaskDescriptor task, final WorkflowDescriptor workflow, final RuntimeDescriptor runtime) throws ExpressionError {
+	public Object evaluate(final String rawTaskInput, final Map<String, Object> context, final Map<String, Object> secrets, final TaskDescriptor task, final WorkflowDescriptor workflow, final RuntimeDescriptor runtime) throws Exception {
 		final RuntimeExpressionArguments arguments = new RuntimeExpressionArguments();
 		arguments.setContext(context);
 		arguments.setSecrets(secrets);
@@ -36,7 +35,7 @@ public abstract class RuntimeExpressionsServiceBase implements RuntimeExpression
 	}
 
 	@Override
-	public void evaluate(final String transformedTaskInput, final Object input, final Map<String, Object> context, final Map<String, Object> secrets, final TaskDescriptor task, final WorkflowDescriptor workflow, final RuntimeDescriptor runtime) throws ExpressionError {
+	public void evaluate(final String transformedTaskInput, final Object input, final Map<String, Object> context, final Map<String, Object> secrets, final TaskDescriptor task, final WorkflowDescriptor workflow, final RuntimeDescriptor runtime) throws Exception {
 		final RuntimeExpressionArguments arguments = new RuntimeExpressionArguments();
 		arguments.setInput(input);
 		arguments.setContext(context);
@@ -48,7 +47,7 @@ public abstract class RuntimeExpressionsServiceBase implements RuntimeExpression
 	}
 
 	@Override
-	public void evaluate(final String transformedTaskInput, final Object input, final Map<String, Object> context, final Map<String, Object> secrets, final TaskDescriptor task, final WorkflowDescriptor workflow, final RuntimeDescriptor runtime, final AuthorizationDescriptor authorization) throws ExpressionError { 
+	public void evaluate(final String transformedTaskInput, final Object input, final Map<String, Object> context, final Map<String, Object> secrets, final TaskDescriptor task, final WorkflowDescriptor workflow, final RuntimeDescriptor runtime, final AuthorizationDescriptor authorization) throws Exception { 
 		final RuntimeExpressionArguments arguments = new RuntimeExpressionArguments();
 		arguments.setInput(input);
 		arguments.setContext(context);
@@ -61,7 +60,7 @@ public abstract class RuntimeExpressionsServiceBase implements RuntimeExpression
 	}
 
 	@Override
-	public Object evaluate(final String rawTaskOutput, final Map<String, Object> context, final Object input, final Map<String, Object> secrets, final TaskDescriptor task, final WorkflowDescriptor workflow, final RuntimeDescriptor runtime, final AuthorizationDescriptor authorization) throws ExpressionError {
+	public Object evaluate(final String rawTaskOutput, final Map<String, Object> context, final Object input, final Map<String, Object> secrets, final TaskDescriptor task, final WorkflowDescriptor workflow, final RuntimeDescriptor runtime, final AuthorizationDescriptor authorization) throws Exception {
 		final RuntimeExpressionArguments arguments = new RuntimeExpressionArguments();
 		arguments.setContext(context);
 		arguments.setSecrets(secrets);
@@ -74,7 +73,7 @@ public abstract class RuntimeExpressionsServiceBase implements RuntimeExpression
 	}
 
 	@Override
-	public Map<String, Object> evaluate(final String transformedTaskOutput, final Map<String, Object> context, final Object input, final Object output, final Map<String, Object> secrets, final TaskDescriptor task, final WorkflowDescriptor workflow, final RuntimeDescriptor runtime, final AuthorizationDescriptor authorization) throws ExpressionError {
+	public Map<String, Object> evaluate(final String transformedTaskOutput, final Map<String, Object> context, final Object input, final Object output, final Map<String, Object> secrets, final TaskDescriptor task, final WorkflowDescriptor workflow, final RuntimeDescriptor runtime, final AuthorizationDescriptor authorization) throws Exception {
 		final RuntimeExpressionArguments arguments = new RuntimeExpressionArguments();
 		arguments.setContext(context);
 		arguments.setInput(input);
@@ -89,7 +88,7 @@ public abstract class RuntimeExpressionsServiceBase implements RuntimeExpression
 	}
 
 	@Override
-	public Object evaluate(final String lastTaskTransformedOutput, final Map<String, Object> context, final Map<String, Object> secrets, final WorkflowDescriptor workflow, final RuntimeDescriptor runtime) throws ExpressionError {
+	public Object evaluate(final String lastTaskTransformedOutput, final Map<String, Object> context, final Map<String, Object> secrets, final WorkflowDescriptor workflow, final RuntimeDescriptor runtime) throws Exception {
 		final RuntimeExpressionArguments arguments = new RuntimeExpressionArguments();
 		arguments.setContext(context);
 		arguments.setSecrets(secrets);

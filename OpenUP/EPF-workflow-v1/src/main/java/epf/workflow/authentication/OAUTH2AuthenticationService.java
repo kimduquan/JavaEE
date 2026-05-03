@@ -1,6 +1,6 @@
 package epf.workflow.authentication;
 
-import epf.workflow.authentication.schema.OAUTH2Authentication;
+import epf.workflow.schema.OAUTH2Authentication;
 
 public interface OAUTH2AuthenticationService {
 

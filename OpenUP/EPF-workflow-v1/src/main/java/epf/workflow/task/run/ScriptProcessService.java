@@ -1,9 +1,9 @@
 package epf.workflow.task.run;
 
 import epf.workflow.schema.Duration;
-import epf.workflow.task.run.schema.ScriptProcess;
+import epf.workflow.schema.ScriptProcess;
 
 public interface ScriptProcessService {
 
-	Object run(final ScriptProcess scriptProcess, final boolean await, final Duration timeout) throws Error;
+	Object run(final ScriptProcess scriptProcess, final boolean await, final Duration timeout) throws Exception;
 }

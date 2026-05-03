@@ -6,5 +6,5 @@ import epf.workflow.schema.Workflow;
 
 public interface TimeoutService {
 	
-	Duration getTimeout(final Workflow workflow, final Task task) throws Error;
+	Duration getTimeout(final Workflow workflow, final Task task) throws Exception;
 }

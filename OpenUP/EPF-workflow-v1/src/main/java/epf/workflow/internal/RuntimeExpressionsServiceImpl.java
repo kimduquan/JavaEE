@@ -3,7 +3,6 @@ package epf.workflow.internal;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import epf.workflow.schema.ExpressionError;
 import epf.workflow.schema.RuntimeExpressionArguments;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -11,7 +10,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 public class RuntimeExpressionsServiceImpl extends RuntimeExpressionsServiceBase {
 
 	@Override
-	public boolean if_(final String condition, final Map<String, Object> context, final Map<String, Object> secrets) throws ExpressionError {
+	public boolean if_(final String condition, final Map<String, Object> context, final Map<String, Object> secrets) throws Exception {
 		return false;
 	}
 
@@ -21,7 +20,7 @@ public class RuntimeExpressionsServiceImpl extends RuntimeExpressionsServiceBase
 	}
 
 	@Override
-	public <T> List<T> in(final String in, final Map<String, Object> context, final Map<String, Object> secrets) throws ExpressionError {
+	public <T> List<T> in(final String in, final Map<String, Object> context, final Map<String, Object> secrets) throws Exception {
 		return null;
 	}
 

@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import epf.workflow.event.TaskLifecycleEventsService;
-import epf.workflow.schema.Error;
 import epf.workflow.schema.FlowDirective;
 import epf.workflow.schema.RuntimeExpressionArguments;
 import epf.workflow.schema.Task;
@@ -32,14 +31,14 @@ public class DoServiceImpl implements DoService {
 	transient ExtensionService extensionService; 
 
 	@Override
-	public Object do_(final Map<String, Task> do_, final RuntimeExpressionArguments arguments, final URI parentURI, final AtomicReference<String> flowDirective) throws Error {
+	public Object do_(final Map<String, Task> do_, final RuntimeExpressionArguments arguments, final URI parentURI, final AtomicReference<String> flowDirective) throws Exception {
 		int taskIndex = 0;
 		final Iterator<Map.Entry<String, Task>> taskIt = do_.entrySet().iterator();
 		String taskName = null;
 		Task task = null;
 		URI taskURI = null;
 		Object output = null;
-		String then = null;
+		Object then = null;
 		while(taskIt.hasNext()) {
 			final Map.Entry<String, Task> entry = taskIt.next();
 			taskIndex++;
@@ -51,12 +50,12 @@ public class DoServiceImpl implements DoService {
 			output = taskService.start(arguments, taskName, taskURI, task, output, flowDirective);
 			output = extensionService.after(arguments, taskName, taskURI, task, output, flowDirective);
 			then = task.getThen();
-			if(FlowDirective._continue.equals(then)) {
+			if(FlowDirective.continue_.equals(then)) {
 				continue;
 			}
-			else if(FlowDirective.isString(then)) {
+			else if(then instanceof String) {
 				taskIndex++;
-				final String nextTaskName = task.getThen();
+				final String nextTaskName = (String) then;
 				final Task nextTask = arguments.getWorkflow().getDefinition().getUse().getFunctions().get(nextTaskName);
 				final URI nextTaskURI = taskURI.resolve(nextTaskName);
 				flowDirective.set(null);

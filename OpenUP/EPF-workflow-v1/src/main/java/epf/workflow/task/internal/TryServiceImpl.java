@@ -5,9 +5,9 @@ import java.util.concurrent.atomic.AtomicReference;
 import epf.workflow.schema.Catch;
 import epf.workflow.schema.Error;
 import epf.workflow.schema.RuntimeExpressionArguments;
+import epf.workflow.schema.Try;
 import epf.workflow.task.DoService;
 import epf.workflow.task.TryService;
-import epf.workflow.task.schema.TryTask;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -18,17 +18,18 @@ public class TryServiceImpl implements TryService {
 	transient DoService doService;
 
 	@Override
-	public Object _try(final RuntimeExpressionArguments arguments, final TryTask task, final Object taskInput, final AtomicReference<String> flowDirective) throws Error {
+	public Object _try(final RuntimeExpressionArguments arguments, final Try task, final Object taskInput, final AtomicReference<String> flowDirective) throws Exception {
 		final URI taskURI = URI.create(arguments.getTask().getReference());
 		try {
-			return doService.do_(task.getTry_(), arguments, taskURI, flowDirective);
+			return doService.do_(task.getTry(), arguments, taskURI, flowDirective);
 		}
-		catch(Error error) {
-			if(catch_(task.getCatch_(), error)) {
-				return doService.do_(task.getCatch_().get_do(), arguments, taskURI, flowDirective);
+		catch(Exception ex) {
+			final Error error = new Error();
+			if(catch_(task.getCatch(), error)) {
+				return doService.do_(task.getCatch().getDo(), arguments, taskURI, flowDirective);
 			}
 			else {
-				throw error;
+				throw ex;
 			}
 		}
 	}

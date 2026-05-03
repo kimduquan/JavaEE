@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.net.URI;
-import epf.workflow.schema.Error;
 import epf.workflow.schema.FlowDirective;
+import epf.workflow.schema.For;
 import epf.workflow.schema.RuntimeExpressionArguments;
 import epf.workflow.schema.Task;
 import epf.workflow.spi.ExtensionService;
@@ -13,7 +13,6 @@ import epf.workflow.spi.RuntimeExpressionsService;
 import epf.workflow.task.DoService;
 import epf.workflow.task.ForService;
 import epf.workflow.task.TaskService;
-import epf.workflow.task.schema.ForTask;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -33,21 +32,21 @@ public class ForServiceImpl implements ForService {
 	transient ExtensionService extensionService;
 
 	@Override
-	public Object _for(final RuntimeExpressionArguments arguments, final ForTask task, final Object taskInput, final AtomicReference<String> flowDirective) throws Error {
+	public Object _for(final RuntimeExpressionArguments arguments, final For task, final Object taskInput, final AtomicReference<String> flowDirective) throws Exception {
 		Object output = null;
 		final Map<String, Object> parentContext = arguments.getContext();
 		final URI taskURI = URI.create(arguments.getTask().getReference());
-		final List<Object> in = runtimeExpressionsService.in(task.getFor_().getIn(), parentContext, arguments.getSecrets());
+		final List<Object> in = runtimeExpressionsService.in(task.getFor().getIn(), parentContext, arguments.getSecrets());
 		Integer at = 0;
-		while(runtimeExpressionsService.if_(task.getWhile_(), parentContext, arguments.getSecrets())) {
+		while(runtimeExpressionsService.if_(task.getWhile(), parentContext, arguments.getSecrets())) {
 			final Object each = in.get(at);
 			final Map<String, Object> forContext = runtimeExpressionsService.createContext(parentContext);
-			runtimeExpressionsService.set(forContext, task.getFor_().getAt(), at);
-			runtimeExpressionsService.set(forContext, task.getFor_().getEach(), each);
+			runtimeExpressionsService.set(forContext, task.getFor().getAt(), at);
+			runtimeExpressionsService.set(forContext, task.getFor().getEach(), each);
 			arguments.setContext(forContext);
-			output = doService.do_(task.getDo_(), arguments, taskURI, flowDirective);
+			output = doService.do_(task.getDo(), arguments, taskURI, flowDirective);
 			at++;
-			if(FlowDirective._continue.equals(flowDirective.get())) {
+			if(FlowDirective.continue_.equals(flowDirective.get())) {
 				continue;
 			}
 			else if(FlowDirective.exit.equals(flowDirective.get()) || FlowDirective.end.equals(flowDirective.get())) {

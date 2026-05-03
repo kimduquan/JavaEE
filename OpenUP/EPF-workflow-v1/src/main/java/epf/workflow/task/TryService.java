@@ -1,11 +1,10 @@
 package epf.workflow.task;
 
 import java.util.concurrent.atomic.AtomicReference;
-import epf.workflow.schema.Error;
 import epf.workflow.schema.RuntimeExpressionArguments;
-import epf.workflow.task.schema.TryTask;
+import epf.workflow.schema.Try;
 
 public interface TryService {
 
-	Object _try(final RuntimeExpressionArguments arguments, final TryTask task, final Object taskInput, final AtomicReference<String> flowDirective) throws Error;
+	Object _try(final RuntimeExpressionArguments arguments, final Try task, final Object taskInput, final AtomicReference<String> flowDirective) throws Exception;
 }

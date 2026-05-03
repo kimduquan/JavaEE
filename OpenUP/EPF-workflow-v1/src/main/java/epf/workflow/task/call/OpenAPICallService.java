@@ -1,9 +1,8 @@
 package epf.workflow.task.call;
 
-import epf.workflow.schema.Error;
-import epf.workflow.task.call.schema.OpenAPI;
+import epf.workflow.schema.OpenAPICall;
 
 public interface OpenAPICallService {
 
-	Object call(final OpenAPI openAPI, final Object input) throws Error;
+	Object call(final OpenAPICall openAPI, final Object input) throws Exception;
 }

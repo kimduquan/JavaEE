@@ -1,6 +1,6 @@
 package epf.workflow.authentication;
 
-import epf.workflow.authentication.schema.DigestAuthentication;
+import epf.workflow.schema.DigestAuthentication;
 
 public interface DigestAuthenticationService {
 

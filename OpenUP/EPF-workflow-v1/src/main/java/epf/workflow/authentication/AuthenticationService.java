@@ -1,6 +1,6 @@
 package epf.workflow.authentication;
 
-import epf.workflow.authentication.schema.Authentication;
+import epf.workflow.schema.Authentication;
 
 public interface AuthenticationService {
 

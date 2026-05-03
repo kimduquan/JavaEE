@@ -1,18 +1,15 @@
 package epf.workflow.task.internal;
 
 import java.net.URI;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
-import epf.workflow.schema.Error;
-import epf.workflow.schema.FlowDirective;
 import epf.workflow.schema.RuntimeExpressionArguments;
+import epf.workflow.schema.Switch;
 import epf.workflow.schema.SwitchCase;
 import epf.workflow.schema.Task;
 import epf.workflow.spi.ExtensionService;
 import epf.workflow.spi.RuntimeExpressionsService;
 import epf.workflow.task.SwitchService;
 import epf.workflow.task.TaskService;
-import epf.workflow.task.schema.SwitchTask;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -29,16 +26,14 @@ public class SwitchServiceImpl implements SwitchService {
 	transient ExtensionService extensionService;
 
 	@Override
-	public Object _switch(final RuntimeExpressionArguments arguments, final SwitchTask task, final Object taskInput, final AtomicReference<String> flowDirective) throws Error {
-		SwitchCase switchCase = task.getSwitch_().get(SwitchCase.DEFAULT);
+	public Object _switch(final RuntimeExpressionArguments arguments, final Switch task, final Object taskInput, final AtomicReference<String> flowDirective) throws Exception {
+		SwitchCase switchCase = null;
 		String switchCaseName = null;
-		for(Map.Entry<String, SwitchCase> entry : task.getSwitch_().entrySet()) {
-			final String caseName = entry.getKey();
-			final SwitchCase case_ = entry.getValue();
+		for(SwitchCase case_ : task.getSwitch()) {
 			if(case_.getWhen() != null) {
 				if(runtimeExpressionsService.if_(case_.getWhen(), arguments.getContext(), arguments.getSecrets())) {
 					switchCase = case_;
-					switchCaseName = caseName;
+					switchCaseName = case_.getWhen();
 					break;
 				}
 				else {
@@ -47,12 +42,12 @@ public class SwitchServiceImpl implements SwitchService {
 			}
 			else {
 				switchCase = case_;
-				switchCaseName = caseName;
+				switchCaseName = case_.getWhen();
 				break;
 			}
 		}
-		if(switchCase != null && FlowDirective.isString(switchCase.getThen())) {
-			final String caseTaskName = switchCase.getThen();
+		if(switchCase != null && switchCase.getThen() instanceof String) {
+			final String caseTaskName = (String) switchCase.getThen();
 			final Task caseTask = arguments.getWorkflow().getDefinition().getUse().getFunctions().get(caseTaskName);
 			final URI caseTaskURI = URI.create(arguments.getTask().getReference()).resolve(switchCaseName).resolve(caseTaskName);
 			flowDirective.set(null);

@@ -1,16 +1,16 @@
 package epf.workflow.task.internal;
 
 import epf.workflow.schema.Error;
+import epf.workflow.schema.Raise;
 import epf.workflow.schema.RuntimeExpressionArguments;
 import epf.workflow.task.RaiseService;
-import epf.workflow.task.schema.RaiseTask;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class RaiseServiceImpl implements RaiseService {
 
 	@Override
-	public Object raise(final RuntimeExpressionArguments arguments, final RaiseTask task, final Object taskInput) throws Error {
+	public Object raise(final RuntimeExpressionArguments arguments, final Raise task, final Object taskInput) throws Exception {
 		Error error = null;
 		if(task.getRaise().getError().isLeft()) {
 			error = arguments.getWorkflow().getDefinition().getUse().getErrors().get(task.getRaise().getError().getLeft());
@@ -18,8 +18,12 @@ public class RaiseServiceImpl implements RaiseService {
 		else {
 			error = task.getRaise().getError().getRight();
 		}
-		final Error errorInstance = error.clone();
+		final Error errorInstance = new Error();
+		errorInstance.setDetail(error.getDetail());
+		errorInstance.setStatus(error.getStatus());
+		errorInstance.setTitle(error.getTitle());
+		errorInstance.setType(error.getType());
 		errorInstance.setInstance(arguments.getTask().getReference());
-		throw errorInstance;
+		return null;
 	}
 }

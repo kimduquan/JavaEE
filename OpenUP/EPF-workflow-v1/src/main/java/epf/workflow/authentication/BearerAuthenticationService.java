@@ -1,6 +1,6 @@
 package epf.workflow.authentication;
 
-import epf.workflow.authentication.schema.BearerAuthentication;
+import epf.workflow.schema.BearerAuthentication;
 
 public interface BearerAuthenticationService {
 

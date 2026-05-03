@@ -9,15 +9,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.workflow.schema.Duration;
-import epf.workflow.schema.Error;
-import epf.workflow.schema.RuntimeError;
+import epf.workflow.schema.Fork;
 import epf.workflow.schema.RuntimeExpressionArguments;
-import epf.workflow.schema.DurationUtil;
 import epf.workflow.spi.ExtensionService;
 import epf.workflow.spi.TimeoutService;
 import epf.workflow.task.ForkService;
 import epf.workflow.task.TaskService;
-import epf.workflow.task.schema.ForkTask;
+import epf.workflow.util.DurationUtil;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -37,7 +35,7 @@ public class ForkServiceImpl implements ForkService {
 	transient ExtensionService extensionService;
 
 	@Override
-	public Object fork(final RuntimeExpressionArguments arguments, final ForkTask task, final AtomicReference<String> flowDirective) throws Error {
+	public Object fork(final RuntimeExpressionArguments arguments, final Fork task, final AtomicReference<String> flowDirective) throws Exception {
 		final List<Callable<Object>> branchTasks = new ArrayList<>();
 		task.getFork().getBranches().forEach((branchTaskName, branchTask) -> {
 			final URI branchURI = URI.create(arguments.getTask().getReference()).resolve(branchTaskName);
@@ -49,41 +47,36 @@ public class ForkServiceImpl implements ForkService {
 				return output;
 			});
 		});
-		try {
-			Object taskOutput;
-			final Duration timeout = timeoutService.getTimeout(arguments.getWorkflow().getDefinition(), task);
-			TimeUnit timeUnit = TimeUnit.NANOSECONDS;
-			long time = 0;
+		Object taskOutput;
+		final Duration timeout = timeoutService.getTimeout(arguments.getWorkflow().getDefinition(), task);
+		TimeUnit timeUnit = TimeUnit.NANOSECONDS;
+		long time = 0;
+		if(timeout != null) {
+			timeUnit = DurationUtil.getTimeUnit(timeout);
+			time = DurationUtil.getTime(timeout, timeUnit);
+		}
+		if(task.getFork().getCompete()) {
+			final List<Object> outputs = new ArrayList<>();
+			List<Future<Object>> futures;
 			if(timeout != null) {
-				timeUnit = DurationUtil.getTimeUnit(timeout);
-				time = DurationUtil.getTime(timeout, timeUnit);
-			}
-			if(task.getFork().isCompete()) {
-				final List<Object> outputs = new ArrayList<>();
-				List<Future<Object>> futures;
-				if(timeout != null) {
-					futures = executor.invokeAll(branchTasks, time, timeUnit);
-				}
-				else {
-					futures = executor.invokeAll(branchTasks);
-				}
-				for(Future<Object> future : futures) {
-					outputs.add(future.get());
-				}
-				taskOutput = outputs;
+				futures = executor.invokeAll(branchTasks, time, timeUnit);
 			}
 			else {
-				if(timeout != null) {
-					taskOutput = executor.invokeAny(branchTasks, time, timeUnit);
-				}
-				else {
-					taskOutput = executor.invokeAny(branchTasks);
-				}
+				futures = executor.invokeAll(branchTasks);
 			}
-			return taskOutput;
+			for(Future<Object> future : futures) {
+				outputs.add(future.get());
+			}
+			taskOutput = outputs;
 		}
-		catch(Exception ex) {
-			throw new RuntimeError(ex);
+		else {
+			if(timeout != null) {
+				taskOutput = executor.invokeAny(branchTasks, time, timeUnit);
+			}
+			else {
+				taskOutput = executor.invokeAny(branchTasks);
+			}
 		}
+		return taskOutput;
 	}
 }

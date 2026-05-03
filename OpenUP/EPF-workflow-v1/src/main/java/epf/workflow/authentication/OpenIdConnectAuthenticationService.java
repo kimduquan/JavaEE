@@ -1,6 +1,6 @@
 package epf.workflow.authentication;
 
-import epf.workflow.authentication.schema.OpenIdConnectAuthentication;
+import epf.workflow.schema.OpenIdConnectAuthentication;
 
 public interface OpenIdConnectAuthenticationService {
 

@@ -2,14 +2,13 @@ package epf.workflow.task.internal;
 
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import epf.naming.Naming;
-import epf.workflow.schema.Error;
 import epf.workflow.schema.EventProperties;
+import epf.workflow.schema.Listen;
 import epf.workflow.schema.RuntimeExpressionArguments;
 import epf.workflow.spi.EventConsumptionStrategyService;
 import epf.workflow.spi.EventFilterService;
 import epf.workflow.spi.EventPropertiesService;
 import epf.workflow.task.ListenService;
-import epf.workflow.task.schema.ListenTask;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -26,13 +25,13 @@ public class ListenServiceImpl implements ListenService {
 	transient EventConsumptionStrategyService eventConsumptionStrategyService;
 
 	@Override
-	public Object listen(final RuntimeExpressionArguments arguments, final ListenTask task, final Object taskInput) throws Error {
+	public Object listen(final RuntimeExpressionArguments arguments, final Listen task, final Object taskInput) throws Exception {
 		eventConsumptionStrategyService.persist(task.getListen().getTo());
 		return taskInput;
 	}
 
 	@Incoming(Naming.Workflow.EVENTS)
-	public void listen(final EventProperties event) throws Error {
+	public void listen(final EventProperties event) throws Exception {
 		eventPropertiesService.persist(event);
 		eventFilterService.findEventFilters(event);
 	}

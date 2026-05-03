@@ -1,6 +1,6 @@
 package epf.workflow.task.call;
 
-import epf.workflow.task.call.schema.AsyncAPIOutboundMessage;
+import epf.workflow.schema.AsyncAPIOutboundMessage;
 
 public interface AsyncAPIOutboundMessageService {
 

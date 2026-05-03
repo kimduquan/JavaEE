@@ -1,6 +1,6 @@
 package epf.workflow.task.run;
 
-import epf.workflow.task.run.schema.ContainerLifetime;
+import epf.workflow.schema.ContainerLifetime;
 
 public interface ContainerLifetimeService {
 

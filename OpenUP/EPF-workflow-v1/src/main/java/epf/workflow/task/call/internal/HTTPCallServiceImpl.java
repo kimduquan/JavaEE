@@ -1,9 +1,8 @@
 package epf.workflow.task.call.internal;
 
 import java.net.URI;
-import epf.workflow.schema.Error;
+import epf.workflow.schema.HTTPCall;
 import epf.workflow.task.call.HTTPCallService;
-import epf.workflow.task.call.schema.HTTP;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -17,7 +16,7 @@ import jakarta.ws.rs.core.Response;
 public class HTTPCallServiceImpl implements HTTPCallService {
 
 	@Override
-	public Object call(final HTTP http, final Object input) throws Error {
+	public Object call(final HTTPCall http, final Object input) throws Exception {
 		final Client client = ClientBuilder.newClient();
 		WebTarget target = null;
 		if(http.getEndpoint().isLeft()) {

@@ -1,6 +1,6 @@
 package epf.workflow.authentication;
 
-import epf.workflow.authentication.schema.CertificateAuthentication;
+import epf.workflow.schema.CertificateAuthentication;
 
 public interface CertificateAuthenticationService {
 

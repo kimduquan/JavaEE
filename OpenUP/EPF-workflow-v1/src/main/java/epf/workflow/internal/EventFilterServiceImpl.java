@@ -13,7 +13,6 @@ import org.eclipse.jnosql.communication.semistructured.SelectQuery;
 import org.eclipse.jnosql.mapping.Database;
 import org.eclipse.jnosql.mapping.DatabaseType;
 import epf.naming.Naming;
-import epf.workflow.schema.Error;
 import epf.workflow.schema.Correlation;
 import epf.workflow.schema.EventFilter;
 import epf.workflow.schema.EventProperties;
@@ -29,7 +28,7 @@ public class EventFilterServiceImpl implements EventFilterService {
 	transient DatabaseManager database;
 
 	@Override
-	public List<EventFilter> findEventFilters(final EventProperties event) throws Error {
+	public List<EventFilter> findEventFilters(final EventProperties event) throws Exception {
 		final CriteriaCondition eventFilterCondition = buildEventFilterCondition(event);
 		final SelectQuery eventFilterQuery = buildEventFilterQuery(eventFilterCondition);
 		final List<EventFilter> eventFilters = queryEventFilters(eventFilterQuery);
@@ -151,13 +150,13 @@ public class EventFilterServiceImpl implements EventFilterService {
 	}
 
 	@Override
-	public void persist(final EventFilter eventFilter) throws Error {
+	public void persist(final EventFilter eventFilter) throws Exception {
 		final CommunicationEntity entity = toEntity(eventFilter);
 		database.insert(entity);
 	}
 
 	@Override
-	public void persist(final List<EventFilter> eventFilters) throws Error {
+	public void persist(final List<EventFilter> eventFilters) throws Exception {
 		final List<CommunicationEntity> entities = eventFilters.stream().map(eventFilter -> toEntity(eventFilter)).collect(Collectors.toList());
 		database.insert(entities);
 	}

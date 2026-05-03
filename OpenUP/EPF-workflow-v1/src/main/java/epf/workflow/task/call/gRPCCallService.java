@@ -1,9 +1,8 @@
 package epf.workflow.task.call;
 
-import epf.workflow.schema.Error;
-import epf.workflow.task.call.schema.gRPC;
+import epf.workflow.schema.gRPCCall;
 
 public interface gRPCCallService {
 
-	Object call(final gRPC grpc, final Object input) throws Error;
+	Object call(final gRPCCall grpc, final Object input) throws Exception;
 }
