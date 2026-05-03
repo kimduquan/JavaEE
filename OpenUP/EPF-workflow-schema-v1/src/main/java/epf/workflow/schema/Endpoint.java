@@ -1,15 +1,17 @@
 package epf.workflow.schema;
 
-import org.eclipse.microprofile.graphql.Description;
-import epf.workflow.authentication.schema.Authentication;
+import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import jakarta.validation.constraints.NotNull;
 
-@Description("Describes an enpoint.")
+@JsonClassDescription("Describes an enpoint.")
 public class Endpoint {
 
-	@Description("The endpoint's URI.")
+	@NotNull
+	@JsonPropertyDescription("The endpoint's URI.")
 	private String uri;
 	
-	@Description("The authentication policy to use.")
+	@JsonPropertyDescription("The authentication policy to use.")
 	private Authentication authentication;
 
 	public String getUri() {

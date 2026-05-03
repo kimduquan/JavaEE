@@ -1,15 +1,16 @@
 package epf.workflow.schema;
 
-import org.eclipse.microprofile.graphql.Description;
+import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import epf.workflow.schema.util.Either;
 
-@Description("Certain task needs to set the workflow context to save the task output for later usage. Users set the content of the context through a runtime expression. The result of the expression is the new value of the context. The expression is evaluated against the transformed task output.")
+@JsonClassDescription("Certain task needs to set the workflow context to save the task output for later usage. Users set the content of the context through a runtime expression. The result of the expression is the new value of the context. The expression is evaluated against the transformed task output.")
 public class Export {
 
-	@Description("The schema used to describe and validate context.")
+	@JsonPropertyDescription("The schema used to describe and validate context. Included to handle the non frequent case in which the context has a known format.")
 	private Schema schema;
 	
-	@Description("A runtime expression, if any, used to export the output data to the context.")
+	@JsonPropertyDescription("A runtime expression, if any, used to export the output data to the context.")
 	private Either<String, Object> as;
 
 	public Schema getSchema() {

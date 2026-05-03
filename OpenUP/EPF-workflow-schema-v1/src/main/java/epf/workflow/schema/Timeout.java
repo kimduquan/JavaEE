@@ -1,13 +1,14 @@
 package epf.workflow.schema;
 
-import org.eclipse.microprofile.graphql.Description;
+import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import jakarta.validation.constraints.NotNull;
 
-@Description("Defines a workflow or task timeout.")
+@JsonClassDescription("Defines a workflow or task timeout.")
 public class Timeout {
 
 	@NotNull
-	@Description("The duration after which the workflow or task times out.")
+	@JsonPropertyDescription("The duration after which the workflow or task times out.")
 	private Duration after;
 
 	public Duration getAfter() {

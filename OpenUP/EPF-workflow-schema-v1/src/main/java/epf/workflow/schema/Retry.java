@@ -1,23 +1,27 @@
 package epf.workflow.schema;
 
-import org.eclipse.microprofile.graphql.Description;
+import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 
-@Description("The Retry is a fundamental concept in the Serverless Workflow DSL, used to define the strategy for retrying a failed task when an error is encountered during execution. This policy provides developers with fine-grained control over how and when to retry failed tasks, enabling robust error handling and fault tolerance within workflows.")
+@JsonClassDescription("The Retry is a fundamental concept in the Serverless Workflow DSL, used to define the strategy for retrying a failed task when an error is encountered during execution. This policy provides developers with fine-grained control over how and when to retry failed tasks, enabling robust error handling and fault tolerance within workflows.")
 public class Retry {
 
-	@Description("A a runtime expression used to determine whether or not to retry running the task, in a given context.")
+	@JsonPropertyDescription("A a runtime expression used to determine whether or not to retry running the task, in a given context.")
 	private String when;
 	
-	@Description("A runtime expression used to determine whether or not to retry running the task, in a given context.")
+	@JsonPropertyDescription("A runtime expression used to determine whether or not to retry running the task, in a given context.")
 	private String exceptWhen;
 	
-	@Description("The limits, if any, to impose to the retry policy.")
-	private RetryLimit limit;
+	@JsonPropertyDescription("The duration, if any, to wait between retry attempts.")
+	private Duration delay;
 	
-	@Description("The backoff strategy to use, if any.")
+	@JsonPropertyDescription("The limits, if any, to impose to the retry policy.")
+	private Retry limit;
+	
+	@JsonPropertyDescription("The backoff strategy to use, if any.")
 	private Backoff backoff;
 	
-	@Description("The parameters, if any, that control the randomness or variability of the delay between retry attempts.")
+	@JsonPropertyDescription("The parameters, if any, that control the randomness or variability of the delay between retry attempts.")
 	private Jitter jitter;
 
 	public String getWhen() {
@@ -36,11 +40,19 @@ public class Retry {
 		this.exceptWhen = exceptWhen;
 	}
 
-	public RetryLimit getLimit() {
+	public Duration getDelay() {
+		return delay;
+	}
+
+	public void setDelay(Duration delay) {
+		this.delay = delay;
+	}
+
+	public Retry getLimit() {
 		return limit;
 	}
 
-	public void setLimit(RetryLimit limit) {
+	public void setLimit(Retry limit) {
 		this.limit = limit;
 	}
 

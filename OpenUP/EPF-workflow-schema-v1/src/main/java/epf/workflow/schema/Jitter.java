@@ -1,17 +1,18 @@
 package epf.workflow.schema;
 
-import org.eclipse.microprofile.graphql.Description;
+import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import jakarta.validation.constraints.NotNull;
 
-@Description("Represents the definition of the parameters that control the randomness or variability of a delay, typically between retry attempts")
+@JsonClassDescription("Represents the definition of the parameters that control the randomness or variability of a delay, typically between retry attempts")
 public class Jitter {
 
 	@NotNull
-	@Description("The minimum duration of the jitter range.")
+	@JsonPropertyDescription("The minimum duration of the jitter range.")
 	private Duration from;
 	
 	@NotNull
-	@Description("The maximum duration of the jitter range.")
+	@JsonPropertyDescription("The maximum duration of the jitter range.")
 	private Duration to;
 
 	public Duration getFrom() {

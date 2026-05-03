@@ -1,39 +1,43 @@
 package epf.workflow.schema;
 
 import java.util.Map;
-import org.eclipse.microprofile.graphql.DefaultValue;
-import org.eclipse.microprofile.graphql.Description;
+import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import epf.workflow.schema.util.Either;
+import jakarta.json.bind.annotation.JsonbProperty;
 
+@JsonClassDescription("A task within a workflow represents a discrete unit of work that contributes to achieving the overall objectives defined by the workflow.")
 public class Task {
 
-	@Description("A runtime expression, if any, used to determine whether or not the task should be run. The task is considered skipped if not run, and the raw task input becomes the task's output. The expression is evaluated against the raw task input before any other expression of the task.")
+	@JsonProperty("if")
+	@JsonPropertyDescription("A runtime expression, if any, used to determine whether or not the task should be run. The task is considered skipped if not run, and the raw task input becomes the task's output. The expression is evaluated against the raw task input before any other expression of the task.")
+	@JsonbProperty("if")
 	private String if_;
 	
-	@Description("An object used to customize the task's input and to document its schema, if any.")
+	@JsonPropertyDescription("An object used to customize the task's input and to document its schema, if any.")
 	private Input input;
 	
-	@Description("An object used to customize the task's output and to document its schema, if any.")
+	@JsonPropertyDescription("An object used to customize the task's output and to document its schema, if any.")
 	private Output output;
 	
-	@Description("An object used to customize the content of the workflow context.")
+	@JsonPropertyDescription("An object used to customize the content of the workflow context.")
 	private Export export;
 	
-	@Description("The configuration of the task's timeout, if any.")
+	@JsonPropertyDescription("The configuration of the task's timeout, if any. If a string, must be the name of a timeout defined in the workflow's reusable components.")
 	private Either<String, Timeout> timeout;
 	
-	@Description("The flow directive to execute next.")
-	@DefaultValue("continue")
-	private String then = FlowDirective._continue;
+	@JsonPropertyDescription("The flow directive to execute next. If not set, defaults to continue.")
+	private Object then = FlowDirective.continue_;
 	
-	@Description("Additional information about the task.")
-	private Map<String, Object> metadata;
+	@JsonPropertyDescription("Additional information about the task.")
+	private Map<?, ?> metadata;
 
-	public String getIf_() {
+	public String getIf() {
 		return if_;
 	}
 
-	public void setIf_(String if_) {
+	public void setIf(String if_) {
 		this.if_ = if_;
 	}
 
@@ -69,19 +73,19 @@ public class Task {
 		this.timeout = timeout;
 	}
 
-	public String getThen() {
+	public Object getThen() {
 		return then;
 	}
 
-	public void setThen(String then) {
+	public void setThen(Object then) {
 		this.then = then;
 	}
 
-	public Map<String, Object> getMetadata() {
+	public Map<?, ?> getMetadata() {
 		return metadata;
 	}
 
-	public void setMetadata(Map<String, Object> metadata) {
+	public void setMetadata(Map<?, ?> metadata) {
 		this.metadata = metadata;
 	}
 }

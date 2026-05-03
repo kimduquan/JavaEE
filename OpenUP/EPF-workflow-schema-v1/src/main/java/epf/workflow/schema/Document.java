@@ -1,38 +1,39 @@
 package epf.workflow.schema;
 
 import java.util.Map;
-import org.eclipse.microprofile.graphql.Description;
+import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import jakarta.validation.constraints.NotNull;
 
-@Description("Documents the workflow definition.")
+@JsonClassDescription("Documents the workflow definition.")
 public class Document {
 
 	@NotNull
-	@Description("The version of the DSL used to define the workflow.")
+	@JsonPropertyDescription("The version of the DSL used to define the workflow.")
 	private String dsl;
 	
 	@NotNull
-	@Description("The workflow's namespace.")
+	@JsonPropertyDescription("The workflow's namespace.")
 	private String namespace;
 	
 	@NotNull
-	@Description("The workflow's name.")
+	@JsonPropertyDescription("The workflow's name.")
 	private String name;
 	
 	@NotNull
-	@Description("The workflow's semantic version")
+	@JsonPropertyDescription("The workflow's semantic version")
 	private String version;
 	
-	@Description("The workflow's title.")
+	@JsonPropertyDescription("The workflow's title.")
 	private String title;
 	
-	@Description("The workflow's Markdown summary.")
+	@JsonPropertyDescription("The workflow's Markdown summary.")
 	private String summary;
 	
-	@Description("A key/value mapping of the workflow's tags, if any.")
+	@JsonPropertyDescription("A key/value mapping of the workflow's tags, if any.")
 	private Map<String, String> tags;
 	
-	@Description("Additional information about the workflow.")
+	@JsonPropertyDescription("Additional information about the workflow.")
 	private Map<?, ?> metadata;
 
 	public String getDsl() {

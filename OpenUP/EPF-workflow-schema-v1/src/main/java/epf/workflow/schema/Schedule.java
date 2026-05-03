@@ -1,20 +1,21 @@
 package epf.workflow.schema;
 
-import org.eclipse.microprofile.graphql.Description;
+import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 
-@Description("Configures the schedule of a workflow.")
+@JsonClassDescription("Configures the schedule of a workflow.")
 public class Schedule {
 
-	@Description("Specifies the duration of the interval at which the workflow should be executed. Unlike after, this option will run the workflow regardless of whether the previous run is still in progress.")
+	@JsonPropertyDescription("Specifies the duration of the interval at which the workflow should be executed. Unlike after, this option will run the workflow regardless of whether the previous run is still in progress. Required when no other property has been set.")
 	private Duration every;
 	
-	@Description("Specifies the schedule using a CRON expression, e.g., '0 0 * * *' for daily at midnight.")
+	@JsonPropertyDescription("Specifies the schedule using a CRON expression, e.g., '0 0 * * *' for daily at midnight. Required when no other property has been set.")
 	private String cron;
 	
-	@Description("Specifies a delay duration that the workflow must wait before starting again after it completes. In other words, when this workflow completes, it should run again after the specified amount of time.")
+	@JsonPropertyDescription("Specifies a delay duration that the workflow must wait before starting again after it completes. In other words, when this workflow completes, it should run again after the specified amount of time. Required when no other property has been set.")
 	private Duration after;
 	
-	@Description("Specifies the events that trigger the workflow execution.")
+	@JsonPropertyDescription("Specifies the events that trigger the workflow execution. Required when no other property has been set.")
 	private EventConsumptionStrategy on;
 
 	public Duration getEvery() {

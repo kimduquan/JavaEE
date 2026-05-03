@@ -1,62 +1,63 @@
 package epf.workflow.schema;
 
-import org.eclipse.microprofile.graphql.Description;
+import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 
-@Description("Defines a duration.")
+@JsonClassDescription("Defines a duration. Durations can be defined through properties, with an ISO 8601 string or with a runtime expression that is evaluated to an ISO 8601 string")
 public class Duration {
 
-	@Description("Number of days, if any.")
-	private Integer Days;
+	@JsonPropertyDescription("Number of days, if any.")
+	private Integer days;
 	
-	@Description("Number of hours, if any.")
-	private Integer Hours;
+	@JsonPropertyDescription("Number of hours, if any.")
+	private Integer hours;
 	
-	@Description("Number of minutes, if any.")
-	private Integer Minutes;
+	@JsonPropertyDescription("Number of minutes, if any.")
+	private Integer minutes;
 	
-	@Description("Number of seconds, if any.")
-	private Integer Seconds;
+	@JsonPropertyDescription("Number of seconds, if any.")
+	private Integer seconds;
 	
-	@Description("Number of milliseconds, if any.")
-	private Integer Milliseconds;
+	@JsonPropertyDescription("Number of milliseconds, if any.")
+	private Integer milliseconds;
 
 	public Integer getDays() {
-		return Days;
+		return days;
 	}
 
 	public void setDays(Integer days) {
-		Days = days;
+		this.days = days;
 	}
 
 	public Integer getHours() {
-		return Hours;
+		return hours;
 	}
 
 	public void setHours(Integer hours) {
-		Hours = hours;
+		this.hours = hours;
 	}
 
 	public Integer getMinutes() {
-		return Minutes;
+		return minutes;
 	}
 
 	public void setMinutes(Integer minutes) {
-		Minutes = minutes;
+		this.minutes = minutes;
 	}
 
 	public Integer getSeconds() {
-		return Seconds;
+		return seconds;
 	}
 
 	public void setSeconds(Integer seconds) {
-		Seconds = seconds;
+		this.seconds = seconds;
 	}
 
 	public Integer getMilliseconds() {
-		return Milliseconds;
+		return milliseconds;
 	}
 
 	public void setMilliseconds(Integer milliseconds) {
-		Milliseconds = milliseconds;
+		this.milliseconds = milliseconds;
 	}
 }

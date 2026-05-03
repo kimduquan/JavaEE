@@ -1,37 +1,42 @@
 package epf.workflow.schema;
 
 import java.util.Map;
-import org.eclipse.microprofile.graphql.Description;
+import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import epf.workflow.schema.util.Either;
+import jakarta.json.bind.annotation.JsonbProperty;
 import jakarta.validation.constraints.NotNull;
 
-@Description("A workflow serves as a blueprint outlining the series of tasks required to execute a specific business operation. It details the sequence in which tasks must be completed, guiding users through the process from start to finish, and helps streamline operations, ensure consistency, and optimize efficiency within an organization.")
+@JsonClassDescription("A workflow serves as a blueprint outlining the series of tasks required to execute a specific business operation. It details the sequence in which tasks must be completed, guiding users through the process from start to finish, and helps streamline operations, ensure consistency, and optimize efficiency within an organization.")
 public class Workflow {
 
 	@NotNull
-	@Description("Documents the defined workflow.")
+	@JsonPropertyDescription("Documents the defined workflow.")
 	private Document document;
 	
-	@Description("Configures the workflow's input.")
+	@JsonPropertyDescription("Configures the workflow's input.")
 	private Input input;
 	
-	@Description("Defines the workflow's reusable components, if any.")
+	@JsonPropertyDescription("Defines the workflow's reusable components, if any.")
 	private Use use;
 	
 	@NotNull
-	@Description("The task(s) that must be performed by the workflow.")
+	@JsonProperty("do")
+	@JsonPropertyDescription("The task(s) that must be performed by the workflow.")
+	@JsonbProperty("do")
 	private Map<String, Task> do_;
 	
-	@Description("The configuration, if any, of the workflow's timeout. If a string, must be the name of a timeout defined in the workflow's reusable components.")
+	@JsonPropertyDescription("The configuration, if any, of the workflow's timeout. If a string, must be the name of a timeout defined in the workflow's reusable components.")
 	private Either<String, Timeout> timeout;
 	
-	@Description("Configures the workflow's output.")
+	@JsonPropertyDescription("Configures the workflow's output.")
 	private Output output;
 	
-	@Description("Configures the workflow's schedule, if any.")
+	@JsonPropertyDescription("Configures the workflow's schedule, if any.")
 	private Schedule schedule;
 	
-	@Description("Configures runtime expression evaluation.")
+	@JsonPropertyDescription("Configures runtime expression evaluation.")
 	private Evaluate evaluate;
 
 	public Document getDocument() {
@@ -58,11 +63,11 @@ public class Workflow {
 		this.use = use;
 	}
 
-	public Map<String, Task> getDo_() {
+	public Map<String, Task> getDo() {
 		return do_;
 	}
 
-	public void setDo_(Map<String, Task> do_) {
+	public void setDo(Map<String, Task> do_) {
 		this.do_ = do_;
 	}
 

@@ -1,31 +1,34 @@
 package epf.workflow.schema;
 
 import java.util.Map;
-import org.eclipse.microprofile.graphql.DefaultValue;
-import org.eclipse.microprofile.graphql.Description;
+import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import epf.workflow.schema.util.Either;
+import jakarta.json.bind.annotation.JsonbProperty;
 
-@Description("Defines the configuration of a catch clause, which a concept used to catch errors.")
+@JsonClassDescription("Defines the configuration of a catch clause, which a concept used to catch errors.")
 public class Catch {
 
-	@Description("The definition of the errors to catch.")
+	@JsonPropertyDescription("The definition of the errors to catch.")
 	private Error errors;
 	
-	@Description("The name of the runtime expression variable to save the error as.")
-	@DefaultValue("error")
+	@JsonPropertyDescription("The name of the runtime expression variable to save the error as. Defaults to 'error'.")
 	private String as = "error";
 	
-	@Description("A runtime expression used to determine whether or not to catch the filtered error.")
+	@JsonPropertyDescription("A runtime expression used to determine whether or not to catch the filtered error.")
 	private String when;
 	
-	@Description("A runtime expression used to determine whether or not to catch the filtered error.")
+	@JsonPropertyDescription("A runtime expression used to determine whether or not to catch the filtered error.")
 	private String exceptWhen;
 	
-	@Description("The retry policy to use, if any, when catching errors.")
-	private Either<String, RetryPolicy> retry;
+	@JsonPropertyDescription("The retry policy to use, if any, when catching errors. If a string, must be the name of a retry policy defined in the workflow's reusable components.")
+	private Either<String, Retry> retry;
 	
-	@Description("The definition of the task(s) to run when catching an error.")
-	private Map<String, Task> _do;
+	@JsonProperty("do")
+	@JsonPropertyDescription("The definition of the task(s) to run when catching an error.")
+	@JsonbProperty("do")
+	private Map<String, Task> do_;
 
 	public Error getErrors() {
 		return errors;
@@ -59,19 +62,19 @@ public class Catch {
 		this.exceptWhen = exceptWhen;
 	}
 
-	public Either<String, RetryPolicy> getRetry() {
+	public Either<String, Retry> getRetry() {
 		return retry;
 	}
 
-	public void setRetry(Either<String, RetryPolicy> retry) {
+	public void setRetry(Either<String, Retry> retry) {
 		this.retry = retry;
 	}
 
-	public Map<String, Task> get_do() {
-		return _do;
+	public Map<String, Task> getDo() {
+		return do_;
 	}
 
-	public void set_do(Map<String, Task> _do) {
-		this._do = _do;
+	public void setDo(Map<String, Task> do_) {
+		this.do_ = do_;
 	}
 }

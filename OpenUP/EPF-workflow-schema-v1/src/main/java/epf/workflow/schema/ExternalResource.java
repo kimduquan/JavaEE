@@ -1,16 +1,17 @@
 package epf.workflow.schema;
 
-import org.eclipse.microprofile.graphql.Description;
+import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import jakarta.validation.constraints.NotNull;
 
-@Description("Defines an external resource.")
+@JsonClassDescription("Defines an external resource.")
 public class ExternalResource {
 
-	@Description("The name, if any, of the defined resource.")
+	@JsonPropertyDescription("The name, if any, of the defined resource.")
 	private String name;
 	
 	@NotNull
-	@Description("The endpoint at which to get the defined resource.")
+	@JsonPropertyDescription("The endpoint at which to get the defined resource.")
 	private Endpoint endpoint;
 
 	public String getName() {

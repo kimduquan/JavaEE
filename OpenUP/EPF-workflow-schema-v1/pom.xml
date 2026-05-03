@@ -28,11 +28,11 @@
 		    <artifactId>jakarta.json.bind-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.graphql/microprofile-graphql-api -->
+		<!-- Source: https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
 		<dependency>
-		    <groupId>org.eclipse.microprofile.graphql</groupId>
-		    <artifactId>microprofile-graphql-api</artifactId>
-			<scope>provided</scope>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-annotations</artifactId>
+		    <scope>provided</scope>
 		</dependency>
 		
 		<dependency>

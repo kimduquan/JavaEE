@@ -1,15 +1,16 @@
 package epf.workflow.schema;
 
-import org.eclipse.microprofile.graphql.Description;
+import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import epf.workflow.schema.util.Either;
 
-@Description("Documents the structure - and optionally configures the transformation of - workflow/task input data.")
+@JsonClassDescription("Documents the structure - and optionally configures the transformation of - workflow/task input data.")
 public class Input {
 
-	@Description("The schema used to describe and validate raw input data.")
+	@JsonPropertyDescription("The schema used to describe and validate raw input data.")
 	private Schema schema;
 	
-	@Description("A runtime expression, if any, used to filter and/or mutate the workflow/task input.")
+	@JsonPropertyDescription("A runtime expression, if any, used to filter and/or mutate the workflow/task input.")
 	private Either<String, Object> from;
 
 	public Schema getSchema() {

@@ -1,31 +1,35 @@
 package epf.workflow.schema;
 
+import java.util.List;
 import java.util.Map;
-import org.eclipse.microprofile.graphql.Description;
-import epf.workflow.authentication.schema.Authentication;
+import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 
-@Description("Defines the workflow's reusable components.")
+@JsonClassDescription("Defines the workflow's reusable components.")
 public class Use {
 
-	@Description("A name/value mapping of the workflow's reusable authentication policies.")
+	@JsonPropertyDescription("A name/value mapping of the workflow's reusable authentication policies.")
 	private Map<String, Authentication> authentications;
 	
-	@Description("A name/value mapping of the workflow's reusable errors.")
+	@JsonPropertyDescription("A name/value mapping of the workflow's reusable resource catalogs.")
+	private Map<String, Catalog> catalogs;
+	
+	@JsonPropertyDescription("A name/value mapping of the workflow's reusable errors.")
 	private Map<String, Error> errors;
 	
-	@Description("A list of the workflow's reusable extensions.")
-	private Map<String, Extension> extensions;
+	@JsonPropertyDescription("A list of the workflow's reusable extensions.")
+	private List<Extension> extensions;
 	
-	@Description("A name/value mapping of the workflow's reusable tasks.")
+	@JsonPropertyDescription("A name/value mapping of the workflow's reusable tasks.")
 	private Map<String, Task> functions;
 	
-	@Description("A name/value mapping of the workflow's reusable retry policies.")
-	private Map<String, RetryPolicy> retries;
+	@JsonPropertyDescription("A name/value mapping of the workflow's reusable retry policies.")
+	private Map<String, Retry> retries;
 	
-	@Description("A list containing the workflow's secrets.")
-	private String[] secrets;
+	@JsonPropertyDescription("A list containing the workflow's secrets.")
+	private List<String> secrets;
 	
-	@Description("A name/value mapping of the workflow's reusable timeouts.")
+	@JsonPropertyDescription("A name/value mapping of the workflow's reusable timeouts.")
 	private Map<String, Timeout> timeouts;
 
 	public Map<String, Authentication> getAuthentications() {
@@ -36,6 +40,14 @@ public class Use {
 		this.authentications = authentications;
 	}
 
+	public Map<String, Catalog> getCatalogs() {
+		return catalogs;
+	}
+
+	public void setCatalogs(Map<String, Catalog> catalogs) {
+		this.catalogs = catalogs;
+	}
+
 	public Map<String, Error> getErrors() {
 		return errors;
 	}
@@ -44,11 +56,11 @@ public class Use {
 		this.errors = errors;
 	}
 
-	public Map<String, Extension> getExtensions() {
+	public List<Extension> getExtensions() {
 		return extensions;
 	}
 
-	public void setExtensions(Map<String, Extension> extensions) {
+	public void setExtensions(List<Extension> extensions) {
 		this.extensions = extensions;
 	}
 
@@ -60,19 +72,19 @@ public class Use {
 		this.functions = functions;
 	}
 
-	public Map<String, RetryPolicy> getRetries() {
+	public Map<String, Retry> getRetries() {
 		return retries;
 	}
 
-	public void setRetries(Map<String, RetryPolicy> retries) {
+	public void setRetries(Map<String, Retry> retries) {
 		this.retries = retries;
 	}
 
-	public String[] getSecrets() {
+	public List<String> getSecrets() {
 		return secrets;
 	}
 
-	public void setSecrets(String[] secrets) {
+	public void setSecrets(List<String> secrets) {
 		this.secrets = secrets;
 	}
 

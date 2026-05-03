@@ -1,19 +1,20 @@
 package epf.workflow.schema;
 
-import org.eclipse.microprofile.graphql.Description;
+import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import jakarta.validation.constraints.NotNull;
 
-@Description("Describes a data schema.")
+@JsonClassDescription("Describes a data schema.")
 public class Schema {
 
 	@NotNull
-	@Description("The schema format.")
-	private String format;
+	@JsonPropertyDescription("The schema format.")
+	private String format = "json";
 	
-	@Description("The inline schema document.")
+	@JsonPropertyDescription("The inline schema document. Required if resource has not been set, otherwise ignored.")
 	private Object document;
 	
-	@Description("The schema external resource.")
+	@JsonPropertyDescription("The schema external resource. Required if document has not been set, otherwise ignored.")
 	private ExternalResource resource;
 
 	public String getFormat() {

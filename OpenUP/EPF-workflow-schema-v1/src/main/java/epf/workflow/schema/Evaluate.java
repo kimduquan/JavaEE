@@ -1,18 +1,19 @@
 package epf.workflow.schema;
 
-import org.eclipse.microprofile.graphql.Description;
+import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import jakarta.validation.constraints.NotNull;
 
-@Description("Configures a workflow's runtime expression evaluation.")
+@JsonClassDescription("Configures a workflow's runtime expression evaluation.")
 public class Evaluate {
 
 	@NotNull
-	@Description("The language used for writting runtime expressions.")
+	@JsonPropertyDescription("The language used for writting runtime expressions. Defaults to jq.")
 	private String language = "jq";
 	
 	@NotNull
-	@Description("The runtime expression evaluation mode.")
-	private String mode;
+	@JsonPropertyDescription("The runtime expression evaluation mode. Defaults to strict.")
+	private String mode = "strict";
 
 	public String getLanguage() {
 		return language;
