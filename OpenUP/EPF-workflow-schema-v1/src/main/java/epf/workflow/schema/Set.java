@@ -11,13 +11,13 @@ public class Set extends Task {
 
 	@NotNull
 	@JsonPropertyDescription("The data to set. Can be an object or a direct runtime expression.")
-	private Either<Map<?, ?>, String> set;
+	private Either<Map<String, Object>, String> set;
 
-	public Either<Map<?, ?>, String> getSet() {
+	public Either<Map<String, Object>, String> getSet() {
 		return set;
 	}
 
-	public void setSet(Either<Map<?, ?>, String> set) {
+	public void setSet(Either<Map<String, Object>, String> set) {
 		this.set = set;
 	}
 }
