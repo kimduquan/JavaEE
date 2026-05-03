@@ -985,7 +985,6 @@
 		<module>EPF-schema</module>
 		<module>EPF-workflow-schema</module>
 		<module>EPF-workflow-schema-v1</module>
-		<module>EPF-workflow-task-schema</module>
 		<module>EPF-event-schema</module>
 		<module>EPF-messaging-schema</module>
 		<module>EPF-query-schema</module>
