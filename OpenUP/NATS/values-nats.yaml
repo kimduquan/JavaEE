@@ -84,7 +84,7 @@ diagnosticMode:
 ##
 image:
   registry: docker.io
-  repository: bitnami/nats
+  repository: bitnamilegacy/nats
   tag: 2.11.8-debian-12-r0
   digest: ""
   ## Specify a imagePullPolicy
