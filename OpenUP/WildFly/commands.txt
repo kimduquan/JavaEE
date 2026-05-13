@@ -1,0 +1,4 @@
+/subsystem=undertow/application-security-domain=other:write-attribute(name=integrated-jaspi, value=false)
+/subsystem=undertow/server=default-server/host=default-host/location="\/":remove()
+/subsystem=undertow/configuration=handler/file=welcome-content:remove()
+:reload
