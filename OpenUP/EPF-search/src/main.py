@@ -8,7 +8,7 @@ auto_instrumentation.initialize()
 LOG_LEVEL = os.environ.get("LOG_LEVEL", "debug")
 APP = FastAPI()
 HOSTNAME = os.environ.get("HOSTNAME", "0.0.0.0")
-PORT = int(os.environ.get("PORT", "8002"))
+PORT = int(os.environ.get("PORT", "9198"))
 
 if __name__ == "__main__":
     
