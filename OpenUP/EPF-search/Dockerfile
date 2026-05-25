@@ -6,8 +6,11 @@ WORKDIR /search
 
 RUN python -m venv .venv
 
-RUN .venv/bin/python -m pip install -r requirements.txt
+RUN .venv/bin/python -m pip install --no-cache-dir -r requirements.txt
 
-RUN .venv/bin/python -m uv sync
+EXPOSE 9198
+
+ENV PORT=9198
+ENV HOSTNAME="0.0.0.0"
 
 CMD [".venv/bin/python", "main.py"]
