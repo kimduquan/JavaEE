@@ -965,6 +965,7 @@
 		<module>EPF-workflow-management</module>
 		<module>EPF-event</module>
 		<module>EPF-mcp-gateway</module>
+		<module>EPF-search</module>
 		
 		<module>EPF-schema-utility</module>
 		<module>EPF-nosql-schema-utility</module>
