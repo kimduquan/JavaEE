@@ -583,6 +583,11 @@ public interface Naming {
 			 * 
 			 */
 			String QUERY_DATASOURCE_PORT = "epf.management.query.datasource.port";
+			
+			/**
+			 * 
+			 */
+			String PAYMENT_MANAGEMENT_SECRET = "epf.management.payment.secret";
 		}
 	}
 	

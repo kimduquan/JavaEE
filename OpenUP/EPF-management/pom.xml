@@ -63,6 +63,11 @@
 	    <groupId>io.quarkus</groupId>
 	    <artifactId>quarkus-opentelemetry</artifactId>
 	</dependency>
+	
+	<dependency>
+	    <groupId>com.stripe</groupId>
+	    <artifactId>stripe-java</artifactId>
+	</dependency>
 
 	<dependency>
         <groupId>openup</groupId>

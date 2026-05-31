@@ -11,7 +11,7 @@ public class Organization {
 	private Boolean enabled;
 	private String description;
 	private String redirectUrl;
-	private Map<String, Object> attributes;
+	private Map<String, List<?>> attributes;
 	private List<Domain> domains;
 	
 	public String getId() {
@@ -50,17 +50,17 @@ public class Organization {
 	public void setRedirectUrl(String redirectUrl) {
 		this.redirectUrl = redirectUrl;
 	}
-	public Map<String, Object> getAttributes() {
-		return attributes;
-	}
-	public void setAttributes(Map<String, Object> attributes) {
-		this.attributes = attributes;
-	}
 	public List<Domain> getDomains() {
 		return domains;
 	}
 	public void setDomains(List<Domain> domains) {
 		this.domains = domains;
+	}
+	public Map<String, List<?>> getAttributes() {
+		return attributes;
+	}
+	public void setAttributes(Map<String, List<?>> attributes) {
+		this.attributes = attributes;
 	}
 	
 }

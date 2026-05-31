@@ -2,7 +2,9 @@ package epf.management.internal;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.LinkedHashMap;
 import java.util.Optional;
 import java.util.Map.Entry;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -44,10 +46,15 @@ public class OrganizationManagement {
 	@Inject
 	transient PersistenceManagement persistenceManagement;
 	
+	@Inject
+	transient PaymentManagement paymentManagement;
+	
 	private final ConfigPath config = new ConfigPath("/epf/config/management");
 
 	@CacheResult(cacheName = Naming.Management.ORGANIZATION_MANAGEMENT)
 	public Organization createOrganization(@CacheKey final String subject, final Principal principal) throws Exception {
+		
+		final String customerId = paymentManagement.createCustomer(principal.getEmail(), principal.getName());
 		
 		final String clientSecret = config.getValue(Naming.Management.Internal.AUTH_CLIENT_SECRET);
 		final ClientCredential credential = new ClientCredential();
@@ -65,17 +72,19 @@ public class OrganizationManagement {
 		domain.setName(domainName);
 		organizationInfo.setDomains(new ArrayList<>());
 		organizationInfo.getDomains().add(domain);
+		organizationInfo.setAttributes(new LinkedHashMap<>());
+		organizationInfo.getAttributes().put("customer_id", Arrays.asList(customerId));
 		
 		final String location = adminClient.createOrganization(token, organizationInfo);
-		final String id = location.substring(location.lastIndexOf('/') + 1);
+		final String organizationId = location.substring(location.lastIndexOf('/') + 1);
 		
 		final String userId = principal.getSubject();
-		adminClient.addMember(token, id, userId);
+		adminClient.addMember(token, organizationId, userId);
 		
 		final Organization organization = new Organization();
-		organization.setId(id);
+		organization.setId(organizationId);
 		organization.setName(name);
-		organization.setDomain(String.format(organizationDomain, id));
+		organization.setDomain(String.format(organizationDomain, organizationId));
 		
 		persistenceManagement.createPersistence(organization, principal);
 		return organization;
