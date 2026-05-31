@@ -335,14 +335,6 @@ containerSecurityContext:
 ## resourcesPreset: "nano"
 ## @param resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
 ## Example:
-## resources:
-##   requests:
-##     cpu: 2
-##     memory: 512Mi
-##   limits:
-##     cpu: 3
-##     memory: 1024Mi
-##
 resources:
   limits:
     cpu: 150m
@@ -350,6 +342,7 @@ resources:
   requests:
     cpu: 15m
     memory: 128Mi
+##
 ## NATS containers' liveness probe.
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
 ## @param livenessProbe.enabled Enable livenessProbe
