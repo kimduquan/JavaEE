@@ -1,10 +1,12 @@
 package epf.payment.schema;
 
+import java.util.List;
+
 public class PaymentDetailsModifier {
 
 	private String supportedMethods;
 	private PaymentItem total;
-	private PaymentItem[] additionalDisplayItems;
+	private List<PaymentItem> additionalDisplayItems;
 	private Object data;
 	
 	public String getSupportedMethods() {
@@ -19,10 +21,10 @@ public class PaymentDetailsModifier {
 	public void setTotal(PaymentItem total) {
 		this.total = total;
 	}
-	public PaymentItem[] getAdditionalDisplayItems() {
+	public List<PaymentItem> getAdditionalDisplayItems() {
 		return additionalDisplayItems;
 	}
-	public void setAdditionalDisplayItems(PaymentItem[] additionalDisplayItems) {
+	public void setAdditionalDisplayItems(List<PaymentItem> additionalDisplayItems) {
 		this.additionalDisplayItems = additionalDisplayItems;
 	}
 	public Object getData() {

@@ -1,9 +1,9 @@
-package epf.payment.schema;
+package epf.payment.event;
 
-public class PaymentMethodChangeEvent {
+public class PaymentMethodChangeEventInit extends PaymentRequestUpdateEventInit {
 
-	private String methodName;
-	private Object methodDetails;
+	private String methodName = "";
+	private Object methodDetails = null;
 	
 	public String getMethodName() {
 		return methodName;

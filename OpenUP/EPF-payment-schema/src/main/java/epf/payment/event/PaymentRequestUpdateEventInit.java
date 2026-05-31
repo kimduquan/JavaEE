@@ -1,4 +1,4 @@
-package epf.payment.schema;
+package epf.payment.event;
 
 public class PaymentRequestUpdateEventInit {
 
