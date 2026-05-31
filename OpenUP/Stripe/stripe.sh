@@ -1,0 +1,1 @@
+kubectl create secret generic stripe --from-literal=STRIPE_API_KEY=""
