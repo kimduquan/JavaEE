@@ -17,6 +17,8 @@ import epf.management.auth.schema.TokenInfo;
 import epf.management.config.util.ConfigPath;
 import epf.management.external.AdminClient;
 import epf.management.external.AuthClient;
+import epf.management.payment.schema.Customer;
+import epf.management.payment.schema.Product;
 import epf.management.schema.Principal;
 import epf.naming.Naming;
 import io.quarkus.cache.CacheKey;
@@ -54,7 +56,7 @@ public class OrganizationManagement {
 	@CacheResult(cacheName = Naming.Management.ORGANIZATION_MANAGEMENT)
 	public Organization createOrganization(@CacheKey final String subject, final Principal principal) throws Exception {
 		
-		final String customerId = paymentManagement.createCustomer(principal.getEmail(), principal.getName());
+		final Customer customer = paymentManagement.createCustomer(principal.getEmail(), principal.getName());
 		
 		final String clientSecret = config.getValue(Naming.Management.Internal.AUTH_CLIENT_SECRET);
 		final ClientCredential credential = new ClientCredential();
@@ -73,7 +75,7 @@ public class OrganizationManagement {
 		organizationInfo.setDomains(new ArrayList<>());
 		organizationInfo.getDomains().add(domain);
 		organizationInfo.setAttributes(new LinkedHashMap<>());
-		organizationInfo.getAttributes().put("customer_id", Arrays.asList(customerId));
+		organizationInfo.getAttributes().put("customer_id", Arrays.asList(customer.getId()));
 		
 		final String location = adminClient.createOrganization(token, organizationInfo);
 		final String organizationId = location.substring(location.lastIndexOf('/') + 1);
@@ -87,6 +89,10 @@ public class OrganizationManagement {
 		organization.setDomain(String.format(organizationDomain, organizationId));
 		
 		persistenceManagement.createPersistence(organization, principal);
+		
+		final Product defaultProduct = paymentManagement.getDefaultProduct();
+		paymentManagement.createTrialSubscription(customer.getId(), defaultProduct.getDefault_price_id());
+		
 		return organization;
 	}
 	
