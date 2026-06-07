@@ -669,6 +669,27 @@ public interface Naming {
 	/**
 	 * 
 	 */
+	String PAYMENT = "payment";
+	
+	/**
+	 * 
+	 */
+	interface Payment {
+		
+		/**
+		 * 
+		 */
+		String DEFAULT_PRODUCT_ID = "epf.payment.product.default.id";
+		
+		/**
+		 * 
+		 */
+		String PRODUCT_TRIAL_PERIOD_DAYS = "epf.payment.product.trial.period.days";
+	}
+	
+	/**
+	 * 
+	 */
 	String PERSISTENCE = "persistence";
 	
 	/**
