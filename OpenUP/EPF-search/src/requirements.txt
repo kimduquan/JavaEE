@@ -1,7 +1,7 @@
 fastapi[standard]==0.136.3
-opentelemetry-instrumentation==0.61b0
-opentelemetry-distro[otlp]==0.61b0
-turbovec==0.5.3
+opentelemetry-instrumentation==0.63b1
+opentelemetry-distro[otlp]==0.63b1
+turbovec==0.7.0
 langchain-openai==1.2.2
 aiocache==0.12.3
 PyJWT==2.13.0
