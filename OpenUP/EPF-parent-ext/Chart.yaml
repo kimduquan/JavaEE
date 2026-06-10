@@ -47,10 +47,10 @@ dependencies:
   repository: "file://../EPF-query/target/helm/kubernetes/epf-query"
 - name: epf-registry
   version: "1.0.0"
-  repository: "file://../EPF-search/target/helm/kubernetes/epf-search"
+  repository: "file://../EPF-search/target/helm/kubernetes/epf-registry"
 - name: epf-search
   version: "1.0.0"
-  repository: "file://../EPF-registry/target/helm/kubernetes/epf-registry"
+  repository: "file://../EPF-registry/target/helm/kubernetes/epf-search"
 - name: epf-transaction
   version: "1.0.0"
   repository: "file://../EPF-transaction/target/helm/kubernetes/epf-transaction"
