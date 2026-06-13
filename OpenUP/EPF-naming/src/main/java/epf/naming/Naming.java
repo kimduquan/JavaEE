@@ -679,12 +679,12 @@ public interface Naming {
 		/**
 		 * 
 		 */
-		String DEFAULT_PRODUCT_ID = "epf.payment.product.default.id";
+		String PRODUCT_ID = "epf.payment.product.id";
 		
 		/**
 		 * 
 		 */
-		String PRODUCT_TRIAL_PERIOD_DAYS = "epf.payment.product.trial.period.days";
+		String TRIAL_PERIOD_DAYS = "epf.payment.trial.period.days";
 	}
 	
 	/**
