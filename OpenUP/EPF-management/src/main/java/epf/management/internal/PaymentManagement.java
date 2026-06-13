@@ -16,12 +16,12 @@ import jakarta.inject.Inject;
 public class PaymentManagement {
 	
 	@Inject
-	@ConfigProperty(name = Naming.Payment.DEFAULT_PRODUCT_ID)
-	String defaultProductId;
+	@ConfigProperty(name = Naming.Payment.PRODUCT_ID)
+	String productId;
 	
 	@Inject
-	@ConfigProperty(name = Naming.Payment.PRODUCT_TRIAL_PERIOD_DAYS)
-	Integer productTrialPeriodDays;
+	@ConfigProperty(name = Naming.Payment.TRIAL_PERIOD_DAYS)
+	Integer trialPeriodDays;
 	
 	private final ConfigPath config = new ConfigPath("/epf/config/payment");
 	
@@ -34,7 +34,7 @@ public class PaymentManagement {
 	public Product getDefaultProduct() throws Exception {
 		final Product defaultProduct = new Product();
 		final StripeClient client = getClient();
-		final com.stripe.model.Product product = client.v1().products().retrieve(defaultProductId);
+		final com.stripe.model.Product product = client.v1().products().retrieve(productId);
 		defaultProduct.setId(product.getId());
 		defaultProduct.setDefault_price_id(product.getDefaultPrice());
 		defaultProduct.setDescription(product.getDescription());
@@ -65,7 +65,7 @@ public class PaymentManagement {
 				    .addItem(
 				      SubscriptionCreateParams.Item.builder().setPrice(priceId).build()
 				    )
-				    .setTrialPeriodDays(productTrialPeriodDays.longValue())
+				    .setTrialPeriodDays(trialPeriodDays.longValue())
 				    .build();
 		final com.stripe.model.Subscription subscription = client.v1().subscriptions().create(params);
 		trialSubscription.setCustomer_id(subscription.getCustomer());
