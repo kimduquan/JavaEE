@@ -1,5 +1,10 @@
 from datetime import datetime, timezone
 from typing import Annotated, Any, TypedDict
+from opentelemetry import trace
+from opentelemetry.sdk.resources import Resource
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import StreamingResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -7,6 +12,22 @@ from pydantic import BaseModel
 from redis.asyncio import Redis as AsyncRedis
 from redis import Redis as SyncRedis
 import uvicorn
+import os
+
+# Configure OpenTelemetry
+service_name = os.environ.get("OTEL_SERVICE_NAME", "epf-agent")
+otlp_endpoint = os.environ.get("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:4318")
+resource = Resource(
+    {"service.name": service_name}
+)
+provider = TracerProvider(resource=resource)
+otlp_exporter = OTLPSpanExporter(
+    endpoint=otlp_endpoint,
+    insecure=True
+)
+provider.add_span_processor(BatchSpanProcessor(otlp_exporter))
+trace.set_tracer_provider(provider)
+
 from langchain_openai import ChatOpenAI
 from langgraph.graph.state import CompiledStateGraph, StateGraph
 from langchain.agents.factory import create_agent
