@@ -13,6 +13,7 @@ This repository is a complex LangGraph/LangChain implementation of an AI Agent, 
     *   `./start.sh`: Deploys the agent using Kubernetes manifests (`kubectl apply -f kubernetes.yml`) and ensures proper scaling (`kubectl autoscale`).
 
 ## ⚠️ Operational Gotchas
+*   **Multi-Tenancy (Organization):** The system is multi-tenant. Each tenant is identified as an organization. The organization ID is securely retrieved from the JWT token's claims during the request authentication process.
 *   **Environment Configuration:** The agent relies heavily on several critical environment variables to function, including:
     *   `OPENAI_API_KEY` / `OPENAI_BASE_URL` (for LLMs).
     *   `MCP_SERVER_URL` (for tool/agent communication).
