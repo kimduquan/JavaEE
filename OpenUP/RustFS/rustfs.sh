@@ -1,1 +1,1 @@
-helm install rustfs -f values-rustfs.yaml --wait --set ingress.className="nginx"
+helm install rustfs -f values-rustfs.yaml --wait

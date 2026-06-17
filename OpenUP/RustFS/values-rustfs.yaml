@@ -34,7 +34,7 @@ fullnameOverride: ""
 
 mode:
   standalone:
-    enabled: false
+    enabled: true
     strategy:
       type: RollingUpdate
       rollingUpdate:
@@ -44,7 +44,7 @@ mode:
       dataClaim: ""
       logsClaim: ""
   distributed:
-    enabled: true
+    enabled: false
 
 secret:
   existingSecret: ""
@@ -196,7 +196,7 @@ service:
 
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
-  enabled: true
+  enabled: false
   className: "nginx" # Specify the classname, traefik or nginx. Different classname has different annotations for session sticky.
   traefikAnnotations: {} # Deprecated: use service.traefikAnnotations instead
   nginxAnnotations:
