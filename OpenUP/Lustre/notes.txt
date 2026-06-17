@@ -1,4 +1,0 @@
-https://stacklab.vn/lua-chon-he-dieu-hanh-cho-lustre-server/
-https://downloads.whamcloud.com/public/lustre/latest-feature-release/ubuntu2404/client
-https://github.com/microsoft/WSL/issues/11293
-http://download.zfsonlinux.org/epel/8/zfs-release-2-8.el8.noarch.rpm
