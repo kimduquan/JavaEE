@@ -196,8 +196,8 @@ service:
 
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
-  enabled: false
-  className: "nginx" # Specify the classname, traefik or nginx. Different classname has different annotations for session sticky.
+  enabled: true
+  className: "haproxy" # Specify the classname, traefik or nginx. Different classname has different annotations for session sticky.
   traefikAnnotations: {} # Deprecated: use service.traefikAnnotations instead
   nginxAnnotations:
     nginx.ingress.kubernetes.io/affinity: cookie
@@ -210,15 +210,15 @@ ingress:
   customAnnotations: # Deprecated: use ingress.annotations instead
     {}
   hosts:
-    - host: example.rustfs.com
+    - host: suitably-useful-arachnid.ngrok-free.app
       paths:
         - path: /
           pathType: Prefix
   tls:
-    enabled: false # Enable tls and access rustfs via https.
+    enabled: true # Enable tls and access rustfs via https.
 
     certManager:
-      enabled: false # Enable certmanager to generate certificate for rustfs, default false.
+      enabled: true # Enable certmanager to generate certificate for rustfs, default false.
 
     existingSecret:
       # To use an existing secret for tls certificates in the ingress enable this,
