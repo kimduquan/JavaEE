@@ -67,7 +67,7 @@ config:
     # volumes: "http://rustfs-{0...3}.rustfs-headless:9000/data/rustfs{0...3}"
     volumes: ""
     address: ":9000"
-    console_enable: "true"
+    console_enable: "false"
     console_address: ":9001"
     log_level: "info"
     region: "us-east-1"
