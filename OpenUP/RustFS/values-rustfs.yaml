@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 # This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
-replicaCount: 4
+replicaCount: 1
 
 # This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
 image:
@@ -34,7 +34,7 @@ fullnameOverride: ""
 
 mode:
   standalone:
-    enabled: true
+    enabled: false
     strategy:
       type: RollingUpdate
       rollingUpdate:
@@ -44,10 +44,10 @@ mode:
       dataClaim: ""
       logsClaim: ""
   distributed:
-    enabled: false
+    enabled: true
 
 secret:
-  existingSecret: ""
+  existingSecret: "rustfs"
   # SECURITY: rendering fails by default unless one of the following is true:
   #   1. `secret.existingSecret` names a Kubernetes Secret you control, or
   #   2. `secret.rustfs.access_key` and `secret.rustfs.secret_key` are both
@@ -57,15 +57,15 @@ secret:
   # `rustfsadmin/rustfsadmin` credentials.
   allowInsecureDefaults: false
   rustfs:
-    access_key: "85da6aac2aba19a6dbf66034d199af599616644578306c8f7116e86f4fb0a7a3"
-    secret_key: "064f13d6b689a11459949e5d5259158230eed290780de054b50c60e1d3c130fd"
+    access_key: ""
+    secret_key: ""
 
 config:
   rustfs:
     # Examples
     # volumes: "/data/rustfs0,/data/rustfs1,/data/rustfs2,/data/rustfs3"
     # volumes: "http://rustfs-{0...3}.rustfs-headless:9000/data/rustfs{0...3}"
-    volumes: ""
+    volumes: "/data"
     address: ":9000"
     console_enable: "true"
     console_address: ":9001"
@@ -196,7 +196,7 @@ service:
 
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
-  enabled: true
+  enabled: false
   className: "haproxy" # Specify the classname, traefik or nginx. Different classname has different annotations for session sticky.
   traefikAnnotations: {} # Deprecated: use service.traefikAnnotations instead
   nginxAnnotations:
@@ -213,10 +213,6 @@ ingress:
     - host: suitably-useful-arachnid.ngrok-free.app
       paths:
         - path: /
-          pathType: Prefix
-    - host: localhost
-      paths:
-        - path: /rustfs
           pathType: Prefix
   tls:
     enabled: false # Enable tls and access rustfs via https.
