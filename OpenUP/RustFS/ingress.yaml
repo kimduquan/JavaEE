@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rustfs
+spec:
+  ingressClassName: haproxy
+  rules:
+  - host: "suitably-useful-arachnid.ngrok-free.app"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: rustfs-svc
+            port:
+              name: endpoint
