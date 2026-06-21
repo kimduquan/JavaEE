@@ -8,5 +8,5 @@ kubectl create secret generic supavisor --from-literal=SECRET_KEY_BASE="dc9b0878
 #kubectl wait deployment --for condition=available --timeout=300s supavisor
 #kubectl wait pod --for condition=ready --timeout=300s -l app.kubernetes.io/name=supavisor
 kubectl apply -f tls.yml
-helm install supavisor target/helm/kubernetes/supavisor --wait
+helm upgrade --install supavisor target/helm/kubernetes/supavisor --wait
 kubectl autoscale deployment supavisor --max 2
