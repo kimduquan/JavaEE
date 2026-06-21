@@ -215,10 +215,10 @@ ingress:
         - path: /
           pathType: Prefix
   tls:
-    enabled: true # Enable tls and access rustfs via https.
+    enabled: false # Enable tls and access rustfs via https.
 
     certManager:
-      enabled: true # Enable certmanager to generate certificate for rustfs, default false.
+      enabled: false # Enable certmanager to generate certificate for rustfs, default false.
 
     existingSecret:
       # To use an existing secret for tls certificates in the ingress enable this,
