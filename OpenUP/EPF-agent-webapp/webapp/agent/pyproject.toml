@@ -19,5 +19,6 @@ dependencies = [
     "langchain-redis==0.2.5",
     "opentelemetry-instrumentation-fastapi==0.63b1",
     "opentelemetry-exporter-otlp-proto-grpc==1.42.1",
-    "openinference-instrumentation-langchain[instruments]==0.1.66"
+    "openinference-instrumentation-langchain[instruments]==0.1.66",
+    "deepagents-acp==0.0.8"
 ]
