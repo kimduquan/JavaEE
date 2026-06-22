@@ -111,7 +111,11 @@ public class Gateway {
 			@ToolArg(name = "pattern", description = "Glob pattern to match files (e.g., '**/*.py', '*.txt', '/subdir/**/*.md').")
 			final String pattern,
 			@ToolArg(name = "path", description = "Base directory to search from. Defaults to the backend's default root.", required = false, defaultValue = "")
-			final String path
+			final String path,
+			@ToolArg(name = "glob", description = "Glob pattern to filter which files to search (e.g., '*.py').")
+			final String glob,
+			@ToolArg(name = "output_mode", description = "Output format: 'files_with_matches' (file paths only, default), 'content' (matching lines with context), 'count' (match counts per file).", required = false, defaultValue = "files_with_matches")
+			final String output_mode
 			) {
 		final SearchResult result = new SearchResult();
 		return result;
@@ -126,7 +130,7 @@ public class Gateway {
 	}
 	
 	//@Prompt(name = Naming.PERSISTENCE, description = "create, update, delete data in database")
-	@RunOnVirtualThread
+	//@RunOnVirtualThread
 	PromptMessage getPersistencePrompt(@PromptArg(name = "schema_name") final String schemaName) throws Exception {
 		final StringBuilder prompt = new StringBuilder();
 		final SchemaBuilder schemaBuilder = new SchemaBuilder();
@@ -141,7 +145,7 @@ public class Gateway {
 	}
 
 	//@Prompt(name = Naming.QUERY, description = "read data in database")
-	@RunOnVirtualThread
+	//@RunOnVirtualThread
 	PromptMessage getQueryPrompt(@PromptArg(name = "schema_name") final String schemaName) throws Exception {
 		final StringBuilder prompt = new StringBuilder();
 		final SchemaBuilder schemaBuilder = new SchemaBuilder();
@@ -156,7 +160,7 @@ public class Gateway {
 	}
 	
 	//@Prompt(name = "chrome_devtools", description = "browsing web content")
-	@RunOnVirtualThread
+	//@RunOnVirtualThread
 	PromptMessage get(@PromptArg(name = "url") final String url) throws Exception {
 		final StringBuilder prompt = new StringBuilder();
 		prompt.append("\n\nUse provided tools to answer user's question.");
