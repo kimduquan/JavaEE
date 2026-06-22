@@ -32,15 +32,14 @@ import jakarta.ws.rs.core.PathSegment;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.StreamingOutput;
 import jakarta.ws.rs.core.UriInfo;
+import software.amazon.awssdk.services.s3.S3Client;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.file.util.EntityOutput;
-import epf.file.internal.FileWatchService;
 import epf.file.internal.PathBuilder;
 import epf.file.util.FileUtil;
 import epf.file.util.PathUtil;
-import epf.file.validation.PathValidator;
 import epf.management.util.OrganizationUtil;
 import epf.naming.Naming;
 import epf.naming.Naming.Security;
@@ -54,28 +53,11 @@ public class FileStore {
 	
 	private transient static final Logger LOGGER = LogManager.getLogger(FileStore.class.getName());
 	
-	@Inject
-	transient FileSystem system;
-	
-	@ConfigProperty(name = Naming.File.ROOT)
-	@Inject
-	transient String rootFolder;
+	@ConfigProperty(name = Naming.File.BUCKET_NAME)
+	String bucketName;
 	
 	@Inject
-	@Readiness
-	transient FileWatchService watchService;
-	
-	@PostConstruct
-	void postConstruct() {
-		final Path rootPath = system.getPath(rootFolder);
-		try {
-			LOGGER.info("[FileStore]epf.file.root=" + rootPath.toAbsolutePath().toString());
-			Files.list(rootPath).forEach(watchService::register);
-		}
-		catch(Exception ex) {
-			LOGGER.log(Level.SEVERE, "[FileStore.watchService]", ex);
-		}
-	}
+	S3Client client;
 
 	@POST
 	@jakarta.ws.rs.Path("{paths: .+}")
@@ -91,9 +73,8 @@ public class FileStore {
 			@Context
 			final JsonWebToken jwt
 			) throws Exception {
-		PathValidator.validate(paths, jwt, HttpMethod.POST);
 		final String organization = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
-		final PathBuilder builder = new PathBuilder(system, rootFolder, organization);
+		final PathBuilder builder = new PathBuilder(bucketName, organization);
 		final Path targetFolder = builder
 				.paths(paths)
 				.build();
@@ -130,7 +111,6 @@ public class FileStore {
     		@Context
 			final JsonWebToken jwt
     		) throws Exception {
-		PathValidator.validate(paths, jwt, HttpMethod.GET);
 		final String organization = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
 		final PathBuilder builder = new PathBuilder(system, rootFolder, organization);
 		final Path targetFile = builder
@@ -150,7 +130,6 @@ public class FileStore {
     		final List<PathSegment> paths,
     		@Context
 			final JsonWebToken jwt) throws Exception {
-		PathValidator.validate(paths, jwt, HttpMethod.DELETE);
 		final String organization = OrganizationUtil.getOrganizationId(jwt).orElseThrow(ForbiddenException::new);
 		final PathBuilder builder = new PathBuilder(system, rootFolder, organization);
 		final Path targetFile = builder
