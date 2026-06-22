@@ -1,10 +1,10 @@
-from typing import Any, TypedDict
+from typing import Any
 from acp import run_agent
 from deepagents import CompiledSubAgent, create_deep_agent
 from deepagents_acp.server import AgentServerACP
-from langchain.agents import AgentState
+from deepagents.profiles import HarnessProfile, register_harness_profile
+from langchain.agents import AgentState, create_agent
 from langchain.agents.middleware.types import AgentMiddleware
-from langchain.messages import SystemMessage
 from langchain.tools import BaseTool
 from langchain_mcp_adapters.interceptors import MCPToolCallRequest, ToolCallInterceptor
 from langchain_mcp_adapters.tools import load_mcp_tools
@@ -147,16 +147,66 @@ async def get_cache(organization: str) -> BaseCache:
     redis_cache = RedisCache(redis_url=redis_url, prefix=prefix, redis_client=redis_client)
     return redis_cache
 
-async def get_agent(organization: str):
+async def create_sub_agent(
+        organization: str,
+        authorization: HTTPAuthorizationCredentials,
+        prompt: Prompt,
+        model: ChatOpenAI,
+        checkpointer: Checkpointer,
+        store: BaseStore,
+        cache: BaseCache) -> CompiledSubAgent:
+    server_name = prompt.name
+    client = get_client(server_name=server_name, authorization=authorization)
+    tools = await load_tools(client=client, server_name=server_name)
+    system_prompt = await client.get_prompt(server_name=server_name, prompt_name=prompt.name)
+    name = prompt.name + "-" + organization
+    agent = create_agent(
+        model=model,
+        tools=tools,
+        system_prompt=system_prompt[0].content,
+        middleware=[DeepAgentMiddleware()],
+        response_format=dict[str, Any],
+        state_schema=DeepAgentState,
+        context_schema=DeepAgentContext,
+        checkpointer=checkpointer,
+        store=store,
+        debug=DEBUG,
+        name=name,
+        cache=cache
+    )
+    sub_agent = CompiledSubAgent(name = prompt.name, description=prompt.description, agent=agent, runnable=agent)
+    return sub_agent
+
+async def create_supervisor_agent(organization: str, authorization: HTTPAuthorizationCredentials):
     model = await get_model(organization=organization)
-    tools: list[BaseTool] = []
-    system_prompt = SystemMessage()
+    server_name = DEFAULT_SERVER_NAME
+    client = get_client(server_name=server_name, authorization=authorization)
+    tools = await load_tools(client=client, server_name=server_name)
+    prompts = await list_prompts(client=client, server_name=server_name)
+    system_prompt: str | None = None
+    sub_agent_prompts: list[Prompt] = []
+    for agent_prompt in prompts:
+        if (agent_prompt.name == DEFAULT_SERVER_NAME):
+            prompt = await client.get_prompt(server_name=server_name, prompt_name=agent_prompt.name)
+            system_prompt = prompt[0].content
+        else:
+            sub_agent_prompts.append(agent_prompt)
     subagents: list[CompiledSubAgent] = []
-    backend = AgentBackend()
     checkpointer = await get_checkpointer(organization=organization)
     store = await get_store(organization=organization)
-    name = AGENT_NAME_PREFIX + organization
     cache = await get_cache(organization=organization)
+    for sub_agent_prompt in sub_agent_prompts:
+        sub_agent = await create_sub_agent(
+            organization=organization, 
+            authorization=authorization, 
+            prompt=sub_agent_prompt, 
+            model=model, 
+            checkpointer=checkpointer,
+            store=store, 
+            cache=cache)
+        subagents.append(sub_agent)
+    backend = AgentBackend()
+    name = AGENT_NAME_PREFIX + organization
     agent = create_deep_agent(
         model=model,
         tools=tools,
@@ -175,15 +225,18 @@ async def get_agent(organization: str):
     )
     return agent
 
-async def get_server(organization: str) -> AgentServerACP:
-    agent = await get_agent(organization=organization)
+async def get_server(organization: str, authorization: HTTPAuthorizationCredentials) -> AgentServerACP:
+    agent = await create_supervisor_agent(organization=organization, authorization=authorization)
     server = AgentServerACP(agent)
     return server
 
-async def run(organization: str) -> None:
-    server = get_server(organization=organization)
+async def run(organization: str, authorization: HTTPAuthorizationCredentials) -> None:
+    server = await get_server(organization=organization, authorization=authorization)
     await run_agent(server)
 
 if __name__ == "__main__":
+    profile = HarnessProfile(excluded_tools=frozenset({""}))
+    register_harness_profile(key="openai", profile=profile)
     organization = sys.argv[1]
-    asyncio.run(run(organization=organization))
+    authorization = HTTPAuthorizationCredentials()
+    asyncio.run(run(organization=organization, authorization=authorization))
