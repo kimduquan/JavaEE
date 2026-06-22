@@ -1,14 +1,13 @@
 package epf.mcp.gateway;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
-
 import epf.mcp.gateway.schema.EditResult;
 import epf.mcp.gateway.schema.FindResult;
 import epf.mcp.gateway.schema.ListResult;
+import epf.mcp.gateway.schema.Prompts;
 import epf.mcp.gateway.schema.ReadResult;
 import epf.mcp.gateway.schema.SearchResult;
 import epf.mcp.gateway.schema.ToolDescriptions;
@@ -122,19 +121,11 @@ public class Gateway {
 	@RunOnVirtualThread
 	PromptMessage getGatewayPrompt() throws Exception {
 		final StringBuilder prompt = new StringBuilder();
-		final String authorization = "Bearer " + jwt.getRawToken();
-		final Set<String> schemas = schemaClient.getEntities(authorization).stream().map(entityType -> entityType.getTable().getSchema()).collect(Collectors.toSet());
-		prompt.append("""
-		Given below schemas : \n
-		""");
-		schemas.forEach(schema -> {
-			prompt.append(String.format("\t - '%s'\n", schema));
-		});
-		prompt.append("\n\nUse provided tools to answer user's question.");
+		prompt.append(Prompts.AGENT_PROMPT);
 		return PromptMessage.withAssistantRole(prompt.toString());
 	}
 	
-	@Prompt(name = Naming.PERSISTENCE, description = "create, update, delete data in database")
+	//@Prompt(name = Naming.PERSISTENCE, description = "create, update, delete data in database")
 	@RunOnVirtualThread
 	PromptMessage getPersistencePrompt(@PromptArg(name = "schema_name") final String schemaName) throws Exception {
 		final StringBuilder prompt = new StringBuilder();
@@ -149,7 +140,7 @@ public class Gateway {
 		return PromptMessage.withAssistantRole(prompt.toString());
 	}
 
-	@Prompt(name = Naming.QUERY, description = "read data in database")
+	//@Prompt(name = Naming.QUERY, description = "read data in database")
 	@RunOnVirtualThread
 	PromptMessage getQueryPrompt(@PromptArg(name = "schema_name") final String schemaName) throws Exception {
 		final StringBuilder prompt = new StringBuilder();
@@ -164,7 +155,7 @@ public class Gateway {
 		return PromptMessage.withAssistantRole(prompt.toString());
 	}
 	
-	@Prompt(name = "chrome_devtools", description = "browsing web content")
+	//@Prompt(name = "chrome_devtools", description = "browsing web content")
 	@RunOnVirtualThread
 	PromptMessage get(@PromptArg(name = "url") final String url) throws Exception {
 		final StringBuilder prompt = new StringBuilder();
