@@ -1,0 +1,24 @@
+{
+  "tenant": {
+    "allow_list": [
+      "0.0.0.0/0",
+      "::/0"
+    ],
+    "db_database": "gitea",
+    "db_host": "postgresql-primary",
+    "db_port": 5432,
+    "enforce_ssl": false,
+    "ip_version": "auto",
+    "require_user": true,
+    "users": [
+      {
+        "db_password": "090323508",
+        "db_user": "gitea",
+        "max_clients": 25000,
+        "mode_type": "transaction",
+        "pool_checkout_timeout": 1000,
+        "pool_size": 10
+      }
+    ]
+  }
+}
