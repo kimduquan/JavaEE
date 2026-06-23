@@ -443,17 +443,17 @@ gitea:
   ## @param gitea.oauth OAuth configuration
   oauth:
     # []
-      - name: "EPF"
-        provider: "openidConnect"
-    #   key:
-    #   secret:
-        existingSecret: "gitea"
-        autoDiscoverUrl: "https://chipmunk-capable-prawn.ngrok-free.app/auth/realms/EPF-dev/.well-known/openid-configuration"
-    #   useCustomUrls:
-    #   customAuthUrl:
-    #   customTokenUrl:
-    #   customProfileUrl:
-    #   customEmailUrl:
+    - name: "EPF"
+      provider: "openidConnect"
+    # key:
+    # secret:
+      existingSecret: "gitea"
+      autoDiscoverUrl: "https://chipmunk-capable-prawn.ngrok-free.app/auth/realms/EPF-dev/.well-known/openid-configuration"
+    # useCustomUrls:
+    # customAuthUrl:
+    # customTokenUrl:
+    # customProfileUrl:
+    # customEmailUrl:
 
   ## @param gitea.config.server.SSH_PORT SSH port for rootlful Gitea image
   ## @param gitea.config.server.SSH_LISTEN_PORT SSH port for rootless Gitea image
@@ -469,13 +469,13 @@ gitea:
       NAME: gitea
     session:
       PROVIDER: redis
-      PROVIDER_CONFIG: redis://:090323508@redis-master:6379/0
+      PROVIDER_CONFIG: "redis://:090323508@redis-master:6379/0"
     cache:
       ADAPTER: redis
-      HOST: redis://:090323508@redis-master:6379/0?pool_size=100&idle_timeout=180s
+      HOST: "redis://:090323508@redis-master:6379/0?pool_size=100&idle_timeout=180s"
     queue:
       TYPE: redis
-      CONN_STR: redis://:090323508@redis-master:6379/0
+      CONN_STR: "redis://:090323508@redis-master:6379/0"
   #
   #  security:
   #    PASSWORD_COMPLEXITY: spec
