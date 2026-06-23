@@ -261,22 +261,11 @@ public interface Naming {
 	     * 
 	     */
 	    String FILE_URL = "epf.file.url";
-		
-	    /**
-	     * 
-	     */
-	    String ROOT = "epf.file.root";
 	    
 	    /**
 	     * 
 	     */
-	    interface Cache {
-	    	
-	    	/**
-		     * 
-		     */
-		    String ROOT = "epf.file.cache.root";
-	    }
+	    String BUCKET_NAME = "epf.file.bucket.name";
 	}
 	
 	/**
