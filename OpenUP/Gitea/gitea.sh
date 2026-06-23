@@ -1,3 +1,3 @@
-kubectl create secret generic gitea --from-literal=secret='cIkzKJZ4A7jXKpXfaxC4GaLxJAmmEqhP' --from-literal=key='account' --from-literal=username='gitea_admin' --from-literal=password='r8sA8CPHD9!bt6d' --from-literal=database_user='gitea.gitea' --from-literal=database_passwd='090323508'
+kubectl create secret generic gitea-secret --from-literal=secret='cIkzKJZ4A7jXKpXfaxC4GaLxJAmmEqhP' --from-literal=key='account' --from-literal=username='gitea_admin' --from-literal=password='r8sA8CPHD9!bt6d' --from-literal=database_user='gitea.gitea' --from-literal=database_passwd='090323508'
 helm repo add gitea-charts https://dl.gitea.com/charts/
 helm install gitea gitea-charts/gitea --wait -f values.yaml
