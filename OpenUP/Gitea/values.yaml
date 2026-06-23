@@ -480,7 +480,7 @@ gitea:
   #    PASSWORD_COMPLEXITY: spec
 
   ## @param gitea.additionalConfigSources Additional configuration from secret or configmap
-  additionalConfigSources: []
+  additionalConfigSources:
     - secret:
       secretName: gitea
   #   - configMap:
