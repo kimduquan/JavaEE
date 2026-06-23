@@ -481,8 +481,8 @@ gitea:
 
   ## @param gitea.additionalConfigSources Additional configuration from secret or configmap
   additionalConfigSources: []
-  #   - secret:
-  #       secretName: gitea-app-ini-oauth
+    - secret:
+        secretName: gitea
   #   - configMap:
   #       name: gitea-app-ini-plaintext
 
