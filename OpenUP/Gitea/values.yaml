@@ -481,9 +481,11 @@ gitea:
     service:
       ENABLE_BASIC_AUTHENTICATION: false
       ENABLE_PASSWORD_SIGNIN_FORM: false
+      ENABLE_PASSKEY_AUTHENTICATION: false
       ALLOW_ONLY_EXTERNAL_REGISTRATION: true
       explore:
         REQUIRE_SIGNIN_VIEW: true
+        DISABLE_USERS_PAGE: true
         DISABLE_ORGANIZATIONS_PAGE: true
   #
   #  security:
