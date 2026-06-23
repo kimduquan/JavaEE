@@ -446,6 +446,7 @@ gitea:
       provider: "openidConnect"
       # key:
       # secret:
+      existingSecret: gitea-secret
       autoDiscoverUrl: "https://chipmunk-capable-prawn.ngrok-free.app/auth/realms/EPF-dev/.well-known/openid-configuration"
       # useCustomUrls:
       # customAuthUrl:
