@@ -467,7 +467,6 @@ gitea:
       DB_TYPE: postgres
       HOST: supavisor:6543
       NAME: gitea
-      SCHEMA: gitea
     session:
       PROVIDER: redis
       PROVIDER_CONFIG: redis://:090323508@redis-master:6379/0
