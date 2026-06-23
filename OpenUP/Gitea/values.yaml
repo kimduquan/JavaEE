@@ -394,7 +394,6 @@ gitea:
   ## @param gitea.admin.email Email for the Gitea admin user
   ## @param gitea.admin.passwordMode Mode for how to set/update the admin user password. Options are: initialOnlyNoReset, initialOnlyRequireReset, and keepUpdated
   admin:
-    # existingSecret: gitea-admin-secret
     existingSecret: gitea
     # username: gitea_admin
     # password: r8sA8CPHD9!bt6d
@@ -447,7 +446,7 @@ gitea:
       provider: "openidConnect"
     # key:
     # secret:
-      existingSecret: gitea
+    # existingSecret: gitea
       autoDiscoverUrl: "https://chipmunk-capable-prawn.ngrok-free.app/auth/realms/EPF-dev/.well-known/openid-configuration"
     # useCustomUrls:
     # customAuthUrl:
