@@ -462,6 +462,7 @@ gitea:
     server:
       SSH_PORT: 22 # rootful image
       SSH_LISTEN_PORT: 2222 # rootless image
+      ROOT_URL: "https://touching-pika-enabled.ngrok-free.app"
     database:
       DB_TYPE: postgres
       HOST: supavisor:6543
@@ -475,6 +476,15 @@ gitea:
     queue:
       TYPE: redis
       CONN_STR: "redis://:090323508@redis-master:6379/0"
+    admin:
+      DISABLE_REGULAR_ORG_CREATION: true
+    service:
+      ENABLE_BASIC_AUTHENTICATION: false
+      ENABLE_PASSWORD_SIGNIN_FORM: false
+      ALLOW_ONLY_EXTERNAL_REGISTRATION: true
+      explore:
+        REQUIRE_SIGNIN_VIEW: true
+        DISABLE_ORGANIZATIONS_PAGE: true
   #
   #  security:
   #    PASSWORD_COMPLEXITY: spec
