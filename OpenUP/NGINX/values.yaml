@@ -441,7 +441,11 @@ autoscaling:
   targetMemory: ""
 ## @param extraVolumes Array to add extra volumes
 ##
-extraVolumes: []
+extraVolumes:
+  - name: ssh-dir
+    secret:
+      secretName: git-ssh
+      defaultMode: 0400
 ## @param extraVolumeMounts Array to add extra mount
 ##
 extraVolumeMounts: []
@@ -532,7 +536,7 @@ cloneStaticSiteFromGit:
     pullSecrets: []
   ## @param cloneStaticSiteFromGit.repository Git Repository to clone static content from
   ##
-  repository: "webapp"
+  repository: "git@gitea:kimduquan03/webapp.git"
   ## @param cloneStaticSiteFromGit.branch Git branch to checkout
   ##
   branch: "main"
@@ -587,11 +591,11 @@ cloneStaticSiteFromGit:
   ## @param cloneStaticSiteFromGit.extraVolumeMounts Add extra volume mounts for the Git containers
   ## Useful to mount keys to connect through ssh. (normally used with extraVolumes)
   ## E.g:
-  ## extraVolumeMounts:
-  ##   - name: ssh-dir
-  ##     mountPath: /root/.ssh/
+  extraVolumeMounts:
+    - name: ssh-dir
+      mountPath: /root/.ssh/
   ##
-  extraVolumeMounts: []
+  ## extraVolumeMounts: []
 ## @param serverBlock Custom server block to be added to NGINX configuration
 ## PHP-FPM example server block:
 ## serverBlock: |-
