@@ -167,7 +167,7 @@
 		<dependency>
 			<groupId>org.eclipse.jnosql.databases</groupId>
 			<artifactId>jnosql-redis</artifactId>
-			<version>1.2.0-M1</version>
+			<version>1.1.14</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.quarkiverse.jnosql/quarkus-jnosql-keyvalue-hazelcast -->
 		<dependency>
@@ -191,7 +191,7 @@
 		<dependency>
 		    <groupId>org.eclipse.jnosql.mapping</groupId>
 		    <artifactId>jnosql-mapping-reflection</artifactId>
-		    <version>1.2.0-M1</version>
+		    <version>1.1.14</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.quarkus/quarkus-smallrye-opentracing -->
 		<dependency>
