@@ -13,7 +13,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
 		<quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-		<quarkus.platform.version>3.36.2</quarkus.platform.version>
+		<quarkus.platform.version>3.36.3</quarkus.platform.version>
 		<skipITs>true</skipITs>
 		<surefire-plugin.version>3.5.5</surefire-plugin.version>
 		<narayana.version>7.2.2.Final</narayana.version>
@@ -32,14 +32,14 @@
 		<dependency>
 			<groupId>io.quarkiverse.mcp</groupId>
 			<artifactId>quarkus-mcp-server-bom</artifactId>
-			<version>1.12.0</version>
+			<version>1.13.0</version>
 			<type>pom</type>
 			<scope>import</scope>
 		</dependency>
 		<dependency>
 			<groupId>io.quarkus.platform</groupId>
 			<artifactId>quarkus-amazon-services-bom</artifactId>
-			<version>3.36.2</version>
+			<version>3.36.3</version>
 			<type>pom</type>
 			<scope>import</scope>
 		</dependency>
@@ -47,19 +47,19 @@
 		<dependency>
 			<groupId>org.neo4j</groupId>
 			<artifactId>neo4j-ogm-core</artifactId>
-			<version>5.0.5</version>
+			<version>5.0.6</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.neo4j/neo4j-ogm-bolt-driver -->
 		<dependency>
 			<groupId>org.neo4j</groupId>
 			<artifactId>neo4j-ogm-bolt-driver</artifactId>
-			<version>5.0.5</version>
+			<version>5.0.6</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.neo4j.driver/neo4j-java-driver -->
 		<dependency>
 			<groupId>org.neo4j.driver</groupId>
 			<artifactId>neo4j-java-driver</artifactId>
-			<version>6.0.5</version>
+			<version>6.2.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/dev.langchain4j/langchain4j-neo4j -->
 		<dependency>
@@ -71,19 +71,19 @@
 		<dependency>
 			<groupId>dev.langchain4j</groupId>
 			<artifactId>langchain4j</artifactId>
-			<version>1.13.1</version>
+			<version>1.16.3</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/dev.langchain4j/langchain4j-ollama -->
 		<dependency>
 		    <groupId>dev.langchain4j</groupId>
 		    <artifactId>langchain4j-ollama</artifactId>
-		    <version>1.13.1</version>
+		    <version>1.16.3</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.jboss.narayana.lra/lra-coordinator-jar -->
 		<dependency>
 			<groupId>org.jboss.narayana.lra</groupId>
 			<artifactId>lra-coordinator-jar</artifactId>
-			<version>1.1.0.Final</version>
+			<version>1.2.0.Final</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.graphql-java/graphql-java -->
 		<dependency>
@@ -101,13 +101,13 @@
 		<dependency>
 		    <groupId>redis.clients</groupId>
 		    <artifactId>jedis</artifactId>
-		    <version>7.5.0</version>
+		    <version>7.5.2</version>
 		</dependency>
 		<!-- Source: https://mvnrepository.com/artifact/com.stripe/stripe-java -->
 		<dependency>
 		    <groupId>com.stripe</groupId>
 		    <artifactId>stripe-java</artifactId>
-		    <version>32.1.0</version>
+		    <version>33.0.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.quarkiverse.helm/quarkus-helm -->
 		<dependency>
@@ -119,25 +119,25 @@
 		<dependency>
 		    <groupId>io.quarkiverse.jnosql</groupId>
 		    <artifactId>quarkus-jnosql-cassandra</artifactId>
-		    <version>3.4.12</version>
+		    <version>3.4.13</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.quarkiverse.jnosql/quarkus-jnosql-hazelcast -->
 		<dependency>
 		    <groupId>io.quarkiverse.jnosql</groupId>
 		    <artifactId>quarkus-jnosql-hazelcast</artifactId>
-		    <version>3.4.12</version>
+		    <version>3.4.13</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.quarkiverse.jnosql/quarkus-jnosql-mongodb -->
 		<dependency>
 		    <groupId>io.quarkiverse.jnosql</groupId>
 		    <artifactId>quarkus-jnosql-mongodb</artifactId>
-		    <version>3.4.12</version>
+		    <version>3.4.13</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.quarkiverse.jnosql/quarkus-jnosql-neo4j -->
 		<dependency>
 		    <groupId>io.quarkiverse.jnosql</groupId>
 		    <artifactId>quarkus-jnosql-neo4j</artifactId>
-		    <version>3.4.12</version>
+		    <version>3.4.13</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.quarkiverse.jnosql/quarkus-jnosql-document-mongodb -->
 		<dependency>
@@ -167,7 +167,7 @@
 		<dependency>
 			<groupId>org.eclipse.jnosql.databases</groupId>
 			<artifactId>jnosql-redis</artifactId>
-			<version>1.1.13</version>
+			<version>1.2.0-M1</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.quarkiverse.jnosql/quarkus-jnosql-keyvalue-hazelcast -->
 		<dependency>
@@ -179,7 +179,7 @@
 		<dependency>
 			<groupId>com.hazelcast</groupId>
 			<artifactId>quarkus-hazelcast-client</artifactId>
-			<version>4.0.0</version>
+			<version>4.1.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/jakarta.nosql/jakarta.nosql-api -->
 		<dependency>
@@ -191,7 +191,7 @@
 		<dependency>
 		    <groupId>org.eclipse.jnosql.mapping</groupId>
 		    <artifactId>jnosql-mapping-reflection</artifactId>
-		    <version>1.1.13</version>
+		    <version>1.2.0-M1</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.quarkus/quarkus-smallrye-opentracing -->
 		<dependency>
@@ -209,7 +209,7 @@
 		<dependency>
 			<groupId>com.hazelcast</groupId>
 			<artifactId>hazelcast</artifactId>
-			<version>5.3.5</version>
+			<version>5.7.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/javax.cache/cache-api -->
 		<dependency>
@@ -222,7 +222,7 @@
 		<dependency>
 		    <groupId>dev.openfeature</groupId>
 		    <artifactId>sdk</artifactId>
-		    <version>1.20.2</version>
+		    <version>1.21.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/dev.openfeature.contrib.providers/env-var -->
 		<dependency>
@@ -234,7 +234,7 @@
 		<dependency>
 		    <groupId>com.github.jknack</groupId>
 		    <artifactId>handlebars</artifactId>
-		    <version>4.5.0</version>
+		    <version>4.5.2</version>
 		</dependency>
 		<!-- Source: https://mvnrepository.com/artifact/com.github.victools/jsonschema-module-jackson -->
 		<dependency>
