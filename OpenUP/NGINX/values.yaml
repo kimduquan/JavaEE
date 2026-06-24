@@ -587,11 +587,11 @@ cloneStaticSiteFromGit:
   ## @param cloneStaticSiteFromGit.extraVolumeMounts Add extra volume mounts for the Git containers
   ## Useful to mount keys to connect through ssh. (normally used with extraVolumes)
   ## E.g:
-  extraVolumeMounts:
-    - name: ssh-dir
-      mountPath: /root/.ssh/
+  ## extraVolumeMounts:
+  ##   - name: ssh-dir
+  ##     mountPath: /root/.ssh/
   ##
-  ## extraVolumeMounts: []
+  extraVolumeMounts: []
 ## @param serverBlock Custom server block to be added to NGINX configuration
 ## PHP-FPM example server block:
 ## serverBlock: |-
