@@ -146,7 +146,7 @@ service:
   ## @param service.ssh.loadBalancerClass Loadbalancer class
   ssh:
     type: ClusterIP
-    port: 2222
+    port: 22
     clusterIP: None
     loadBalancerIP:
     nodePort:
@@ -461,7 +461,7 @@ gitea:
     #  RUN_MODE: dev
     server:
       SSH_PORT: 22 # rootful image
-      SSH_LISTEN_PORT: 2222 # rootless image
+      SSH_LISTEN_PORT: 22 # rootless image
       ROOT_URL: "https://touching-pika-enabled.ngrok-free.app"
     database:
       DB_TYPE: postgres
