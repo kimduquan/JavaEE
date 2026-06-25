@@ -154,7 +154,7 @@ service:
     externalIPs:
     ipFamilyPolicy:
     ipFamilies:
-    hostPort:
+    hostPort: 2222
     loadBalancerSourceRanges: []
     annotations: {}
     labels: {}
