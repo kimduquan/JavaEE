@@ -85,8 +85,8 @@ diagnosticMode:
 ##
 image:
   registry: docker.io
-  repository: bitnami/nginx
-  tag: latest
+  repository: bitnamilegacy/nginx
+  tag: 1.29.1-debian-12-r0
   digest: ""
   ## Specify a imagePullPolicy
   ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
@@ -519,8 +519,8 @@ cloneStaticSiteFromGit:
   ##
   image:
     registry: docker.io
-    repository: bitnami/git
-    tag: latest
+    repository: bitnamilegacy/git
+    tag: 2.51.0-debian-12-r0
     digest: ""
     ## Specify a imagePullPolicy
     ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
@@ -992,7 +992,7 @@ metrics:
   ##
   image:
     registry: docker.io
-    repository: bitnami/nginx-exporter
+    repository: bitnamilegacy/nginx-exporter
     tag: 1.4.2-debian-12-r9
     digest: ""
     pullPolicy: IfNotPresent
