@@ -536,7 +536,7 @@ cloneStaticSiteFromGit:
     pullSecrets: []
   ## @param cloneStaticSiteFromGit.repository Git Repository to clone static content from
   ##
-  repository: "git@gitea:kimduquan03/webapp.git"
+  repository: "git@gitea-ssh:kimduquan03/webapp.git"
   ## @param cloneStaticSiteFromGit.branch Git branch to checkout
   ##
   branch: "main"
