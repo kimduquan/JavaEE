@@ -146,7 +146,7 @@ service:
   ## @param service.ssh.loadBalancerClass Loadbalancer class
   ssh:
     type: ClusterIP
-    port: 22
+    port: 2222
     clusterIP: None
     loadBalancerIP:
     nodePort:
@@ -154,7 +154,7 @@ service:
     externalIPs:
     ipFamilyPolicy:
     ipFamilies:
-    hostPort: 2222
+    hostPort:
     loadBalancerSourceRanges: []
     annotations: {}
     labels: {}
