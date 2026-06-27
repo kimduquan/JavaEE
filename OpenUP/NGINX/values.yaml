@@ -614,21 +614,23 @@ cloneStaticSiteFromGit:
   ## extraVolumeMounts: []
 ## @param serverBlock Custom server block to be added to NGINX configuration
 ## PHP-FPM example server block:
-## serverBlock: |-
-##   server {
-##     listen 0.0.0.0:8080;
-##     root /app;
-##     location / {
-##       index index.html index.php;
-##     }
-##     location ~ \.php$ {
-##       fastcgi_pass phpfpm-server:9000;
-##       fastcgi_index index.php;
-##       include fastcgi.conf;
-##     }
-##   }
+serverBlock: |-
+  server {
+    listen 0.0.0.0:8080;
+    server_name ~^(?<webapp>[^.]+)\.lvh\.me$;
+    root /app/$webapp;
+    access_log /var/log/nginx/$webapp-access.log;
+    error_log  /var/log/nginx/error.log error; 
+    location / {
+      index index.html;
+      if (!-d /app/$webapp) {
+          return 404;
+      }
+      try_files $uri $uri/ =404;
+    }
+  }
 ##
-serverBlock: ""
+## serverBlock: ""
 ## @param streamServerBlock Custom stream server block to be added to NGINX configuration
 ## streamServerBlock: |-
 ##   server {
