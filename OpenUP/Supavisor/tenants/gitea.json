@@ -15,7 +15,7 @@
         "db_password": "090323508",
         "db_user": "gitea",
         "max_clients": 25000,
-        "mode_type": "transaction",
+        "mode_type": "session",
         "pool_checkout_timeout": 1000,
         "pool_size": 10
       }
