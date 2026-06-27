@@ -617,15 +617,24 @@ cloneStaticSiteFromGit:
 serverBlock: |-
   server {
     listen 0.0.0.0:8080;
-    server_name ~^(?<webapp>[^.]+)\.lvh\.me$;
-    root /app/$webapp;
-    access_log /bitnami/nginx/$webapp-access.log;
-    error_log  /bitnami/nginx/error.log error; 
+    server_name _;
+    root /app/webapp;
+    access_log /opt/bitnami/nginx/logs/access.log;
+    error_log  /opt/bitnami/nginx/logs/error.log error; 
     location / {
       index index.html;
-      if (!-d /app/$webapp) {
-          return 404;
-      }
+      try_files $uri $uri/ =404;
+    }
+  }
+  
+  server {
+    listen 0.0.0.0:8080;
+    server_name ~^(?<webapp>[^.]+)\.lvh\.me$;
+    root /app/$webapp;
+    access_log /opt/bitnami/nginx/logs/webapp-access.log;
+    error_log  /opt/bitnami/nginx/logs/webapp-error.log error; 
+    location / {
+      index index.html;
       try_files $uri $uri/ =404;
     }
   }
