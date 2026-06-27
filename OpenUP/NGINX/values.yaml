@@ -442,7 +442,7 @@ autoscaling:
 ## @param extraVolumes Array to add extra volumes
 ##
 extraVolumes:
-  - name: ssh-dir
+  - name: git-ssh
     secret:
       secretName: git-ssh
       defaultMode: 0400
@@ -480,7 +480,7 @@ sidecars: []
 ## @param sidecarSingleProcessNamespace Enable sharing the process namespace with sidecars
 ## This will switch pod.spec.shareProcessNamespace parameter
 ##
-sidecarSingleProcessNamespace: true
+sidecarSingleProcessNamespace: false
 ## @param initContainers Extra init containers
 ##
 initContainers: []
@@ -548,7 +548,13 @@ cloneStaticSiteFromGit:
   gitClone:
     ## @param cloneStaticSiteFromGit.gitClone.command Override default container command for git-clone-repository
     ##
-    command: []
+    command:
+      - /bin/bash
+      - -ec
+      - |
+        [[ -f "/opt/bitnami/scripts/git/entrypoint.sh" ]] && source "/opt/bitnami/scripts/git/entrypoint.sh"
+        ssh-keyscan gitea-ssh >> /.ssh/known_hosts && git clone -v --progress "git@gitea-ssh:kimduquan03/webapp.git" --branch "main" /tmp/app
+        [[ "$?" -eq 0 ]] && shopt -s dotglob && rm -rf /app/* && mv /tmp/app/* /app/
     ## @param cloneStaticSiteFromGit.gitClone.args Override default container args for git-clone-repository
     ##
     args: []
@@ -557,7 +563,15 @@ cloneStaticSiteFromGit:
   gitSync:
     ## @param cloneStaticSiteFromGit.gitSync.command Override default container command for git-repo-syncer
     ##
-    command: []
+    command:
+      - /bin/bash
+      - -ec
+      - |
+        [[ -f "/opt/bitnami/scripts/git/entrypoint.sh" ]] && source "/opt/bitnami/scripts/git/entrypoint.sh"
+        while true; do
+            cd /app && git -c safe.directory=/app pull origin main
+            sleep 60
+        done
     ## @param cloneStaticSiteFromGit.gitSync.args Override default container args for git-repo-syncer
     ##
     args: []
@@ -592,8 +606,10 @@ cloneStaticSiteFromGit:
   ## Useful to mount keys to connect through ssh. (normally used with extraVolumes)
   ## E.g:
   extraVolumeMounts:
-    - name: ssh-dir
-      mountPath: /root/.ssh/
+    - name: git-ssh
+      mountPath: /.ssh/id_ed25519
+      subPath: ssh-privatekey
+      readOnly: true
   ##
   ## extraVolumeMounts: []
 ## @param serverBlock Custom server block to be added to NGINX configuration
