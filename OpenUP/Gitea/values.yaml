@@ -465,7 +465,7 @@ gitea:
       ROOT_URL: "https://touching-pika-enabled.ngrok-free.app"
     database:
       DB_TYPE: postgres
-      HOST: supavisor:6543
+      HOST: supavisor:5432
       NAME: gitea
     session:
       PROVIDER: redis
