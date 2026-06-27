@@ -1332,7 +1332,7 @@ postgresql:
 ##
 externalDatabase:
   host: "supavisor"
-  port: 5452
+  port: 5432
   user: keycloak.keycloak
   database: keycloak
   schema: public
