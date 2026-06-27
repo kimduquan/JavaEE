@@ -619,8 +619,8 @@ serverBlock: |-
     listen 0.0.0.0:8080;
     server_name ~^(?<webapp>[^.]+)\.lvh\.me$;
     root /app/$webapp;
-    access_log /var/log/$webapp-access.log;
-    error_log  /var/log/error.log error; 
+    access_log /bitnami/nginx/$webapp-access.log;
+    error_log  /bitnami/nginx/error.log error; 
     location / {
       index index.html;
       if (!-d /app/$webapp) {
