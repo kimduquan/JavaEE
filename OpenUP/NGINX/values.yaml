@@ -553,7 +553,7 @@ cloneStaticSiteFromGit:
       - -ec
       - |
         [[ -f "/opt/bitnami/scripts/git/entrypoint.sh" ]] && source "/opt/bitnami/scripts/git/entrypoint.sh"
-        ssh-keyscan gitea-ssh >> /.ssh/known_hosts && git clone -v --progress "git@gitea-ssh:kimduquan03/webapp.git" --branch "main" /tmp/app
+        ssh-keyscan gitea-ssh >> /.ssh/known_hosts && git clone "git@gitea-ssh:kimduquan03/webapp.git" --branch "main" /tmp/app
         [[ "$?" -eq 0 ]] && shopt -s dotglob && rm -rf /app/* && mv /tmp/app/* /app/
     ## @param cloneStaticSiteFromGit.gitClone.args Override default container args for git-clone-repository
     ##
