@@ -840,7 +840,7 @@ ingress:
   apiVersion: ""
   ## @param ingress.hostname Default host for the ingress resource
   ##
-  hostname: lvh.me
+  hostname: "*.lvh.me"
   ## @param ingress.path The Path to Nginx. You may need to set this to '/*' in order to use this with ALB ingress controllers.
   ##
   path: /
@@ -872,11 +872,11 @@ ingress:
   tlsWwwPrefix: false
   ## @param ingress.extraHosts The list of additional hostnames to be covered with this ingress record.
   ## Most likely the hostname above will be enough, but in the event more hosts are needed, this is an array
-  extraHosts:
-    - name: "*.lvh.me"
-      path: /
+  ## extraHosts:
+  ##   - name: "*.lvh.me"
+  ##     path: /
   ##
-  ## extraHosts: []
+  extraHosts: []
   ## @param ingress.extraPaths Any additional arbitrary paths that may need to be added to the ingress under the main host.
   ## For example: The ALB ingress controller requires a special rule for handling SSL redirection.
   ## extraPaths:
