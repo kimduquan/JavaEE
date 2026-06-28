@@ -457,7 +457,7 @@ gitea:
   ## @param gitea.config.server.SSH_PORT SSH port for rootlful Gitea image
   ## @param gitea.config.server.SSH_LISTEN_PORT SSH port for rootless Gitea image
   config:
-    #  APP_NAME: "Gitea: Git with a cup of tea"
+    APP_NAME: "EPF Git"
     #  RUN_MODE: dev
     server:
       SSH_PORT: 22 # rootful image
