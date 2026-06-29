@@ -1,2 +1,3 @@
 kubectl create namespace kserve
-kubectl apply --server-side --namespace kserve --wait -f https://github.com/kserve/kserve/releases/download/v0.19.0/kserve.yaml
+helm upgrade --install --wait kserve-crd oci://ghcr.io/kserve/charts/kserve-crd
+helm upgrade --install --wait kserve oci://ghcr.io/kserve/charts/kserve-resources --set kserve.controller.deploymentMode=Standard --set kserve.controller.gateway.ingressGateway.className=haproxy
