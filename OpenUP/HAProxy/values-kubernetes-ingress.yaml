@@ -134,7 +134,7 @@ controller:
   ## Enable the controller's Prometheus metrics endpoint (served on the stat port at /metrics).
   ## Required for ServiceMonitor / PodMonitor scraping.
   ## Defaults to true. Previously this was implicitly gated on controller.service.enablePorts.admin,
-  ## but the metrics endpoint is on the stat port, not the admin port — so the coupling was wrong.
+  ## but the metrics endpoint is on the stat port, not the admin port â€” so the coupling was wrong.
   prometheus:
     enabled: false
 
@@ -157,7 +157,7 @@ controller:
 
   ## Controller Container liveness/readiness probe configuration
   ## Port 1042 is the controller's built-in /healthz HTTP listener, bound
-  ## unconditionally by the controller binary — independent of containerPort above.
+  ## unconditionally by the controller binary â€” independent of containerPort above.
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
   livenessProbe:
     httpGet:
@@ -348,7 +348,7 @@ controller:
   affinity: {}
 
   ## Topology spread constraints (Deployment only; ignored for DaemonSet since
-  ## DaemonSets already run one pod per node — see _podspec.tpl).
+  ## DaemonSets already run one pod per node â€” see _podspec.tpl).
   ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
   topologySpreadConstraints: []
   # - maxSkew: 1
