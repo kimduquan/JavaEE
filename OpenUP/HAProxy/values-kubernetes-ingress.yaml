@@ -25,7 +25,7 @@ podSecurityPolicy:
     # apparmor.security.beta.kubernetes.io/defaultProfileName: runtime/default
     # seccomp.security.alpha.kubernetes.io/allowedProfileNames: runtime/default
     # seccomp.security.alpha.kubernetes.io/defaultProfileName: runtime/default
-  enabled: false
+  enabled: true
 
 ## Enable RBAC Authorization
 ## ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
@@ -68,7 +68,7 @@ controller:
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/
   kind: Deployment    # can be 'Deployment' or 'DaemonSet'
-  replicaCount: 2
+  replicaCount: 1
 
   ## minReadySeconds setting of Deployment or DaemonSet
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#min-ready-seconds
@@ -134,15 +134,15 @@ controller:
   ## Enable the controller's Prometheus metrics endpoint (served on the stat port at /metrics).
   ## Required for ServiceMonitor / PodMonitor scraping.
   ## Defaults to true. Previously this was implicitly gated on controller.service.enablePorts.admin,
-  ## but the metrics endpoint is on the stat port, not the admin port â€” so the coupling was wrong.
+  ## but the metrics endpoint is on the stat port, not the admin port — so the coupling was wrong.
   prometheus:
-    enabled: true
+    enabled: false
 
   ## Enable the controller's pprof debug endpoints (served on the admin port at /debug/pprof).
   ## Defaults to true for backward compatibility. Consider disabling in production hardening
   ## to reduce attack surface.
   pprof:
-    enabled: true
+    enabled: false
 
   ## QUIC (HTTP/3) configuration
   ## announcePort overrides the port advertised to clients in Alt-Svc headers.
@@ -157,7 +157,7 @@ controller:
 
   ## Controller Container liveness/readiness probe configuration
   ## Port 1042 is the controller's built-in /healthz HTTP listener, bound
-  ## unconditionally by the controller binary â€” independent of containerPort above.
+  ## unconditionally by the controller binary — independent of containerPort above.
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
   livenessProbe:
     httpGet:
@@ -213,7 +213,7 @@ controller:
   # ref: https://gateway-api.sigs.k8s.io/
   # ref: https://gateway-api.sigs.k8s.io/guides/#installing-a-gateway-controller
   kubernetesGateway:
-    enabled: false
+    enabled: true
     gatewayControllerName: haproxy.org/gateway-controller
 
   ## Additional labels to add to the deployment or daemonset metadata
@@ -257,16 +257,16 @@ controller:
   #    cpu: 250m
   #    memory: 400Mi
     requests:
-      cpu: 250m
-      memory: 400Mi
+      cpu: 25m
+      memory: 128Mi
 
   ## Horizontal Pod Scaler
   ## Only to be used with Deployment kind
   ## ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
   autoscaling:
-    enabled: false
-    minReplicas: 2
-    maxReplicas: 20
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 2
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
 
@@ -327,7 +327,7 @@ controller:
   ## Only to be used with Deployment kind
   ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
   PodDisruptionBudget:
-    enable: false
+    enable: true
     # maxUnavailable: 1
     # minAvailable: 1
 
@@ -348,7 +348,7 @@ controller:
   affinity: {}
 
   ## Topology spread constraints (Deployment only; ignored for DaemonSet since
-  ## DaemonSets already run one pod per node â€” see _podspec.tpl).
+  ## DaemonSets already run one pod per node — see _podspec.tpl).
   ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
   topologySpreadConstraints: []
   # - maxSkew: 1
@@ -370,7 +370,8 @@ controller:
 
   ## Additional command line arguments to pass to Controller
   ## ref: https://github.com/haproxytech/kubernetes-ingress/blob/master/documentation/controller.md
-  extraArgs: []
+  extraArgs:
+  - --configmap-tcp-services=default/tcp
   #  - --namespace-whitelist=default
   #  - --namespace-whitelist=namespace1
   #  - --namespace-blacklist=namespace2
@@ -435,7 +436,7 @@ controller:
   service:
     enabled: true     # set to false when controller.kind is 'DaemonSet' and controller.daemonset.useHostPorts is true
 
-    type: NodePort    # can be 'ClusterIP', 'NodePort' or 'LoadBalancer'
+    type: LoadBalancer    # can be 'ClusterIP', 'NodePort' or 'LoadBalancer'
 
     ## Service annotations
     ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
@@ -489,7 +490,15 @@ controller:
     ## Additional tcp ports to expose
     ## This is especially useful for TCP services:
     ## https://github.com/haproxytech/kubernetes-ingress/blob/master/documentation/controller.md
-    tcpPorts: []
+    tcpPorts:
+    - name: frp-ssh
+      port: 2200
+      targetPort: 2200
+      protocol: TCP
+    - name: frp
+      port: 7000
+      targetPort: 7000
+      protocol: TCP
     #  - name: http-alt
     #    port: 8080
     #    targetPort: http-alt
