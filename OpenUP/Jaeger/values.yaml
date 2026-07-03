@@ -104,8 +104,8 @@ userconfig:
         primary_store:
           badger:
             directories:
-              keys: "/badger/jaeger/"
-              values: "/badger/jaeger/"
+              keys: "/tmp/jaeger/"
+              values: "/tmp/jaeger/"
             ephemeral: false
             ttl:
               spans: 48h # 2 days
@@ -113,8 +113,8 @@ userconfig:
         archive_store:
           badger:
             directories:
-              keys: "/badger/jaeger_archive/"
-              values: "/badger/jaeger_archive/"
+              keys: "/tmp/jaeger_archive/"
+              values: "/tmp/jaeger_archive/"
             ephemeral: false
             ttl:
               spans: 720h # 30 days
