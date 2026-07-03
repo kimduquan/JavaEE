@@ -128,6 +128,9 @@ userconfig:
         http:
           endpoint: 0.0.0.0:4318
 
+  processors:
+    batch:
+
   exporters:
     jaeger_storage_exporter:
       trace_storage: primary_store
