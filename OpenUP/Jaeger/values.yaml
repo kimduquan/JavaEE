@@ -96,8 +96,8 @@ userconfig:
       storage:
         traces: primary_store
         traces_archive: archive_store
-      ui:
-        config_file: /etc/jaeger/ui-config.json
+      ## ui:
+      ##   config_file: /etc/jaeger/ui-config.json
 
     jaeger_storage:
       backends:
