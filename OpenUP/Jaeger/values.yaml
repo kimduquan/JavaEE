@@ -136,7 +136,7 @@ global:
   imageRegistry:
 
 networkPolicy:
-  enabled: false
+  enabled: true
 
 # Overrides the image tag where default is the chart appVersion.
 tag: ""
@@ -246,13 +246,13 @@ jaeger:
     runAsGroup: 10001
     fsGroup: 10001
   securityContext: {}
-  extraVolumes:
-    - name: badger-data
-      persistentVolumeClaim:
-        claimName: jaeger-badger-data
-  extraVolumeMounts:
-    - name: badger-data
-      mountPath: /badger
+  extraVolumes: []
+    ## - name: badger-data
+    ##   persistentVolumeClaim:
+    ##     claimName: jaeger-badger-data
+  extraVolumeMounts: []
+    ## - name: badger-data
+    ##   mountPath: /badger
 
 # ------------------------------------------------------------------------------
 # Storage Connection Settings
