@@ -29,6 +29,10 @@ cd OpenFeature
 ./openfeature.sh
 
 cd ../
+cd WildFly
+./wildfly.sh
+
+cd ../
 cd PostgreSQL
 ./postgresql.sh
 
@@ -49,10 +53,6 @@ cd MongoDB
 ./mongodb.sh
 
 cd ../
-cd Neo4j
-./neo4j.sh
-
-cd ../
 cd Kafka
 ./kafka.sh
 
@@ -60,6 +60,6 @@ cd ../
 cd NATS
 ./nats.sh
 
-cd ../
-cd WildFly
-./wildfly.sh
+#cd ../
+#cd Neo4j
+#./neo4j.sh
