@@ -317,7 +317,7 @@ topologySpreadConstraints:
     #       app.kubernetes.io/name: rustfs
 
 storageclass:
-  name: hostpath
+  name: microk8s-hostpath
   dataStorageSize: 1Gi
   logStorageSize: 256Mi
   pvcAnnotations: {}
