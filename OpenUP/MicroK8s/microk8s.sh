@@ -8,3 +8,4 @@ sudo microk8s enable host-access
 sudo microk8s enable registry
 sudo microk8s enable nvidia
 sudo microk8s config > ~/.kube/config
+kubectl label node desktop-q9gd575 node-role.kubernetes.io/control-plane=""
