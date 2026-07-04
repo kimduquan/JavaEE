@@ -2,7 +2,7 @@ sudo snap install microk8s --classic
 sudo snap install kubectl --classic
 sudo microk8s status --wait-ready
 sudo microk8s enable cis-hardening
-sudo microk8s enable metallb 10.64.140.43-10.64.140.49
+sudo microk8s enable metallb 172.23.225.250-172.23.225.254
 sudo microk8s enable host-access
 sudo microk8s enable registry
 sudo microk8s enable nvidia
