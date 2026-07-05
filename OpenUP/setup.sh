@@ -29,6 +29,10 @@ cd OpenFeature
 ./openfeature.sh
 
 cd ../
+cd GPU
+./nvidia-device-plugin.sh
+
+cd ../
 cd KubeVirt
 ./kubevirt.sh
 
