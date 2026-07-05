@@ -29,6 +29,10 @@ cd OpenFeature
 ./openfeature.sh
 
 cd ../
+cd KubeVirt
+./kubevirt.sh
+
+cd ../
 cd WildFly
 ./wildfly.sh
 
