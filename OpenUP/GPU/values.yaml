@@ -42,7 +42,7 @@ fullnameOverride: ""
 namespaceOverride: ""
 selectorLabelsOverride: {}
 
-allowDefaultNamespace: false
+allowDefaultNamespace: true
 
 imagePullSecrets: []
 image:
