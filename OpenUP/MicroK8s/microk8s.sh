@@ -6,6 +6,9 @@ sudo microk8s enable cis-hardening
 sudo microk8s enable metallb 172.23.225.250-172.23.225.254
 sudo microk8s enable host-access
 sudo microk8s enable registry
-sudo microk8s enable nvidia
+#sudo microk8s enable nvidia
 sudo microk8s config > ~/.kube/config
 kubectl label node desktop-q9gd575 node-role.kubernetes.io/control-plane=""
+#kubectl label node desktop-q9gd575 feature.node.kubernetes.io/pci-10de.present=true --overwrite
+#kubectl label node desktop-q9gd575 feature.node.kubernetes.io/gpu.present=true --overwrite
+#kubectl run --rm -it --image=docker.io/nvidia/cuda:13.2.0-base-ubuntu24.04 test nvidia-smi
