@@ -34,7 +34,7 @@ cd GPU
 
 cd ../
 cd KubeVirt
-./kubevirt.sh
+#./kubevirt.sh
 
 cd ../
 cd WildFly
@@ -42,7 +42,7 @@ cd WildFly
 
 cd ../
 cd PostgreSQL
-./postgresql.sh
+#./postgresql.sh
 
 cd ../
 cd Redis
@@ -58,11 +58,11 @@ cd ScyllaDB
 
 cd ../
 cd MongoDB
-./mongodb.sh
+#./mongodb.sh
 
 cd ../
 cd Kafka
-./kafka.sh
+#./kafka.sh
 
 cd ../
 cd NATS
