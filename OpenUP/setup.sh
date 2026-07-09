@@ -61,6 +61,10 @@ cd PostgreSQL
 ./postgresql.sh
 
 cd ../
+cd Supavisor
+./supavisor.sh
+
+cd ../
 cd MongoDB
 ./mongodb.sh
 
