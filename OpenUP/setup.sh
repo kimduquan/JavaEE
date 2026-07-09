@@ -1,4 +1,4 @@
-sudo apt-get update 
+sudo apt-get update
 sudo apt-get install -y --no-install-recommends ca-certificates curl gnupg2
 curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg && curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
 sudo apt-get update
@@ -34,15 +34,11 @@ cd GPU
 
 cd ../
 cd KubeVirt
-#./kubevirt.sh
+./kubevirt.sh
 
 cd ../
 cd WildFly
 ./wildfly.sh
-
-cd ../
-cd PostgreSQL
-#./postgresql.sh
 
 cd ../
 cd Redis
@@ -57,16 +53,20 @@ cd ScyllaDB
 ./scylladb.sh
 
 cd ../
+cd NATS
+./nats.sh
+
+cd ../
+cd PostgreSQL
+./postgresql.sh
+
+cd ../
 cd MongoDB
-#./mongodb.sh
+./mongodb.sh
 
 cd ../
 cd Kafka
-#./kafka.sh
-
-cd ../
-cd NATS
-./nats.sh
+./kafka.sh
 
 #cd ../
 #cd Neo4j
