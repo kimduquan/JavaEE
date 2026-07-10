@@ -6,7 +6,7 @@ crds:
 
 secrets:
   alibaba:
-    create: false
+    create: true
     accessKeyID: ""
     accessKeySecret: ""
     # The name of the secret to use.
@@ -14,7 +14,7 @@ secrets:
     # The secret values are pulled from the keys, "accessKeyID" and "accessKeySecret".
     name: ""
   aws:
-    create: false
+    create: true
     accessKeyID: ""
     secretAccessKey: ""
     # The name of the secret to use.
@@ -22,7 +22,7 @@ secrets:
     # The secret values are pulled from the keys, "accessKeyID" and "secretAccessKey".
     name: ""
   gcp:
-    create: false
+    create: true
     jsonKeyfile: ""
     # The name of the secret to use.
     # If not set, and create is true, the name is generated using the fullname template.
@@ -242,7 +242,7 @@ messaging:
 open-webui:
   enabled: false
   ollama:
-    enabled: false
+    enabled: true
   pipelines:
     enabled: false
   # added to keep same behaviour
