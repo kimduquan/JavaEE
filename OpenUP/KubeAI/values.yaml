@@ -242,7 +242,7 @@ messaging:
 open-webui:
   enabled: false
   ollama:
-    enabled: true
+    enabled: false
   pipelines:
     enabled: false
   # added to keep same behaviour
