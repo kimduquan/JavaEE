@@ -3,7 +3,6 @@ kind: PersistentVolumeClaim
 metadata:
   name: model-pvc
 spec:
-  storageClassName: "" # replace with your actual storage class
   accessModes:
     - ReadWriteMany
   resources:
