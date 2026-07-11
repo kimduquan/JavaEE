@@ -662,6 +662,6 @@ catalog:
   gemma4-e4b:
     enabled: true
     features: ["TextGeneration"]
-    url: "ollama://gemma4:e4b"
+    url: "pvc://model-pvc?model=gemma4:e4b"
     engine: OLlama
     resourceProfile: nvidia-gpu-t4:1
