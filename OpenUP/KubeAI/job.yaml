@@ -20,8 +20,8 @@ spec:
           sleep 10
           
           # Pull the model and ensure it downloads successfully
-          echo "Pulling model hf.co/google/gemma-4-E4B-it-qat-q4_0-gguf..."
-          if ! /bin/ollama pull "hf.co/google/gemma-4-E4B-it-qat-q4_0-gguf"; then
+          echo "Pulling model gemma4:e4b..."
+          if ! /bin/ollama pull gemma4:e4b; then
             echo "Failed to pull model"
             exit 1
           fi
@@ -35,7 +35,7 @@ spec:
           fi
           
           echo "Model setup completed successfully"
-          ls -la /model/manifests/registry.ollama.ai/library/google/gemma-4-E4B-it-qat-q4_0-gguf
+          ls -la /model/manifests/registry.ollama.ai/library/google
         volumeMounts:
         - name: models-volume
           mountPath: /model
