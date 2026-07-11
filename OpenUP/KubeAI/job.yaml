@@ -35,7 +35,7 @@ spec:
           fi
           
           echo "Model setup completed successfully"
-          ls -la /model/manifests/registry.ollama.ai/library/google
+          ls -la /model/manifests/registry.ollama.ai/library
         volumeMounts:
         - name: models-volume
           mountPath: /model
