@@ -674,4 +674,4 @@ catalog:
     # minReplicas: 1
     env:
       # OLLAMA_CONTEXT_LENGTH: "131072"
-      OLLAMA_CONTEXT_LENGTH: "100000"
+      OLLAMA_CONTEXT_LENGTH: "50000"
