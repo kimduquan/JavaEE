@@ -1,0 +1,661 @@
+all:
+  # Enable all models instead of enabling them one-by-one via .catalog.<name>.enabled
+  enabled: false
+
+catalog:
+  llama-3.2-11b-vision-instruct-l4:
+    # You can optionally add metadata.labels.
+    # labels:
+    #   tenancy: public
+    enabled: false
+    features: [TextGeneration]
+    url: hf://neuralmagic/Llama-3.2-11B-Vision-Instruct-FP8-dynamic
+    engine: VLLM
+    env:
+      VLLM_WORKER_MULTIPROC_METHOD: spawn
+    args:
+      - --max-model-len=8192
+      - --max-num-batched-token=8192
+      - --gpu-memory-utilization=0.99
+      - --enforce-eager
+      - --disable-log-requests
+      - --max-num-seqs=16
+      # Setting this is broken in vllm 0.6.2
+      #    - --kv-cache-dtype=fp8
+    resourceProfile: nvidia-gpu-l4:1
+    minReplicas: 1
+    maxReplicas: 1
+    targetRequests: 32
+  # Mistral #
+  e5-mistral-7b-instruct-cpu:
+    enabled: false
+    features: ["TextEmbedding"]
+    url: "hf://intfloat/e5-mistral-7b-instruct"
+    engine: VLLM
+    # TODO: Adjust - the memory associated with this request is too low.
+    resourceProfile: cpu:1
+    args:
+    - --gpu-memory-utilization=0.9
+  mistral-small-24b-instruct-h100:
+    enabled: false
+    features: [TextGeneration]
+    url: hf://mistralai/Mistral-Small-24B-Instruct-2501
+    engine: VLLM
+    env:
+      VLLM_ATTENTION_BACKEND: FLASHINFER
+    args:
+      - --kv-cache-dtype=fp8
+      - --max-num-batched-token=65536
+      - --gpu-memory-utilization=0.9
+      - --enable-prefix-caching
+      - --disable-log-requests
+    resourceProfile: nvidia-gpu-h100:1
+  mistral-small-3.1-24b-instruct-h100:
+    enabled: false
+    features: [TextGeneration]
+    url: hf://mistralai/Mistral-Small-3.1-24B-Instruct-2503
+    engine: VLLM
+    env:
+      VLLM_ATTENTION_BACKEND: FLASHINFER
+    args:
+      - --kv-cache-dtype=fp8
+      - --max-model-len=65536
+      - --gpu-memory-utilization=0.9
+      # Doesn't work in v0 with multimodal models
+      # - --enable-prefix-caching
+      - --disable-log-requests
+      # Bug with vLLM v0.8.1, workaround from here:
+      # https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/14#67d9ba6bb158df9ac8afa2c1
+      - --tokenizer-mode=mistral
+      - --load-format=mistral
+      - --config-format=mistral
+    resourceProfile: nvidia-gpu-h100:1
+  # Gemma #
+  gemma2-2b-cpu:
+    enabled: false
+    features: ["TextGeneration"]
+    url: "ollama://gemma2:2b"
+    engine: OLlama
+    resourceProfile: cpu:2
+  gemma-2b-it-tpu:
+    enabled: false
+    features: ["TextGeneration"]
+    url: "hf://google/gemma-2b-it"
+    engine: VLLM
+    resourceProfile: google-tpu-v5e-1x1:1
+    args:
+    - --disable-log-requests
+  # gemma2-9b-it-fp8-tpu:
+  #   enabled: false
+  #   features: ["TextGeneration"]
+  #   # vLLM logs: "ValueError: fp8 quantization is currently not supported in TPU Backend."
+  #   #url: "hf://neuralmagic/gemma-2-9b-it-FP8"
+  #   engine: VLLM
+  #   resourceProfile: google-tpu-v5e-1x1:1
+  #   args:
+  #   - --disable-log-requests
+  # gemma2-9b-it-int8-tpu:
+  #   enabled: false
+  #   features: ["TextGeneration"]
+  #   # vLLM logs: "ValueError: compressed-tensors quantization is currently not supported in TPU Backend."
+  #   #url: "hf://neuralmagic/gemma-2-9b-it-quantized.w8a8"
+  #   #url: "hf://neuralmagic/gemma-2-9b-it-quantized.w8a16"
+  #   engine: VLLM
+  #   resourceProfile: google-tpu-v5e-1x1:1
+  #   args:
+  #   - --disable-log-requests
+  # Llama #
+  llama-3.1-8b-instruct-cpu:
+    enabled: false
+    features: ["TextGeneration"]
+    url: "hf://meta-llama/Meta-Llama-3.1-8B-Instruct"
+    engine: VLLM
+    resourceProfile: cpu:6
+    env:
+      VLLM_CPU_KVCACHE_SPACE: "4"
+    args:
+    - --max-model-len=32768
+    - --max-num-batched-token=32768
+  llama-3.1-8b-instruct-tpu:
+    enabled: false
+    features: ["TextGeneration"]
+    url: "hf://meta-llama/Meta-Llama-3.1-8B-Instruct"
+    engine: VLLM
+    resourceProfile: google-tpu-v5e-2x2:4
+    args:
+    - --disable-log-requests
+    - --swap-space=8
+    - --tensor-parallel-size=4
+    - --num-scheduler-steps=4
+    - --max-model-len=8192
+    # Set backend to ray b/c using "--distributed-executor-backend=mp" (or letting it default)
+    # results in the following error:
+    #
+    # Traceback (most recent call last):
+    #   File "/usr/local/lib/python3.10/multiprocessing/process.py", line 314, in _bootstrap
+    #     self.run()
+    #   File "/usr/local/lib/python3.10/multiprocessing/process.py", line 108, in run
+    #     self._target(*self._args, **self._kwargs)
+    #   File "/workspace/vllm/vllm/entrypoints/openai/rpc/server.py", line 236, in run_rpc_server
+    #     server = AsyncEngineRPCServer(async_engine_args, usage_context, rpc_path)
+    #   File "/workspace/vllm/vllm/entrypoints/openai/rpc/server.py", line 34, in __init__
+    #     self.engine = AsyncLLMEngine.from_engine_args(
+    #   File "/workspace/vllm/vllm/engine/async_llm_engine.py", line 732, in from_engine_args
+    #     executor_class = cls._get_executor_cls(engine_config)
+    #   File "/workspace/vllm/vllm/engine/async_llm_engine.py", line 675, in _get_executor_cls
+    #     assert distributed_executor_backend is None
+    # AssertionError
+    #
+    - --distributed-executor-backend=ray
+  llama-3.1-8b-instruct-fp8-l4:
+    enabled: false
+    features: ["TextGeneration"]
+    url: "hf://neuralmagic/Meta-Llama-3.1-8B-Instruct-FP8"
+    engine: VLLM
+    resourceProfile: nvidia-gpu-l4:1
+    args:
+    - --max-model-len=16384
+    - --max-num-batched-token=16384
+    - --gpu-memory-utilization=0.9
+    - --disable-log-requests
+  llama-3.1-70b-instruct-fp8-h100:
+    enabled: false
+    features: [TextGeneration]
+    url: hf://neuralmagic/Meta-Llama-3.1-70B-Instruct-FP8
+    engine: VLLM
+    args:
+      - --max-model-len=65536
+      - --max-num-batched-token=65536
+      - --max-num-seqs=1024
+      - --gpu-memory-utilization=0.9
+      - --tensor-parallel-size=2
+      - --enable-prefix-caching
+      - --disable-log-requests
+    resourceProfile: nvidia-gpu-h100:2
+    targetRequests: 500
+  llama-3.1-70b-instruct-fp8-1-h100:
+    features: [TextGeneration]
+    url: hf://neuralmagic/Meta-Llama-3.1-70B-Instruct-FP8
+    engine: VLLM
+    args:
+      - --enable-prefix-caching
+      - --max-model-len=16384
+      - --max-num-batched-token=16384
+      - --gpu-memory-utilization=0.95
+      - --disable-log-requests
+      - --kv-cache-dtype=fp8
+    resourceProfile: nvidia-gpu-h100:1
+  llama-3.1-70b-instruct-fp8-l4:
+    enabled: false
+    features: [TextGeneration]
+    url: hf://neuralmagic/Meta-Llama-3.1-70B-Instruct-FP8
+    engine: VLLM
+    env:
+      VLLM_ATTENTION_BACKEND: FLASHINFER
+    args:
+      - --max-model-len=32768
+      - --max-num-batched-token=32768
+      - --max-num-seqs=512
+      - --gpu-memory-utilization=0.9
+      # Pipeline parallelism performs better than tensor over PCI.
+      - --pipeline-parallel-size=4
+      # A minimum of tensor parallel 2 was needed to not have OOM errors.
+      # We use 8 GPUs so parallelism strategy of 4 x 2 works well.
+      - --tensor-parallel-size=2
+      - --enable-prefix-caching
+      - --enable-chunked-prefill=false
+      - --disable-log-requests
+      - --kv-cache-dtype=fp8
+      # Enforce eager wasn't supported with FLASHINFER.
+      - --enforce-eager
+    resourceProfile: nvidia-gpu-l4:8
+    targetRequests: 500
+  llama-3.1-405b-instruct-fp8-h100:
+    enabled: false
+    features: [TextGeneration]
+    url: hf://neuralmagic/Meta-Llama-3.1-405B-Instruct-FP8
+    engine: VLLM
+    args:
+      - --max-model-len=65536
+      - --max-num-batched-token=65536
+      - --gpu-memory-utilization=0.9
+      - --tensor-parallel-size=8
+      - --enable-prefix-caching
+      - --disable-log-requests
+      - --max-num-seqs=1024
+      - --kv-cache-dtype=fp8
+    # You can also use nvidia-gpu-a100-80gb:8
+    resourceProfile: nvidia-gpu-h100:8
+    targetRequests: 500
+  llama-3.1-70b-instruct-fp8-mi300x:
+    enabled: false
+    features: [TextGeneration]
+    url: hf://amd/Llama-3.1-70B-Instruct-FP8-KV
+    engine: VLLM
+    env:
+      HIP_FORCE_DEV_KERNARG: "1"
+      NCCL_MIN_NCHANNELS: "112"
+      TORCH_BLAS_PREFER_HIPBLASLT: "1"
+      VLLM_USE_TRITON_FLASH_ATTN: "0"
+    args:
+      - --max-model-len=120000
+      - --max-num-batched-token=120000
+      - --max-num-seqs=1024
+      - --num-scheduler-steps=15
+      - --gpu-memory-utilization=0.9
+      - --disable-log-requests
+      - --kv-cache-dtype=fp8
+      - --enable-chunked-prefill=false
+      - --max-seq-len-to-capture=16384
+    resourceProfile: amd-gpu-mi300x:1
+    targetRequests: 1024
+  llama-3.1-70b-instruct-fp8-gh200:
+    enabled: false
+    features: [TextGeneration]
+    url: hf://neuralmagic/Meta-Llama-3.1-70B-Instruct-FP8
+    engine: VLLM
+    env:
+      VLLM_ATTENTION_BACKEND: FLASHINFER
+    args:
+      - --max-model-len=32768
+      - --max-num-batched-token=32768
+      - --max-num-seqs=1024
+      - --gpu-memory-utilization=0.9
+      - --enable-prefix-caching
+      - --enable-chunked-prefill=false
+      - --disable-log-requests
+      - --kv-cache-dtype=fp8
+      - --enforce-eager
+    resourceProfile: nvidia-gpu-gh200:1
+    targetRequests: 1024
+  llama-3.1-70b-instruct-awq-int4-gh200:
+    enabled: false
+    features: [TextGeneration]
+    url: hf://hugging-quants/Meta-Llama-3.1-70B-Instruct-AWQ-INT4
+    engine: VLLM
+    args:
+      - --max-model-len=16384
+      - --max-num-batched-token=16384
+      - --enable-prefix-caching
+      - --disable-log-requests
+    resourceProfile: nvidia-gpu-gh200:1
+    targetRequests: 50
+  llama-3.1-405b-instruct-fp8-a100-80b:
+    enabled: false
+    features: [TextGeneration]
+    url: hf://neuralmagic/Meta-Llama-3.1-405B-Instruct-FP8
+    engine: VLLM
+    env:
+      VLLM_ATTENTION_BACKEND: FLASHINFER
+    args:
+      - --max-model-len=65536
+      - --max-num-batched-token=65536
+      - --gpu-memory-utilization=0.98
+      - --tensor-parallel-size=8
+      - --enable-prefix-caching
+      - --disable-log-requests
+      - --max-num-seqs=128
+      - --kv-cache-dtype=fp8
+      - --enforce-eager
+      - --enable-chunked-prefill=false
+      - --num-scheduler-steps=8
+    targetRequests: 128
+    resourceProfile: nvidia-gpu-a100-80gb:8
+  llama-3.1-405b-instruct-fp8-mi300x:
+    enabled: false
+    features: [TextGeneration]
+    url: hf://amd/Llama-3.1-405B-Instruct-FP8-KV
+    engine: VLLM
+    env:
+      HIP_FORCE_DEV_KERNARG: "1"
+      NCCL_MIN_NCHANNELS: "112"
+      TORCH_BLAS_PREFER_HIPBLASLT: "1"
+      VLLM_USE_TRITON_FLASH_ATTN: "0"
+    args:
+      - --max-model-len=120000
+      - --max-num-batched-token=120000
+      - --max-num-seqs=1024
+      - --num-scheduler-steps=15
+      - --tensor-parallel-size=8
+      - --gpu-memory-utilization=0.90
+      - --disable-log-requests
+      - --kv-cache-dtype=fp8
+      - --enable-chunked-prefill=false
+      - --max-seq-len-to-capture=16384
+    resourceProfile: amd-gpu-mi300x:8
+    targetRequests: 1024
+  llama-3.3-70b-ollama-l4:
+    enabled: false
+    features: [TextGeneration]
+    url: 'ollama://llama3.3:70b'
+    engine: OLlama
+    resourceProfile: 'nvidia-gpu-l4:1'
+  granite-3.1-dense-ollama-l4:
+    enabled: false
+    features: [TextGeneration]
+    url: 'ollama://granite3.1-dense'
+    engine: OLlama
+    resourceProfile: 'nvidia-gpu-l4:1'
+  phi-4-ollama-l4:
+    enabled: false
+    features: [TextGeneration]
+    url: 'ollama://phi4'
+    engine: OLlama
+    resourceProfile: 'nvidia-gpu-l4:1'
+  gemma-27b-ollama-l4:
+    enabled: false
+    features: [TextGeneration]
+    url: 'ollama://gemma2:27b'
+    engine: OLlama
+    resourceProfile: 'nvidia-gpu-l4:1'
+  gemma-3-12b-ollama-l4:
+    enabled: false
+    features: [TextGeneration]
+    url: 'ollama://gemma3:12b'
+    engine: OLlama
+    resourceProfile: 'nvidia-gpu-l4:1'
+  gemma-3-27b-ollama-l4:
+    enabled: false
+    features: [TextGeneration]
+    url: 'ollama://gemma3:27b'
+    engine: OLlama
+    resourceProfile: 'nvidia-gpu-l4:1'
+  gemma-9b-ollama-l4:
+    enabled: false
+    features: [TextGeneration]
+    url: 'ollama://gemma2:9b'
+    engine: OLlama
+    resourceProfile: 'nvidia-gpu-l4:1'
+  gemma-2-9b-it-fp8-l4:
+    enabled: false
+    url: "hf://neuralmagic/gemma-2-9b-it-FP8"
+    features: [TextGeneration]
+    env:
+      # VLLM_ATTENTION_BACKEND: "FLASHINFER"
+      VLLM_USE_V1: "1"
+    args:
+      - --max-model-len=4096
+      - --max-num-batched-token=4096
+      - --max-num-seqs=256
+      - --gpu-memory-utilization=0.95
+      - --kv-cache-dtype=fp8
+      # - --enable-prefix-caching
+      # - --enforce-eager
+    engine: VLLM
+    resourceProfile: 'nvidia-gpu-l4:1'
+  qwen2.5-7b-instruct-l4:
+    enabled: false
+    url: "hf://Qwen/Qwen2.5-7B-Instruct"
+    features: [TextGeneration]
+    env:
+      VLLM_ATTENTION_BACKEND: "FLASHINFER"
+      # VLLM_USE_V1: "1"
+    args:
+      - --max-model-len=8192
+      - --max-num-batched-token=8192
+      - --max-num-seqs=256
+      - --gpu-memory-utilization=0.95
+      - --kv-cache-dtype=fp8
+      - --enable-prefix-caching
+      # - --enforce-eager
+    engine: VLLM
+    resourceProfile: 'nvidia-gpu-l4:1'
+  llama-3.1-tulu-3-8b-l4:
+    enabled: false
+    features: [TextGeneration]
+    url: "hf://allenai/Llama-3.1-Tulu-3-8B"
+    env:
+      VLLM_ATTENTION_BACKEND: "FLASHINFER"
+      # VLLM_USE_V1: "1"
+    args:
+      - --max-model-len=8192
+      - --max-num-batched-token=8192
+      - --max-num-seqs=256
+      - --gpu-memory-utilization=0.95
+      - --kv-cache-dtype=fp8
+      # - --enforce-eager
+    engine: VLLM
+    resourceProfile: 'nvidia-gpu-l4:1'
+  phi-4-bnb-4bit-l4:
+    enabled: false
+    features: [TextGeneration]
+    url: "hf://unsloth/phi-4-bnb-4bit"
+    env:
+      VLLM_ATTENTION_BACKEND: "FLASHINFER"
+      # VLLM_USE_V1: "1"
+    args:
+      - --max-model-len=8192
+      - --max-num-batched-token=8192
+      - --max-num-seqs=1
+      - --gpu-memory-utilization=0.95
+      - --disable-log-requests
+      - --enforce-eager
+      - --quantization=bitsandbytes
+      - --load_format=bitsandbytes
+      # - --kv-cache-dtype=fp8
+      # - --quantization=fp8
+    engine: VLLM
+    resourceProfile: 'nvidia-gpu-l4:1'
+  deepseek-r1-distill-llama-8b-l4:
+    enabled: false
+    features: [TextGeneration]
+    url: "hf://deepseek-ai/DeepSeek-R1-Distill-Llama-8B"
+    env:
+      VLLM_ATTENTION_BACKEND: "FLASHINFER"
+      # VLLM_USE_V1: "1"
+    args:
+      - --max-model-len=8192
+      - --max-num-batched-token=8192
+      - --max-num-seqs=256
+      - --gpu-memory-utilization=0.95
+      - --kv-cache-dtype=fp8
+      - --disable-log-requests
+      - --quantization=fp8
+      - --enforce-eager
+    engine: VLLM
+    resourceProfile: 'nvidia-gpu-l4:1'
+  deepseek-r1-1.5b-cpu:
+    enabled: false
+    features: [TextGeneration]
+    url: 'ollama://deepseek-r1:1.5b'
+    engine: OLlama
+    resourceProfile: 'cpu:1'
+  llama-3.1-supernova-lite-l4:
+    enabled: false
+    features: [TextGeneration]
+    url: "hf://arcee-ai/Llama-3.1-SuperNova-Lite"
+    env:
+      VLLM_ATTENTION_BACKEND: "FLASHINFER"
+      # VLLM_USE_V1: "1"
+    args:
+      - --max-model-len=2048
+      - --max-num-batched-token=2048
+      - --max-num-seqs=1
+      - --gpu-memory-utilization=0.95
+      - --kv-cache-dtype=fp8
+      - --disable-log-requests
+      - --quantization=fp8
+      - --enforce-eager
+    engine: VLLM
+    resourceProfile: 'nvidia-gpu-l4:1'
+  llama-3.3-70b-instruct-bf16-gh200:
+    enabled: false
+    features: [TextGeneration]
+    url: hf://meta-llama/Llama-3.3-70B-Instruct
+    engine: VLLM
+    env:
+      VLLM_ATTENTION_BACKEND: FLASHINFER
+    args:
+      - --max-model-len=32768
+      - --max-num-batched-token=32768
+      - --gpu-memory-utilization=0.98
+      - --kv-cache-dtype=fp8
+      - --cpu-offload-gb=60
+      - --enable-prefix-caching
+      - --disable-log-requests
+    resourceProfile: nvidia-gpu-gh200:1
+    targetRequests: 200
+  llama-4-maverick-430k-h100:
+    enabled: false
+    features: [TextGeneration]
+    url: hf://meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8
+    engine: VLLM
+    env:
+      VLLM_DISABLE_COMPILE_CACHE: "1"
+    args:
+      - --max-model-len=430000
+      - --tensor-parallel-size=8
+      - --enable-prefix-caching
+      - --disable-log-requests
+    resourceProfile: nvidia-gpu-h100:8
+  deepseek-r1-70b-gh200-fp8:
+    enabled: false
+    features: [TextGeneration]
+    url: hf://neuralmagic/DeepSeek-R1-Distill-Llama-70B-FP8-dynamic
+    engine: VLLM
+    args:
+      - --max-model-len=32768
+      - --max-num-batched-token=32768
+      - --gpu-memory-utilization=0.95
+      - --kv-cache-dtype=fp8
+      - --enable-prefix-caching
+      - --disable-log-requests
+    resourceProfile: nvidia-gpu-gh200:1
+  deepseek-r1-70b-gh200:
+    enabled: false
+    features: [TextGeneration]
+    url: hf://deepseek-ai/DeepSeek-R1-Distill-Llama-70B
+    engine: VLLM
+    env:
+      VLLM_ATTENTION_BACKEND: FLASHINFER
+    args:
+      - --max-model-len=32768
+      - --max-num-batched-token=32768
+      - --gpu-memory-utilization=0.95
+      - --kv-cache-dtype=fp8
+      - --cpu-offload-gb=120
+      - --enable-prefix-caching
+      - --disable-log-requests
+    resourceProfile: nvidia-gpu-gh200:1
+  deepseek-r1-distill-qwen-1.5b-rtx4070:
+    enabled: false
+    features: ["TextGeneration"]
+    url: "hf://deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B"
+    engine: VLLM
+    env:
+      VLLM_USE_V1: "1"
+    args:
+    - --max-model-len=2048
+    - --max-num-batched-token=2048
+    - --max-num-seqs=8
+    - --kv-cache-dtype=fp8
+    resourceProfile: nvidia-gpu-rtx4070-8gb:1
+  deepseek-r1-mi300x:
+    enabled: false
+    features: [TextGeneration]
+    url: hf://deepseek-ai/DeepSeek-R1
+    engine: VLLM
+    env:
+      HIP_FORCE_DEV_KERNARG: "1"
+      NCCL_MIN_NCHANNELS: "112"
+      TORCH_BLAS_PREFER_HIPBLASLT: "1"
+      VLLM_USE_TRITON_FLASH_ATTN: "0"
+      VLLM_FP8_PADDING: "0"
+    args:
+      - --trust-remote-code
+      # Currently only context length =< 32k supported.
+      # See: https://github.com/ROCm/vllm/issues/375
+      - --max-model-len=32768
+      - --max-num-batched-token=32768
+      - --max-num-seqs=1024
+      - --num-scheduler-steps=10
+      - --tensor-parallel-size=8
+      - --gpu-memory-utilization=0.90
+      - --disable-log-requests
+      - --enable-chunked-prefill=false
+      - --max-seq-len-to-capture=16384
+      - --kv-cache-dtype=fp8
+    resourceProfile: amd-gpu-mi300x:8
+    targetRequests: 1024
+  nomic-embed-text-cpu:
+    enabled: false
+    features: ["TextEmbedding"]
+    url: "ollama://nomic-embed-text"
+    engine: OLlama
+    resourceProfile: cpu:1
+  bge-embed-text-cpu:
+    enabled: false
+    features: ["TextEmbedding"]
+    url: "hf://BAAI/bge-small-en-v1.5"
+    engine: Infinity
+    resourceProfile: cpu:1
+  bge-rerank-base-cpu:
+    enabled: false
+    features: ["Reranking"]
+    url: "hf://BAAI/bge-reranker-base"
+    engine: Infinity
+    resourceProfile: cpu:1
+  # Opt #
+  opt-125m-cpu:
+    enabled: false
+    features: ["TextGeneration"]
+    url: "hf://facebook/opt-125m"
+    engine: VLLM
+    # TODO: Adjust - the memory associated with this request is too low.
+    resourceProfile: cpu:1
+    args:
+    - --chat-template=/config/chat-template.jinja
+    files:
+    - path: "/config/chat-template.jinja"
+      content: "{% for message in messages %}\n{% if message['role'] == 'user' %}\n{{ 'Question:\n' + message['content'] + '\n\n' }}{% elif message['role'] == 'system' %}\n{{ 'System:\n' + message['content'] + '\n\n' }}{% elif message['role'] == 'assistant' %}{{ 'Answer:\n'  + message['content'] + '\n\n' }}{% endif %}\n{% if loop.last and add_generation_prompt %}\n{{ 'Answer:\n' }}{% endif %}{% endfor %}"
+  opt-125m-l4:
+    enabled: false
+    features: ["TextGeneration"]
+    url: "hf://facebook/opt-125m"
+    engine: VLLM
+    resourceProfile: nvidia-gpu-l4:1
+  # Qwen #
+  qwen2.5-coder-1.5b-cpu:
+    enabled: false
+    features: ["TextGeneration"]
+    url: "ollama://qwen2.5-coder:1.5b"
+    engine: OLlama
+    resourceProfile: cpu:1
+  qwen2.5-coder-1.5b-rtx4070-8gb:
+    enabled: false
+    features: ["TextGeneration"]
+    url: "hf://Qwen/Qwen2.5-Coder-1.5B-Instruct"
+    engine: VLLM
+    env:
+      VLLM_ATTENTION_BACKEND: FLASHINFER
+    args:
+    - --max-model-len=2048
+    - --max-num-seqs=16
+    - --quantization=fp8
+    - --kv-cache-dtype=fp8
+    minReplicas: 1
+    resourceProfile: nvidia-gpu-rtx4070-8gb:1
+  qwen2.5-7b-cpu:
+    enabled: false
+    features: ["TextGeneration"]
+    url: "ollama://qwen2.5:7b"
+    engine: OLlama
+    resourceProfile: cpu:2
+  qwen2-500m-cpu:
+    enabled: false
+    features: ["TextGeneration"]
+    url: "ollama://qwen2:0.5b"
+    engine: OLlama
+    resourceProfile: cpu:1
+  faster-whisper-medium-en-cpu:
+    enabled: false
+    features: ["SpeechToText"]
+    url: "hf://Systran/faster-whisper-medium.en"
+    engine: FasterWhisper
+    resourceProfile: cpu:1
+  gemma-4-E4B-it-qat-q4_0-gguf:
+    enabled: true
+    features: ["TextGeneration"]
+    url: "pvc://model-pvc?model=gemma-4-E4B-it-qat-q4_0-gguf:Q4_0"
+    engine: OLlama
+    resourceProfile: gpu:1
