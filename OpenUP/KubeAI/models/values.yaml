@@ -671,3 +671,4 @@ catalog:
     url: "pvc://model-pvc?model=gemma4:e2b"
     engine: OLlama
     resourceProfile: nvidia-gpu-t4:1
+    minReplicas: 1
