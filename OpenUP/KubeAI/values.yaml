@@ -53,7 +53,7 @@ modelServers:
       cpu: "public.ecr.aws/q9t5s3a7/vllm-cpu-release-repo:v0.11.2"
       google-tpu: "vllm/vllm-tpu:23194d83e8f2a6783b0d8c275f5f8a22faab9aec"
       # VLLM support arm
-      gh200: "vllm/vllm-openai:v0.11.2"
+      gh200: "vllm/vllm-openai:latest"
       # AMD use last ROCM driver version
       amd-gpu: "rocm/vllm/rocm7.0.0_vllm_0.11.1_20251103"
   OLlama:
@@ -73,7 +73,7 @@ modelServers:
       nvidia-gpu: "michaelf34/infinity:0.0.77"
 
 modelLoading:
-  image: "ghcr.io/kubeai-project/kubeai-model-loader:v0.14.0"
+  image: "ghcr.io/kubeai-project/kubeai-model-loader:latest"
 
 modelServerPods:
   # Security Context for the model pods
@@ -244,7 +244,7 @@ modelAutoscaling:
   stateConfigMapName: ""
 
 messaging:
-  errorMaxBackoff: 30s
+  errorMaxBackoff: 300s
   streams: []
 
 # Configure the openwebui subchart.
