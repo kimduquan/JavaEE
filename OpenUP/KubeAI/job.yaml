@@ -20,8 +20,8 @@ spec:
           sleep 10
           
           # Pull the model and ensure it downloads successfully
-          echo "Pulling model gemma4:e2b..."
-          if ! /bin/ollama pull gemma4:e2b; then
+          echo "Pulling model gemma4:e4b-it-qat..."
+          if ! /bin/ollama pull gemma4:e4b-it-qat; then
             echo "Failed to pull model"
             exit 1
           fi
