@@ -35,7 +35,7 @@ spec:
           fi
           
           echo "Model setup completed successfully"
-          ls -la /model/manifests/registry.ollama.ai/library
+          ls -la /model/manifests/registry.ollama.ai/library/gemma4/e4b-it-qat
         volumeMounts:
         - name: models-volume
           mountPath: /model
