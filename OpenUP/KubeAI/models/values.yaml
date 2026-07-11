@@ -672,3 +672,5 @@ catalog:
     engine: OLlama
     resourceProfile: nvidia-gpu-t4:1
     minReplicas: 1
+    env:
+      OLLAMA_CONTEXT_LENGTH: "131072"
