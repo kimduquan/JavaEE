@@ -665,3 +665,9 @@ catalog:
     url: "pvc://model-pvc?model=gemma4:e4b"
     engine: OLlama
     resourceProfile: nvidia-gpu-t4:1
+  gemma4-e2b:
+    enabled: true
+    features: ["TextGeneration"]
+    url: "pvc://model-pvc?model=gemma4:e2b"
+    engine: OLlama
+    resourceProfile: nvidia-gpu-t4:1
