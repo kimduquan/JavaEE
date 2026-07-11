@@ -5,6 +5,7 @@ metadata:
 spec:
   template:
     spec:
+      runtimeClassName: nvidia
       containers:
       - name: ollama
         image: ollama/ollama:latest
