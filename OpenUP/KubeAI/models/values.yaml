@@ -659,3 +659,9 @@ catalog:
     url: "hf://google/gemma-4-E4B-it-qat-q4_0-gguf"
     engine: OLlama
     resourceProfile: nvidia-gpu-t4:1
+  gemma4-e4b:
+    enabled: true
+    features: ["TextGeneration"]
+    url: "ollama://gemma4:e4b"
+    engine: OLlama
+    resourceProfile: nvidia-gpu-t4:1
