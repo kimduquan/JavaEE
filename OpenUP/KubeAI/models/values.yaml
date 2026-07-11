@@ -658,4 +658,4 @@ catalog:
     features: ["TextGeneration"]
     url: "pvc://model-pvc?model=gemma-4-E4B-it-qat-q4_0-gguf:Q4_0"
     engine: OLlama
-    resourceProfile: gpu:1
+    resourceProfile: nvidia-gpu-t4:1
