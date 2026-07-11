@@ -67,7 +67,7 @@ controller:
   ## Deployment or DaemonSet pod mode
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/
-  kind: Deployment    # can be 'Deployment' or 'DaemonSet'
+  kind: DaemonSet    # can be 'Deployment' or 'DaemonSet'
   replicaCount: 1
 
   ## minReadySeconds setting of Deployment or DaemonSet
@@ -76,7 +76,7 @@ controller:
 
   ## Running container without root privileges
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
-  unprivileged: true
+  unprivileged: false
 
   ## Allow privileged port binding without root privileges
   ## ref: https://kubernetes.io/docs/tasks/administer-cluster/sysctl-cluster/
@@ -126,8 +126,8 @@ controller:
   ## ref: https://kubernetes.io/docs/concepts/services-networking/connect-applications-service/
   ## Note: If binding to privileged ports, allowPrivilegeEscalation will be required for NET_BIND_SERVICE to apply
   containerPort:
-    http: 8080
-    https: 8443
+    http: 80
+    https: 443
     stat: 1024
     admin: 6060
 
@@ -264,7 +264,7 @@ controller:
   ## Only to be used with Deployment kind
   ## ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
   autoscaling:
-    enabled: true
+    enabled: false
     minReplicas: 1
     maxReplicas: 2
     targetCPUUtilizationPercentage: 80
@@ -366,7 +366,7 @@ controller:
   ## Pod DNS Policy
   ## Change this to ClusterFirstWithHostNet in case you have useHostNetwork set to true
   ## ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-policy
-  dnsPolicy: ClusterFirst
+  dnsPolicy: ClusterFirstWithHostNet
 
   ## Additional command line arguments to pass to Controller
   ## ref: https://github.com/haproxytech/kubernetes-ingress/blob/master/documentation/controller.md
@@ -570,7 +570,7 @@ controller:
   ## Controller DaemonSet configuration
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/
   daemonset:
-    useHostNetwork: false  # also modify dnsPolicy accordingly
+    useHostNetwork: true  # also modify dnsPolicy accordingly
     useHostPort: false
     hostIP: null
     hostPorts:
