@@ -382,8 +382,8 @@ readinessProbe:
   httpGet:
     path: /readyz
     port: 8081
-  initialDelaySeconds: 5
-  periodSeconds: 10
+  initialDelaySeconds: 120
+  periodSeconds: 20
 
 # Additional volumes on the output Deployment definition.
 volumes: []

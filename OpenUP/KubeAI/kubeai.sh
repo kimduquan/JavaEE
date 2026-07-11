@@ -2,7 +2,7 @@ helm repo add kubeai https://www.kubeai.org
 helm repo update
 kubectl create secret generic huggingface --from-literal=token=''
 kubectl apply -f pvc.yaml
-kubectl delete -f job.yaml
+#kubectl delete -f job.yaml
 kubectl apply -f job.yaml
 #VOLUME_NAME=$(kubectl get pvc model-pvc -o jsonpath='{.spec.volumeName}')
 #HOST_PATH=$(kubectl get pv $VOLUME_NAME -o jsonpath='{.spec.hostPath.path}')
