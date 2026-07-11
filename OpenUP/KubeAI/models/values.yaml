@@ -653,7 +653,7 @@ catalog:
     url: "hf://Systran/faster-whisper-medium.en"
     engine: FasterWhisper
     resourceProfile: cpu:1
-  gemma-4-E4B-it-qat-q4-0-gguf:
+  gemma-4-e4b-it-qat-q4-0-gguf:
     enabled: true
     features: ["TextGeneration"]
     url: "pvc://model-pvc?model=gemma-4-E4B-it-qat-q4_0-gguf:Q4_0"
