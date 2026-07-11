@@ -125,12 +125,14 @@ resourceProfiles:
       # ephemeral-storage: "2Gi"
   nvidia-gpu-t4:
     imageName: "nvidia-gpu"
+    runtimeClassName: nvidia
     limits:
       nvidia.com/gpu: "1"
     requests:
       nvidia.com/gpu: "1"
   nvidia-gpu-l4:
     imageName: "nvidia-gpu"
+    runtimeClassName: nvidia
     limits:
       nvidia.com/gpu: "1"
     requests:
@@ -144,6 +146,7 @@ resourceProfiles:
         effect: "NoSchedule"
   nvidia-gpu-l40s:
     imageName: "nvidia-gpu"
+    runtimeClassName: nvidia
     limits:
       nvidia.com/gpu: "1"
     requests:
@@ -157,6 +160,7 @@ resourceProfiles:
         effect: "NoSchedule"
   nvidia-gpu-h100:
     imageName: "nvidia-gpu"
+    runtimeClassName: nvidia
     limits:
       nvidia.com/gpu: "1"
     tolerations:
@@ -166,6 +170,7 @@ resourceProfiles:
         effect: "NoSchedule"
   nvidia-gpu-gh200:
     imageName: "gh200"
+    runtimeClassName: nvidia
     limits:
       nvidia.com/gpu: "1"
     requests:
@@ -177,6 +182,7 @@ resourceProfiles:
         effect: "NoSchedule"
   nvidia-gpu-a100-80gb:
     imageName: "nvidia-gpu"
+    runtimeClassName: nvidia
     limits:
       nvidia.com/gpu: "1"
     tolerations:
@@ -186,6 +192,7 @@ resourceProfiles:
         effect: "NoSchedule"
   nvidia-gpu-a100-40gb:
     imageName: "nvidia-gpu"
+    runtimeClassName: nvidia
     limits:
       nvidia.com/gpu: "1"
     tolerations:
@@ -195,6 +202,7 @@ resourceProfiles:
         effect: "NoSchedule"
   nvidia-gpu-a16:
     imageName: "nvidia-gpu"
+    runtimeClassName: nvidia
     limits:
       nvidia.com/gpu: "1"
     tolerations:
@@ -204,6 +212,7 @@ resourceProfiles:
         effect: "NoSchedule"
   nvidia-gpu-rtx4070-8gb:
     imageName: "nvidia-gpu"
+    runtimeClassName: nvidia
     limits:
       nvidia.com/gpu: "1"
     tolerations:
