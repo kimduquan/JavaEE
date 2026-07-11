@@ -656,6 +656,6 @@ catalog:
   gemma-4-e4b-it-qat-q4-0-gguf:
     enabled: true
     features: ["TextGeneration"]
-    url: "pvc://model-pvc?model=gemma-4-E4B-it-qat-q4_0-gguf"
+    url: "hf.co/google/gemma-4-E4B-it-qat-q4_0-gguf:Q4_0"
     engine: OLlama
     resourceProfile: nvidia-gpu-t4:1
