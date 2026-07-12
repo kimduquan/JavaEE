@@ -230,7 +230,9 @@ resourceProfiles:
         value: "present"
         effect: "NoSchedule"
 
-cacheProfiles: {}
+cacheProfiles:
+  default-cache:
+    sharedFilesystem: {}
 
 modelAutoscaling:
   # Interval that the autoscaler will scrape model server metrics.

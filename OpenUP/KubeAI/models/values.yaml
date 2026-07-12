@@ -653,24 +653,29 @@ catalog:
     url: "hf://Systran/faster-whisper-medium.en"
     engine: FasterWhisper
     resourceProfile: cpu:1
-  gemma-4-e4b-it-qat-q4-0-gguf:
-    enabled: false
-    features: ["TextGeneration"]
-    url: "hf://google/gemma-4-E4B-it-qat-q4_0-gguf"
-    engine: OLlama
-    resourceProfile: nvidia-gpu-t4:1
-  gemma4-e4b:
-    enabled: false
-    features: ["TextGeneration"]
-    url: "pvc://model-pvc?model=gemma4:e4b"
-    engine: OLlama
-    resourceProfile: nvidia-gpu-t4:1
   gemma4-e4b-it-qat:
     enabled: true
     features: ["TextGeneration"]
     url: "pvc://model-pvc?model=gemma4:e4b-it-qat"
     engine: OLlama
     resourceProfile: nvidia-gpu-t4:1
-    # minReplicas: 1
     env:
       OLLAMA_CONTEXT_LENGTH: "131072"
+  granite-4.1-3b-awq-int4:
+    enabled: true
+    features: ["TextGeneration"]
+    url: "hf://cyankiwi/granite-4.1-3b-AWQ-INT4"
+    engine: VLLM
+    env:
+      HUGGING_FACE_HUB_TOKEN: ""
+      VLLM_API_KEY: "EMPTY"
+      VLLM_ALLOW_RUNTIME_LORA_UPDATING: "True"
+      VLLM_WSL2_ENABLE_PIN_MEMORY: "1"
+    args:
+    - --gpu-memory-utilization=0.87
+    - --max_model_len=auto
+    - --enable-auto-tool-choice
+    - --tool-call-parser=granite4
+    - --enable-lora
+    resourceProfile: nvidia-gpu-t4:1
+    cacheProfile: default-cache
