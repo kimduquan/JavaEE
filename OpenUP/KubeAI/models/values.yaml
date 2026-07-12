@@ -667,8 +667,6 @@ catalog:
     url: "hf://cyankiwi/granite-4.1-3b-AWQ-INT4"
     engine: VLLM
     env:
-      HUGGING_FACE_HUB_TOKEN: ""
-      VLLM_API_KEY: "EMPTY"
       VLLM_ALLOW_RUNTIME_LORA_UPDATING: "True"
       VLLM_WSL2_ENABLE_PIN_MEMORY: "1"
     args:
