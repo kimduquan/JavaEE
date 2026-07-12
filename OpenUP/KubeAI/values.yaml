@@ -233,7 +233,7 @@ resourceProfiles:
 cacheProfiles:
   default-cache:
     sharedFilesystem:
-      storageClassName: null
+      storageClassName: "microk8s-hostpath"
 
 modelAutoscaling:
   # Interval that the autoscaler will scrape model server metrics.
