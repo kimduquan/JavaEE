@@ -233,7 +233,7 @@ resourceProfiles:
 cacheProfiles:
   default-cache:
     sharedFilesystem:
-      storageClassName: ""
+      storageClassName: null
 
 modelAutoscaling:
   # Interval that the autoscaler will scrape model server metrics.

@@ -679,3 +679,4 @@ catalog:
     - --enable-lora
     resourceProfile: nvidia-gpu-t4:1
     cacheProfile: default-cache
+    minReplicas: 1
