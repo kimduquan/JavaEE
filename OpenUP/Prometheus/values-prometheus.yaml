@@ -1210,6 +1210,15 @@ alertmanager:
     ##
     emptyDir: {}
 
+  config:
+    receivers:
+      - name: default-receiver
+        email_configs:
+          - to: "kimduquan@gmail.com"
+            from: "kimduquan@gmail.com"
+            smarthost: "smtp.gmail.com:465"
+            auth_username: "kimduquan@gmail.com"
+
   podSecurityContext:
     runAsUser: 65534
     runAsNonRoot: true
