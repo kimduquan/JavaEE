@@ -1,1 +1,1 @@
-helm upgrade --install prometheus oci://ghcr.io/prometheus-community/charts/prometheus -f values-prometheus.yaml
+helm upgrade --install --wait prometheus oci://ghcr.io/prometheus-community/charts/prometheus -f values-prometheus.yaml
