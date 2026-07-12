@@ -231,7 +231,10 @@ resourceProfiles:
         effect: "NoSchedule"
 
 cacheProfiles:
-  default-cache:
+  vllm:
+    sharedFilesystem:
+      storageClassName: "microk8s-hostpath"
+  ollama:
     sharedFilesystem:
       storageClassName: "microk8s-hostpath"
 
@@ -347,16 +350,16 @@ service:
   annotations: {}
 
 ingress:
-  enabled: false
-  className: ""
+  enabled: true
+  className: "haproxy"
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   rules:
-    - host: kubeai.example.com
+    - host: kubeai.localhost.direct
       paths:
         - path: /
-          pathType: ImplementationSpecific
+          pathType: Prefix
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
