@@ -1,0 +1,1 @@
+helm upgrade --install prometheus oci://ghcr.io/prometheus-community/charts/prometheus -f values-prometheus.yaml
