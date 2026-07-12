@@ -1,1 +1,1 @@
-helm install nats oci://registry-1.docker.io/bitnamicharts/nats -f values-nats.yaml --wait
+helm upgrade --install nats oci://registry-1.docker.io/bitnamicharts/nats -f values-nats.yaml --wait
