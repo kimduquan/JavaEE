@@ -25,6 +25,10 @@ cd Jaeger
 ./jaeger.sh
 
 cd ../
+cd Prometheus
+./prometheus.sh
+
+cd ../
 cd OpenFeature
 ./openfeature.sh
 
