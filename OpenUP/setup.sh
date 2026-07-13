@@ -33,6 +33,10 @@ cd GPU
 ./nvidia-device-plugin.sh
 
 cd ../
+cd KubeAI
+./kubeai.sh
+
+cd ../
 cd KubeVirt
 ./kubevirt.sh
 
