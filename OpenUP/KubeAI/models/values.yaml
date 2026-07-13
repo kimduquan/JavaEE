@@ -661,7 +661,6 @@ catalog:
     env:
       OLLAMA_CONTEXT_LENGTH: "131072"
     resourceProfile: nvidia-gpu-t4:1
-    cacheProfile: ollama
   granite-4.1-3b-awq-int4:
     enabled: true
     features: ["TextGeneration"]

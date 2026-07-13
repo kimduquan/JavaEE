@@ -234,9 +234,6 @@ cacheProfiles:
   vllm:
     sharedFilesystem:
       storageClassName: "microk8s-hostpath"
-  ollama:
-    sharedFilesystem:
-      storageClassName: "microk8s-hostpath"
 
 modelAutoscaling:
   # Interval that the autoscaler will scrape model server metrics.
