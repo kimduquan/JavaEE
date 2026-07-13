@@ -10,3 +10,4 @@ kubectl apply -f job.yaml
 #kubectl logs -f jobs/ollama-load-model-to-pvc
 helm upgrade --install kubeai kubeai/kubeai --wait -f values.yaml
 helm upgrade --install --reuse-values --wait kubeai-models kubeai/models -f models/values.yaml
+#kubectl patch Model granite-4.1-3b-awq-int4 -p '{"metadata":{"finalizers":[]}}' --type=merge
