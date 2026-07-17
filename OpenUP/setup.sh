@@ -21,12 +21,12 @@ cd HAProxy
 ./haproxy.sh
 
 cd ../
-cd Jaeger
-./jaeger.sh
-
-cd ../
 cd Prometheus
 ./prometheus.sh
+
+cd ../
+cd Jaeger
+./jaeger.sh
 
 cd ../
 cd OpenFeature
