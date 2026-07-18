@@ -372,7 +372,7 @@ primary:
     scriptsSecret: ""
     ## @param primary.initdb.user Specify the PostgreSQL username to execute the initdb scripts
     ##
-    user: "postgre"
+    user: "postgres"
     ## @param primary.initdb.password Specify the PostgreSQL password to execute the initdb scripts
     ##
     password: "090323508"
