@@ -650,7 +650,7 @@ ingress:
   apiVersion: ""
   ## @param ingress.hostname Default host for the ingress record (evaluated as template)
   ##
-  hostname: gateway.docker.internal
+  hostname: localhost.direct
   ## @param ingress.ingressClassName IngressClass that will be be used to implement the Ingress (evaluated as template)
   ## Required if you have more than one IngressClass marked as the default for your cluster
   ##
