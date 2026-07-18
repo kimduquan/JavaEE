@@ -7,6 +7,7 @@ import {
 import { LangGraphAgent } from "@copilotkit/runtime/langgraph";
 import { handle } from "hono/vercel";
 
+const debug = ("true" == process.env.DEBUG);
 const defaultAgent = new LangGraphAgent({
   deploymentUrl:
     process.env.AGENT_URL ||
