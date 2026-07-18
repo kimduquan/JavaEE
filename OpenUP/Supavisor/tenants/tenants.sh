@@ -1,5 +1,5 @@
-curl -X PUT http://localhost:4000/api/tenants/postgres -H "Content-Type: application/json" --data @postgres.json
-curl -X PUT http://localhost:4000/api/tenants/epf -H "Content-Type: application/json" --data @epf.json
-curl -X PUT http://localhost:4000/api/tenants/keycloak -H "Content-Type: application/json" --data @keycloak.json
-curl -X PUT http://localhost:4000/api/tenants/odoo -H "Content-Type: application/json" --data @odoo.json
-curl -X PUT http://localhost:4000/api/tenants/gitea -H "Content-Type: application/json" --data @gitea.json
+curl -X PUT http://localhost:4000/api/tenants/postgres -H "Content-Type: application/json" -H "Authorization: Bearer 983cbf9422aba2dd9239e076497f5aaf9ee5acd8a5d939dc3b82ba661ea130d9" -v --data @postgres.json
+curl -X PUT http://localhost:4000/api/tenants/epf -H "Content-Type: application/json" -H "Authorization: Bearer 983cbf9422aba2dd9239e076497f5aaf9ee5acd8a5d939dc3b82ba661ea130d9" -v --data @epf.json
+curl -X PUT http://localhost:4000/api/tenants/keycloak -H "Content-Type: application/json" -H "Authorization: Bearer 983cbf9422aba2dd9239e076497f5aaf9ee5acd8a5d939dc3b82ba661ea130d9" -v --data @keycloak.json
+curl -X PUT http://localhost:4000/api/tenants/odoo -H "Content-Type: application/json" -H "Authorization: Bearer 983cbf9422aba2dd9239e076497f5aaf9ee5acd8a5d939dc3b82ba661ea130d9" -v --data @odoo.json
+curl -X PUT http://localhost:4000/api/tenants/gitea -H "Content-Type: application/json" -H "Authorization: Bearer 983cbf9422aba2dd9239e076497f5aaf9ee5acd8a5d939dc3b82ba661ea130d9" -v --data @gitea.json
