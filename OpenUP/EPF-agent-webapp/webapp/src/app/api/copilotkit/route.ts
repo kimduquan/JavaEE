@@ -1,50 +1,60 @@
 import {
   CopilotRuntime,
-  ExperimentalEmptyAdapter,
-  copilotRuntimeNextJSAppRouterEndpoint,
-} from "@copilotkit/runtime";
-import { LangGraphHttpAgent } from "@copilotkit/runtime/langgraph";
-import { NextRequest } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { getToken } from "next-auth/jwt";
+  CopilotKitIntelligence,
+  createCopilotEndpoint,
+  InMemoryAgentRunner,
+} from "@copilotkit/runtime/v2";
+import { LangGraphAgent } from "@copilotkit/runtime/langgraph";
+import { handle } from "hono/vercel";
 
-const debug = ("true" == process.env.DEBUG);
-// 1. Define the agent connection to LangGraph
-/*const defaultAgent = new LangGraphAgent({
-  deploymentUrl: process.env.LANGGRAPH_DEPLOYMENT_URL || "http://localhost:8123",
+const defaultAgent = new LangGraphAgent({
+  deploymentUrl:
+    process.env.AGENT_URL ||
+    process.env.LANGGRAPH_DEPLOYMENT_URL ||
+    "http://localhost:8123",
   graphId: "sample_agent",
   langsmithApiKey: process.env.LANGSMITH_API_KEY || "",
-});*/
+});
 
-// 2. Bind in middleware to the agent. For A2UI and MCP Apps.
-//defaultAgent.use(...aguiMiddleware)
-
-// 3. Define the route and CopilotRuntime for the agent
-export const POST = async (req: NextRequest) => {
-  const session = await getServerSession(authOptions);
-  const jwt = await getToken({ req : req });
-  if(debug){
-    console.log("[BEGIN]POST");
-    console.log("session.user.id:%s", session?.user.id);
-    console.log("session.expires:%s", session?.expires);
-    console.log("jwt.sub:%s", jwt?.sub);
-    console.log("[END]POST");
-  }
-  const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
-    endpoint: "/api/copilotkit",
-    serviceAdapter: new ExperimentalEmptyAdapter(),
-    runtime: new CopilotRuntime({
-      agents: {
-        default: new LangGraphHttpAgent({
-          url: process.env.EPF_AGENT_URL || "http://localhost:8123",
-          headers: { "Authorization": "Bearer " + jwt?.accessToken },
-          threadId: jwt?.sub,
-          debug: debug
+const runtime = new CopilotRuntime({
+  agents: { default: defaultAgent },
+  /* --- copilotkit:intelligence (remove this block to opt out) ---
+  ...(process.env.COPILOTKIT_LICENSE_TOKEN
+    ? {
+        intelligence: new CopilotKitIntelligence({
+          apiKey: process.env.INTELLIGENCE_API_KEY ?? "",
+          apiUrl: process.env.INTELLIGENCE_API_URL ?? "http://localhost:4201",
+          wsUrl:
+            process.env.INTELLIGENCE_GATEWAY_WS_URL ?? "ws://localhost:4401",
         }),
+        // Demo stub — replace with your real auth-derived user identity before any
+        // multi-user deployment, or all users share one thread history.
+        identifyUser: () => ({ id: "demo-user", name: "Demo User" }),
+        licenseToken: process.env.COPILOTKIT_LICENSE_TOKEN,
+      }
+    : { runner: new InMemoryAgentRunner() }),
+  // --- /copilotkit:intelligence --- */
+  openGenerativeUI: true,
+  a2ui: {
+    injectA2UITool: false,
+  },
+  mcpApps: {
+    servers: [
+      {
+        type: "http",
+        url: process.env.MCP_SERVER_URL || "https://mcp.excalidraw.com",
+        serverId: "example_mcp_app",
       },
-    }),
-  });
+    ],
+  },
+});
 
-  return handleRequest(req);
-};
+const app = createCopilotEndpoint({
+  runtime,
+  basePath: "/api/copilotkit",
+});
+
+export const GET = handle(app);
+export const POST = handle(app);
+export const PATCH = handle(app);
+export const DELETE = handle(app);

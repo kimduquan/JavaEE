@@ -1,11 +1,11 @@
-set CLIENT_ID=
-set CLIENT_SECRET=
+set CLIENT_ID=account
+set CLIENT_SECRET=cIkzKJZ4A7jXKpXfaxC4GaLxJAmmEqhP
 set ISSUER=https://chipmunk-capable-prawn.ngrok-free.app/auth/realms/EPF-dev
 set NEXTAUTH_URL=http://localhost:3000/agent/api/auth
 set AUTH_REQUEST_TIMEOUT=10000
 set JWT_MAX_AGE=300
 set JWT_UPDATE_AGE=60
-set NEXTAUTH_SECRET=
+set NEXTAUTH_SECRET=01263aa9dca3b11efa2bd1c73dfea942cfb11783e07b6d0e7b565c2f61f77709
 set COPILOTKIT_PUBLIC_LICENSE_KEY=
 set EPF_AGENT_URL=http://localhost:8123
 set DEBUG=true
