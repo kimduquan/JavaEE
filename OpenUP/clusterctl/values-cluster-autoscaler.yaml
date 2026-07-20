@@ -5,7 +5,7 @@ affinity: {}
 # additionalLabels -- Labels to add to each object of the chart.
 additionalLabels: {}
 
-autoDiscovery: clusterapi
+autoDiscovery:
   # cloudProviders `aws`, `gce`, `azure`, `magnum`, `clusterapi` and `oci` are supported by auto-discovery at this time
   # AWS: Set tags as described in https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/cloudprovider/aws/README.md#auto-discovery-setup
 
