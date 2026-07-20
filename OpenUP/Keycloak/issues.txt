@@ -3,3 +3,19 @@ keycloak 401 Unauthorized on "Manage Account"
 https://github.com/keycloak/keycloak/issues/34771
 
 https://www.keycloak.org/docs/latest/server_development/index.html#admin-rest-api
+
+Authenticating with a service account(admin-cli)
+	To authenticate against the Admin REST API using a client_id and a client_secret, perform this procedure.
+
+Procedure
+	Make sure the client is configured as follows:
+
+	client_id belongs to the realm master
+
+	client_id has Client authentication set to On
+
+	client_id has the Service account roles option enabled
+
+	Assign client_id the admin realm role in the Service accounts roles tab.
+
+	Use the Client Secret from the Credentials tab to verify the service account access:
