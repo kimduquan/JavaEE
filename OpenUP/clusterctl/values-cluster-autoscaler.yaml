@@ -373,7 +373,7 @@ prometheusRule:
 
 rbac:
   # rbac.create -- If `true`, create and use RBAC resources.
-  create: true
+  create: false
   # rbac.pspEnabled -- If `true`, creates and uses RBAC resources required in the cluster with [Pod Security Policies](https://kubernetes.io/docs/concepts/policy/pod-security-policy/) enabled.
   # Must be used with `rbac.create` set to `true`.
   pspEnabled: false
