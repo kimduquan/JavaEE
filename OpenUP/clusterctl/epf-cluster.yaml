@@ -1,4 +1,4 @@
-apiVersion: cluster.x-k8s.io/v1beta2
+apiVersion: cluster.x-k8s.io/v1beta1
 kind: Cluster
 metadata:
   name: epf-cluster
@@ -12,7 +12,7 @@ spec:
       cidrBlocks:
       - 10.95.0.0/16
   controlPlaneRef:
-    apiVersion: controlplane.cluster.x-k8s.io/v1beta2
+    apiVersion: controlplane.cluster.x-k8s.io/v1beta1
     kind: KubeadmControlPlane
     name: epf-cluster-control-plane
     namespace: default
@@ -91,7 +91,7 @@ spec:
       name: epf-cluster-control-plane
       namespace: default
   replicas: 1
-  version: v1.34.1
+  version: v1.35.6
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
 kind: KubevirtMachineTemplate
@@ -127,7 +127,7 @@ spec:
                   image: quay.io/capk/ubuntu-2404-container-disk:v1.34.1
                 name: containervolume
 ---
-apiVersion: bootstrap.cluster.x-k8s.io/v1beta2
+apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
 kind: KubeadmConfigTemplate
 metadata:
   name: epf-cluster-md-0
@@ -139,7 +139,7 @@ spec:
         nodeRegistration:
           kubeletExtraArgs: {}
 ---
-apiVersion: cluster.x-k8s.io/v1beta2
+apiVersion: cluster.x-k8s.io/v1beta1
 kind: MachineDeployment
 metadata:
   name: epf-cluster-md-0
@@ -153,7 +153,7 @@ spec:
     spec:
       bootstrap:
         configRef:
-          apiVersion: bootstrap.cluster.x-k8s.io/v1beta2
+          apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
           kind: KubeadmConfigTemplate
           name: epf-cluster-md-0
           namespace: default
@@ -163,4 +163,4 @@ spec:
         kind: KubevirtMachineTemplate
         name: epf-cluster-md-0
         namespace: default
-      version: v1.34.1
+      version: v1.35.6
