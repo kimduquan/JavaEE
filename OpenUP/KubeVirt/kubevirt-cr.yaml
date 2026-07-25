@@ -8,7 +8,7 @@ spec:
   certificateRotateStrategy: {}
   configuration:
     developerConfiguration:
-      useEmulation: true
+      # useEmulation: true
       featureGates:
         - "Root"
     imagePullPolicy: IfNotPresent
