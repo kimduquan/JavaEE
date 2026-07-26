@@ -12,6 +12,18 @@ spec:
       # featureGates:
       #   - "Root"
     imagePullPolicy: IfNotPresent
-  customizeComponents: {}
+  customizeComponents:
+    flags:
+      handler:
+        kubelet-root: "/var/snap/microk8s/common/var/lib/kubelet"
+        kubelet-pods-dir: "/var/snap/microk8s/common/var/lib/kubelet/pods"
+        port: "8443"
+        hostname-override: "$(NODE_NAME)"
+        pod-ip-address: "$(MY_POD_IP)"
+        max-metric-requests: "3"
+        console-server-port: "8186"
+        graceful-shutdown-seconds: "315"
+        v: "2"
+        migration-cn-types: "migration"
   imagePullPolicy: IfNotPresent
   workloadUpdateStrategy: {}
