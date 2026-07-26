@@ -9,4 +9,4 @@ kubectl wait cluster epf-cluster --for condition=InfrastructureReady
 #clusterctl upgrade apply --contract v1beta2 --wait-providers
 rm epf-cluster.kubeconfig
 clusterctl get kubeconfig epf-cluster > epf-cluster.kubeconfig
-kubectl --kubeconfig=epf-cluster.kubeconfig apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.26.1/manifests/calico.yaml
+kubectl --kubeconfig=epf-cluster.kubeconfig apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.32.1/manifests/calico.yaml
