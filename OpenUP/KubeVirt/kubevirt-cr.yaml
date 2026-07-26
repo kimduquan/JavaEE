@@ -16,6 +16,6 @@ spec:
     flags:
       handler:
         kubelet-root: "/var/snap/microk8s/common/var/lib/kubelet"
-        kubelet-pods-dir: "/var/snap/microk8s/common/var/lib/kubelet/pods"
+        # kubelet-pods-dir: "/var/snap/microk8s/common/var/lib/kubelet/pods"
   imagePullPolicy: IfNotPresent
   workloadUpdateStrategy: {}
