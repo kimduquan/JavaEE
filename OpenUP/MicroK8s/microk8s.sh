@@ -3,12 +3,6 @@ grep -qxF "vm.overcommit_memory = 1" /etc/sysctl.conf || echo "vm.overcommit_mem
 sudo sysctl -p
 sudo rm -r -f /var/lib/kubelet
 sudo snap install microk8s --classic
-sudo snap stop microk8s
-sudo unlink /var/lib/kubelet
-sudo mkdir /var/lib/kubelet
-sudo mount --rbind /var/snap/microk8s/common/var/lib/kubelet /var/lib/kubelet
-sudo mount --make-rshared /var/lib/kubelet
-sudo snap start microk8s
 sudo snap install kubectl --classic
 sudo microk8s status --wait-ready
 sudo microk8s disable ha-cluster --force
@@ -21,3 +15,10 @@ sudo microk8s inspect
 sudo microk8s config > ~/.kube/config
 kubectl label node desktop-q9gd575 node-role.kubernetes.io/control-plane=""
 kubectl label node desktop-q9gd575 nvidia.com/gpu.present=true
+sudo snap stop microk8s
+sudo unlink /var/lib/kubelet
+sudo mkdir /var/lib/kubelet
+sudo mount --rbind /var/snap/microk8s/common/var/lib/kubelet /var/lib/kubelet
+sudo mount --make-rshared /var/lib/kubelet
+sudo snap start microk8s
+sudo microk8s status --wait-ready
