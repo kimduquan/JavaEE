@@ -7,10 +7,10 @@ metadata:
 spec:
   certificateRotateStrategy: {}
   configuration:
-    developerConfiguration: {}
+    developerConfiguration:
       # useEmulation: true
-      # featureGates:
-      #   - "Root"
+      featureGates:
+        - "Root"
     imagePullPolicy: IfNotPresent
   customizeComponents:
     flags:
