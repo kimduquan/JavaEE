@@ -6,3 +6,6 @@ export CRI_PATH="unix:///var/run/containerd/containerd.sock"
 #clusterctl generate cluster epf-cluster --kubernetes-version ${CAPK_GUEST_K8S_VERSION} --flavor lb --control-plane-machine-count 1 --infrastructure kubevirt --target-namespace default > epf-cluster.yaml
 kubectl apply -f epf-cluster.yaml
 #clusterctl upgrade apply --contract v1beta2 --wait-providers
+rm epf-cluster.kubeconfig
+clusterctl get kubeconfig epf-cluster > epf-cluster.kubeconfig
+kubectl --kubeconfig=epf-cluster.kubeconfig apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.26.1/manifests/calico.yaml
