@@ -5,6 +5,7 @@ export CAPK_GUEST_K8S_VERSION="${NODE_VM_IMAGE_TEMPLATE/*:/}"
 export CRI_PATH="unix:///var/run/containerd/containerd.sock"
 #clusterctl generate cluster epf-cluster --kubernetes-version ${CAPK_GUEST_K8S_VERSION} --flavor lb --control-plane-machine-count 1 --infrastructure kubevirt --target-namespace default > epf-cluster.yaml
 kubectl apply -f epf-cluster.yaml
+kubectl wait cluster epf-cluster --for condition=InfrastructureReady
 #clusterctl upgrade apply --contract v1beta2 --wait-providers
 rm epf-cluster.kubeconfig
 clusterctl get kubeconfig epf-cluster > epf-cluster.kubeconfig
