@@ -151,13 +151,13 @@ clusterAPIConfigMapsNamespace: ""
 
 # clusterAPIKubeconfigSecret -- Secret containing kubeconfig for connecting to Cluster API managed workloadcluster
 # Required if `cloudProvider=clusterapi` and `clusterAPIMode=kubeconfig-kubeconfig,kubeconfig-incluster or incluster-kubeconfig`
-clusterAPIKubeconfigSecret: ""
+clusterAPIKubeconfigSecret: "epf-cluster"
 
 # clusterAPIMode --  Cluster API mode, see https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/cloudprovider/clusterapi/README.md#connecting-cluster-autoscaler-to-cluster-api-management-and-workload-clusters
 # Syntax: workloadClusterMode-ManagementClusterMode
 # for `kubeconfig-kubeconfig`, `incluster-kubeconfig` and `single-kubeconfig` you always must mount the external kubeconfig using either `extraVolumeSecrets` or `extraMounts` and `extraVolumes`
 # if you dont set `clusterAPIKubeconfigSecret`and thus use an in-cluster config or want to use a non capi generated kubeconfig you must do so for the workload kubeconfig as well
-clusterAPIMode: incluster-incluster  # incluster-incluster, incluster-kubeconfig, kubeconfig-incluster, kubeconfig-kubeconfig, single-kubeconfig
+clusterAPIMode: kubeconfig-incluster  # incluster-incluster, incluster-kubeconfig, kubeconfig-incluster, kubeconfig-kubeconfig, single-kubeconfig
 
 # clusterAPIWorkloadKubeconfigPath -- Path to kubeconfig for connecting to Cluster API managed workloadcluster, only used if `clusterAPIMode=kubeconfig-kubeconfig or kubeconfig-incluster`
 clusterAPIWorkloadKubeconfigPath: /etc/kubernetes/value

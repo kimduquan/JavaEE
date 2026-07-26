@@ -10,3 +10,5 @@ kubectl wait cluster epf-cluster --for condition=InfrastructureReady
 rm epf-cluster.kubeconfig
 clusterctl get kubeconfig epf-cluster > epf-cluster.kubeconfig
 kubectl --kubeconfig=epf-cluster.kubeconfig apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.32.1/manifests/calico.yaml
+kubectl delete secret epf-cluster
+kubectl create secret generic epf-cluster --from-file=kubeconfig=epf-cluster.kubeconfig
