@@ -7,8 +7,9 @@ export CRI_PATH="unix:///var/run/containerd/containerd.sock"
 kubectl apply -f epf-cluster.yaml
 kubectl wait cluster epf-cluster --for condition=InfrastructureReady
 #clusterctl upgrade apply --contract v1beta2 --wait-providers
+. ../../env.sh
 rm epf-cluster.kubeconfig
-clusterctl get kubeconfig epf-cluster > epf-cluster.kubeconfig
-kubectl --kubeconfig=epf-cluster.kubeconfig apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.32.1/manifests/calico.yaml
+clusterctl get kubeconfig epf-cluster > ${EPF_CLUSTER_KUBE_CONFIG}
+kubectl --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} -f https://raw.githubusercontent.com/projectcalico/calico/v3.32.1/manifests/calico.yaml
 kubectl delete secret epf-cluster
-kubectl create secret generic epf-cluster --from-file=epf-cluster=epf-cluster.kubeconfig
+kubectl create secret generic epf-cluster --from-file=epf-cluster=${EPF_CLUSTER_KUBE_CONFIG}
