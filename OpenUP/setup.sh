@@ -13,6 +13,14 @@ cd cert-manager
 ./cert-manager.sh
 
 cd ../
+cd KubeVirt
+./kubevirt.sh
+
+cd ../
+cd clusterctl
+./clusterctl.sh
+
+cd ../
 cd metrics-server
 ./metrics-server.sh
 
@@ -39,10 +47,6 @@ cd GPU
 cd ../
 cd KubeAI
 ./kubeai.sh
-
-cd ../
-cd KubeVirt
-./kubevirt.sh
 
 cd ../
 cd WildFly
