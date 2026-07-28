@@ -160,7 +160,7 @@ clusterAPIKubeconfigSecret: "epf-cluster"
 clusterAPIMode: kubeconfig-incluster  # incluster-incluster, incluster-kubeconfig, kubeconfig-incluster, kubeconfig-kubeconfig, single-kubeconfig
 
 # clusterAPIWorkloadKubeconfigPath -- Path to kubeconfig for connecting to Cluster API managed workloadcluster, only used if `clusterAPIMode=kubeconfig-kubeconfig or kubeconfig-incluster`
-clusterAPIWorkloadKubeconfigPath: /etc/kubernetes/kubeconfig
+clusterAPIWorkloadKubeconfigPath: /etc/kubernetes/value
 
 # containerSecurityContext -- [Security context for container](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
 containerSecurityContext: {}
