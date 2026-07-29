@@ -17,6 +17,8 @@ kubectl label node desktop-q9gd575 node-role.kubernetes.io/control-plane=""
 kubectl label node desktop-q9gd575 nvidia.com/gpu.present=true
 sudo snap stop microk8s
 sudo unlink /var/lib/kubelet
+sudo umount /var/lib/kubelet
+sudo rm -r -f /var/lib/kubelet/
 sudo mkdir /var/lib/kubelet
 sudo mount --rbind /var/snap/microk8s/common/var/lib/kubelet /var/lib/kubelet
 sudo mount --make-rshared /var/lib/kubelet
