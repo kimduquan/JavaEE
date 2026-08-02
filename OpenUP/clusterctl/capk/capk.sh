@@ -8,9 +8,3 @@ clusterctl generate cluster epf-cluster --kubernetes-version ${CAPK_GUEST_K8S_VE
 kubectl apply -f epf-cluster.yaml
 kubectl wait cluster epf-cluster --for condition=Available
 clusterctl upgrade apply --contract v1beta2 --wait-providers
-#. ../../env.sh
-#rm ${EPF_CLUSTER_KUBE_CONFIG}
-#clusterctl get kubeconfig epf-cluster > ${EPF_CLUSTER_KUBE_CONFIG}
-#kubectl --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.32.1/manifests/calico.yaml
-#kubectl delete secret epf-cluster
-#kubectl create secret generic epf-cluster --from-file=epf-cluster=${EPF_CLUSTER_KUBE_CONFIG}
