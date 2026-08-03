@@ -7,11 +7,7 @@ sudo microk8s status --wait-ready
 sudo snap stop microk8s
 sudo unlink /var/lib/kubelet
 sudo umount /var/lib/kubelet
-sudo rm -r -f /var/lib/kubelet/
-sudo mkdir /var/lib/kubelet
-sudo mount --rbind /var/snap/microk8s/common/var/lib/kubelet /var/lib/kubelet
-sudo mount --make-rshared /var/lib/kubelet
-sudo snap start microk8s
+./start.sh
 sudo snap install kubectl --classic
 sudo microk8s status --wait-ready
 sudo microk8s disable ha-cluster --force
