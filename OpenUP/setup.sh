@@ -62,7 +62,7 @@ cd RustFS
 
 cd ../
 cd ScyllaDB
-./scylladb.sh
+#./scylladb.sh
 
 cd ../
 cd NATS
