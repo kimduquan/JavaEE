@@ -4,7 +4,7 @@ sudo sysctl -p
 sudo rm -r -f /var/lib/kubelet
 sudo snap install microk8s --classic
 sudo microk8s status --wait-ready
-sudo snap stop microk8s
+./stop.sh
 sudo unlink /var/lib/kubelet
 sudo umount /var/lib/kubelet
 ./start.sh
