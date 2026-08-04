@@ -50,15 +50,15 @@ cd KubeAI
 
 cd ../
 cd WildFly
-./wildfly.sh
+#./wildfly.sh
 
 cd ../
 cd Redis
-./redis.sh
+#./redis.sh
 
 cd ../
 cd RustFS
-./rustfs.sh
+#./rustfs.sh
 
 cd ../
 cd ScyllaDB
@@ -66,23 +66,23 @@ cd ScyllaDB
 
 cd ../
 cd NATS
-./nats.sh
+#./nats.sh
 
 cd ../
 cd PostgreSQL
-./postgresql.sh
+#./postgresql.sh
 
 cd ../
 cd Supavisor
-./supavisor.sh
+#./supavisor.sh
 
 cd ../
 cd MongoDB
-./mongodb.sh
+#./mongodb.sh
 
 cd ../
 cd Kafka
-./kafka.sh
+#./kafka.sh
 
 #cd ../
 #cd Neo4j
