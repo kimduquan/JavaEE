@@ -59,7 +59,7 @@ spec:
                     name: containervolume
                   networkInterfaceMultiqueue: true
                 memory:
-                  guest: 2Gi
+                  guest: 3Gi
               evictionStrategy: External
               volumes:
               - containerDisk:
