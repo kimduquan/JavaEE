@@ -147,7 +147,7 @@ metadata:
   namespace: default
 spec:
   clusterName: epf-cluster
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels: null
   template:
