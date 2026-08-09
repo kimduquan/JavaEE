@@ -7,3 +7,4 @@ export MAVEN_HOME=~/apache-maven-3.9.15/bin
 export PATH=$MAVEN_HOME:$PATH
 export DOCKER_BUILDKIT=1
 export EPF_CLUSTER_KUBE_CONFIG=/home/kimduquan/epf-cluster.kubeconfig
+export EPF_CLUSTER_SSH_KEY=/home/kimduquan/epf-cluster-ssh-key
