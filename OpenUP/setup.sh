@@ -26,32 +26,36 @@ cd clusterctl
 ./clusterctl.sh
 
 cd ../
+cd EPF-cluster
+./epf-cluster.sh
+
+cd ../
 cd metrics-server
-./metrics-server.sh
+#./metrics-server.sh
 
 cd ../
 cd HAProxy
-./haproxy.sh
+#./haproxy.sh
 
 cd ../
 cd Prometheus
-./prometheus.sh
+#./prometheus.sh
 
 cd ../
 cd Jaeger
-./jaeger.sh
+#./jaeger.sh
 
 cd ../
 cd OpenFeature
-./openfeature.sh
+#./openfeature.sh
 
 cd ../
-cd GPU
-./nvidia-device-plugin.sh
+cd NVIDIA-device-plugin
+#./nvidia-device-plugin.sh
 
 cd ../
 cd KubeAI
-./kubeai.sh
+#./kubeai.sh
 
 cd ../
 cd WildFly
