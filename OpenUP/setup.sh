@@ -17,6 +17,11 @@ cd KubeVirt
 ./kubevirt.sh
 
 cd ../
+cd Rook-Ceph
+./rook-ceph.sh
+./rook-ceph-cluster.sh
+
+cd ../
 cd clusterctl
 ./clusterctl.sh
 
