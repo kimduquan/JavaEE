@@ -313,20 +313,20 @@ cephClusterSpec:
       limits:
         memory: "1Gi"
       requests:
-        cpu: "500m"
-        memory: "512Mi"
+        cpu: "50m"
+        memory: "128Mi"
     mon:
       limits:
         memory: "2Gi"
       requests:
-        cpu: "1000m"
-        memory: "1Gi"
+        cpu: "100m"
+        memory: "128Mi"
     osd:
       limits:
         memory: "4Gi"
       requests:
-        cpu: "1000m"
-        memory: "4Gi"
+        cpu: "100m"
+        memory: "128Mi"
     prepareosd:
       # limits: It is not recommended to set limits on the OSD prepare job
       #         since it's a one-time burst for memory that must be allowed to
@@ -337,44 +337,44 @@ cephClusterSpec:
       #         OSDs ; for larger devices 2Gi may be required.
       #         cf. https://github.com/rook/rook/pull/11103
       requests:
-        cpu: "500m"
+        cpu: "50m"
         memory: "50Mi"
     mgr-sidecar:
       limits:
         memory: "100Mi"
       requests:
-        cpu: "100m"
+        cpu: "25m"
         memory: "40Mi"
     crashcollector:
       limits:
         memory: "60Mi"
       requests:
-        cpu: "100m"
+        cpu: "25m"
         memory: "60Mi"
     logcollector:
       limits:
         memory: "1Gi"
       requests:
-        cpu: "100m"
-        memory: "100Mi"
+        cpu: "25m"
+        memory: "50Mi"
     cleanup:
       limits:
         memory: "1Gi"
       requests:
-        cpu: "500m"
-        memory: "100Mi"
+        cpu: "50m"
+        memory: "50Mi"
     exporter:
       limits:
         memory: "128Mi"
       requests:
-        cpu: "50m"
-        memory: "50Mi"
+        cpu: "25m"
+        memory: "25Mi"
     cmd-reporter:
       limits:
         memory: "1Gi"
       requests:
-        cpu: "500m"
-        memory: "100Mi"
+        cpu: "50m"
+        memory: "25Mi"
 
   # The option to automatically remove OSDs that are out and are safe to destroy.
   removeOSDsIfOutAndSafeToRemove: false
@@ -569,10 +569,10 @@ cephFileSystems:
         activeStandby: true
         resources:
           limits:
-            memory: "4Gi"
+            memory: "1Gi"
           requests:
-            cpu: "1000m"
-            memory: "4Gi"
+            cpu: "100m"
+            memory: "128Mi"
         priorityClassName: system-cluster-critical
     storageClass:
       enabled: true
@@ -648,10 +648,10 @@ cephObjectStores:
         port: 80
         resources:
           limits:
-            memory: "2Gi"
-          requests:
-            cpu: "1000m"
             memory: "1Gi"
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
         # securePort: 443
         # sslCertificateRef:
         instances: 1
