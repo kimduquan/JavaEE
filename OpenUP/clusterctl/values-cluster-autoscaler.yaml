@@ -47,10 +47,10 @@ autoDiscovery:
 #   instanceType: CPX21<br />
 #   region: FSN1
 # </pre>
-autoscalingGroups:
-  - name: epf-cluster
-    maxSize: 2
-    minSize: 0
+autoscalingGroups: []
+# - name: epf-cluster
+#   maxSize: 2
+#   minSize: 0
 # - name: asg2
 #   maxSize: 2
 #   minSize: 1
@@ -395,7 +395,7 @@ rbac:
     - apiGroups:
       - infrastructure.cluster.x-k8s.io
       resources:
-      - kubemarkmachinetemplates
+      - kubevirtmachinetemplates
       verbs:
       - get
       - list
