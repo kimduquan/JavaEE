@@ -9,3 +9,9 @@ kubectl apply -f epf-cluster.yaml
 kubectl wait cluster epf-cluster --for condition=Available
 clusterctl upgrade apply --contract v1beta2 --wait-providers
 kubectl wait cluster epf-cluster --for condition=Available
+. ../env.sh
+rm ${EPF_CLUSTER_KUBE_CONFIG}
+clusterctl get kubeconfig epf-cluster > ${EPF_CLUSTER_KUBE_CONFIG}
+rm ${EPF_CLUSTER_SSH_KEY}
+kubectl get secret epf-cluster-ssh-keys -o jsonpath='{.data.key}' | base64 --decode > ${EPF_CLUSTER_SSH_KEY}
+chmod 600 ${EPF_CLUSTER_SSH_KEY}
