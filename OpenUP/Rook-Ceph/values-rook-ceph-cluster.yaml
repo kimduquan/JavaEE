@@ -201,7 +201,7 @@ cephClusterSpec:
       # Requires a kernel that supports msgr v2 (kernel 5.11 or CentOS 8.4 or newer).
       requireMsgr2: false
   #   # enable host networking
-  #   provider: host
+      provider: host
   #   # EXPERIMENTAL: enable the Multus network provider
   #   provider: multus
   #   selectors:
@@ -317,13 +317,13 @@ cephClusterSpec:
         memory: "128Mi"
     mon:
       limits:
-        memory: "2Gi"
+        memory: "1Gi"
       requests:
         cpu: "100m"
         memory: "128Mi"
     osd:
       limits:
-        memory: "4Gi"
+        memory: "1Gi"
       requests:
         cpu: "100m"
         memory: "128Mi"
