@@ -67,7 +67,7 @@ imagePullSecrets: []
 
 networkPolicy:
   # -- Enable network policies
-  enabled: true
+  enabled: false
   # -- Flavor of the network policies (cilium, kubernetes)
   flavor: "kubernetes"
   # -- Allow use of extra egress rules for cilium network policies
