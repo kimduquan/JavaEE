@@ -20,7 +20,8 @@ global:
   #
   # If a component-specific nodeSelector is also set, it will be merged and take precedence.
   # +docs:property
-  nodeSelector: {}
+  nodeSelector:
+    node-role.kubernetes.io/control-plane: ""
 
   # Labels to apply to all resources.
   # These labels are also applied to dynamically-created ACME HTTP01 solver resources
@@ -608,7 +609,9 @@ runtimeClassName: ""
 #     operator: Equal
 #     value: master
 #     effect: NoSchedule
-tolerations: []
+tolerations:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/control-plane
 
 # A list of Kubernetes TopologySpreadConstraints, if required. For more information, see [Topology spread constraint v1 core](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.27/#topologyspreadconstraint-v1-core
 #
@@ -968,6 +971,7 @@ webhook:
   # +docs:property
   nodeSelector:
     kubernetes.io/os: linux
+    node-role.kubernetes.io/control-plane: ""
 
   # A Kubernetes Affinity, if required. For more information, see [Affinity v1 core](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.27/#affinity-v1-core).
   #
@@ -998,7 +1002,9 @@ webhook:
   #     operator: Equal
   #     value: master
   #     effect: NoSchedule
-  tolerations: []
+  tolerations:
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/control-plane
 
   # A list of Kubernetes TopologySpreadConstraints, if required. For more information, see [Topology spread constraint v1 core](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.27/#topologyspreadconstraint-v1-core).
   #
@@ -1360,6 +1366,7 @@ cainjector:
   # +docs:property
   nodeSelector:
     kubernetes.io/os: linux
+    node-role.kubernetes.io/control-plane: ""
 
   # A Kubernetes Affinity, if required. For more information, see [Affinity v1 core](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.27/#affinity-v1-core).
   #
@@ -1390,7 +1397,9 @@ cainjector:
   #     operator: Equal
   #     value: master
   #     effect: NoSchedule
-  tolerations: []
+  tolerations:
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/control-plane
 
   # A list of Kubernetes TopologySpreadConstraints, if required. For more information, see [Topology spread constraint v1 core](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.27/#topologyspreadconstraint-v1-core).
   #
@@ -1618,6 +1627,7 @@ startupapicheck:
   # +docs:property
   nodeSelector:
     kubernetes.io/os: linux
+    node-role.kubernetes.io/control-plane: ""
 
   # A Kubernetes Affinity, if required. For more information, see [Affinity v1 core](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.27/#affinity-v1-core).
   # For example:
@@ -1647,7 +1657,9 @@ startupapicheck:
   #     operator: Equal
   #     value: master
   #     effect: NoSchedule
-  tolerations: []
+  tolerations:
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/control-plane
 
   # Optional additional labels to add to the startupapicheck Pods.
   podLabels: {}
