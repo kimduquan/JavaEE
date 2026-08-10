@@ -45,7 +45,7 @@ image:
   pullPolicy: Always
 
 # -- Kubernetes cluster name. Used in features such as emitting CloudEvents
-clusterName: default
+clusterName: epf-cluster
 
 # -- Kubernetes cluster domain
 clusterDomain: cluster.local
