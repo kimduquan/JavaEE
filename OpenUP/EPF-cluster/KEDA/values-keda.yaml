@@ -45,7 +45,7 @@ image:
   pullPolicy: Always
 
 # -- Kubernetes cluster name. Used in features such as emitting CloudEvents
-clusterName: kubernetes-default
+clusterName: default
 
 # -- Kubernetes cluster domain
 clusterDomain: cluster.local
@@ -60,16 +60,16 @@ crds:
     # foo: bar
 
 # -- Defines Kubernetes namespaces to watch to scale their workloads. Default watches all namespaces
-watchNamespace: ""
+watchNamespace: "default"
 
 # -- Name of secret to use to pull images to use to pull Docker images
 imagePullSecrets: []
 
 networkPolicy:
   # -- Enable network policies
-  enabled: false
+  enabled: true
   # -- Flavor of the network policies (cilium, kubernetes)
-  flavor: "cilium"
+  flavor: "kubernetes"
   # -- Allow use of extra egress rules for cilium network policies
   cilium:
     operator:
@@ -150,9 +150,12 @@ operator:
     failureThreshold: 3
     successThreshold: 1
   # -- Node selector for pod scheduling ([docs](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/))
-  nodeSelector: {}
+  nodeSelector:
+    node-role.kubernetes.io/control-plane: ""
   # -- Tolerations for pod scheduling ([docs](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/))
-  tolerations: []
+  tolerations:
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/control-plane
 
 metricsServer:
   # -- Enable KEDA metrics server and external metrics API resources.
@@ -200,9 +203,12 @@ metricsServer:
     failureThreshold: 3
     successThreshold: 1
   # -- Node selector for pod scheduling ([docs](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/))
-  nodeSelector: {}
+  nodeSelector:
+    node-role.kubernetes.io/control-plane: ""
   # -- Tolerations for pod scheduling ([docs](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/))
-  tolerations: []
+  tolerations:
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/control-plane
 
 webhooks:
   # It also used to enable or disable webhook patching in the operator
@@ -253,9 +259,12 @@ webhooks:
   failurePolicy: Ignore
 
   # -- Node selector for pod scheduling ([docs](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/))
-  nodeSelector: {}
+  nodeSelector:
+    node-role.kubernetes.io/control-plane: ""
   # -- Tolerations for pod scheduling ([docs](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/))
-  tolerations: []
+  tolerations:
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/control-plane
 
 upgradeStrategy:
   # -- Capability to configure [Deployment upgrade strategy] for operator
@@ -550,28 +559,31 @@ resources:
       cpu: 1
       memory: 1000Mi
     requests:
-      cpu: 100m
-      memory: 100Mi
+      cpu: 50m
+      memory: 50Mi
   # -- Manage [resource request & limits] of KEDA metrics apiserver pod
   metricServer:
     limits:
       cpu: 1
       memory: 1000Mi
     requests:
-      cpu: 100m
-      memory: 100Mi
+      cpu: 50m
+      memory: 50Mi
   # -- Manage [resource request & limits] of KEDA admission webhooks pod
   webhooks:
     limits:
       cpu: 1
       memory: 1000Mi
     requests:
-      cpu: 100m
-      memory: 100Mi
+      cpu: 50m
+      memory: 50Mi
 # -- Node selector for pod scheduling ([docs](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/))
-nodeSelector: {}
+nodeSelector:
+  node-role.kubernetes.io/control-plane: ""
 # -- Tolerations for pod scheduling ([docs](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/))
-tolerations: []
+tolerations:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/control-plane
 
 # -- HostAliases for pod networking ([docs](https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/))
 hostAliases: []
