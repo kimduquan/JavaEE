@@ -883,7 +883,7 @@ certificates:
   mountPath: /certs
   certManager:
     # -- Enables Cert-manager for certificate management
-    enabled: false
+    enabled: true
     # -- Certificate duration
     duration: 8760h0m0s # 1 year
     # -- Certificate renewal time before expiration
@@ -907,7 +907,7 @@ certificates:
       # -- Generates an Issuer resource with Cert-manager
       generate: true
       # -- Custom Issuer name. Required when generate: false
-      name: foo-org-ca
+      name: epf-org-ca
       # -- Custom Issuer kind. Required when generate: false
       kind: ClusterIssuer
       # -- Custom Issuer group. Required when generate: false
