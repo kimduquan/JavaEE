@@ -1,0 +1,2 @@
+toolbox=$(kubectl get pod -l app=rook-ceph-tools -n rook-ceph -o jsonpath='{.items[*].metadata.name}')
+kubectl -n rook-ceph cp create-external-cluster-resources.py $toolbox:/etc/ceph
