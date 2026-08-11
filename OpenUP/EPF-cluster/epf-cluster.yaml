@@ -286,7 +286,7 @@ spec:
         - --cloud-config=/etc/cloud/cloud-config
         - --kubeconfig=/etc/kubernetes/kubeconfig/value
         - --authentication-skip-lookup=true
-        - --cluster-name="epf-cluster"
+        - --cluster-name=epf-cluster
         command:
         - /bin/kubevirt-cloud-controller-manager
         image: quay.io/kubevirt/kubevirt-cloud-controller-manager:v0.5.1
