@@ -289,7 +289,7 @@ spec:
         - --cluster-name=epf-cluster
         command:
         - /bin/kubevirt-cloud-controller-manager
-        image: quay.io/kubevirt/kubevirt-cloud-controller-manager:v0.5.1
+        image: quay.io/kubevirt/kubevirt-cloud-controller-manager:v0.6.0
         imagePullPolicy: Always
         name: kubevirt-cloud-controller-manager
         resources:
