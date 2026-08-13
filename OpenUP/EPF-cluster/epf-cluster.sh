@@ -20,4 +20,5 @@ cd Calico
 ./calico.sh
 cd ../
 
-kubectl wait cluster epf-cluster --for condition=Available
+kubectl wait cluster epf-cluster --for condition=Available --timeout=600s
+
