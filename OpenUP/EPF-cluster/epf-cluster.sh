@@ -22,3 +22,4 @@ cd ../
 
 kubectl wait cluster epf-cluster --for condition=Available --timeout=600s
 
+./setup.sh
