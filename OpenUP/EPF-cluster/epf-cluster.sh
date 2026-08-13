@@ -8,7 +8,7 @@ export CRI_PATH="unix:///var/run/containerd/containerd.sock"
 kubectl apply -f epf-cluster.yaml
 kubectl wait cluster epf-cluster --for condition=InfrastructureReady
 clusterctl upgrade apply --contract v1beta2 --wait-providers
-kubectl wait cluster epf-cluster --for condition=RemoteConnectionProbe
+kubectl wait cluster epf-cluster --for condition=RemoteConnectionProbe --timeout=600s
 . ../env.sh
 rm ${EPF_CLUSTER_KUBE_CONFIG}
 clusterctl get kubeconfig epf-cluster > ${EPF_CLUSTER_KUBE_CONFIG}
