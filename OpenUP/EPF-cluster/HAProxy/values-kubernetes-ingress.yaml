@@ -248,7 +248,7 @@ controller:
   defaultTLSSecret:
     enabled: true
     secretNamespace: '{{ include "kubernetes-ingress.namespace" . }}'
-    secret: localhost-direct
+    secret: epf-cluster-tls
 
   ## Compute Resources for controller container
   ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
