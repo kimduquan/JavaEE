@@ -400,7 +400,7 @@ cephClusterSpec:
     nodes:
       - name: "desktop-q9gd575"
         devices: # specific devices to use for storage can be specified for each node
-          - name: "sdd"
+          - name: "sde"
     #       - name: "nvme01" # multiple osds can be created on high performance devices
     #         config:
     #           osdsPerDevice: "5"
