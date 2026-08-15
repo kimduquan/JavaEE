@@ -213,7 +213,7 @@ controller:
   # ref: https://gateway-api.sigs.k8s.io/
   # ref: https://gateway-api.sigs.k8s.io/guides/#installing-a-gateway-controller
   kubernetesGateway:
-    enabled: true
+    enabled: false
     gatewayControllerName: haproxy.org/gateway-controller
 
   ## Additional labels to add to the deployment or daemonset metadata
