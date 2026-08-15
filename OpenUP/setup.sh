@@ -35,7 +35,7 @@ cd metrics-server
 
 cd ../
 cd HAProxy
-#./haproxy.sh
+./haproxy.sh
 
 cd ../
 cd Prometheus
