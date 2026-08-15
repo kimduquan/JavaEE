@@ -813,3 +813,10 @@ cephObjectStores:
 # -- CSI driver name prefix for cephfs, rbd and nfs.
 # @default -- `namespace name where rook-ceph operator is deployed`
 csiDriverNamePrefix:
+
+nodeSelector:
+  node-role.kubernetes.io/control-plane: ""
+
+tolerations:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/control-plane
