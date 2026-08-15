@@ -34,7 +34,9 @@ toolbox:
   # @default -- the image used by the Ceph cluster
   image: #quay.io/ceph/ceph:v20.2.2
   # -- Toolbox tolerations
-  tolerations: []
+  tolerations:
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/control-plane
   # -- Toolbox affinity
   affinity: {}
   # -- Toolbox labels
