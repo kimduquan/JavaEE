@@ -436,7 +436,7 @@ controller:
   service:
     enabled: true     # set to false when controller.kind is 'DaemonSet' and controller.daemonset.useHostPorts is true
 
-    type: LoadBalancer    # can be 'ClusterIP', 'NodePort' or 'LoadBalancer'
+    type: ClusterIP    # can be 'ClusterIP', 'NodePort' or 'LoadBalancer'
 
     ## Service annotations
     ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
