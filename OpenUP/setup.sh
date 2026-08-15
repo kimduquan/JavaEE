@@ -35,7 +35,7 @@ cd cluster-autoscaler
 
 cd ../
 cd metrics-server
-#./metrics-server.sh
+./metrics-server.sh
 
 cd ../
 cd HAProxy
