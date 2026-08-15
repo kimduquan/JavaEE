@@ -1,0 +1,1 @@
+wsl --mount --vhd "D:\Installed\WSL\epf_disk.vhdx" --bare
