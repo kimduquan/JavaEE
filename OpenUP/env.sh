@@ -8,3 +8,5 @@ export PATH=$MAVEN_HOME:$PATH
 export DOCKER_BUILDKIT=1
 export EPF_CLUSTER_KUBE_CONFIG=/home/kimduquan/epf-cluster.kubeconfig
 export EPF_CLUSTER_SSH_KEY=/home/kimduquan/epf-cluster-ssh-key
+export EPF_CLUSTER_CERT=/home/kimduquan/localhost.direct.SS.crt
+export EPF_CLUSTER_CERT_KEY=/home/kimduquan/localhost.direct.SS.key
