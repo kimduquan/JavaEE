@@ -3,10 +3,6 @@ export KUBECONFIG=$EPF_CLUSTER_KUBE_CONFIG
 
 cd ../
 
-cd cert-manager
-./cert-manager.sh
- cd ../
-
 cd metrics-server
 ./metrics-server.sh
 cd ../
