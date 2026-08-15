@@ -883,7 +883,7 @@ certificates:
   mountPath: /certs
   certManager:
     # -- Enables Cert-manager for certificate management
-    enabled: true
+    enabled: false
     # -- Certificate duration
     duration: 8760h0m0s # 1 year
     # -- Certificate renewal time before expiration
