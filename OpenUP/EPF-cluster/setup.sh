@@ -17,3 +17,7 @@ cd ../
 cd HAProxy
 ./haproxy.sh
 cd ../
+
+cd Rook-Ceph
+./rook-ceph.sh
+cd ../
