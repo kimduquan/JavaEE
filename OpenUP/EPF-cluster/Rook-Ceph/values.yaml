@@ -822,3 +822,12 @@ nodeSelector:
 tolerations:
   - effect: NoSchedule
     key: node-role.kubernetes.io/control-plane
+
+ceph-csi-operator:
+  controllerManager:
+    manager:
+      nodeSelector:
+        node-role.kubernetes.io/control-plane: ""
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/control-plane
