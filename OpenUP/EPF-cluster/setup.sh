@@ -10,10 +10,6 @@ cd ../
 export KUBECONFIG=
 cd EPF-cluster
 
-cd Rook-Ceph
-./rook-ceph.sh
-cd ../
-
 cd KEDA
 #./keda.sh
 cd ../
