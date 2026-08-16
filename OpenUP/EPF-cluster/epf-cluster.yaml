@@ -59,7 +59,7 @@ spec:
                     name: containervolume
                   networkInterfaceMultiqueue: true
                 memory:
-                  guest: 2Gi
+                  guest: 1Gi
               evictionStrategy: External
               volumes:
               - containerDisk:
@@ -90,7 +90,7 @@ spec:
       kind: KubevirtMachineTemplate
       name: epf-cluster-control-plane
       namespace: default
-  replicas: 2
+  replicas: 3
   version: v1.34.1
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
