@@ -14,9 +14,6 @@ operatorConfig:
       name: rook-csi-operator-image-set-configmap
     nodePlugin:
       priorityClassName: system-node-critical
-      tolerations:
-        - effect: NoSchedule
-          key: node-role.kubernetes.io/control-plane
     controllerPlugin:
       priorityClassName: system-cluster-critical
       tolerations:
@@ -27,10 +24,6 @@ drivers:
   rbd:
     enabled: true
     name: rook-ceph.rbd.csi.ceph.com # csi-provisioner-name
-    nodePlugin:
-      tolerations:
-        - effect: NoSchedule
-          key: node-role.kubernetes.io/control-plane
     controllerPlugin:
       tolerations:
         - effect: NoSchedule
@@ -38,10 +31,6 @@ drivers:
   cephfs:
     enabled: true
     name: rook-ceph.cephfs.csi.ceph.com # csi-provisioner-name
-    nodePlugin:
-      tolerations:
-        - effect: NoSchedule
-          key: node-role.kubernetes.io/control-plane
     controllerPlugin:
       tolerations:
         - effect: NoSchedule
