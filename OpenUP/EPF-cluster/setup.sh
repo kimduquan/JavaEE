@@ -7,6 +7,7 @@ cd metrics-server
 ./metrics-server.sh
 cd ../
 
+export KUBECONFIG=
 cd EPF-cluster
 
 cd KEDA
