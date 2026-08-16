@@ -6,7 +6,7 @@ export CRI_PATH="unix:///var/run/containerd/containerd.sock"
 #rm epf-cluster.yaml
 #clusterctl generate cluster epf-cluster --kubernetes-version ${CAPK_GUEST_K8S_VERSION} --flavor lb-kccm --control-plane-machine-count 1 --infrastructure kubevirt --target-namespace default > epf-cluster.yaml
 kubectl apply -f epf-cluster.yaml
-kubectl wait cluster epf-cluster --for condition=InfrastructureReady
+kubectl wait cluster epf-cluster --for condition=InfrastructureReady --timeout=1200s
 clusterctl upgrade apply --contract v1beta2 --wait-providers
 kubectl wait cluster epf-cluster --for condition=RemoteConnectionProbe --timeout=1200s
 . ../env.sh
