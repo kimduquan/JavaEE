@@ -333,8 +333,7 @@ controller:
 
   ## Pod Node assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
-  nodeSelector:
-    node-role.kubernetes.io/control-plane: ""
+  nodeSelector: {}
 
   ## Node Taints and Tolerations for pod-node cheduling through attraction/repelling
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
@@ -348,7 +347,14 @@ controller:
 
   ## Node Affinity for pod-node scheduling constraints
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
-  affinity: {}
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          preference:
+            matchExpressions:
+              - key: node-role.kubernetes.io/worker
+                operator: Exists
 
   ## Topology spread constraints (Deployment only; ignored for DaemonSet since
   ## DaemonSets already run one pod per node — see _podspec.tpl).
@@ -715,8 +721,7 @@ crdjob:
 
   ## Pod Node assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
-  nodeSelector:
-    node-role.kubernetes.io/control-plane: ""
+  nodeSelector: {}
 
   ## Node Taints and Tolerations for pod-node cheduling through attraction/repelling
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
@@ -730,7 +735,14 @@ crdjob:
 
   ## Node Affinity for pod-node scheduling constraints
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
-  affinity: {}
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          preference:
+            matchExpressions:
+              - key: node-role.kubernetes.io/worker
+                operator: Exists
 
   ## Compute Resources for the CRD Job
   ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
