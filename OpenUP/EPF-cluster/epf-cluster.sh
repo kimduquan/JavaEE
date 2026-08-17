@@ -23,10 +23,10 @@ cd Calico
 ./calico.sh
 cd ../
 
+kubectl wait cluster epf-cluster --for condition=Available --timeout=1200s
+
 cd Rook-Ceph
 ./rook-ceph.sh
 cd ../
-
-kubectl wait cluster epf-cluster --for condition=Available --timeout=1200s
 
 ./setup.sh
