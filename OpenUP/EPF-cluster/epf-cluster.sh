@@ -16,14 +16,14 @@ rm ${EPF_CLUSTER_SSH_KEY}
 kubectl get secret epf-cluster-ssh-keys -o jsonpath='{.data.key}' | base64 --decode > ${EPF_CLUSTER_SSH_KEY}
 chmod 600 ${EPF_CLUSTER_SSH_KEY}
 
-VM_IP=$(kubectl get vmi --no-headers | awk '{print $4}')
-ssh -i ${EPF_CLUSTER_SSH_KEY} -o StrictHostKeyChecking=accept-new capk@${VM_IP} 'bash -s' < disk.sh
-
-kubectl wait cluster epf-cluster --for condition=RemoteConnectionProbe --timeout=1200s
-
 cd Calico
 ./calico.sh
 cd ../
+
+kubectl wait cluster epf-cluster --for condition=Available --timeout=1200s
+
+VM_IP=$(kubectl get vmi --no-headers | awk '{print $4}')
+ssh -i ${EPF_CLUSTER_SSH_KEY} -o StrictHostKeyChecking=accept-new capk@${VM_IP} 'bash -s' < disk.sh
 
 kubectl wait cluster epf-cluster --for condition=Available --timeout=1200s
 
