@@ -11,9 +11,9 @@ export KUBECONFIG=
 cd EPF-cluster
 
 cd KEDA
-#./keda.sh
+./keda.sh
 cd ../
 
 cd HAProxy
-#./haproxy.sh
+./haproxy.sh
 cd ../
