@@ -1,3 +1,3 @@
 toolbox=$(kubectl get pod -l app=rook-ceph-tools -n rook-ceph -o jsonpath='{.items[*].metadata.name}')
 kubectl -n rook-ceph cp create-external-cluster-resources.py $toolbox:/etc/ceph
-kubectl -n rook-ceph exec "$toolbox" -- python3 /etc/ceph/create-external-cluster-resources.py --namespace rook-ceph --format bash --rbd-data-pool-name data0 --k8s-cluster-name epf-cluster --restricted-auth-permission
+kubectl -n rook-ceph exec "$toolbox" -- python3 /etc/ceph/create-external-cluster-resources.py --namespace rook-ceph --format bash --rbd-data-pool-name data0 --k8s-cluster-name epf-cluster --restricted-auth-permission true
