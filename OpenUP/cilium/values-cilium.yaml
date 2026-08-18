@@ -138,11 +138,11 @@ cluster:
   # * It must begin and end with a lower case alphanumeric character;
   # * It may contain lower case alphanumeric characters and dashes between.
   # The "default" name cannot be used if the Cluster ID is different from 0.
-  name: default
+  name: epf-cluster
   # -- (int) Unique ID of the cluster. Must be unique across all connected
   # clusters and in the range of 1 to 255. Only required for Cluster Mesh,
   # may be 0 if Cluster Mesh is not used.
-  id: 0
+  id: 1
 # -- Define serviceAccount names for components.
 # @default -- Component's fully qualified name.
 serviceAccounts:
@@ -275,11 +275,12 @@ affinity:
             k8s-app: cilium
 # -- Node selector for cilium-agent.
 nodeSelector:
-  kubernetes.io/os: linux
+  node-role.kubernetes.io/control-plane: ""
 # -- Node tolerations for agent scheduling to nodes with taints
 # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
 tolerations:
-  - operator: Exists
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/control-plane
     # - key: "key"
     #   operator: "Equal|Exists"
     #   value: "value"
@@ -334,13 +335,13 @@ podAnnotations: {}
 podLabels: {}
 # -- Agent resource limits & requests
 # ref: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
-resources: {}
-#   limits:
-#     cpu: 4000m
-#     memory: 4Gi
-#   requests:
-#     cpu: 100m
-#     memory: 512Mi
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+  requests:
+    cpu: 50m
+    memory: 128Mi
 
 # -- resources & limits for the agent init containers
 initResources: {}
@@ -1240,7 +1241,7 @@ encryption:
       failureThreshold: 3
     # -- Node selector for ztunnel pods.
     nodeSelector:
-      kubernetes.io/os: linux
+      node-role.kubernetes.io/control-plane: ""
     # -- Node tolerations for ztunnel scheduling.
     tolerations:
       - effect: NoSchedule
@@ -1424,13 +1425,16 @@ certgen:
     cronJob: {}
   # -- Node selector for certgen
   # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector
-  nodeSelector: {}
+  nodeSelector:
+    node-role.kubernetes.io/control-plane: ""
   # -- Priority class for certgen
   # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/#priorityclass
   priorityClassName: ""
   # -- Node tolerations for pod assignment on nodes with taints
   # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
-  tolerations: []
+  tolerations:
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/control-plane
   # -- Resource limits for certgen
   # ref: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers
   resources: {}
@@ -1792,10 +1796,12 @@ hubble:
     # -- Node labels for pod assignment
     # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector
     nodeSelector:
-      kubernetes.io/os: linux
+      node-role.kubernetes.io/control-plane: ""
     # -- Node tolerations for pod assignment on nodes with taints
     # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
-    tolerations: []
+    tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/control-plane
     # -- Additional hubble-relay environment variables.
     extraEnv: []
     # -- Annotations to be added to all top-level hubble-relay objects (resources under templates/hubble-relay)
@@ -2147,10 +2153,12 @@ hubble:
     # -- Node labels for pod assignment
     # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector
     nodeSelector:
-      kubernetes.io/os: linux
+      node-role.kubernetes.io/control-plane: ""
     # -- Node tolerations for pod assignment on nodes with taints
     # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
-    tolerations: []
+    tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/control-plane
     # -- The priority class to use for hubble-ui
     priorityClassName: ""
     # -- hubble-ui update strategy.
@@ -2999,11 +3007,12 @@ envoy:
                   - "true"
   # -- Node selector for cilium-envoy.
   nodeSelector:
-    kubernetes.io/os: linux
+    node-role.kubernetes.io/control-plane: ""
   # -- Node tolerations for envoy scheduling to nodes with taints
   # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
   tolerations:
-    - operator: Exists
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/control-plane
       # - key: "key"
       #   operator: "Equal|Exists"
       #   value: "value"
@@ -3285,7 +3294,7 @@ operator:
   # -- Node labels for cilium-operator pod assignment
   # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector
   nodeSelector:
-    kubernetes.io/os: linux
+    node-role.kubernetes.io/control-plane: ""
   # -- Node tolerations for cilium-operator scheduling to nodes with taints
   # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
   # Toleration for agentNotReadyTaintKey taint is always added to cilium-operator pods.
@@ -3506,11 +3515,12 @@ nodeinit:
   # -- Node labels for nodeinit pod assignment
   # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector
   nodeSelector:
-    kubernetes.io/os: linux
+    node-role.kubernetes.io/control-plane: ""
   # -- Node tolerations for nodeinit scheduling to nodes with taints
   # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
   tolerations:
-    - operator: Exists
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/control-plane
       # - key: "key"
       #   operator: "Equal|Exists"
       #   value: "value"
@@ -3616,11 +3626,12 @@ preflight:
   # -- Node labels for preflight pod assignment
   # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector
   nodeSelector:
-    kubernetes.io/os: linux
+    node-role.kubernetes.io/control-plane: ""
   # -- Node tolerations for preflight scheduling to nodes with taints
   # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
   tolerations:
-    - operator: Exists
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/control-plane
       # - key: "key"
       #   operator: "Equal|Exists"
       #   value: "value"
@@ -3835,13 +3846,16 @@ clustermesh:
       annotations: {}
       # -- Node selector for coredns-mcsapi-autoconfig
       # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector
-      nodeSelector: {}
+      nodeSelector:
+        node-role.kubernetes.io/control-plane: ""
       # -- Priority class for coredns-mcsapi-autoconfig
       # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/#priorityclass
       priorityClassName: ""
       # -- Node tolerations for pod assignment on nodes with taints
       # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
-      tolerations: []
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/control-plane
       # -- Resource limits for coredns-mcsapi-autoconfig
       # ref: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers
       resources: {}
@@ -4096,10 +4110,12 @@ clustermesh:
     # -- Node labels for pod assignment
     # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector
     nodeSelector:
-      kubernetes.io/os: linux
+      node-role.kubernetes.io/control-plane: ""
     # -- Node tolerations for pod assignment on nodes with taints
     # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
-    tolerations: []
+    tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/control-plane
     # -- clustermesh-apiserver update strategy
     updateStrategy:
       type: RollingUpdate
@@ -4487,10 +4503,13 @@ authentication:
           affinity: {}
           # -- SPIRE server nodeSelector configuration
           # ref: ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector
-          nodeSelector: {}
+          nodeSelector:
+            node-role.kubernetes.io/control-plane: ""
           # -- SPIRE server tolerations configuration
           # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
-          tolerations: []
+          tolerations:
+            - effect: NoSchedule
+              key: node-role.kubernetes.io/control-plane
           # SPIRE server datastorage configuration
           dataStorage:
             # -- Enable SPIRE server data storage
@@ -4561,9 +4580,11 @@ standaloneDnsProxy:
   serverPort: 10095
   # -- Standalone DNS proxy Node Selector
   nodeSelector:
-    kubernetes.io/os: linux
+    node-role.kubernetes.io/control-plane: ""
   # -- Standalone DNS proxy tolerations
-  tolerations: []
+  tolerations:
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/control-plane
   # -- Standalone DNS proxy auto mount service account token
   automountServiceAccountToken: false
   # -- Minimum number of seconds for which a newly created standalone DNS proxy pod should be ready
