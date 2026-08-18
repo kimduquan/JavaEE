@@ -69,7 +69,7 @@ spec:
                   image: quay.io/capk/ubuntu-2404-container-disk:v1.34.1
                 name: containervolume
               - emptyDisk:
-                  capacity: 10Gi
+                  capacity: 20Gi
                 name: emptyvolume
 ---
 apiVersion: controlplane.cluster.x-k8s.io/v1beta1
