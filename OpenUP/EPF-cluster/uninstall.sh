@@ -1,0 +1,1 @@
+kubectl delete cluster epf-cluster
