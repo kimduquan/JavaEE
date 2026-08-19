@@ -326,7 +326,7 @@ cephClusterSpec:
         memory: "1Gi"
       requests:
         cpu: "100m"
-        memory: "128Mi"
+        memory: "1Gi"
     prepareosd:
       # limits: It is not recommended to set limits on the OSD prepare job
       #         since it's a one-time burst for memory that must be allowed to
