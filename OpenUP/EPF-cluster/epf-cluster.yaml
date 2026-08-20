@@ -46,6 +46,20 @@ spec:
         metadata:
           namespace: default
         spec:
+          dataVolumeTemplates:
+          - metadata:
+              name: epf-cluster-boot-volume
+            spec:
+              pvc:
+                accessModes:
+                - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 20Gi
+                storageClassName: microk8s-hostpath
+              source:
+                registry:
+                  url: docker://quay.io/capk/ubuntu-2404-container-disk:v1.34.1
           runStrategy: Always
           template:
             spec:
@@ -56,21 +70,15 @@ spec:
                   disks:
                   - disk:
                       bus: virtio
-                    name: containervolume
-                  - disk:
-                      bus: virtio
-                    name: emptyvolume
+                    name: dv-volume
                   networkInterfaceMultiqueue: true
                 memory:
                   guest: 4Gi
               evictionStrategy: External
               volumes:
-              - containerDisk:
-                  image: quay.io/capk/ubuntu-2404-container-disk:v1.34.1
-                name: containervolume
-              - emptyDisk:
-                  capacity: 20Gi
-                name: emptyvolume
+              - dataVolume:
+                  name: epf-cluster-boot-volume
+                name: dv-volume
 ---
 apiVersion: controlplane.cluster.x-k8s.io/v1beta1
 kind: KubeadmControlPlane
@@ -113,6 +121,20 @@ spec:
         metadata:
           namespace: default
         spec:
+          dataVolumeTemplates:
+          - metadata:
+              name: epf-cluster-boot-volume
+            spec:
+              pvc:
+                accessModes:
+                - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 20Gi
+                storageClassName: microk8s-hostpath
+              source:
+                registry:
+                  url: docker://quay.io/capk/ubuntu-2404-container-disk:v1.34.1
           runStrategy: Always
           template:
             spec:
@@ -123,21 +145,15 @@ spec:
                   disks:
                   - disk:
                       bus: virtio
-                    name: containervolume
-                  - disk:
-                      bus: virtio
-                    name: emptyvolume
+                    name: dv-volume
                   networkInterfaceMultiqueue: true
                 memory:
                   guest: 2Gi
               evictionStrategy: External
               volumes:
-              - containerDisk:
-                  image: quay.io/capk/ubuntu-2404-container-disk:v1.34.1
-                name: containervolume
-              - emptyDisk:
-                  capacity: 10Gi
-                name: emptyvolume
+              - dataVolume:
+                  name: epf-cluster-boot-volume
+                name: dv-volume
 ---
 apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
 kind: KubeadmConfigTemplate
@@ -162,6 +178,7 @@ metadata:
     cluster.x-k8s.io/cluster-api-autoscaler-node-group-min-size: "0"
     capacity.cluster-autoscaler.kubernetes.io/memory: "2G"
     capacity.cluster-autoscaler.kubernetes.io/cpu: "2"
+    capacity.cluster-autoscaler.kubernetes.io/ephemeral-disk: "20Gi"
     capacity.cluster-autoscaler.kubernetes.io/maxPods: "20"
 spec:
   clusterName: epf-cluster
