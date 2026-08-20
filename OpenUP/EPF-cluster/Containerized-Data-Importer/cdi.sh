@@ -2,3 +2,5 @@
 #export VERSION=$(echo ${TAG##*/})
 #kubectl create -f https://github.com/kubevirt/containerized-data-importer/releases/download/$VERSION/cdi-operator.yaml
 #kubectl create -f https://github.com/kubevirt/containerized-data-importer/releases/download/$VERSION/cdi-cr.yaml
+kubectl create -f cdi-operator.yaml
+kubectl create -f cdi-cr.yaml
