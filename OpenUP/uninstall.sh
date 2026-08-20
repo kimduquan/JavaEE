@@ -13,4 +13,5 @@ sudo umount /var/lib/kubelet
 sudo rm -rf /var/lib/kubelet
 
 sudo rm -rf /var/lib/rook-ceph
-sudo wipefs -f /dev/sde
+sudo rm -rf /var/lib/rook/
+sudo wipefs -af /dev/sde
