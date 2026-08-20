@@ -1,12 +1,11 @@
 grep -qxF "kernel.panic = 10" /etc/sysctl.conf || echo "kernel.panic = 10" | sudo tee -a /etc/sysctl.conf
 grep -qxF "vm.overcommit_memory = 1" /etc/sysctl.conf || echo "vm.overcommit_memory = 1" | sudo tee -a /etc/sysctl.conf
 sudo sysctl -p
-sudo rm -r -f /var/lib/kubelet
 sudo snap install microk8s --classic
 sudo microk8s status --wait-ready
-./stop.sh
-sudo unlink /var/lib/kubelet
-sudo umount /var/lib/kubelet
+#./stop.sh
+#sudo unlink /var/lib/kubelet
+#sudo umount /var/lib/kubelet
 ./start.sh
 sudo snap install kubectl --classic
 sudo microk8s status --wait-ready
