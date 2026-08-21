@@ -17,6 +17,10 @@ cd KubeVirt
 ./kubevirt.sh
 
 cd ../
+cd Containerized-Data-Importer
+./containerized-data-importer.sh
+
+cd ../
 cd Rook-Ceph
 ./rook-ceph.sh
 ./rook-ceph-cluster.sh
