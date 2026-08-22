@@ -51,8 +51,8 @@ toolbox:
     limits:
       memory: "1Gi"
     requests:
-      cpu: "100m"
-      memory: "128Mi"
+      cpu: "50m"
+      memory: "64Mi"
   # -- Set the priority class for the toolbox if desired
   priorityClassName:
 
@@ -314,13 +314,13 @@ cephClusterSpec:
         memory: "1Gi"
       requests:
         cpu: "50m"
-        memory: "128Mi"
+        memory: "64Mi"
     mon:
       limits:
         memory: "1Gi"
       requests:
-        cpu: "100m"
-        memory: "128Mi"
+        cpu: "50m"
+        memory: "64Mi"
     osd:
       limits:
         memory: "1Gi"
