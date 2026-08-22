@@ -664,7 +664,7 @@ cephObjectStores:
         #       cpu: "100m"
         #       memory: "40Mi"
     storageClass:
-      enabled: true
+      enabled: false
       name: ceph-bucket
       reclaimPolicy: Delete
       volumeBindingMode: "Immediate"
