@@ -42,7 +42,7 @@ tolerations: []
 unreachableNodeTolerationSeconds: 5
 
 # -- Whether the operator should watch cluster CRD in its own namespace or not
-currentNamespaceOnly: false
+currentNamespaceOnly: true
 
 # -- Number of clusters the operator reconciles concurrently
 reconcileConcurrentClusters: 1
