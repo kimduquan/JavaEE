@@ -326,7 +326,7 @@ cephClusterSpec:
         memory: "1Gi"
       requests:
         cpu: "100m"
-        memory: "1Gi"
+        memory: "256Mi"
     prepareosd:
       # limits: It is not recommended to set limits on the OSD prepare job
       #         since it's a one-time burst for memory that must be allowed to
@@ -377,7 +377,7 @@ cephClusterSpec:
         memory: "25Mi"
 
   # The option to automatically remove OSDs that are out and are safe to destroy.
-  removeOSDsIfOutAndSafeToRemove: false
+  removeOSDsIfOutAndSafeToRemove: true
 
   # priority classes to apply to ceph resources
   priorityClassNames:
@@ -605,9 +605,9 @@ cephFileSystems:
 # -- Settings for the filesystem snapshot class
 # @default -- See [CephFS Snapshots](../Storage-Configuration/Ceph-CSI/ceph-csi-snapshot.md#cephfs-snapshots)
 cephFileSystemVolumeSnapshotClass:
-  enabled: false
+  enabled: true
   name: ceph-filesystem
-  isDefault: true
+  isDefault: false
   deletionPolicy: Delete
   annotations: {}
   labels: {}
@@ -617,7 +617,7 @@ cephFileSystemVolumeSnapshotClass:
 # -- Settings for the block pool snapshot class
 # @default -- See [RBD Snapshots](../Storage-Configuration/Ceph-CSI/ceph-csi-snapshot.md#rbd-snapshots)
 cephBlockPoolsVolumeSnapshotClass:
-  enabled: false
+  enabled: true
   name: ceph-block
   isDefault: false
   deletionPolicy: Delete
