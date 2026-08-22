@@ -53,8 +53,8 @@ toolbox:
     limits:
       memory: "1Gi"
     requests:
-      cpu: "100m"
-      memory: "128Mi"
+      cpu: "50m"
+      memory: "64Mi"
   # -- Set the priority class for the toolbox if desired
   priorityClassName:
 
@@ -315,14 +315,14 @@ cephClusterSpec:
       limits:
         memory: "1Gi"
       requests:
-        cpu: "100m"
-        memory: "128Mi"
+        cpu: "50m"
+        memory: "64Mi"
     mon:
       limits:
         memory: "1Gi"
       requests:
-        cpu: "100m"
-        memory: "128Mi"
+        cpu: "50m"
+        memory: "64Mi"
     osd:
       limits:
         memory: "1Gi"
@@ -339,31 +339,31 @@ cephClusterSpec:
       #         OSDs ; for larger devices 2Gi may be required.
       #         cf. https://github.com/rook/rook/pull/11103
       requests:
-        cpu: "100m"
+        cpu: "50m"
         memory: "25Mi"
     mgr-sidecar:
       limits:
         memory: "100Mi"
       requests:
-        cpu: "50m"
+        cpu: "25m"
         memory: "20Mi"
     crashcollector:
       limits:
         memory: "60Mi"
       requests:
-        cpu: "50m"
+        cpu: "25m"
         memory: "30Mi"
     logcollector:
       limits:
         memory: "1Gi"
       requests:
-        cpu: "50m"
+        cpu: "25m"
         memory: "50Mi"
     cleanup:
       limits:
         memory: "1Gi"
       requests:
-        cpu: "100m"
+        cpu: "50m"
         memory: "50Mi"
     exporter:
       limits:
@@ -375,8 +375,8 @@ cephClusterSpec:
       limits:
         memory: "1Gi"
       requests:
-        cpu: "100m"
-        memory: "50Mi"
+        cpu: "50m"
+        memory: "25Mi"
 
   # The option to automatically remove OSDs that are out and are safe to destroy.
   removeOSDsIfOutAndSafeToRemove: false
