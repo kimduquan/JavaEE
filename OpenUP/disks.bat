@@ -1,1 +1,1 @@
-wsl --mount --vhd "D:\Installed\WSL\epf_disk.vhdx" --bare --name epf-disk
+wsl --mount --vhd "D:\Installed\Disks\epf_disk.vhdx" --bare --name epf-disk
