@@ -605,7 +605,7 @@ cephFileSystems:
 # -- Settings for the filesystem snapshot class
 # @default -- See [CephFS Snapshots](../Storage-Configuration/Ceph-CSI/ceph-csi-snapshot.md#cephfs-snapshots)
 cephFileSystemVolumeSnapshotClass:
-  enabled: true
+  enabled: false
   name: ceph-filesystem
   isDefault: false
   deletionPolicy: Delete
@@ -617,7 +617,7 @@ cephFileSystemVolumeSnapshotClass:
 # -- Settings for the block pool snapshot class
 # @default -- See [RBD Snapshots](../Storage-Configuration/Ceph-CSI/ceph-csi-snapshot.md#rbd-snapshots)
 cephBlockPoolsVolumeSnapshotClass:
-  enabled: true
+  enabled: false
   name: ceph-block
   isDefault: false
   deletionPolicy: Delete
