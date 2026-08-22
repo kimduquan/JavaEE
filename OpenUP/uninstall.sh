@@ -12,6 +12,9 @@ sudo snap remove microk8s --purge
 sudo umount /var/lib/kubelet
 sudo rm -rf /var/lib/kubelet
 sudo rm -rf /var/lib/kubevirt-node-labeller
+sudo rm -rf /var/run/kubevirt
+sudo rm -rf /var/run/kubevirt-libvirt-runtimes
+sudo rm -rf /var/run/kubevirt-private
 sudo rm -rf /var/lib/rook-ceph
 sudo rm -rf /var/lib/rook/
 sudo wipefs -af /dev/sde
