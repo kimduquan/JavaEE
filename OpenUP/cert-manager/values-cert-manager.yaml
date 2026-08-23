@@ -147,7 +147,7 @@ podDisruptionBudget:
   # For example, the PodDisruptionBudget will block `kubectl drain`
   # if it is used on the Node where the only remaining cert-manager
   # Pod is currently running.
-  enabled: false
+  enabled: true
 
   # This configures the minimum available pods for disruptions. It can either be set to
   # an integer (e.g., 1) or a percentage value (e.g., 25%).
@@ -417,7 +417,10 @@ extraEnv: []
 #    memory: 32Mi
 #
 # For more information, see [Resource Management for Pods and Containers](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
-resources: {}
+resources:
+  requests:
+     cpu: 10m
+     memory: 48Mi
 
 # Pod Security Context.
 # For more information, see [Configure a Security Context for a Pod or Container](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/).
@@ -510,6 +513,7 @@ hostAliases: []
 # +docs:property
 nodeSelector:
   kubernetes.io/os: linux
+  node-role.kubernetes.io/control-plane: ""
 
 # Enables default network policies for cert-manager.
 # This provides a way for you to restrict network traffic
@@ -518,7 +522,7 @@ nodeSelector:
 # NOTE: an incorrect networkPolicy will cause traffic to be dropped
 networkPolicy:
   # Create network policies for cert-manager.
-  enabled: false
+  enabled: true
 
   # Ingress rule for the cert-manager network policy.
   # By default all pods are allowed access to:
@@ -847,7 +851,7 @@ webhook:
     # For example, the PodDisruptionBudget will block `kubectl drain`
     # if it is used on the Node where the only remaining cert-manager
     # Pod is currently running.
-    enabled: false
+    enabled: true
 
     # This property configures the minimum available pods for disruptions. Can either be set to
     # an integer (e.g., 1) or a percentage value (e.g., 25%).
@@ -938,7 +942,10 @@ webhook:
   #    memory: 32Mi
   #
   # For more information, see [Resource Management for Pods and Containers](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
-  resources: {}
+  resources:
+    requests:
+     cpu: 10m
+     memory: 48Mi
 
   # Liveness probe values.
   # For more information, see [Container probes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes).
@@ -1127,7 +1134,7 @@ webhook:
   # NOTE: an incorrect networkPolicy will cause traffic to be dropped
   networkPolicy:
     # Create network policies for the webhooks.
-    enabled: false
+    enabled: true
 
     # Ingress rule for the webhook network policy.
     # By default all pods are allowed access to:
@@ -1258,7 +1265,7 @@ cainjector:
   # NOTE: an incorrect networkPolicy will cause traffic to be dropped
   networkPolicy:
     # Create network policies for the cainjector.
-    enabled: false
+    enabled: true
 
     # Ingress rule for the webhook cainjector policy.
     # By default all pods are allowed access to:
@@ -1294,7 +1301,7 @@ cainjector:
     # For example, the PodDisruptionBudget will block `kubectl drain`
     # if it is used on the Node where the only remaining cert-manager
     # Pod is currently running.
-    enabled: false
+    enabled: true
 
     # `minAvailable` configures the minimum available pods for disruptions. It can either be set to
     # an integer (e.g., 1) or a percentage value (e.g., 25%).
