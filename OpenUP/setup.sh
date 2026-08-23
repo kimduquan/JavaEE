@@ -24,6 +24,7 @@ cd ../
 cd Rook-Ceph
 ./rook-ceph.sh
 ./rook-ceph-cluster.sh
+./ceph-csi-drivers.sh
 
 cd ../
 cd clusterctl
