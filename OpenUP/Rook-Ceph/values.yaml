@@ -136,7 +136,7 @@ operatorConfig:
       # -- Pod's priority class name (default: "")
       priorityClassName: "system-node-critical"
       # -- kubelet directory path (default: "/var/lib/kubelet")
-      kubeletDirPath: "/var/lib/kubelet"
+      kubeletDirPath: "/var/snap/microk8s/common/var/lib/kubelet"
       # -- Custom labels for the pod (default: {})
       labels: {}
       # -- Custom annotations for the pod (default: {})
