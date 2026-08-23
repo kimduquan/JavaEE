@@ -32,11 +32,11 @@ cd clusterctl
 
 cd ../
 cd EPF-cluster
-#./epf-cluster.sh
+./epf-cluster.sh
 
 cd ../
 cd cluster-autoscaler
-#./cluster-autoscaler.sh
+./cluster-autoscaler.sh
 
 cd ../
 cd metrics-server
