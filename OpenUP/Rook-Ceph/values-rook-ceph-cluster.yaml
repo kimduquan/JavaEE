@@ -313,20 +313,20 @@ cephClusterSpec:
       limits:
         memory: "1Gi"
       requests:
-        cpu: "50m"
-        memory: "64Mi"
+        cpu: "25m"
+        memory: "192Mi"
     mon:
       limits:
         memory: "1Gi"
       requests:
-        cpu: "50m"
+        cpu: "30m"
         memory: "64Mi"
     osd:
       limits:
         memory: "2Gi"
       requests:
-        cpu: "100m"
-        memory: "128Mi"
+        cpu: "30m"
+        memory: "96Mi"
     prepareosd:
       # limits: It is not recommended to set limits on the OSD prepare job
       #         since it's a one-time burst for memory that must be allowed to
@@ -349,8 +349,8 @@ cephClusterSpec:
       limits:
         memory: "60Mi"
       requests:
-        cpu: "25m"
-        memory: "60Mi"
+        cpu: "5m"
+        memory: "16Mi"
     logcollector:
       limits:
         memory: "1Gi"
@@ -367,8 +367,8 @@ cephClusterSpec:
       limits:
         memory: "128Mi"
       requests:
-        cpu: "25m"
-        memory: "25Mi"
+        cpu: "15m"
+        memory: "16Mi"
     cmd-reporter:
       limits:
         memory: "1Gi"
