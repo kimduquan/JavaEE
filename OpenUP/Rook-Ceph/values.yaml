@@ -104,7 +104,7 @@ operatorConfig:
         logHostPath: ""
     imageSet:
       # -- ConfigMap reference to the image set for the driver (default: "")
-      name: ""
+      name: "rook-csi-operator-image-set-configmap"
     # -- Cluster name identifier (default: "")
     clusterName: ""
     # -- Flag to enable fencing (default: false)
@@ -178,7 +178,7 @@ drivers:
   # RBD driver configuration
   rbd:
     # -- CSI driver name for RBD (default: "rbd.csi.ceph.com")
-    name: "rbd.csi.ceph.com"
+    name: "rook-ceph.rbd.csi.ceph.com"
     # -- Enable the RBD driver (default: true)
     enabled: true
     log:
@@ -197,7 +197,7 @@ drivers:
         logHostPath: ""
     imageSet:
       # -- ConfigMap reference to the image set for the driver (default: "")
-      name: ""
+      name: "rook-csi-operator-image-set-configmap"
     # -- Cluster name identifier (default: "")
     clusterName: ""
     # -- Flag to enable fencing (default: false)
@@ -318,7 +318,7 @@ drivers:
   # NVMe-oF driver configuration (backed by RBD)
   nvmeof:
     # -- CSI driver name for NVMe-oF (default: "nvmeof.csi.ceph.com")
-    name: "nvmeof.csi.ceph.com"
+    name: "rook-ceph.nvmeof.csi.ceph.com"
     # -- Enable the NVMe-oF driver (default: true)
     enabled: false
     log:
@@ -337,7 +337,7 @@ drivers:
         logHostPath: ""
     imageSet:
       # -- ConfigMap reference to the image set for the driver (default: "")
-      name: ""
+      name: "rook-csi-operator-image-set-configmap"
     # -- Cluster name identifier (default: "")
     clusterName: ""
     # -- Flag to enable fencing (default: false)
@@ -458,7 +458,7 @@ drivers:
   # CephFS driver configuration
   cephfs:
     # -- CSI driver name for CephFS (default: "cephfs.csi.ceph.com")
-    name: "cephfs.csi.ceph.com"
+    name: "rook-ceph.cephfs.csi.ceph.com"
     # -- Enable the CephFS driver (default: true)
     enabled: true
     log:
@@ -477,7 +477,7 @@ drivers:
         logHostPath: ""
     imageSet:
       # -- ConfigMap reference to the image set for the driver (default: "")
-      name: ""
+      name: "rook-csi-operator-image-set-configmap"
     # -- Cluster name identifier (default: "")
     clusterName: ""
     # -- Flag to enable fencing (default: false)
@@ -595,7 +595,7 @@ drivers:
   # NFS driver configuration
   nfs:
     # -- CSI driver name for NFS (default: "nfs.csi.ceph.com")
-    name: "nfs.csi.ceph.com"
+    name: "rook-ceph.nfs.csi.ceph.com"
     # -- Enable the NFS driver (default: true)
     enabled: false
     log:
@@ -614,7 +614,7 @@ drivers:
         logHostPath: ""
     imageSet:
       # -- ConfigMap reference to the image set for the driver (default: "")
-      name: ""
+      name: "rook-csi-operator-image-set-configmap"
     # -- Cluster name identifier (default: "")
     clusterName: ""
     # -- Flag to enable fencing (default: false)
