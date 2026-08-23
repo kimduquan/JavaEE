@@ -29,42 +29,42 @@ clientProfiles:
           # -- Name of the controller publish secret (default: "")
           name: ""
           # -- Namespace of the controller publish secret (default: "")
-          namespace: ""
+          namespace: "rook-ceph"
         nodePublishSecret:
           # -- Name of the node publish secret (default: "")
           name: ""
           # -- Namespace of the node publish secret (default: "")
-          namespace: ""
+          namespace: "rook-ceph"
     rbd:
       # -- Namespace for RADOS block devices (default: "")
-      radosNamespace: ""
+      radosNamespace: "rook-ceph"
       # -- Ceph CSI secret references for RBD (default: {})
       cephCsiSecrets:
         controllerPublishSecret:
           # -- Name of the controller publish secret (default: "")
           name: ""
           # -- Namespace of the controller publish secret (default: "")
-          namespace: ""
+          namespace: "rook-ceph"
         nodePublishSecret:
           # -- Name of the node publish secret (default: "")
           name: ""
           # -- Namespace of the node publish secret (default: "")
-          namespace: ""
+          namespace: "rook-ceph"
     nvmeof:
       # -- Namespace for RADOS block devices (default: "")
-      radosNamespace: ""
+      radosNamespace: "rook-ceph"
       # -- Ceph CSI secret references for NVMe-oF (default: {})
       cephCsiSecrets:
         controllerPublishSecret:
           # -- Name of the controller publish secret (default: "")
           name: ""
           # -- Namespace of the controller publish secret (default: "")
-          namespace: ""
+          namespace: "rook-ceph"
         nodePublishSecret:
           # -- Name of the node publish secret (default: "")
           name: ""
           # -- Namespace of the node publish secret (default: "")
-          namespace: ""
+          namespace: "rook-ceph"
 # Configuration for Client Profile Replications
 clientProfileReplications:
   - # -- Name of the client profile replication (default: "")
