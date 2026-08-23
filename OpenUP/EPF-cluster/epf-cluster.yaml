@@ -179,7 +179,7 @@ metadata:
     capacity.cluster-autoscaler.kubernetes.io/memory: "2G"
     capacity.cluster-autoscaler.kubernetes.io/cpu: "2"
     capacity.cluster-autoscaler.kubernetes.io/ephemeral-disk: "20Gi"
-    capacity.cluster-autoscaler.kubernetes.io/maxPods: "20"
+    capacity.cluster-autoscaler.kubernetes.io/maxPods: "30"
 spec:
   clusterName: epf-cluster
   replicas: 0
