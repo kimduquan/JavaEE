@@ -11,6 +11,73 @@ cephClusterSpec:
       mon:
         disabled: false
         interval: 45s
+  resources:
+    mgr:
+      limits:
+        memory: "1Gi"
+      requests:
+        cpu: "50m"
+        memory: "64Mi"
+    mon:
+      limits:
+        memory: "1Gi"
+      requests:
+        cpu: "50m"
+        memory: "64Mi"
+    osd:
+      limits:
+        memory: "2Gi"
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+    prepareosd:
+      # limits: It is not recommended to set limits on the OSD prepare job
+      #         since it's a one-time burst for memory that must be allowed to
+      #         complete without an OOM kill.  Note however that if a k8s
+      #         limitRange guardrail is defined external to Rook, the lack of
+      #         a limit here may result in a sync failure, in which case a
+      #         limit should be added.  1200Mi may suffice for up to 15Ti
+      #         OSDs ; for larger devices 2Gi may be required.
+      #         cf. https://github.com/rook/rook/pull/11103
+      requests:
+        cpu: "50m"
+        memory: "50Mi"
+    mgr-sidecar:
+      limits:
+        memory: "100Mi"
+      requests:
+        cpu: "25m"
+        memory: "40Mi"
+    crashcollector:
+      limits:
+        memory: "60Mi"
+      requests:
+        cpu: "25m"
+        memory: "60Mi"
+    logcollector:
+      limits:
+        memory: "1Gi"
+      requests:
+        cpu: "25m"
+        memory: "50Mi"
+    cleanup:
+      limits:
+        memory: "1Gi"
+      requests:
+        cpu: "50m"
+        memory: "50Mi"
+    exporter:
+      limits:
+        memory: "128Mi"
+      requests:
+        cpu: "25m"
+        memory: "25Mi"
+    cmd-reporter:
+      limits:
+        memory: "1Gi"
+      requests:
+        cpu: "50m"
+        memory: "25Mi"
 # -- A list of CephBlockPool configurations to deploy
 # @default -- See [below](#ceph-block-pools)
 cephBlockPools: {}
