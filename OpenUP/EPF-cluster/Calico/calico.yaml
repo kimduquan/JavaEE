@@ -7647,7 +7647,7 @@ spec:
             privileged: true
           resources:
             requests:
-              cpu: 250m
+              cpu: 50m
           lifecycle:
             preStop:
               exec:
