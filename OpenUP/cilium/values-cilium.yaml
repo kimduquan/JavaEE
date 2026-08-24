@@ -180,7 +180,7 @@ serviceAccounts:
   relay:
     create: true
     name: hubble-relay
-    automount: false
+    automount: true
     annotations: {}
   ui:
     create: true
@@ -214,7 +214,7 @@ serviceAccounts:
   ztunnel:
     create: true
     name: ztunnel-cilium
-    automount: false
+    automount: true
     annotations: {}
 # -- Configure termination grace period for cilium-agent DaemonSet.
 terminationGracePeriodSeconds: 1
@@ -223,7 +223,7 @@ agent: true
 # -- Agent daemonset name.
 name: cilium
 # -- Roll out cilium agent pods automatically when configmap is updated.
-rollOutCiliumPods: false
+rollOutCiliumPods: true
 # -- Configuration for the ConfigMap drift detection feature.
 # When enabled, the agent continuously watches the cilium-config ConfigMap
 # and exposes a cilium_drift_checker_config_delta Prometheus metric reporting
@@ -455,10 +455,10 @@ aksbyocni:
 # @schema
 # -- Enable installation of PodCIDR routes between worker
 # nodes if worker nodes share a common L2 network segment.
-autoDirectNodeRoutes: false
+autoDirectNodeRoutes: true
 # -- Enable skipping of PodCIDR routes between worker
 # nodes if the worker nodes are in a different L2 network segment.
-directRoutingSkipUnreachable: false
+directRoutingSkipUnreachable: true
 # -- Annotate k8s node upon initialization with Cilium's metadata.
 annotateK8sNode: false
 azure:
@@ -1296,7 +1296,7 @@ k8sNetworkPolicy:
   enabled: true
 k8sClusterNetworkPolicy:
   # -- Enable support for K8s Cluster Network Policy
-  enabled: false
+  enabled: true
 # -- Enable endpoint lockdown on policy map overflow.
 endpointLockdownOnMapOverflow: false
 eni:
@@ -3246,7 +3246,7 @@ operator:
   # -- Enable the cilium-operator component (required).
   enabled: true
   # -- Roll out cilium-operator pods automatically when configmap is updated.
-  rollOutPods: false
+  rollOutPods: true
   # -- cilium-operator image.
   image:
     # @schema
@@ -3267,7 +3267,7 @@ operator:
     pullPolicy: "IfNotPresent"
     suffix: ""
   # -- Number of replicas to run for the cilium-operator deployment
-  replicas: 2
+  replicas: 1
   # -- The priority class to use for cilium-operator
   priorityClassName: ""
   # -- DNS policy for Cilium operator pods.
@@ -3303,7 +3303,6 @@ operator:
   # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector
   nodeSelector:
     kubernetes.io/os: linux
-    node-role.kubernetes.io/control-plane: ""
   # -- Node tolerations for cilium-operator scheduling to nodes with taints
   # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
   # Toleration for agentNotReadyTaintKey taint is always added to cilium-operator pods.
