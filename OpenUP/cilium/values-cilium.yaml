@@ -874,7 +874,7 @@ crdWaitTimeout: ""
 # -- Plugins to inject custom BPF into the datapath.
 datapathPlugins:
   # -- Enable datapath plugins.
-  enabled: false
+  enabled: true
   # -- Parent directory for per-plugin state directories.
   stateDir: /var/run/cilium/plugins
 daemon:
