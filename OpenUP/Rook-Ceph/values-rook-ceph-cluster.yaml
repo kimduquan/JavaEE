@@ -571,11 +571,11 @@ cephFileSystems:
           limits:
             memory: "1Gi"
           requests:
-            cpu: "100m"
-            memory: "128Mi"
+            cpu: "30m"
+            memory: "32Mi"
         priorityClassName: system-cluster-critical
     storageClass:
-      enabled: true
+      enabled: false
       isDefault: false
       name: ceph-filesystem
       # (Optional) specify a data pool to use, must be the name of one of the data pools above, 'data0' by default
@@ -650,7 +650,7 @@ cephObjectStores:
           limits:
             memory: "1Gi"
           requests:
-            cpu: "100m"
+            cpu: "10m"
             memory: "128Mi"
         # securePort: 443
         # sslCertificateRef:
