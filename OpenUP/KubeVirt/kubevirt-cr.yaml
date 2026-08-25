@@ -20,3 +20,5 @@ spec:
         # kubelet-pods-dir: "/var/snap/microk8s/common/var/lib/kubelet/pods"
   imagePullPolicy: IfNotPresent
   workloadUpdateStrategy: {}
+  infra:
+    replicas: 1
