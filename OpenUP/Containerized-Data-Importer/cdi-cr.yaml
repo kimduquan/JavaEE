@@ -8,8 +8,11 @@ spec:
     - HonorWaitForFirstConsumer
   imagePullPolicy: IfNotPresent
   infra:
+    apiServerReplicas: 1
+    deploymentReplicas: 1
     nodeSelector:
       kubernetes.io/os: linux
+    uploadProxyReplicas: 1
   workload:
     nodeSelector:
       kubernetes.io/os: linux
