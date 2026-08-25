@@ -3,7 +3,7 @@ grep -qxF "vm.overcommit_memory = 1" /etc/sysctl.conf || echo "vm.overcommit_mem
 sudo sysctl -p
 sudo snap install microk8s --classic
 sudo microk8s status --wait-ready
-#./stop.sh
+./stop.sh
 #sudo unlink /var/lib/kubelet
 #sudo umount /var/lib/kubelet
 ./start.sh
