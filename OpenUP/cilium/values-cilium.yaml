@@ -73,12 +73,12 @@ k8sServiceHostRef:
   # -- (string) Key in the ConfigMap containing the Kubernetes service endpoint
   key:
 # -- (string) Kubernetes service host - use "auto" for automatic lookup from the cluster-info ConfigMap
-k8sServiceHost: ""
+k8sServiceHost: "auto"
 # @schema
 # type: [string, integer]
 # @schema
 # -- (string) Kubernetes service port
-k8sServicePort: ""
+k8sServicePort: "443"
 # @schema
 # type: [null, string]
 # @schema
@@ -88,7 +88,7 @@ k8sServiceLookupConfigMapName: ""
 # type: [null, string]
 # @schema
 # -- (string) When `k8sServiceHost=auto`, allows to customize the namespace that contains `k8sServiceLookupConfigMapName`. It defaults to `kube-public`.
-k8sServiceLookupNamespace: ""
+k8sServiceLookupNamespace: "default"
 # -- Configure the client side rate limit for the agent
 #
 # If the amount of requests to the Kubernetes API server exceeds the configured
