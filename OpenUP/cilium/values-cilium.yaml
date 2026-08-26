@@ -73,7 +73,7 @@ k8sServiceHostRef:
   # -- (string) Key in the ConfigMap containing the Kubernetes service endpoint
   key:
 # -- (string) Kubernetes service host - use "auto" for automatic lookup from the cluster-info ConfigMap
-k8sServiceHost: "auto"
+k8sServiceHost: "kubernetes"
 # @schema
 # type: [string, integer]
 # @schema
