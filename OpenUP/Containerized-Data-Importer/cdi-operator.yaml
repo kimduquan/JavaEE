@@ -5704,7 +5704,7 @@ metadata:
     name: cdi-operator
     np.kubevirt.io/allow-access-cluster-services: "true"
     operator.cdi.kubevirt.io: ""
-    prometheus.cdi.kubevirt.io: "true"
+    prometheus.cdi.kubevirt.io: "false"
   name: cdi-operator
   namespace: cdi
 spec:
@@ -5723,7 +5723,7 @@ spec:
         name: cdi-operator
         np.kubevirt.io/allow-access-cluster-services: "true"
         operator.cdi.kubevirt.io: ""
-        prometheus.cdi.kubevirt.io: "true"
+        prometheus.cdi.kubevirt.io: "false"
     spec:
       affinity:
         podAffinity:
