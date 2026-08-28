@@ -95,8 +95,8 @@ spec:
       etcd:
         local:
           extraArgs:
-            listen-client-urls: "http://0.0.0.0:2379"
-            listen-peer-urls: "http://0.0.0.0:2380"
+            listen-client-urls: "https://0.0.0.0:2379"
+            listen-peer-urls: "https://0.0.0.0:2380"
     initConfiguration:
       nodeRegistration:
         criSocket: unix:///var/run/containerd/containerd.sock
