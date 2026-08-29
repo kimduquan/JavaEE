@@ -331,7 +331,7 @@ spec:
         name: kubevirt-cloud-controller-manager
         resources:
           requests:
-            cpu: 100m
+            cpu: 10m
         securityContext:
           privileged: true
         volumeMounts:
