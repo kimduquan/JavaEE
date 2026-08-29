@@ -1,7 +1,7 @@
-kubectl -n rook-ceph delete --force CephBlockPool ceph-blockpool
-kubectl -n rook-ceph delete --force CephFilesystem ceph-filesystem
-kubectl -n rook-ceph delete --force CephFilesystemSubVolumeGroup ceph-filesystem-csi
-kubectl -n rook-ceph delete --force CephObjectStore ceph-objectstore
+kubectl -n rook-ceph delete CephBlockPool ceph-blockpool
+kubectl -n rook-ceph delete CephFilesystem ceph-filesystem
+kubectl -n rook-ceph delete CephFilesystemSubVolumeGroup ceph-filesystem-csi
+kubectl -n rook-ceph delete CephObjectStore ceph-objectstore
 kubectl delete crd cephblockpoolradosnamespaces.ceph.rook.io
 kubectl delete crd cephblockpools.ceph.rook.io
 kubectl delete crd cephbucketnotifications.ceph.rook.io
