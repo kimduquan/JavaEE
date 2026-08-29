@@ -16,7 +16,7 @@ spec:
     supportContainerResources:
       resources:
         requests:
-          
+          cpu: "10m"
   customizeComponents: {}
     # flags:
       # handler:
