@@ -1,6 +1,7 @@
 grep -qxF "kernel.panic = 10" /etc/sysctl.conf || echo "kernel.panic = 10" | sudo tee -a /etc/sysctl.conf
 grep -qxF "vm.overcommit_memory = 1" /etc/sysctl.conf || echo "vm.overcommit_memory = 1" | sudo tee -a /etc/sysctl.conf
 sudo sysctl -p
+sudo hostnamectl set-hostname desktop-q9gd575
 sudo snap install microk8s --classic
 sudo microk8s status --wait-ready
 ./stop.sh
