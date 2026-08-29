@@ -575,7 +575,7 @@ cephFileSystems:
             memory: "32Mi"
         priorityClassName: system-cluster-critical
     storageClass:
-      enabled: true
+      enabled: false
       isDefault: false
       name: ceph-filesystem
       # (Optional) specify a data pool to use, must be the name of one of the data pools above, 'data0' by default
