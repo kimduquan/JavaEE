@@ -92,14 +92,14 @@ spec:
         dnsDomain: epf-cluster.default.local
         podSubnet: 10.243.0.0/16
         serviceSubnet: 10.95.0.0/16
-      etcd:
-        local:
-          extraArgs:
-            listen-client-urls: "http://0.0.0.0:2379"
-            listen-peer-urls: "http://0.0.0.0:2380"
-            advertise-client-urls: "http://0.0.0.0:2379"
-            client-cert-auth: "false"
-            peer-client-cert-auth: "false"
+    # etcd:
+    #   local:
+    #     extraArgs:
+    #       listen-client-urls: "http://0.0.0.0:2379"
+    #       listen-peer-urls: "http://0.0.0.0:2380"
+    #       advertise-client-urls: "http://0.0.0.0:2379"
+    #       client-cert-auth: "false"
+    #       peer-client-cert-auth: "false"
     initConfiguration:
       nodeRegistration:
         criSocket: unix:///var/run/containerd/containerd.sock
