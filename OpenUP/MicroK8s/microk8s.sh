@@ -9,9 +9,10 @@ sudo microk8s status --wait-ready
 ./start.sh
 sudo snap install kubectl --classic
 sudo microk8s status --wait-ready
-#sudo microk8s enable community
+sudo microk8s enable community
 #sudo microk8s enable cilium
-sudo microk8s disable ha-cluster --force
+#sudo microk8s disable ha-cluster --force
+sudo microk8s enable kube-ovn --force
 sudo microk8s enable cis-hardening
 sudo microk8s enable dns
 sudo microk8s enable metallb 172.23.225.250-172.23.225.254
