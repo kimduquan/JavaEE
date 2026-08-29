@@ -6,6 +6,9 @@ spec:
   config:
     featureGates:
     - HonorWaitForFirstConsumer
+    podResourceRequirements:
+      requests:
+        cpu: "10m"
   imagePullPolicy: IfNotPresent
   infra:
     apiServerReplicas: 1
