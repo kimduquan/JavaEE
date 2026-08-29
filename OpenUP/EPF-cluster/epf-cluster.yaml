@@ -97,7 +97,6 @@ spec:
           extraArgs:
             listen-client-urls: "http://0.0.0.0:2379"
             listen-peer-urls: "http://0.0.0.0:2380"
-            initial-advertise-peer-urls: "http://0.0.0.0:2380"
             advertise-client-urls: "http://0.0.0.0:2379"
             client-cert-auth: "false"
             peer-client-cert-auth: "false"
