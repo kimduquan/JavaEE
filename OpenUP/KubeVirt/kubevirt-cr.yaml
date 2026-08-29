@@ -14,9 +14,10 @@ spec:
       #   - "Root"
     imagePullPolicy: IfNotPresent
     supportContainerResources:
-      resources:
-        requests:
-          cpu: "10m"
+      - type: ""
+        resources:
+          requests:
+            cpu: "5m"
   customizeComponents: {}
     # flags:
       # handler:
