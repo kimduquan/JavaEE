@@ -15,7 +15,7 @@ spec:
     deploymentReplicas: 1
     nodeSelector:
       kubernetes.io/os: linux
-    uploadProxyReplicas: 1
+    uploadProxyReplicas: 0
   workload:
     nodeSelector:
       kubernetes.io/os: linux
