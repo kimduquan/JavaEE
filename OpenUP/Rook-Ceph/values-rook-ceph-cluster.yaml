@@ -51,7 +51,7 @@ toolbox:
     limits:
       memory: "1Gi"
     requests:
-      cpu: "50m"
+      cpu: "10m"
       memory: "64Mi"
   # -- Set the priority class for the toolbox if desired
   priorityClassName:
