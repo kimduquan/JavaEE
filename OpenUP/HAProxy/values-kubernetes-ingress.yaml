@@ -257,7 +257,7 @@ controller:
   #    cpu: 250m
   #    memory: 400Mi
     requests:
-      cpu: 25m
+      cpu: 5m
       memory: 128Mi
 
   ## Horizontal Pod Scaler
@@ -705,7 +705,7 @@ controller:
       # period: 3s                                      # optional, default is 5s
       source: k8s                                       # possible values are: 'proxy', 'k8s'
     proxyParams:                                        # Mandatory if source is 'proxy'
-      replicaCount: 3                                   # number of replicas of the proxy, mandatory if source is 'proxy'
+      replicaCount: 1                                   # number of replicas of the proxy, mandatory if source is 'proxy'
       proxySvcLabelSelector: run:haproxy-ingress-proxy  # label selector of the proxy service, mandatory if source is 'proxy'
 
 ## CRD job default values
@@ -742,5 +742,5 @@ crdjob:
   #    cpu: 250m
   #    memory: 400Mi
     requests:
-      cpu: 250m
+      cpu: 5m
       memory: 400Mi
