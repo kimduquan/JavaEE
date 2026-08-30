@@ -8,11 +8,11 @@ spec:
     - HonorWaitForFirstConsumer
     podResourceRequirements:
       requests:
-        cpu: "10m"
+        cpu: "5m"
   imagePullPolicy: IfNotPresent
   infra:
-    apiServerReplicas: 1
-    deploymentReplicas: 1
+    apiServerReplicas: 0
+    deploymentReplicas: 0
     nodeSelector:
       kubernetes.io/os: linux
     uploadProxyReplicas: 0
