@@ -173,7 +173,7 @@ serviceMonitor:
 # See https://github.com/kubernetes-sigs/metrics-server#scaling
 resources:
   requests:
-    cpu: 10m
+    cpu: 5m
     memory: 50Mi
     # limits:
     #   cpu:
