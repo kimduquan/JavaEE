@@ -25,7 +25,7 @@ resources:
   limits:
     memory: 512Mi
   requests:
-    cpu: 10m
+    cpu: 5m
     memory: 64Mi
 
 # -- Kubernetes [`nodeSelector`](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector) to add to the Deployment.

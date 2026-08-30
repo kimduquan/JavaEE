@@ -51,7 +51,7 @@ toolbox:
     limits:
       memory: "1Gi"
     requests:
-      cpu: "10m"
+      cpu: "5m"
       memory: "64Mi"
   # -- Set the priority class for the toolbox if desired
   priorityClassName:
@@ -319,13 +319,13 @@ cephClusterSpec:
       limits:
         memory: "1Gi"
       requests:
-        cpu: "30m"
+        cpu: "25m"
         memory: "64Mi"
     osd:
       limits:
         memory: "2Gi"
       requests:
-        cpu: "30m"
+        cpu: "20m"
         memory: "96Mi"
     prepareosd:
       # limits: It is not recommended to set limits on the OSD prepare job

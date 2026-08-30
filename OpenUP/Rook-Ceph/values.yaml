@@ -460,7 +460,7 @@ drivers:
     # -- CSI driver name for CephFS (default: "cephfs.csi.ceph.com")
     name: "rook-ceph.cephfs.csi.ceph.com"
     # -- Enable the CephFS driver (default: true)
-    enabled: false
+    enabled: true
     log:
       # -- Log verbosity level (0-5) (default: 0)
       verbosity: 0
