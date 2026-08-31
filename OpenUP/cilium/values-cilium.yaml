@@ -488,9 +488,9 @@ alibabacloud:
 # Time) through the "kubernetes.io/egress-bandwidth" Pod annotation.
 bandwidthManager:
   # -- Enable bandwidth manager infrastructure (also prerequirement for BBR)
-  enabled: false
+  enabled: true
   # -- Activate BBR TCP congestion control for Pods
-  bbr: false
+  bbr: true
   # -- Activate BBR TCP congestion control for Pods in the host namespace only.
   bbrHostNamespaceOnly: false
 # -- Configure standalone NAT46/NAT64 gateway
@@ -500,7 +500,7 @@ nat46x64Gateway:
 # -- Configure L2 announcements
 l2announcements:
   # -- Enable L2 announcements
-  enabled: false
+  enabled: true
   # -- If a lease is not renewed for X duration, the current leader is considered dead, a new leader is picked
   # leaseDuration: 15s
   # -- The interval at which the leader will renew the lease
@@ -516,7 +516,7 @@ l2podAnnouncements:
 # -- This feature set enables virtual BGP routers to be created via BGP CRDs.
 bgpControlPlane:
   # -- Enables the BGP control plane.
-  enabled: false
+  enabled: true
   # -- SecretsNamespace is the namespace which BGP support will retrieve secrets from.
   secretsNamespace:
     # -- Create secrets namespace for BGP secrets.
@@ -528,7 +528,7 @@ bgpControlPlane:
     # -- Enable/Disable BGP status reporting
     # It is recommended to enable status reporting in general, but if you have any issue
     # such as high API server load, you can disable it by setting this to false.
-    enabled: true
+    enabled: false
   # -- BGP router-id allocation mode
   routerIDAllocation:
     # -- BGP router-id allocation mode. In default mode, the router-id is derived from the IPv4 address if it is available, or else it is determined by the lower 32 bits of the MAC address.
@@ -870,7 +870,7 @@ conntrackGCInterval: ""
 conntrackGCMaxInterval: ""
 # -- (string) Configure timeout in which Cilium will exit if CRDs are not available
 # @default -- `"5m"`
-crdWaitTimeout: ""
+crdWaitTimeout: "25m"
 # -- Plugins to inject custom BPF into the datapath.
 datapathPlugins:
   # -- Enable datapath plugins.
@@ -986,10 +986,10 @@ envoyConfig:
 ingressController:
   # -- Enable cilium ingress controller
   # This will automatically set enable-envoy-config as well.
-  enabled: false
+  enabled: true
   # -- Set cilium ingress controller to be the default ingress controller
   # This will let cilium ingress controller route entries without ingress class set
-  default: false
+  default: true
   # -- Default ingress load balancer mode
   # Supported values: shared, dedicated
   # For granular control, use the following annotations on the ingress resource:
@@ -997,7 +997,7 @@ ingressController:
   loadbalancerMode: dedicated
   # -- Enforce https for host having matching TLS host in Ingress.
   # Incoming traffic to http listener will return 308 http error code with respective location in header.
-  enforceHttps: true
+  enforceHttps: false
   # -- Enable proxy protocol for all Ingress listeners. Note that _only_ Proxy protocol traffic will be accepted once this is enabled.
   enableProxyProtocol: false
   # @schema
@@ -1023,7 +1023,7 @@ ingressController:
   # -- SecretsNamespace is the namespace in which envoy SDS will retrieve TLS secrets from.
   secretsNamespace:
     # -- Create secrets namespace for Ingress.
-    create: true
+    create: false
     # -- Name of Ingress secret namespace.
     name: cilium-secrets
     # -- Enable secret sync, which will make sure all TLS secrets used by Ingress are synced to secretsNamespace.name.
@@ -1073,7 +1073,7 @@ ingressController:
   # Host Network related configuration
   hostNetwork:
     # -- Configure whether the Envoy listeners should be exposed on the host network.
-    enabled: false
+    enabled: true
     # -- Configure a specific port on the host network that gets used for the shared listener.
     sharedListenerPort: 8080
     # -- Configure a specific port on the host network that gets used for the shared HTTP listener.
@@ -1096,7 +1096,7 @@ ingressController:
 gatewayAPI:
   # -- Enable support for Gateway API in cilium
   # This will automatically set enable-envoy-config as well.
-  enabled: false
+  enabled: true
   # -- Enable proxy protocol for all GatewayAPI listeners. Note that _only_ Proxy protocol traffic will be accepted once this is enabled.
   enableProxyProtocol: false
   # @schema
@@ -1106,10 +1106,10 @@ gatewayAPI:
   # When enabled, the source IP is determined from the remote address instead of the proxy protocol header.
   useRemoteAddress: true
   # -- Enable Backend Protocol selection support (GEP-1911) for Gateway API via appProtocol.
-  enableAppProtocol: false
+  enableAppProtocol: true
   # -- Enable ALPN for all listeners configured with Gateway API. ALPN will attempt HTTP/2, then HTTP 1.1.
   # Note that this will also enable `appProtocol` support, and services that wish to use HTTP/2 will need to indicate that via their `appProtocol`.
-  enableAlpn: false
+  enableAlpn: true
   # -- The number of additional GatewayAPI proxy hops from the right side of the HTTP header to trust when determining the origin client's IP address.
   xffNumTrustedHops: 0
   # -- Control how traffic from external sources is routed to the LoadBalancer Kubernetes Service for all Cilium GatewayAPI Gateway instances. Valid values are "Cluster" and "Local".
@@ -1127,7 +1127,7 @@ gatewayAPI:
   # -- SecretsNamespace is the namespace in which envoy SDS will retrieve TLS secrets from.
   secretsNamespace:
     # -- Create secrets namespace for Gateway API.
-    create: true
+    create: false
     # -- Name of Gateway API secret namespace.
     name: cilium-secrets
     # -- Enable secret sync, which will make sure all TLS secrets used by Ingress are synced to secretsNamespace.name.
@@ -1136,7 +1136,7 @@ gatewayAPI:
   # Host Network related configuration
   hostNetwork:
     # -- Configure whether the Envoy listeners should be exposed on the host network.
-    enabled: false
+    enabled: true
     # Specify the nodes where the Ingress listeners should be exposed
     nodes:
       # -- Specify the labels of the nodes where the Ingress listeners should be exposed
@@ -1453,7 +1453,7 @@ certgen:
     failedJobsHistoryLimit: 1
 hubble:
   # -- Enable Hubble (true by default).
-  enabled: true
+  enabled: false
   # @schema
   # type: [null, boolean]
   # @schema
@@ -2499,7 +2499,7 @@ enableIPv6Masquerade: true
 # -- Enables masquerading to the source of the route for traffic leaving the node from endpoints.
 enableMasqueradeRouteSource: false
 # -- Enables IPv4 BIG TCP support which increases maximum IPv4 GSO/GRO limits for nodes and pods
-enableIPv4BIGTCP: false
+enableIPv4BIGTCP: true
 # -- Enables IPv6 BIG TCP support which increases maximum IPv6 GSO/GRO limits for nodes and pods
 enableIPv6BIGTCP: false
 nat:
@@ -2574,14 +2574,14 @@ loadBalancer:
   # program is run directly out of the networking driver's early receive
   # path), or best-effort (use native mode XDP acceleration on devices
   # that support it).
-  acceleration: disabled
+  acceleration: best-effort
   # -- dsrDispatch configures whether IP option (opt), IPIP encapsulation (ipip),
   # Geneve Class Option (geneve) used to pass a service IP and port to remote backend
   # dsrDispatch: opt
 
   # -- serviceTopology enables K8s Topology Aware Hints -based service
   # endpoints filtering
-  serviceTopology: false
+  serviceTopology: true
   # -- reflectorWaitTime is the maximum amount of time the K8s reflector waits
   # to fill its events buffer. A higher wait time will reduce processing of
   # transient states and increases throughput as it gives bigger batches
@@ -2600,7 +2600,7 @@ loadBalancer:
     # Applicable values:
     #   - envoy: Enable L7 load balancing via envoy proxy. This will automatically set enable-envoy-config as well.
     #   - disabled: Disable L7 load balancing by way of service annotation.
-    backend: disabled
+    backend: envoy
     # -- List of ports from service to be automatically redirected to above backend.
     # Any service exposing one of these ports will be automatically redirected.
     # Fine-grained control can be achieved by using the service annotation.
@@ -2887,7 +2887,7 @@ envoy:
       # @schema
       maxUnavailable: 2
   # -- Roll out cilium envoy pods automatically when configmap is updated.
-  rollOutPods: false
+  rollOutPods: true
   # -- ADVANCED OPTION: Bring your own custom Envoy bootstrap ConfigMap. Provide the name of a ConfigMap with a `bootstrap-config.json` key.
   # When specified, Envoy will use this ConfigMap instead of the default provided by the chart.
   # WARNING: Use of this setting has the potential to prevent cilium-envoy from starting up, and can cause unexpected behavior (e.g. due to
@@ -3048,7 +3048,7 @@ envoy:
   # Note that some of these apply to either cilium-agent or cilium-envoy.
   prometheus:
     # -- Enable prometheus metrics for cilium-envoy
-    enabled: true
+    enabled: false
     serviceMonitor:
       # -- Enable service monitors.
       # This requires the prometheus CRDs to be available (see https://github.com/prometheus-operator/prometheus-operator/blob/main/example/prometheus-operator-crd/monitoring.coreos.com_servicemonitors.yaml)
@@ -3093,7 +3093,7 @@ nodeSelectorLabels: false
 
 # -- Enable resource quotas for priority classes used in the cluster.
 resourceQuotas:
-  enabled: false
+  enabled: true
   cilium:
     hard:
       # 5k nodes * 2 DaemonSets (Cilium and cilium node init)
@@ -3142,7 +3142,7 @@ tls:
   # -- Configures where secrets used in CiliumNetworkPolicies will be looked for
   secretsNamespace:
     # -- Create secrets namespace for TLS Interception secrets.
-    create: true
+    create: false
     # -- Name of TLS Interception secret namespace.
     name: cilium-secrets
   # -- Configures settings for synchronization of TLS Interception Secrets
@@ -3353,7 +3353,7 @@ operator:
   podDisruptionBudget:
     # -- enable PodDisruptionBudget
     # ref: https://kubernetes.io/docs/concepts/workloads/pods/disruptions/
-    enabled: false
+    enabled: true
     # @schema
     # type: [null, integer, string]
     # @schema
@@ -3577,7 +3577,7 @@ nodeinit:
   # written by the node-init DaemonSet
   bootstrapFile: "/tmp/cilium-bootstrap.d/cilium-bootstrap-time"
   # -- wait for Cloud init to finish on the host and assume the node has cloud init installed
-  waitForCloudInit: false
+  waitForCloudInit: true
   # -- startup offers way to customize startup nodeinit script (pre and post position)
   startup:
     preScript: ""
@@ -3658,7 +3658,7 @@ preflight:
   podDisruptionBudget:
     # -- enable PodDisruptionBudget
     # ref: https://kubernetes.io/docs/concepts/workloads/pods/disruptions/
-    enabled: false
+    enabled: true
     # @schema
     # type: [null, integer, string]
     # @schema
@@ -4075,7 +4075,7 @@ clustermesh:
     podDisruptionBudget:
       # -- enable PodDisruptionBudget
       # ref: https://kubernetes.io/docs/concepts/workloads/pods/disruptions/
-      enabled: false
+      enabled: true
       # @schema
       # type: [null, integer, string]
       # @schema
@@ -4226,17 +4226,17 @@ clustermesh:
     # clustermesh-apiserver Prometheus metrics configuration
     metrics:
       # -- Enables exporting apiserver metrics in OpenMetrics format.
-      enabled: true
+      enabled: false
       # -- Configure the port the apiserver metric server listens on.
       port: 9962
       kvstoremesh:
         # -- Enables exporting KVStoreMesh metrics in OpenMetrics format.
-        enabled: true
+        enabled: false
         # -- Configure the port the KVStoreMesh metric server listens on.
         port: 9964
       etcd:
         # -- Enables exporting etcd metrics in OpenMetrics format.
-        enabled: true
+        enabled: false
         # -- Set level of detail for etcd metrics; specify 'extensive' to include server side gRPC histogram metrics.
         mode: basic
         # -- Configure the port the etcd metric server listens on.
