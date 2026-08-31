@@ -73,12 +73,12 @@ k8sServiceHostRef:
   # -- (string) Key in the ConfigMap containing the Kubernetes service endpoint
   key:
 # -- (string) Kubernetes service host - use "auto" for automatic lookup from the cluster-info ConfigMap
-k8sServiceHost: "10.95.0.1"
+k8sServiceHost: ""
 # @schema
 # type: [string, integer]
 # @schema
 # -- (string) Kubernetes service port
-k8sServicePort: "443"
+k8sServicePort: ""
 # @schema
 # type: [null, string]
 # @schema
@@ -341,7 +341,7 @@ resources:
     cpu: 1000m
     memory: 1Gi
   requests:
-    cpu: 50m
+    cpu: 5m
     memory: 128Mi
 
 # -- resources & limits for the agent init containers
@@ -2448,12 +2448,12 @@ readinessProbe:
 # @schema@
 # type: [string, boolean]
 # @schema@
-kubeProxyReplacement: "true"
+kubeProxyReplacement: "false"
 # -- healthz server bind address for the kube-proxy replacement.
 # To enable set the value to '0.0.0.0:10256' for all ipv4
 # addresses and this '[::]:10256' for all ipv6 addresses.
 # By default it is disabled.
-kubeProxyReplacementHealthzBindAddr: "0.0.0.0:10256"
+kubeProxyReplacementHealthzBindAddr: ""
 l2NeighDiscovery:
   # -- Enable L2 neighbor discovery in the agent
   enabled: false
