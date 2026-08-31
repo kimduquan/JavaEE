@@ -53,7 +53,7 @@ toolbox:
     limits:
       memory: "1Gi"
     requests:
-      cpu: "50m"
+      cpu: "5m"
       memory: "64Mi"
   # -- Set the priority class for the toolbox if desired
   priorityClassName:
@@ -321,13 +321,13 @@ cephClusterSpec:
       limits:
         memory: "1Gi"
       requests:
-        cpu: "30m"
+        cpu: "25m"
         memory: "64Mi"
     osd:
       limits:
         memory: "2Gi"
       requests:
-        cpu: "30m"
+        cpu: "20m"
         memory: "96Mi"
     prepareosd:
       # limits: It is not recommended to set limits on the OSD prepare job
@@ -339,13 +339,13 @@ cephClusterSpec:
       #         OSDs ; for larger devices 2Gi may be required.
       #         cf. https://github.com/rook/rook/pull/11103
       requests:
-        cpu: "50m"
+        cpu: "5m"
         memory: "50Mi"
     mgr-sidecar:
       limits:
         memory: "100Mi"
       requests:
-        cpu: "25m"
+        cpu: "5m"
         memory: "40Mi"
     crashcollector:
       limits:
@@ -357,25 +357,25 @@ cephClusterSpec:
       limits:
         memory: "1Gi"
       requests:
-        cpu: "25m"
+        cpu: "5m"
         memory: "50Mi"
     cleanup:
       limits:
         memory: "1Gi"
       requests:
-        cpu: "50m"
+        cpu: "5m"
         memory: "50Mi"
     exporter:
       limits:
         memory: "128Mi"
       requests:
-        cpu: "15m"
+        cpu: "5m"
         memory: "16Mi"
     cmd-reporter:
       limits:
         memory: "1Gi"
       requests:
-        cpu: "50m"
+        cpu: "5m"
         memory: "25Mi"
 
   # The option to automatically remove OSDs that are out and are safe to destroy.
@@ -672,7 +672,7 @@ cephObjectStores:
         #       cpu: "100m"
         #       memory: "40Mi"
     storageClass:
-      enabled: true
+      enabled: false
       name: ceph-bucket
       reclaimPolicy: Delete
       volumeBindingMode: "Immediate"
