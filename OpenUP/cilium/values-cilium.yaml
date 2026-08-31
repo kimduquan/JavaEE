@@ -520,7 +520,7 @@ bgpControlPlane:
   # -- SecretsNamespace is the namespace which BGP support will retrieve secrets from.
   secretsNamespace:
     # -- Create secrets namespace for BGP secrets.
-    create: false
+    create: true
     # -- The name of the secret namespace to which Cilium agents are given read access
     name: kube-system
   # -- Status reporting settings
@@ -1023,7 +1023,7 @@ ingressController:
   # -- SecretsNamespace is the namespace in which envoy SDS will retrieve TLS secrets from.
   secretsNamespace:
     # -- Create secrets namespace for Ingress.
-    create: false
+    create: true
     # -- Name of Ingress secret namespace.
     name: cilium-secrets
     # -- Enable secret sync, which will make sure all TLS secrets used by Ingress are synced to secretsNamespace.name.
@@ -1127,7 +1127,7 @@ gatewayAPI:
   # -- SecretsNamespace is the namespace in which envoy SDS will retrieve TLS secrets from.
   secretsNamespace:
     # -- Create secrets namespace for Gateway API.
-    create: false
+    create: true
     # -- Name of Gateway API secret namespace.
     name: cilium-secrets
     # -- Enable secret sync, which will make sure all TLS secrets used by Ingress are synced to secretsNamespace.name.
@@ -1378,7 +1378,7 @@ healthCheckICMPFailureThreshold: 3
 # -- Configure the host firewall.
 hostFirewall:
   # -- Enables the enforcement of host policies in the eBPF datapath.
-  enabled: false
+  enabled: true
 # -- Enable routing to a service that has zero endpoints
 enableNoServiceEndpointsRoutable: true
 # -- Configure socket LB
@@ -3142,7 +3142,7 @@ tls:
   # -- Configures where secrets used in CiliumNetworkPolicies will be looked for
   secretsNamespace:
     # -- Create secrets namespace for TLS Interception secrets.
-    create: false
+    create: true
     # -- Name of TLS Interception secret namespace.
     name: cilium-secrets
   # -- Configures settings for synchronization of TLS Interception Secrets
