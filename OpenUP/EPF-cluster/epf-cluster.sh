@@ -3,13 +3,13 @@ clusterctl init --infrastructure kubevirt --target-namespace default --wait-prov
 export NODE_VM_IMAGE_TEMPLATE="quay.io/capk/ubuntu-2404-container-disk:v1.34.1"
 export CAPK_GUEST_K8S_VERSION="${NODE_VM_IMAGE_TEMPLATE/*:/}"
 export CRI_PATH="unix:///var/run/containerd/containerd.sock"
-export STORAGE_CLASS_NAME="microk8s-hostpath"
+export STORAGE_CLASS_NAME="ceph-block"
 export ROOT_VOLUME_SIZE="20Gi"
 #rm epf-cluster.yaml
 #clusterctl generate cluster epf-cluster --kubernetes-version ${CAPK_GUEST_K8S_VERSION} --flavor lb-kccm --control-plane-machine-count 1 --infrastructure kubevirt --target-namespace default > epf-cluster.yaml
-kubectl apply -f epf-cluster.yaml
-kubectl wait cluster epf-cluster --for condition=InfrastructureReady --timeout=1200s
 clusterctl upgrade apply --contract v1beta2 --wait-providers
+kubectl apply -f epf-cluster-v1beta2.yaml
+#kubectl wait cluster epf-cluster --for condition=InfrastructureReady --timeout=1200s
 kubectl wait cluster epf-cluster --for condition=RemoteConnectionProbe --timeout=1800s
 . ../env.sh
 rm ${EPF_CLUSTER_KUBE_CONFIG}
