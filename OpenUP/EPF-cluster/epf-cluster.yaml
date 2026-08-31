@@ -103,6 +103,13 @@ spec:
     initConfiguration:
       nodeRegistration:
         criSocket: unix:///var/run/containerd/containerd.sock
+      timeouts:
+        controlPlaneComponentHealthCheckSeconds: 1200
+        kubeletHealthCheckSeconds: 1200
+        kubernetesAPICallSeconds: 300
+        etcdAPICallSeconds: 600
+        tlsBootstrapSeconds: 1500
+        discoverySeconds: 1500
     joinConfiguration:
       nodeRegistration:
         criSocket: unix:///var/run/containerd/containerd.sock
