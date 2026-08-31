@@ -520,7 +520,7 @@ bgpControlPlane:
   # -- SecretsNamespace is the namespace which BGP support will retrieve secrets from.
   secretsNamespace:
     # -- Create secrets namespace for BGP secrets.
-    create: true
+    create: false
     # -- The name of the secret namespace to which Cilium agents are given read access
     name: kube-system
   # -- Status reporting settings
@@ -978,7 +978,7 @@ envoyConfig:
   # -- SecretsNamespace is the namespace in which envoy SDS will retrieve secrets from.
   secretsNamespace:
     # -- Create secrets namespace for CiliumEnvoyConfig CRDs.
-    create: true
+    create: false
     # -- The name of the secret namespace to which Cilium agents are given read access.
     name: kube-system
   # -- Interval in which an attempt is made to reconcile failed EnvoyConfigs. If the duration is zero, the retry is deactivated.
