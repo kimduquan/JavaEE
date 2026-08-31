@@ -1,0 +1,355 @@
+apiVersion: cluster.x-k8s.io/v1beta2
+kind: Cluster
+metadata:
+  name: epf-cluster
+  namespace: default
+spec:
+  clusterNetwork:
+    pods:
+      cidrBlocks:
+      - 10.243.0.0/16
+    services:
+      cidrBlocks:
+      - 10.95.0.0/16
+  controlPlaneRef:
+    apiGroup : controlplane.cluster.x-k8s.io
+    kind: KubeadmControlPlane
+    name: epf-cluster-control-plane
+  infrastructureRef:
+    apiGroup: infrastructure.cluster.x-k8s.io
+    kind: KubevirtCluster
+    name: epf-cluster
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+kind: KubevirtCluster
+metadata:
+  name: epf-cluster
+  namespace: default
+spec:
+  controlPlaneServiceTemplate:
+    spec:
+      type: LoadBalancer
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+kind: KubevirtMachineTemplate
+metadata:
+  name: epf-cluster-control-plane
+  namespace: default
+spec:
+  template:
+    spec:
+      virtualMachineBootstrapCheck:
+        checkStrategy: ssh
+      virtualMachineTemplate:
+        metadata:
+          namespace: default
+        spec:
+          dataVolumeTemplates:
+          - metadata:
+              name: epf-cluster-boot-volume
+            spec:
+              pvc:
+                accessModes:
+                - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 20Gi
+                storageClassName: ceph-block
+              source:
+                registry:
+                  url: docker://quay.io/capk/ubuntu-2404-container-disk:v1.34.1
+          runStrategy: Always
+          template:
+            spec:
+              domain:
+                cpu:
+                  cores: 2
+                devices:
+                  disks:
+                  - disk:
+                      bus: virtio
+                    name: dv-volume
+                  networkInterfaceMultiqueue: true
+                memory:
+                  guest: 4Gi
+              evictionStrategy: External
+              volumes:
+              - dataVolume:
+                  name: epf-cluster-boot-volume
+                name: dv-volume
+---
+apiVersion: controlplane.cluster.x-k8s.io/v1beta2
+kind: KubeadmControlPlane
+metadata:
+  name: epf-cluster-control-plane
+  namespace: default
+spec:
+  kubeadmConfigSpec:
+    initConfiguration:
+      nodeRegistration:
+        criSocket: unix:///var/run/containerd/containerd.sock
+      timeouts:
+        controlPlaneComponentHealthCheckSeconds: 1200
+        kubeletHealthCheckSeconds: 1200
+        kubernetesAPICallSeconds: 300
+        etcdAPICallSeconds: 600
+        tlsBootstrapSeconds: 1500
+        discoverySeconds: 1500
+    joinConfiguration:
+      nodeRegistration:
+        criSocket: unix:///var/run/containerd/containerd.sock
+      timeouts:
+        controlPlaneComponentHealthCheckSeconds: 1200
+        kubeletHealthCheckSeconds: 1200
+        kubernetesAPICallSeconds: 300
+        etcdAPICallSeconds: 600
+        tlsBootstrapSeconds: 1500
+        discoverySeconds: 1500
+  machineTemplate:
+    spec:
+      infrastructureRef:
+        apiGroup: infrastructure.cluster.x-k8s.io
+        kind: KubevirtMachineTemplate
+        name: epf-cluster-control-plane
+  replicas: 1
+  version: v1.34.1
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+kind: KubevirtMachineTemplate
+metadata:
+  name: epf-cluster-md-0
+  namespace: default
+spec:
+  template:
+    spec:
+      virtualMachineBootstrapCheck:
+        checkStrategy: ssh
+      virtualMachineTemplate:
+        metadata:
+          namespace: default
+        spec:
+          dataVolumeTemplates:
+          - metadata:
+              name: epf-cluster-boot-volume
+            spec:
+              pvc:
+                accessModes:
+                - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 20Gi
+                storageClassName: ceph-block
+              source:
+                registry:
+                  url: docker://quay.io/capk/ubuntu-2404-container-disk:v1.34.1
+          runStrategy: Always
+          template:
+            spec:
+              domain:
+                cpu:
+                  cores: 1
+                devices:
+                  disks:
+                  - disk:
+                      bus: virtio
+                    name: dv-volume
+                  networkInterfaceMultiqueue: true
+                memory:
+                  guest: 2Gi
+              evictionStrategy: External
+              volumes:
+              - dataVolume:
+                  name: epf-cluster-boot-volume
+                name: dv-volume
+---
+apiVersion: bootstrap.cluster.x-k8s.io/v1beta2
+kind: KubeadmConfigTemplate
+metadata:
+  name: epf-cluster-md-0
+  namespace: default
+spec:
+  template:
+    spec:
+      joinConfiguration:
+        nodeRegistration:
+          criSocket: unix:///var/run/containerd/containerd.sock
+---
+apiVersion: cluster.x-k8s.io/v1beta2
+kind: MachineDeployment
+metadata:
+  name: epf-cluster-md-0
+  namespace: default
+  annotations:
+    cluster.x-k8s.io/cluster-api-autoscaler-node-group-max-size: "5"
+    cluster.x-k8s.io/cluster-api-autoscaler-node-group-min-size: "0"
+    capacity.cluster-autoscaler.kubernetes.io/memory: "2G"
+    capacity.cluster-autoscaler.kubernetes.io/cpu: "1"
+    capacity.cluster-autoscaler.kubernetes.io/ephemeral-disk: "20Gi"
+    capacity.cluster-autoscaler.kubernetes.io/maxPods: "30"
+spec:
+  clusterName: epf-cluster
+  replicas: 0
+  selector:
+    matchLabels: null
+  template:
+    spec:
+      bootstrap:
+        configRef:
+          apiGroup : bootstrap.cluster.x-k8s.io
+          kind: KubeadmConfigTemplate
+          name: epf-cluster-md-0
+      clusterName: epf-cluster
+      infrastructureRef:
+        apiGroup : infrastructure.cluster.x-k8s.io
+        kind: KubevirtMachineTemplate
+        name: epf-cluster-md-0
+      version: v1.34.1
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    capk.cluster.x-k8s.io/template-kind: extra-resource
+    cluster.x-k8s.io/cluster-name: epf-cluster
+  name: cloud-controller-manager
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    capk.cluster.x-k8s.io/template-kind: extra-resource
+    cluster.x-k8s.io/cluster-name: epf-cluster
+  name: kccm
+  namespace: default
+rules:
+- apiGroups:
+  - kubevirt.io
+  resources:
+  - virtualmachines
+  verbs:
+  - get
+  - watch
+  - list
+- apiGroups:
+  - kubevirt.io
+  resources:
+  - virtualmachineinstances
+  verbs:
+  - get
+  - watch
+  - list
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - services
+  verbs:
+  - '*'
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    capk.cluster.x-k8s.io/template-kind: extra-resource
+    cluster.x-k8s.io/cluster-name: epf-cluster
+  name: kccm-sa
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: kccm
+subjects:
+- kind: ServiceAccount
+  name: cloud-controller-manager
+  namespace: default
+---
+apiVersion: v1
+data:
+  cloud-config: |
+    loadBalancer:
+      creationPollInterval: 5
+      creationPollTimeout: 60
+    namespace: default
+    instancesV2:
+      enabled: true
+      zoneAndRegionEnabled: false
+kind: ConfigMap
+metadata:
+  labels:
+    capk.cluster.x-k8s.io/template-kind: extra-resource
+    cluster.x-k8s.io/cluster-name: epf-cluster
+  name: cloud-config
+  namespace: default
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    capk.cluster.x-k8s.io/template-kind: extra-resource
+    cluster.x-k8s.io/cluster-name: epf-cluster
+    k8s-app: kubevirt-cloud-controller-manager
+  name: kubevirt-cloud-controller-manager
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      capk.cluster.x-k8s.io/template-kind: extra-resource
+      cluster.x-k8s.io/cluster-name: epf-cluster
+      k8s-app: kubevirt-cloud-controller-manager
+  template:
+    metadata:
+      labels:
+        capk.cluster.x-k8s.io/template-kind: extra-resource
+        cluster.x-k8s.io/cluster-name: epf-cluster
+        k8s-app: kubevirt-cloud-controller-manager
+    spec:
+      containers:
+      - args:
+        - --cloud-provider=kubevirt
+        - --cloud-config=/etc/cloud/cloud-config
+        - --kubeconfig=/etc/kubernetes/kubeconfig/value
+        - --authentication-skip-lookup=true
+        - --cluster-name=epf-cluster
+        command:
+        - /bin/kubevirt-cloud-controller-manager
+        image: quay.io/kubevirt/kubevirt-cloud-controller-manager:v0.6.0
+        imagePullPolicy: Always
+        name: kubevirt-cloud-controller-manager
+        resources:
+          requests:
+            cpu: 10m
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /etc/kubernetes/kubeconfig
+          name: kubeconfig
+          readOnly: true
+        - mountPath: /etc/cloud
+          name: cloud-config
+          readOnly: true
+      nodeSelector:
+        node-role.kubernetes.io/control-plane: ""
+      serviceAccountName: cloud-controller-manager
+      tolerations:
+      - effect: NoSchedule
+        key: node.cloudprovider.kubernetes.io/uninitialized
+        value: "true"
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/control-plane
+      volumes:
+      - configMap:
+          name: cloud-config
+        name: cloud-config
+      - name: kubeconfig
+        secret:
+          secretName: epf-cluster-kubeconfig
