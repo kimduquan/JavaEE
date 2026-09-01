@@ -257,7 +257,7 @@ controller:
   #    cpu: 250m
   #    memory: 400Mi
     requests:
-      cpu: 25m
+      cpu: 5m
       memory: 128Mi
 
   ## Horizontal Pod Scaler
@@ -751,5 +751,5 @@ crdjob:
   #    cpu: 250m
   #    memory: 400Mi
     requests:
-      cpu: 50m
-      memory: 100Mi
+      cpu: 5m
+      memory: 64Mi
