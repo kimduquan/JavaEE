@@ -315,20 +315,20 @@ cephClusterSpec:
       limits:
         memory: "1Gi"
       requests:
-        cpu: "25m"
-        memory: "192Mi"
+        cpu: "5m"
+        memory: "64Mi"
     mon:
       limits:
         memory: "1Gi"
       requests:
-        cpu: "25m"
-        memory: "64Mi"
+        cpu: "5m"
+        memory: "32Mi"
     osd:
       limits:
         memory: "2Gi"
       requests:
-        cpu: "20m"
-        memory: "96Mi"
+        cpu: "5m"
+        memory: "64Mi"
     prepareosd:
       # limits: It is not recommended to set limits on the OSD prepare job
       #         since it's a one-time burst for memory that must be allowed to
@@ -579,8 +579,8 @@ cephFileSystems:
           limits:
             memory: "1Gi"
           requests:
-            cpu: "100m"
-            memory: "128Mi"
+            cpu: "5m"
+            memory: "64Mi"
         priorityClassName: system-cluster-critical
     storageClass:
       enabled: true
@@ -658,8 +658,8 @@ cephObjectStores:
           limits:
             memory: "1Gi"
           requests:
-            cpu: "100m"
-            memory: "128Mi"
+            cpu: "5m"
+            memory: "64Mi"
         # securePort: 443
         # sslCertificateRef:
         instances: 1
