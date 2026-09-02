@@ -280,6 +280,7 @@ nodeSelector:
 # -- Node tolerations for agent scheduling to nodes with taints
 # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
 tolerations:
+  - operator: Exists
   - effect: NoSchedule
     key: node-role.kubernetes.io/control-plane
     # - key: "key"
@@ -1073,7 +1074,7 @@ ingressController:
   # Host Network related configuration
   hostNetwork:
     # -- Configure whether the Envoy listeners should be exposed on the host network.
-    enabled: true
+    enabled: false
     # -- Configure a specific port on the host network that gets used for the shared listener.
     sharedListenerPort: 8080
     # -- Configure a specific port on the host network that gets used for the shared HTTP listener.
@@ -1136,7 +1137,7 @@ gatewayAPI:
   # Host Network related configuration
   hostNetwork:
     # -- Configure whether the Envoy listeners should be exposed on the host network.
-    enabled: true
+    enabled: false
     # Specify the nodes where the Ingress listeners should be exposed
     nodes:
       # -- Specify the labels of the nodes where the Ingress listeners should be exposed
@@ -3019,6 +3020,7 @@ envoy:
   # -- Node tolerations for envoy scheduling to nodes with taints
   # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
   tolerations:
+    - operator: Exists
     - effect: NoSchedule
       key: node-role.kubernetes.io/control-plane
       # - key: "key"
@@ -3528,6 +3530,7 @@ nodeinit:
   # -- Node tolerations for nodeinit scheduling to nodes with taints
   # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
   tolerations:
+    - operator: Exists
     - effect: NoSchedule
       key: node-role.kubernetes.io/control-plane
       # - key: "key"
@@ -3640,6 +3643,7 @@ preflight:
   # -- Node tolerations for preflight scheduling to nodes with taints
   # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
   tolerations:
+    - operator: Exists
     - effect: NoSchedule
       key: node-role.kubernetes.io/control-plane
       # - key: "key"
