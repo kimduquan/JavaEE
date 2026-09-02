@@ -2408,7 +2408,7 @@ ipv4:
   enabled: true
 ipv6:
   # -- Enable IPv6 support.
-  enabled: false
+  enabled: true
 # -- Configure Kubernetes specific configuration
 k8s:
   # -- requireIPv4PodCIDR enables waiting for Kubernetes to provide the PodCIDR
