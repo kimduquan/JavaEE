@@ -460,7 +460,7 @@ autoDirectNodeRoutes: true
 # nodes if the worker nodes are in a different L2 network segment.
 directRoutingSkipUnreachable: true
 # -- Annotate k8s node upon initialization with Cilium's metadata.
-annotateK8sNode: false
+annotateK8sNode: true
 azure:
   # -- Enable Azure integration.
   # Note that this is incompatible with AKS clusters created in BYOCNI mode: use
@@ -510,7 +510,7 @@ l2announcements:
 # -- Configure L2 pod announcements
 l2podAnnouncements:
   # -- Enable L2 pod announcements
-  enabled: false
+  enabled: true
   # -- A regular expression matching interfaces used for sending Gratuitous ARP pod announcements
   interfacePattern: ""
 # -- This feature set enables virtual BGP routers to be created via BGP CRDs.
@@ -4335,7 +4335,7 @@ sysctlfix:
 
 # -- Configure the key of the taint indicating that Cilium is not ready on the node.
 # When set to a value starting with `ignore-taint.cluster-autoscaler.kubernetes.io/`, the Cluster Autoscaler will ignore the taint on its decisions, allowing the cluster to scale up.
-agentNotReadyTaintKey: "node.cilium.io/agent-not-ready"
+agentNotReadyTaintKey: "ignore-taint.cluster-autoscaler.kubernetes.io/agent-not-ready"
 dnsProxy:
   # -- Timeout (in seconds) when closing the connection between the DNS proxy and the upstream server. If set to 0, the connection is closed immediately (with TCP RST). If set to -1, the connection is closed asynchronously in the background.
   socketLingerTimeout: 10
