@@ -511,7 +511,7 @@ l2announcements:
 # -- Configure L2 pod announcements
 l2podAnnouncements:
   # -- Enable L2 pod announcements
-  enabled: true
+  enabled: false
   # -- A regular expression matching interfaces used for sending Gratuitous ARP pod announcements
   interfacePattern: ""
 # -- This feature set enables virtual BGP routers to be created via BGP CRDs.
