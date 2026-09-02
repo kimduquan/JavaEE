@@ -3492,7 +3492,7 @@ operator:
     selector: ~
 nodeinit:
   # -- Enable the node initialization DaemonSet
-  enabled: false
+  enabled: true
   # -- node-init image.
   image:
     # @schema
