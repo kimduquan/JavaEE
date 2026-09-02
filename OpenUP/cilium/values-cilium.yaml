@@ -1253,6 +1253,8 @@ encryption:
         operator: Exists
       - effect: NoExecute
         operator: Exists
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/control-plane
     # -- Affinity for ztunnel pods.
     affinity: {}
     # @schema
