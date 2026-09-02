@@ -456,12 +456,12 @@ aksbyocni:
 # @schema
 # -- Enable installation of PodCIDR routes between worker
 # nodes if worker nodes share a common L2 network segment.
-autoDirectNodeRoutes: true
+autoDirectNodeRoutes: false
 # -- Enable skipping of PodCIDR routes between worker
 # nodes if the worker nodes are in a different L2 network segment.
-directRoutingSkipUnreachable: true
+directRoutingSkipUnreachable: false
 # -- Annotate k8s node upon initialization with Cilium's metadata.
-annotateK8sNode: true
+annotateK8sNode: false
 azure:
   # -- Enable Azure integration.
   # Note that this is incompatible with AKS clusters created in BYOCNI mode: use
