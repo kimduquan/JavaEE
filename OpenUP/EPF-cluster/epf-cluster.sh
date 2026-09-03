@@ -4,7 +4,7 @@ export NODE_VM_IMAGE_TEMPLATE="quay.io/capk/ubuntu-2404-container-disk:v1.34.1"
 export CAPK_GUEST_K8S_VERSION="${NODE_VM_IMAGE_TEMPLATE/*:/}"
 export CRI_PATH="unix:///var/run/containerd/containerd.sock"
 export STORAGE_CLASS_NAME="ceph-block"
-export ROOT_VOLUME_SIZE="20Gi"
+export ROOT_VOLUME_SIZE="30Gi"
 #rm epf-cluster.yaml
 #clusterctl generate cluster epf-cluster --kubernetes-version ${CAPK_GUEST_K8S_VERSION} --flavor lb-kccm --control-plane-machine-count 1 --infrastructure kubevirt --target-namespace default > epf-cluster.yaml
 clusterctl upgrade apply --contract v1beta2 --wait-providers

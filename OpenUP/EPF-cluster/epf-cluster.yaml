@@ -55,7 +55,7 @@ spec:
                 - ReadWriteOnce
                 resources:
                   requests:
-                    storage: 20Gi
+                    storage: 30Gi
                 storageClassName: ceph-block
               source:
                 registry:
@@ -73,7 +73,7 @@ spec:
                     name: dv-volume
                   networkInterfaceMultiqueue: true
                 memory:
-                  guest: 4Gi
+                  guest: 3Gi
               evictionStrategy: External
               volumes:
               - dataVolume:
