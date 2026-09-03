@@ -1,7 +1,17 @@
+toolbox:
+  tolerations:
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/control-plane
+cephImage:
+  tag: v20.2.2
 # All values below are taken from the CephCluster CRD
 # -- Cluster configuration.
 # @default -- See [below](#ceph-cluster-spec)
 cephClusterSpec:
+  mon:
+    count: 1
+  mgr:
+    count: 1
   external:
     enable: true
   crashCollector:
