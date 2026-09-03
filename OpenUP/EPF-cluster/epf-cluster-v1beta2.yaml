@@ -71,7 +71,7 @@ spec:
                     name: dv-volume
                   networkInterfaceMultiqueue: true
                 memory:
-                  guest: 4Gi
+                  guest: 3Gi
               evictionStrategy: External
               volumes:
               - dataVolume:

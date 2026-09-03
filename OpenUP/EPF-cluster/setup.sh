@@ -15,5 +15,5 @@ cd KEDA
 cd ../
 
 cd HAProxy
-./haproxy.sh
+#./haproxy.sh
 cd ../

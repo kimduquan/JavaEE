@@ -18,8 +18,8 @@ rm ${EPF_CLUSTER_SSH_KEY}
 kubectl get secret epf-cluster-ssh-keys -o jsonpath='{.data.key}' | base64 --decode > ${EPF_CLUSTER_SSH_KEY}
 chmod 600 ${EPF_CLUSTER_SSH_KEY}
 
-cd Calico
-./calico.sh
+cd cilium
+./cilium.sh
 cd ../
 
 kubectl wait cluster epf-cluster --for condition=Available --timeout=1200s
