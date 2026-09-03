@@ -12,10 +12,17 @@ cephClusterSpec:
     count: 1
   mgr:
     count: 1
+  dashboard:
+    enabled: false
   external:
     enable: true
   crashCollector:
     disable: true
+  placement:
+    all:
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/control-plane
   healthCheck:
     daemonHealth:
       mon:
