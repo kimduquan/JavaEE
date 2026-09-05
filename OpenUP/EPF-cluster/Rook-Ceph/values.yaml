@@ -53,8 +53,8 @@ toolbox:
     limits:
       memory: "1Gi"
     requests:
-      cpu: "5m"
-      memory: "64Mi"
+      cpu: "1m"
+      memory: "1Mi"
   # -- Set the priority class for the toolbox if desired
   priorityClassName:
 
@@ -315,20 +315,20 @@ cephClusterSpec:
       limits:
         memory: "1Gi"
       requests:
-        cpu: "5m"
-        memory: "64Mi"
+        cpu: "1m"
+        memory: "1Mi"
     mon:
       limits:
         memory: "1Gi"
       requests:
-        cpu: "5m"
-        memory: "32Mi"
+        cpu: "1m"
+        memory: "1Mi"
     osd:
       limits:
         memory: "2Gi"
       requests:
-        cpu: "5m"
-        memory: "64Mi"
+        cpu: "1m"
+        memory: "1Mi"
     prepareosd:
       # limits: It is not recommended to set limits on the OSD prepare job
       #         since it's a one-time burst for memory that must be allowed to
@@ -339,44 +339,44 @@ cephClusterSpec:
       #         OSDs ; for larger devices 2Gi may be required.
       #         cf. https://github.com/rook/rook/pull/11103
       requests:
-        cpu: "5m"
-        memory: "50Mi"
+        cpu: "1m"
+        memory: "1Mi"
     mgr-sidecar:
       limits:
         memory: "100Mi"
       requests:
-        cpu: "5m"
-        memory: "40Mi"
+        cpu: "1m"
+        memory: "1Mi"
     crashcollector:
       limits:
         memory: "60Mi"
       requests:
-        cpu: "5m"
-        memory: "16Mi"
+        cpu: "1m"
+        memory: "1Mi"
     logcollector:
       limits:
         memory: "1Gi"
       requests:
-        cpu: "5m"
-        memory: "50Mi"
+        cpu: "1m"
+        memory: "1Mi"
     cleanup:
       limits:
         memory: "1Gi"
       requests:
-        cpu: "5m"
-        memory: "50Mi"
+        cpu: "1m"
+        memory: "1Mi"
     exporter:
       limits:
         memory: "128Mi"
       requests:
-        cpu: "5m"
-        memory: "16Mi"
+        cpu: "1m"
+        memory: "1Mi"
     cmd-reporter:
       limits:
         memory: "1Gi"
       requests:
-        cpu: "5m"
-        memory: "25Mi"
+        cpu: "1m"
+        memory: "1Mi"
 
   # The option to automatically remove OSDs that are out and are safe to destroy.
   removeOSDsIfOutAndSafeToRemove: false
@@ -579,8 +579,8 @@ cephFileSystems:
           limits:
             memory: "1Gi"
           requests:
-            cpu: "5m"
-            memory: "64Mi"
+            cpu: "1m"
+            memory: "1Mi"
         priorityClassName: system-cluster-critical
     storageClass:
       enabled: true
@@ -658,8 +658,8 @@ cephObjectStores:
           limits:
             memory: "1Gi"
           requests:
-            cpu: "5m"
-            memory: "64Mi"
+            cpu: "1m"
+            memory: "1Mi"
         # securePort: 443
         # sslCertificateRef:
         instances: 1
