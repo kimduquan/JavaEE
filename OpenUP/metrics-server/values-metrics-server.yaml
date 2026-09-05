@@ -146,7 +146,7 @@ addonResizer:
   resources:
     requests:
       cpu: 1m
-      memory: 25Mi
+      memory: 1Mi
     limits:
       cpu: 40m
       memory: 25Mi
@@ -174,7 +174,7 @@ serviceMonitor:
 resources:
   requests:
     cpu: 1m
-    memory: 50Mi
+    memory: 1Mi
     # limits:
     #   cpu:
     #   memory:
