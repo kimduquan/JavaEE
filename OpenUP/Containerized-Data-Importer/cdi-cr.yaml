@@ -8,7 +8,7 @@ spec:
     - HonorWaitForFirstConsumer
     podResourceRequirements:
       requests:
-        cpu: "5m"
+        cpu: "1m"
   imagePullPolicy: IfNotPresent
   infra:
     apiServerReplicas: 0
