@@ -145,7 +145,7 @@ addonResizer:
         - ALL
   resources:
     requests:
-      cpu: 40m
+      cpu: 1m
       memory: 25Mi
     limits:
       cpu: 40m
@@ -173,7 +173,7 @@ serviceMonitor:
 # See https://github.com/kubernetes-sigs/metrics-server#scaling
 resources:
   requests:
-    cpu: 5m
+    cpu: 1m
     memory: 50Mi
     # limits:
     #   cpu:
