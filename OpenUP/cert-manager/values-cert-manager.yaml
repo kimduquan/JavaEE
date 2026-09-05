@@ -419,7 +419,7 @@ extraEnv: []
 # For more information, see [Resource Management for Pods and Containers](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
 resources:
   requests:
-     cpu: 5m
+     cpu: 1m
      memory: 48Mi
 
 # Pod Security Context.
@@ -944,7 +944,7 @@ webhook:
   # For more information, see [Resource Management for Pods and Containers](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
   resources:
     requests:
-     cpu: 5m
+     cpu: 1m
      memory: 48Mi
 
   # Liveness probe values.
