@@ -17,7 +17,7 @@ spec:
       - type: ""
         resources:
           requests:
-            cpu: "5m"
+            cpu: "1m"
   customizeComponents: {}
     # flags:
       # handler:
