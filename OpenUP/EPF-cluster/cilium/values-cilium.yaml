@@ -276,7 +276,6 @@ affinity:
 # -- Node selector for cilium-agent.
 nodeSelector:
   kubernetes.io/os: linux
-  node-role.kubernetes.io/control-plane: ""
 # -- Node tolerations for agent scheduling to nodes with taints
 # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
 tolerations:
@@ -1244,7 +1243,6 @@ encryption:
     # -- Node selector for ztunnel pods.
     nodeSelector:
       kubernetes.io/os: linux
-      node-role.kubernetes.io/control-plane: ""
     # -- Node tolerations for ztunnel scheduling.
     tolerations:
       - effect: NoSchedule
@@ -3018,7 +3016,6 @@ envoy:
   # -- Node selector for cilium-envoy.
   nodeSelector:
     kubernetes.io/os: linux
-    node-role.kubernetes.io/control-plane: ""
   # -- Node tolerations for envoy scheduling to nodes with taints
   # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
   tolerations:
@@ -3528,7 +3525,6 @@ nodeinit:
   # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector
   nodeSelector:
     kubernetes.io/os: linux
-    node-role.kubernetes.io/control-plane: ""
   # -- Node tolerations for nodeinit scheduling to nodes with taints
   # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
   tolerations:
@@ -3641,7 +3637,6 @@ preflight:
   # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector
   nodeSelector:
     kubernetes.io/os: linux
-    node-role.kubernetes.io/control-plane: ""
   # -- Node tolerations for preflight scheduling to nodes with taints
   # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
   tolerations:
@@ -3862,8 +3857,7 @@ clustermesh:
       annotations: {}
       # -- Node selector for coredns-mcsapi-autoconfig
       # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector
-      nodeSelector:
-        node-role.kubernetes.io/control-plane: ""
+      nodeSelector: {}
       # -- Priority class for coredns-mcsapi-autoconfig
       # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/#priorityclass
       priorityClassName: ""
@@ -4127,7 +4121,6 @@ clustermesh:
     # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector
     nodeSelector:
       kubernetes.io/os: linux
-      node-role.kubernetes.io/control-plane: ""
     # -- Node tolerations for pod assignment on nodes with taints
     # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
     tolerations:
@@ -4520,8 +4513,7 @@ authentication:
           affinity: {}
           # -- SPIRE server nodeSelector configuration
           # ref: ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector
-          nodeSelector:
-            node-role.kubernetes.io/control-plane: ""
+          nodeSelector: {}
           # -- SPIRE server tolerations configuration
           # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
           tolerations:
