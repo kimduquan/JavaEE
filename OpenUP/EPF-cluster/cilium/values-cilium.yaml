@@ -342,8 +342,8 @@ resources:
     cpu: 1000m
     memory: 1Gi
   requests:
-    cpu: 5m
-    memory: 128Mi
+    cpu: 1m
+    memory: 1Mi
 
 # -- resources & limits for the agent init containers
 initResources: {}
@@ -840,8 +840,8 @@ cni:
       # @schema
       # type: [integer, string]
       # @schema
-      cpu: 5m
-      memory: 10Mi
+      cpu: 1m
+      memory: 1Mi
     limits:
       # @schema
       # type: [integer, string]
@@ -1223,8 +1223,8 @@ encryption:
     # -- ztunnel resource limits & requests.
     resources:
       requests:
-        cpu: 5m
-        memory: 128Mi
+        cpu: 1m
+        memory: 1Mi
     # -- Minimum number of seconds for which a newly created ztunnel pod should be ready
     # before it is considered available.
     minReadySeconds: 0
@@ -3557,8 +3557,8 @@ nodeinit:
       # @schema
       # type: [integer, string]
       # @schema
-      cpu: 5m
-      memory: 100Mi
+      cpu: 1m
+      memory: 1Mi
   # -- Security context to be added to nodeinit pods.
   securityContext:
     allowPrivilegeEscalation: false
