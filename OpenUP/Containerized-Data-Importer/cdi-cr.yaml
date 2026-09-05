@@ -9,6 +9,7 @@ spec:
     podResourceRequirements:
       requests:
         cpu: "1m"
+        memory: "1Mi"
   imagePullPolicy: IfNotPresent
   infra:
     apiServerReplicas: 0
