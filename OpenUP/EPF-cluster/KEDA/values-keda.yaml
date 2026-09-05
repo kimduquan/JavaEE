@@ -559,24 +559,24 @@ resources:
       cpu: 1
       memory: 1000Mi
     requests:
-      cpu: 5m
-      memory: 50Mi
+      cpu: 1m
+      memory: 1Mi
   # -- Manage [resource request & limits] of KEDA metrics apiserver pod
   metricServer:
     limits:
       cpu: 1
       memory: 1000Mi
     requests:
-      cpu: 5m
-      memory: 50Mi
+      cpu: 1m
+      memory: 1Mi
   # -- Manage [resource request & limits] of KEDA admission webhooks pod
   webhooks:
     limits:
       cpu: 1
       memory: 1000Mi
     requests:
-      cpu: 5m
-      memory: 50Mi
+      cpu: 1m
+      memory: 1Mi
 # -- Node selector for pod scheduling ([docs](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/))
 nodeSelector:
   node-role.kubernetes.io/control-plane: ""
