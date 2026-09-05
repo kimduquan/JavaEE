@@ -51,7 +51,7 @@ toolbox:
     limits:
       memory: "1Gi"
     requests:
-      cpu: "5m"
+      cpu: "1m"
       memory: "64Mi"
   # -- Set the priority class for the toolbox if desired
   priorityClassName:
@@ -313,19 +313,19 @@ cephClusterSpec:
       limits:
         memory: "1Gi"
       requests:
-        cpu: "25m"
+        cpu: "1m"
         memory: "192Mi"
     mon:
       limits:
         memory: "1Gi"
       requests:
-        cpu: "25m"
+        cpu: "1m"
         memory: "64Mi"
     osd:
       limits:
         memory: "2Gi"
       requests:
-        cpu: "20m"
+        cpu: "1m"
         memory: "96Mi"
     prepareosd:
       # limits: It is not recommended to set limits on the OSD prepare job
@@ -337,43 +337,43 @@ cephClusterSpec:
       #         OSDs ; for larger devices 2Gi may be required.
       #         cf. https://github.com/rook/rook/pull/11103
       requests:
-        cpu: "5m"
+        cpu: "1m"
         memory: "50Mi"
     mgr-sidecar:
       limits:
         memory: "100Mi"
       requests:
-        cpu: "5m"
+        cpu: "1m"
         memory: "40Mi"
     crashcollector:
       limits:
         memory: "60Mi"
       requests:
-        cpu: "5m"
+        cpu: "1m"
         memory: "16Mi"
     logcollector:
       limits:
         memory: "1Gi"
       requests:
-        cpu: "5m"
+        cpu: "1m"
         memory: "50Mi"
     cleanup:
       limits:
         memory: "1Gi"
       requests:
-        cpu: "5m"
+        cpu: "1m"
         memory: "50Mi"
     exporter:
       limits:
         memory: "128Mi"
       requests:
-        cpu: "5m"
+        cpu: "1m"
         memory: "16Mi"
     cmd-reporter:
       limits:
         memory: "1Gi"
       requests:
-        cpu: "5m"
+        cpu: "1m"
         memory: "25Mi"
 
   # The option to automatically remove OSDs that are out and are safe to destroy.
@@ -571,7 +571,7 @@ cephFileSystems:
           limits:
             memory: "1Gi"
           requests:
-            cpu: "5m"
+            cpu: "1m"
             memory: "32Mi"
         priorityClassName: system-cluster-critical
     storageClass:
@@ -650,7 +650,7 @@ cephObjectStores:
           limits:
             memory: "1Gi"
           requests:
-            cpu: "10m"
+            cpu: "1m"
             memory: "128Mi"
         # securePort: 443
         # sslCertificateRef:
