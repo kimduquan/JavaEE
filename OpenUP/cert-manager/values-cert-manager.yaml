@@ -420,7 +420,7 @@ extraEnv: []
 resources:
   requests:
      cpu: 1m
-     memory: 48Mi
+     memory: 1Mi
 
 # Pod Security Context.
 # For more information, see [Configure a Security Context for a Pod or Container](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/).
@@ -945,7 +945,7 @@ webhook:
   resources:
     requests:
      cpu: 1m
-     memory: 48Mi
+     memory: 1Mi
 
   # Liveness probe values.
   # For more information, see [Container probes](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes).
