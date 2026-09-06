@@ -9,7 +9,6 @@ export ROOT_VOLUME_SIZE="30Gi"
 #clusterctl generate cluster epf-cluster --kubernetes-version ${CAPK_GUEST_K8S_VERSION} --flavor lb-kccm --control-plane-machine-count 1 --infrastructure kubevirt --target-namespace default > epf-cluster.yaml
 clusterctl upgrade apply --contract v1beta2 --wait-providers
 kubectl apply -f epf-cluster-v1beta2.yaml
-#kubectl wait cluster epf-cluster --for condition=InfrastructureReady --timeout=1200s
 kubectl wait cluster epf-cluster --for condition=RemoteConnectionProbe --timeout=3600s
 . ../env.sh
 rm ${EPF_CLUSTER_KUBE_CONFIG}
@@ -18,11 +17,11 @@ rm ${EPF_CLUSTER_SSH_KEY}
 kubectl get secret epf-cluster-ssh-keys -o jsonpath='{.data.key}' | base64 --decode > ${EPF_CLUSTER_SSH_KEY}
 chmod 600 ${EPF_CLUSTER_SSH_KEY}
 
+kubectl wait cluster epf-cluster --for condition=Available --timeout=1200s
+
 cd cilium
 ./cilium.sh
 cd ../
-
-kubectl wait cluster epf-cluster --for condition=Available --timeout=1200s
 
 VM_IP=$(kubectl get vmi --no-headers | awk '{print $4}')
 #ssh -i ${EPF_CLUSTER_SSH_KEY} -o StrictHostKeyChecking=accept-new capk@${VM_IP} 'bash -s' < disk.sh
