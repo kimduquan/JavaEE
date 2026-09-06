@@ -26,7 +26,7 @@ cd ../
 VM_IP=$(kubectl get vmi --no-headers | awk '{print $4}')
 #ssh -i ${EPF_CLUSTER_SSH_KEY} -o StrictHostKeyChecking=accept-new capk@${VM_IP} 'bash -s' < disk.sh
 
-kubectl wait cluster epf-cluster --for condition=Available --timeout=1200s
+kubectl wait cluster epf-cluster --for condition=ControlPlaneAvailable --timeout=3600s
 
 cd Rook-Ceph
 ./rook-ceph.sh
