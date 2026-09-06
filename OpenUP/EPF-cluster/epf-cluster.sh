@@ -10,7 +10,7 @@ export ROOT_VOLUME_SIZE="30Gi"
 clusterctl upgrade apply --contract v1beta2 --wait-providers
 kubectl apply -f epf-cluster-v1beta2.yaml
 #kubectl wait cluster epf-cluster --for condition=InfrastructureReady --timeout=1200s
-kubectl wait cluster epf-cluster --for condition=RemoteConnectionProbe --timeout=1800s
+kubectl wait cluster epf-cluster --for condition=RemoteConnectionProbe --timeout=3600s
 . ../env.sh
 rm ${EPF_CLUSTER_KUBE_CONFIG}
 clusterctl get kubeconfig epf-cluster > ${EPF_CLUSTER_KUBE_CONFIG}
