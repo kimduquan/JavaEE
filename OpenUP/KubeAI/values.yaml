@@ -237,7 +237,7 @@ resourceProfiles:
 cacheProfiles:
   vllm:
     sharedFilesystem:
-      storageClassName: "microk8s-hostpath"
+      storageClassName: "ceph-block"
 
 modelAutoscaling:
   # Interval that the autoscaler will scrape model server metrics.
