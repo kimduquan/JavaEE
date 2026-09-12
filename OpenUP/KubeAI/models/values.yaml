@@ -666,7 +666,7 @@ catalog:
   granite-4.2-8b-nvfp4:
     enabled: true
     features: ["TextGeneration"]
-    url: "hf:/ibm-granite/granite-4.2-8b-nvfp4"
+    url: "hf://ibm-granite/granite-4.2-8b-nvfp4"
     engine: VLLM
     env:
       VLLM_ALLOW_RUNTIME_LORA_UPDATING: "True"
