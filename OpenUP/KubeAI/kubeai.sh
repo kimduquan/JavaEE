@@ -1,3 +1,4 @@
+sudo microk8s ctr image pull docker.io/vllm/vllm-openai:latest
 helm repo add kubeai https://www.kubeai.org
 helm repo update
 kubectl create secret generic huggingface --from-literal=token=''
