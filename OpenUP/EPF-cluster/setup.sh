@@ -13,7 +13,3 @@ cd EPF-cluster
 cd KEDA
 ./keda.sh
 cd ../
-
-cd HAProxy
-#./haproxy.sh
-cd ../
