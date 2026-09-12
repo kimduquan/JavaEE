@@ -663,10 +663,10 @@ catalog:
       OLLAMA_FLASH_ATTENTION: "true"
       OLLAMA_NO_CLOUD: "true"
     resourceProfile: nvidia-gpu-t4:1
-  granite-4.1-3b-awq-int4:
+  granite-4.2-8b-nvfp4:
     enabled: true
     features: ["TextGeneration"]
-    url: "hf://cyankiwi/granite-4.1-3b-AWQ-INT4"
+    url: "hf:/ibm-granite/granite-4.2-8b-nvfp4"
     engine: VLLM
     env:
       VLLM_ALLOW_RUNTIME_LORA_UPDATING: "True"
