@@ -85,6 +85,9 @@ metadata:
   namespace: default
 spec:
   kubeadmConfigSpec:
+    clusterConfiguration:
+      dns:
+        imageTag: v1.12.2
     initConfiguration:
       nodeRegistration:
         criSocket: unix:///var/run/containerd/containerd.sock
