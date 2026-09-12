@@ -60,11 +60,11 @@ cd OpenFeature
 
 cd ../
 cd NVIDIA-device-plugin
-#./nvidia-device-plugin.sh
+./nvidia-device-plugin.sh
 
 cd ../
 cd KubeAI
-#./kubeai.sh
+./kubeai.sh
 
 cd ../
 cd WildFly
