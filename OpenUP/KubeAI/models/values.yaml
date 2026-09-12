@@ -660,6 +660,8 @@ catalog:
     engine: OLlama
     env:
       OLLAMA_CONTEXT_LENGTH: "131072"
+      OLLAMA_FLASH_ATTENTION: "true"
+      OLLAMA_NO_CLOUD: "true"
     resourceProfile: nvidia-gpu-t4:1
   granite-4.1-3b-awq-int4:
     enabled: true
