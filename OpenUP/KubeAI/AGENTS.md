@@ -1,18 +1,21 @@
 # AGENTS.md
 
-This repository is a Kubernetes/Helm application specifically designed for deploying and managing AI models. It operates through orchestration and configuration rather than traditional application code.
+This repository is an infrastructure-oriented Kubernetes/Helm application for deploying and managing AI models. Agents should focus on configuration changes, not source code logic.
 
-### Investigation & Workflow
-The primary workflow is managed by `kubeai.sh`.
-1.  **Initialization:** Run `kubeai.sh` to setup the Helm repository (`https://www.kubeai.org`).
-2.  **Secret Setup:** Ensure the HuggingFace token is set:
-    ```bash
-    kubectl create secret generic huggingface --from-literal=token='...'
-    ```
-3.  **Storage:** Persistent storage must be provisioned via `pvc.yaml`.
-4.  **Deployment:** The core service is deployed using `values.yaml`, and individual models are configured and deployed using the `models/values.yaml` overrides.
+### Core Workflow (Executed via `kubeai.sh`)
+1.  **Initialize:** Run `kubeai.sh` to set up the Helm repository and dependencies.
+2.  **Provision Storage:** Apply persistent storage using `kubectl apply -f pvc.yaml`.
+3.  **Base Deployment:** Deploy the core service via `helm upgrade --install kubeai kubeai/kubeai -f values.yaml`.
+4.  **Model Updates:** Model swapping is done by modifying `models/values.yaml` overrides and re-running the deployment command.
 
-### Critical Operational Notes
-*   **Deployment Paradigm:** The application relies on Helm and `kubectl` for all operational setup.
-*   **Model Updates:** Model swapping is achieved by modifying, not by modifying source code. Changes are driven by updating `models/values.yaml`.
-*   **Command Reliability:** Always use `kubeai.sh` as it automates the dependency chain (repo update, secret creation, deployment).
+### Architectural Quirks
+*   **Data-Driven Model Swap**: New AI models are added or swapped purely by updating the `models/values.yaml` files, not by modifying application source code.
+*   **Configuration Hierarchy**: 
+    *   `values.yaml`: Main Helm chart defaults.
+    *   `models/values.yaml`: Specific overrides for individual models.
+*   **Execution Context**: All primary tasks are executed against Kubernetes manifests and Helm configurations, not a standard application entry point or test suite (no standard `lint`/`test` commands found).
+
+### Key Constraints
+*   Rely exclusively on Kubernetes manifests and Helm commands for operational tasks.
+*   Maintain configuration in `values.yaml` files to update infrastructure.
+*   Verify changes via `kubectl describe` or `helm get values`.
