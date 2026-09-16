@@ -4,5 +4,5 @@
 kubectl apply -f kubevirt-operator.yaml
 kubectl apply -f kubevirt-cr.yaml
 kubectl -n kubevirt wait kv kubevirt --for condition=Available --timeout=600s
-kubectl patch -n kubevirt kubevirt kubevirt --type merge --patch '{"spec": {"infra": {"nodePlacement": {"nodeSelector": {"node-role.kubernetes.io/control-plane": ""}}}}}'
+kubectl patch -n kubevirt kubevirt kubevirt --type merge --patch '{"spec": {"infra": {"nodePlacement": {"nodeSelector": {"node-role.kubernetes.io/control-plane": ""}}}, "workloads": {"nodePlacement": {"nodeSelector": {"node-role.kubernetes.io/worker": ""}}}}}'
 kubectl -n kubevirt wait kv kubevirt --for condition=Available --timeout=600s
