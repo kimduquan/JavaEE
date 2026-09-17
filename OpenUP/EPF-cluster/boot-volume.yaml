@@ -1,0 +1,16 @@
+apiVersion: cdi.kubevirt.io/v1beta1
+kind: DataVolume
+metadata:
+  name: epf-cluster-boot-volume
+  namespace: default
+spec:
+  pvc:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 30Gi
+    storageClassName: ceph-block
+  source:
+    registry:
+      url: docker://quay.io/capk/ubuntu-2404-container-disk:v1.34.1
