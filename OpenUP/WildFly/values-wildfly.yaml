@@ -288,7 +288,7 @@ resources:
     cpu: 50m
     memory: 256Mi
   limits:
-    cpu: 250m
+    cpu: 1
     memory: 768Mi
 ## Container ports
 ## @param containerPorts.http WildFly HTTP container port
