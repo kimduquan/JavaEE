@@ -1,5 +1,5 @@
 kubectl apply -f ubuntu-2404-container-disk.yaml
-kubectl wait dv ubuntu-2404-container-disk --for condition=Bound --timeout=1200s
+kubectl wait dv ubuntu-2404-container-disk --for condition=Bound --timeout=4800s
 export CLUSTER_TOPOLOGY=true
 clusterctl init --infrastructure kubevirt --target-namespace default --wait-providers
 export NODE_VM_IMAGE_TEMPLATE="quay.io/capk/ubuntu-2404-container-disk:v1.34.1"
