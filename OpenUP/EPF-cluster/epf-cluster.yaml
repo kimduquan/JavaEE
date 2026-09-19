@@ -58,8 +58,9 @@ spec:
                     storage: 30Gi
                 storageClassName: ceph-block
               source:
-                registry:
-                  url: docker://quay.io/capk/ubuntu-2404-container-disk:v1.34.1
+                pvc:
+                  name: ubuntu-2404-container-disk
+                  namespace: default
           runStrategy: Always
           template:
             spec:
@@ -133,8 +134,9 @@ spec:
                     storage: 20Gi
                 storageClassName: ceph-block
               source:
-                registry:
-                  url: docker://quay.io/capk/ubuntu-2404-container-disk:v1.34.1
+                pvc:
+                  name: ubuntu-2404-container-disk
+                  namespace: default
           runStrategy: Always
           template:
             spec:
