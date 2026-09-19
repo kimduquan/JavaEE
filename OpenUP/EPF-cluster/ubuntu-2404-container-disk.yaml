@@ -1,7 +1,7 @@
 apiVersion: cdi.kubevirt.io/v1beta1
 kind: DataVolume
 metadata:
-  name: epf-cluster-boot-volume
+  name: ubuntu-2404-container-disk
   namespace: default
 spec:
   pvc:
