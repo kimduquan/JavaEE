@@ -7,7 +7,7 @@ helm repo add rook https://charts.rook.io/release
 helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" upgrade --install --create-namespace --namespace rook-ceph --wait --timeout 40m rook-ceph rook/rook-ceph -f values.yaml \
 	--set "toolbox.image=$EPF_CLUSTER_IMAGE_REGISTRY/$TOOLBOX_IMAGE" \
 	--set "cephImage.repository=$EPF_CLUSTER_IMAGE_REGISTRY/ceph/ceph" \
-	--set "cephImage.tag=$CEPH_IMAGE_TAG" \
+	--set "cephImage.tag=$CEPH_IMAGE_TAG"
 helm --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} upgrade --install --create-namespace --namespace rook-ceph --wait --timeout 40m rook-ceph-cluster --set operatorNamespace=rook-ceph rook/rook-ceph-cluster -f values-external.yaml
 kubectl --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} wait -n rook-ceph cephcluster rook-ceph --for condition=Connecting=True --timeout=1200s
 helm repo add ceph-csi-operator https://ceph.github.io/ceph-csi-operator
