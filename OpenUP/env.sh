@@ -10,3 +10,4 @@ export EPF_CLUSTER_KUBE_CONFIG=/home/kimduquan/epf-cluster.kubeconfig
 export EPF_CLUSTER_SSH_KEY=/home/kimduquan/epf-cluster-ssh-key
 export EPF_CLUSTER_CERT=/home/kimduquan/localhost.direct.SS.crt
 export EPF_CLUSTER_CERT_KEY=/home/kimduquan/localhost.direct.SS.key
+export EPF_CLUSTER_IMAGE_REGISTRY=172.23.225.247:32000
