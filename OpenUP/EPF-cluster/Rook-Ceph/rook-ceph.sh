@@ -23,12 +23,19 @@ helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" upgrade --install --create-namesp
 	--set "cephImage.repository=$EPF_CLUSTER_IMAGE_REGISTRY/ceph/ceph" \
 	--set "cephImage.tag=$CEPH_IMAGE_TAG" \
 	--set "ceph-csi-operator.controllerManager.manager.image.repository=$EPF_CLUSTER_IMAGE_REGISTRY/cephcsi/ceph-csi-operator" \
+	--set "ceph-csi-operator.controllerManager.manager.image.tag=$CEPH_CSI_OPERATOR_IMAGE_TAG" \
 	--set "image.repository=$EPF_CLUSTER_IMAGE_REGISTRY/rook/ceph" \
+	--set "image.tag=$ROOK_CEPH_IMAGE_TAG" \
 	--set "csi.cephcsi.repository=$EPF_CLUSTER_IMAGE_REGISTRY/cephcsi/cephcsi" \
+	--set "csi.cephcsi.tag=$CEPH_CSI_IMAGE_TAG" \
 	--set "csi.provisioner.repository=$EPF_CLUSTER_IMAGE_REGISTRY/sig-storage/csi-provisioner" \
+	--set "csi.provisioner.tag=$CSI_PROVISIONER_IMAGE_TAG" \
 	--set "csi.resizer.repository=$EPF_CLUSTER_IMAGE_REGISTRY/sig-storage/csi-resizer" \
+	--set "csi.resizer.tag=$CSI_RESIZER_IMAGE_TAG" \
 	--set "csi.attacher.repository=$EPF_CLUSTER_IMAGE_REGISTRY/sig-storage/csi-attacher" \
-	--set "csi.snapshotter.repository=$EPF_CLUSTER_IMAGE_REGISTRY/sig-storage/csi-snapshotter"
+	--set "csi.attacher.tag=$CSI_ATTACHER_IMAGE_TAG" \
+	--set "csi.snapshotter.repository=$EPF_CLUSTER_IMAGE_REGISTRY/sig-storage/csi-snapshotter" \
+	--set "csi.snapshotter.tag=$CSI_SNAPSHOTTER_IMAGE_TAG"
 helm --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} upgrade --install --create-namespace --namespace rook-ceph --wait --timeout 40m rook-ceph-cluster --set operatorNamespace=rook-ceph rook/rook-ceph-cluster -f values-external.yaml
 kubectl --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} wait -n rook-ceph cephcluster rook-ceph --for condition=Connecting=True --timeout=1200s
 helm repo add ceph-csi-operator https://ceph.github.io/ceph-csi-operator
