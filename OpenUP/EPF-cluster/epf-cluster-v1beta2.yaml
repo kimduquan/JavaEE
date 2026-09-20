@@ -193,6 +193,16 @@ spec:
           etcdAPICallSeconds: 600
           tlsBootstrapSeconds: 1500
           discoverySeconds: 1500
+      files:
+        - path: /etc/containerd/certs.d/172.23.225.247:32000/hosts.toml
+          owner: root:root
+          permissions: "0644"
+          content: |
+            server = "http://172.23.225.247:32000"
+            
+            [host."http://172.23.225.247:32000"]
+              capabilities = ["pull", "resolve"]
+              skip_verify = true
 ---
 apiVersion: cluster.x-k8s.io/v1beta2
 kind: MachineDeployment
