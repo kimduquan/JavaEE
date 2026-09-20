@@ -251,7 +251,7 @@ image:
   pullPolicy: "IfNotPresent"
   # cilium-digest
   digest: sha256:ae9ea21f7427fe24bc6ea7247eb552157a1b0a431744045d3f641545ca71d11b
-  useDigest: true
+  useDigest: false
 # -- Scheduling configurations for cilium pods
 scheduling:
   # @schema
@@ -1413,7 +1413,7 @@ certgen:
     repository: "quay.io/cilium/certgen"
     tag: "v0.4.9"
     digest: "sha256:6213a4c54a1f36e14a9280765f058aaa2017550c28bc122f5b09ad146fd0da2b"
-    useDigest: true
+    useDigest: false
     pullPolicy: "IfNotPresent"
   # @schema
   # type: [null, integer]
@@ -2849,7 +2849,7 @@ envoy:
     tag: "v1.37.5-1786810558-766ccfb37260a43e9d228837aa84ce3faf9f64e7"
     pullPolicy: "IfNotPresent"
     digest: "sha256:75b8094c7127736a2ffd2dce3945e0931cb6df21b0372ff661940eca26730b91"
-    useDigest: true
+    useDigest: false
   # -- Init containers added to the cilium Envoy DaemonSet.
   initContainers: []
   # -- Additional containers added to the cilium Envoy DaemonSet.
@@ -3264,7 +3264,7 @@ operator:
     awsDigest: sha256:7cf0cb0e6584f72ca8de951a1be03829f69fcaeba69dc6c7856fc4470545acd7
     # operator-alibabacloud-digest
     alibabacloudDigest: sha256:2af5dd3d85649ea36d365363b8eca82ad06116c6259c4aace700a7c036348e4c
-    useDigest: true
+    useDigest: false
     pullPolicy: "IfNotPresent"
     suffix: ""
   # -- Number of replicas to run for the cilium-operator deployment
@@ -3503,7 +3503,7 @@ nodeinit:
     repository: "quay.io/cilium/startup-script"
     tag: "1782916218-36ae25f"
     digest: "sha256:f99e2beda7324e93ba04d6240d9626a6b9ab023d7d56e3b029d3d9c823ce63ef"
-    useDigest: true
+    useDigest: false
     pullPolicy: "IfNotPresent"
   # -- The priority class to use for the nodeinit pod.
   priorityClassName: ""
@@ -3886,7 +3886,7 @@ clustermesh:
       tag: "v1.20.1"
       # clustermesh-apiserver-digest
       digest: sha256:d905d614a332b2058cb81c193e481d1f460902b903f4eb57cc9764640b750fb5
-      useDigest: true
+      useDigest: false
       pullPolicy: "IfNotPresent"
     # -- TCP port for the clustermesh-apiserver health API.
     healthPort: 9880
