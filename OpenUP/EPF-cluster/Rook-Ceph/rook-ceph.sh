@@ -2,6 +2,7 @@
 TOOLBOX_IMAGE=ceph/ceph:v20.2.2
 CEPH_IMAGE_TAG=v20.2.2
 ROOK_CEPH_IMAGE_TAG=v1.20.7
+CEPH_CSI_OPERATOR_IMAGE_TAG=v1.0.4
 CEPH_CSI_IMAGE_TAG=v3.17.1
 CSI_PROVISIONER_IMAGE_TAG=v6.2.0
 CSI_RESIZER_IMAGE_TAG=v2.1.0
@@ -9,7 +10,7 @@ CSI_ATTACHER_IMAGE_TAG=v4.12.0
 CSI_SNAPSHOTTER_IMAGE_TAG=v8.5.0
 ../../registry.sh quay.io "$TOOLBOX_IMAGE"
 ../../registry.sh quay.io "ceph/ceph:$CEPH_IMAGE_TAG"
-../../registry.sh quay.io "cephcsi/ceph-csi-operator:latest"
+../../registry.sh quay.io "cephcsi/ceph-csi-operator:$CEPH_CSI_OPERATOR_IMAGE_TAG"
 ../../registry.sh docker.io "rook/ceph:$ROOK_CEPH_IMAGE_TAG"
 ../../registry.sh quay.io "cephcsi/cephcsi:$CEPH_CSI_IMAGE_TAG"
 ../../registry.sh registry.k8s.io "sig-storage/csi-provisioner:$CSI_PROVISIONER_IMAGE_TAG"
