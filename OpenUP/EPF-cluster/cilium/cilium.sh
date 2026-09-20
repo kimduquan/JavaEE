@@ -9,6 +9,7 @@ CLUSTERMESH_APISERVER_IMAGE_TAG=v1.20.1
 ../../registry.sh quay.io "cilium/certgen:$CERTGEN_IMAGE_TAG"
 ../../registry.sh quay.io "cilium/cilium-envoy:$ENVOY_IMAGE_TAG"
 ../../registry.sh quay.io "cilium/operator:$OPERATOR_IMAGE_TAG"
+../../registry.sh quay.io "cilium/operator-generic:$OPERATOR_IMAGE_TAG"
 ../../registry.sh quay.io "cilium/startup-script:$NODEINIT_IMAGE_TAG"
 ../../registry.sh quay.io "cilium/clustermesh-apiserver:$CLUSTERMESH_APISERVER_IMAGE_TAG"
 helm repo add cilium https://helm.cilium.io/
