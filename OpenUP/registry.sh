@@ -1,4 +1,4 @@
-. env.sh
+#. env.sh
 REPOSITORY="$1"
 IMAGE="$2"
 sudo microk8s ctr image pull "$REPOSITORY/$IMAGE"
