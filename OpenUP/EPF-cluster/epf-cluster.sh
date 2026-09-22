@@ -27,6 +27,8 @@ cd cilium
 ./cilium.sh
 cd ../
 
+kubectl annotate namespace default clustermesh.cilium.io/global="true"
+
 VM_IP=$(kubectl get vmi --no-headers | awk '{print $4}')
 #ssh -i ${EPF_CLUSTER_SSH_KEY} -o StrictHostKeyChecking=accept-new capk@${VM_IP} 'bash -s' < disk.sh
 
