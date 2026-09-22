@@ -32,14 +32,14 @@
 		<dependency>
 			<groupId>io.quarkiverse.mcp</groupId>
 			<artifactId>quarkus-mcp-server-bom</artifactId>
-			<version>1.13.1</version>
+			<version>2.0.1</version>
 			<type>pom</type>
 			<scope>import</scope>
 		</dependency>
 		<dependency>
 			<groupId>io.quarkus.platform</groupId>
 			<artifactId>quarkus-amazon-services-bom</artifactId>
-			<version>3.37.2</version>
+			<version>${quarkus.platform.version}</version>
 			<type>pom</type>
 			<scope>import</scope>
 		</dependency>
@@ -113,31 +113,31 @@
 		<dependency>
 		    <groupId>io.quarkiverse.helm</groupId>
 		    <artifactId>quarkus-helm</artifactId>
-		    <version>1.4.1</version>
+		    <version>1.4.3</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.quarkiverse.jnosql/quarkus-jnosql-cassandra -->
 		<dependency>
 		    <groupId>io.quarkiverse.jnosql</groupId>
 		    <artifactId>quarkus-jnosql-cassandra</artifactId>
-		    <version>3.4.14</version>
+		    <version>3.5.1</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.quarkiverse.jnosql/quarkus-jnosql-hazelcast -->
 		<dependency>
 		    <groupId>io.quarkiverse.jnosql</groupId>
 		    <artifactId>quarkus-jnosql-hazelcast</artifactId>
-		    <version>3.4.14</version>
+		    <version>3.5.1</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.quarkiverse.jnosql/quarkus-jnosql-mongodb -->
 		<dependency>
 		    <groupId>io.quarkiverse.jnosql</groupId>
 		    <artifactId>quarkus-jnosql-mongodb</artifactId>
-		    <version>3.4.14</version>
+		    <version>3.5.1</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.quarkiverse.jnosql/quarkus-jnosql-neo4j -->
 		<dependency>
 		    <groupId>io.quarkiverse.jnosql</groupId>
 		    <artifactId>quarkus-jnosql-neo4j</artifactId>
-		    <version>3.4.14</version>
+		    <version>3.5.1</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.quarkiverse.jnosql/quarkus-jnosql-document-mongodb -->
 		<dependency>
@@ -222,7 +222,7 @@
 		<dependency>
 		    <groupId>dev.openfeature</groupId>
 		    <artifactId>sdk</artifactId>
-		    <version>1.21.0</version>
+		    <version>1.22.1</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/dev.openfeature.contrib.providers/env-var -->
 		<dependency>
