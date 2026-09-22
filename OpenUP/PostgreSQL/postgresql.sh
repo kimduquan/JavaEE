@@ -8,3 +8,4 @@ helm upgrade --install postgresql oci://registry-1.docker.io/bitnamicharts/postg
 	--set "global.defaultStorageClass=ceph-rbd" \
 	--set "image.registry=$EPF_CLUSTER_IMAGE_REGISTRY" \
 	--set "global.security.allowInsecureImages=true"
+kubectl apply -f services.yaml
