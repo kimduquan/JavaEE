@@ -1,4 +1,5 @@
 . ../env.sh
+../registry.sh ghcr.io "supabase/supavisor:2.9.13"
 mvn clean install -U
 kubectl delete secret supavisor
 kubectl delete hpa supavisor
@@ -8,5 +9,6 @@ kubectl create secret generic supavisor --from-literal=SECRET_KEY_BASE="dc9b0878
 #kubectl wait deployment --for condition=available --timeout=300s supavisor
 #kubectl wait pod --for condition=ready --timeout=300s -l app.kubernetes.io/name=supavisor
 kubectl apply -f tls.yml
-helm upgrade --install supavisor target/helm/kubernetes/supavisor --wait
+helm upgrade --install supavisor target/helm/kubernetes/supavisor --wait \
+	--set "app.image.registry=$EPF_CLUSTER_IMAGE_REGISTRY"
 kubectl autoscale deployment supavisor --max 2
