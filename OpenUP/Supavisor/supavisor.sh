@@ -10,5 +10,5 @@ kubectl create secret generic supavisor --from-literal=SECRET_KEY_BASE="dc9b0878
 #kubectl wait pod --for condition=ready --timeout=300s -l app.kubernetes.io/name=supavisor
 kubectl apply -f tls.yml
 helm upgrade --install supavisor target/helm/kubernetes/supavisor --wait \
-	--set "app.image.registry=$EPF_CLUSTER_IMAGE_REGISTRY"
+	--set "app.image=$EPF_CLUSTER_IMAGE_REGISTRY/supabase/supavisor:2.9.13"
 kubectl autoscale deployment supavisor --max 2
