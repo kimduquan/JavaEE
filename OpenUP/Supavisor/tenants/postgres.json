@@ -5,7 +5,7 @@
       "::/0"
     ],
     "db_database": "postgres",
-    "db_host": "postgresql-primary",
+    "db_host": "postgresql-primary.default.svc.clusterset.local",
     "db_port": 5432,
     "enforce_ssl": false,
     "ip_version": "auto",
