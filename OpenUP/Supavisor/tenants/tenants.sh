@@ -1,4 +1,4 @@
-Authorization=""Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE3NzQwMTMzMjgsImV4cCI6MTgwNTU0OTMyOCwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSJ9.Ec31X-x1OOUTkfqduvYFG5UE6k_-9OXMYOS_U2zpi_w""
+Authorization="Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE3NzQwMTMzMjgsImV4cCI6MTgwNTU0OTMyOCwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSJ9.Ec31X-x1OOUTkfqduvYFG5UE6k_-9OXMYOS_U2zpi_w""
 curl -X PUT http://localhost:4000/api/tenants/postgres -H "Content-Type: application/json" -H  -v --data @postgres.json
 curl -X PUT http://localhost:4000/api/tenants/epf -H "Content-Type: application/json" -H $Authorization -v --data @epf.json
 curl -X PUT http://localhost:4000/api/tenants/keycloak -H "Content-Type: application/json" -H $Authorization -v --data @keycloak.json
