@@ -6,5 +6,5 @@ IMAGE_TAG=v1.35.0
 kubectl delete secret epf-cluster
 kubectl create secret generic epf-cluster --from-file=value=${EPF_CLUSTER_KUBE_CONFIG}
 helm upgrade --install --wait --timeout 10m cluster-autoscaler autoscaler/cluster-autoscaler -f values-cluster-autoscaler.yaml \
-	--set "image.repository=$EPF_CLUSTER_IMAGE_REGISTRY/autoscaling/cluster-autoscaler" \
+#	--set "image.repository=$EPF_CLUSTER_IMAGE_REGISTRY/autoscaling/cluster-autoscaler" \
 	--set "image.tag=$IMAGE_TAG"
