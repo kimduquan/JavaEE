@@ -1,0 +1,4 @@
+server = "http://172.23.225.247:32000"
+
+[host."http://172.23.225.247:32000"]
+capabilities = ["pull", "resolve"]
