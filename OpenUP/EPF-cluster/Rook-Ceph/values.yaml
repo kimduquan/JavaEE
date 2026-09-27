@@ -29,10 +29,10 @@ toolbox:
   repository: #quay.io/ceph/ceph
   # -- The tag of the toolbox image
   # @default -- `.Values.cephImage.tag`
-  tag: #v20.2.2
+  tag: #v20.2.4
   # -- Toolbox image, superseded by `toolbox.repository` and `toolbox.tag`
   # @default -- the image used by the Ceph cluster
-  image: #quay.io/ceph/ceph:v20.2.2
+  image: #quay.io/ceph/ceph:v20.2.4
   # -- Toolbox tolerations
   tolerations:
     - effect: NoSchedule
@@ -83,6 +83,14 @@ monitoring:
   # externalMgrPrometheusPort: <port>
   # Scrape interval for prometheus
   # interval: 10s
+  # Enable native HTTPS on the Ceph mgr prometheus endpoint (Ceph v20.2+).
+  # Rook mounts the TLS Secret and configures the prometheus module; it does not create certificates.
+  # metricsTLS:
+  #   secretName: rook-ceph-prometheus-server-tls
+  #   ca:
+  #     configMap:
+  #       name: rook-ceph-mgr-metrics-service-ca
+  #       key: service-ca.crt
   # allow adding custom labels and annotations to the prometheus rule
   prometheusRule:
     # -- Labels applied to PrometheusRule
@@ -106,8 +114,8 @@ cephImage:
   repository: quay.io/ceph/ceph
   # In production, use a specific version tag instead of the general v20 flag, which pulls the latest release and could result in different
   # versions running within the cluster. See tags available at https://hub.docker.com/r/ceph/ceph/tags/.
-  # To be more precise, you can always use a timestamp tag such as quay.io/ceph/ceph:v20.2.2-20260616
-  tag: v20.2.2
+  # To be more precise, you can always use a timestamp tag such as quay.io/ceph/ceph:v20.2.4-20260818
+  tag: v20.2.4
   # Whether to allow unsupported versions of Ceph. Currently Squid and Tentacle are supported.
   # Future versions would require this to be set to `true`.
   # Do not set to true in production.
@@ -152,6 +160,11 @@ cephClusterSpec:
   # Default is false.
   upgradeOSDRequiresHealthyPGs: false
 
+  security:
+    cephx:
+      csi:
+        keyType: aes # required when Kubernetes nodes don't run Linux kernel 7.0+
+
   mon:
     # Set the number of mons to be started. Generally recommended to be 3.
     # For highest availability, an odd number of mons should be specified.
@@ -169,8 +182,9 @@ cephClusterSpec:
     modules:
       # List of modules to optionally enable or disable.
       # Note the "dashboard" and "monitoring" modules are already configured by other settings in the cluster CR.
-      # - name: rook
-      #   enabled: true
+      # The rook mgr module is not recommended. The only impact is that some small features will be disabled in the Ceph dashboard.
+      - name: rook
+        enabled: false
 
   # enable the ceph dashboard for viewing cluster status
   dashboard:
@@ -182,6 +196,9 @@ cephClusterSpec:
     # Serve the dashboard using SSL (if using ingress to expose the dashboard and `ssl: true` you need to set
     # the corresponding "backend protocol" annotation(s) for your ingress controller of choice)
     ssl: true
+    # The Kubernetes secret name in the current namespace to use as the dashboard SSL certificate, if the secret
+    # type is kubernetes.io/tls and the private key is RSA. If not set, a self-signed certificate is created.
+    # sslCertificateRef: rook-ceph-dashboard-tls
 
   # Network configuration, see: https://github.com/rook/rook/blob/master/Documentation/CRDs/Cluster/ceph-cluster-crd.md#network-configuration-settings
   network:
@@ -627,7 +644,7 @@ cephFileSystemVolumeSnapshotClass:
 cephBlockPoolsVolumeSnapshotClass:
   enabled: false
   name: ceph-block
-  isDefault: true
+  isDefault: false
   deletionPolicy: Delete
   annotations: {}
   labels: {}
