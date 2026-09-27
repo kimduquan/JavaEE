@@ -117,8 +117,7 @@ spec:
           server = "http://172.23.225.247:32000"
           
           [host."http://172.23.225.247:32000"]
-            capabilities = ["pull", "resolve"]
-            skip_verify = true
+          capabilities = ["pull", "resolve"]
   machineTemplate:
     spec:
       infrastructureRef:
@@ -211,8 +210,7 @@ spec:
             server = "http://172.23.225.247:32000"
             
             [host."http://172.23.225.247:32000"]
-              capabilities = ["pull", "resolve"]
-              skip_verify = true
+            capabilities = ["pull", "resolve"]
 ---
 apiVersion: cluster.x-k8s.io/v1beta2
 kind: MachineDeployment
@@ -225,7 +223,6 @@ metadata:
     capacity.cluster-autoscaler.kubernetes.io/memory: "2G"
     capacity.cluster-autoscaler.kubernetes.io/cpu: "2"
     capacity.cluster-autoscaler.kubernetes.io/ephemeral-disk: "20Gi"
-    capacity.cluster-autoscaler.kubernetes.io/maxPods: "30"
 spec:
   clusterName: epf-cluster
   replicas: 0
