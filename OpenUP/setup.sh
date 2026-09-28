@@ -64,7 +64,7 @@ cd NVIDIA-device-plugin
 
 cd ../
 cd KubeAI
-./kubeai.sh
+#./kubeai.sh
 
 cd ../
 cd WildFly
