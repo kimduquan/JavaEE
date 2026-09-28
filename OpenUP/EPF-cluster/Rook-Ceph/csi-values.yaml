@@ -24,6 +24,10 @@ drivers:
   rbd:
     enabled: true
     name: rook-ceph.rbd.csi.ceph.com # csi-provisioner-name
+    nodePlugin:
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/control-plane
     controllerPlugin:
       tolerations:
         - effect: NoSchedule
