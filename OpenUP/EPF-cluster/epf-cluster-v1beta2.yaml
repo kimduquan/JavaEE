@@ -169,7 +169,7 @@ spec:
                     name: dv-volume
                   networkInterfaceMultiqueue: true
                 memory:
-                  guest: 2Gi
+                  guest: 3Gi
               evictionStrategy: External
               volumes:
               - dataVolume:
@@ -220,7 +220,7 @@ metadata:
   annotations:
     cluster.x-k8s.io/cluster-api-autoscaler-node-group-max-size: "5"
     cluster.x-k8s.io/cluster-api-autoscaler-node-group-min-size: "0"
-    capacity.cluster-autoscaler.kubernetes.io/memory: "2G"
+    capacity.cluster-autoscaler.kubernetes.io/memory: "3G"
     capacity.cluster-autoscaler.kubernetes.io/cpu: "2"
     capacity.cluster-autoscaler.kubernetes.io/ephemeral-disk: "20Gi"
 spec:
