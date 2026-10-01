@@ -8,7 +8,7 @@ kubectl create secret generic supavisor --from-literal=SECRET_KEY_BASE="dc9b0878
 #kubectl apply -f kubernetes.yml
 #kubectl wait deployment --for condition=available --timeout=300s supavisor
 #kubectl apply -f tls.yml
-helm upgrade --install supavisor target/helm/kubernetes/supavisor --wait \
+helm upgrade --install supavisor target/helm/kubernetes/supavisor --wait --timeout 40m \
 	--set "app.image=$EPF_CLUSTER_IMAGE_REGISTRY/supabase/supavisor:2.9.13" \
 	--set "app.envs.DATABASE_URL=ecto://postgres:090323508@postgresql-primary.default.svc.clusterset.local:5432/postgres"
 kubectl autoscale deployment supavisor --max 2
