@@ -6,5 +6,6 @@ kubectl create secret generic odoo --from-literal=user="odoo.odoo" --from-litera
 helm upgrade --install odoo oci://registry-1.docker.io/bitnamicharts/odoo -f values-odoo.yaml --wait --timeout 20m \
 	--set "image.registry=$EPF_CLUSTER_IMAGE_REGISTRY" \
 	--set "image.repository=library/odoo" \
-	--set "image.tag=latest"
+	--set "image.tag=latest" \
+	--set "persistence.storageClass=ceph-rbd"
 #helm install odoo oci://registry-1.docker.io/bitnamicharts/odoo -f values-odoo.yaml --wait --wait-for-jobs --set externalDatabase.host=postgresql-primary --set externalDatabase.port=5432 --set externalDatabase.postgresqlPostgresUser=postgres --set externalDatabase.database=odoo_template --set externalDatabase.create=true --set loadDemoData=false --set persistence.resourcePolicy=""
