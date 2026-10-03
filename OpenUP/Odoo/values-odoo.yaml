@@ -193,6 +193,8 @@ extraEnvVars:
     value: "/supavisor-tls/tls.key"
   - name: PGSSLROOTCERT
     value: "/supavisor-tls/ca.crt"
+  - name: PGOPTIONS
+    value: "-c reference=odoo"
 ## @param extraEnvVarsCM Name of existing ConfigMap containing extra env vars
 ##
 extraEnvVarsCM: ""
