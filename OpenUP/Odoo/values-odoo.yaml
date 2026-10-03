@@ -428,13 +428,13 @@ updateStrategy:
   rollingUpdate: null
 ## @param extraVolumes Optionally specify extra list of additional volumes for Odoo pods
 ##
-extraVolumes: []
+extraVolumes:
   - name: supavisor-tls
     secret:
       secretName: supavisor-tls
 ## @param extraVolumeMounts Optionally specify extra list of additional volumeMounts for Odoo container(s)
 ##
-extraVolumeMounts: []
+extraVolumeMounts:
   - mountPath: /supavisor-tls
     name: supavisor-tls
     readOnly: true
