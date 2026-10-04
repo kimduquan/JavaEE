@@ -46,7 +46,7 @@ modelServers:
       # The "default" image should always be specified.
       # "default" is used when no imageName is specified or if a specific image is not found.
       default: "vllm/vllm-openai:latest"
-      nvidia-gpu: "vllm/vllm-openai:latest"
+      nvidia-gpu: "vllm/vllm-openai:gemma4-0505-cu129"
       # vLLM CPU pre-built images requires a cpu with avx512f, avx512_bf16, or avx512_vnni support.
       # If deploying the pre-built images on machines without avx512f, avx512_bf16, or avx512_vnni support, an Illegal instruction error may be raised or the container ends up in a restart loop.
       # Check vLLM documentation to build image for these machines with the appropriate build arguments https://docs.vllm.ai/en/stable/getting_started/installation/cpu.html#set-up-using-docker

@@ -654,7 +654,7 @@ catalog:
     engine: FasterWhisper
     resourceProfile: cpu:1
   gemma4-e4b-it-qat:
-    enabled: true
+    enabled: false
     features: ["TextGeneration"]
     url: "pvc://model-pvc?model=gemma4:e4b-it-qat"
     engine: OLlama
@@ -664,7 +664,7 @@ catalog:
       OLLAMA_NO_CLOUD: "true"
     resourceProfile: nvidia-gpu-t4:1
   granite-4.2-8b-nvfp4:
-    enabled: true
+    enabled: false
     features: ["TextGeneration"]
     url: "hf://ibm-granite/granite-4.2-8b-nvfp4"
     engine: VLLM
@@ -676,6 +676,24 @@ catalog:
     - --max_model_len=auto
     - --enable-auto-tool-choice
     - --tool-call-parser=granite4
+    - --enable-lora
+    resourceProfile: nvidia-gpu-t4:1
+    cacheProfile: vllm
+  gemma-4-e2b-it-qat-w4a16-ct:
+    enabled: true
+    features: ["TextGeneration"]
+    url: "hf://google/gemma-4-E2B-it-qat-w4a16-ct"
+    engine: VLLM
+    env:
+      VLLM_ALLOW_RUNTIME_LORA_UPDATING: "True"
+      VLLM_WSL2_ENABLE_PIN_MEMORY: "1"
+    args:
+    - --gpu-memory-utilization=0.87
+    - --max_model_len=auto
+    - --enable-auto-tool-choice
+    - --tool-call-parser=gemma4
+    - --reasoning-parser=gemma4
+    - --limit-mm-per-prompt={"image":1,"audio":1}
     - --enable-lora
     resourceProfile: nvidia-gpu-t4:1
     cacheProfile: vllm
