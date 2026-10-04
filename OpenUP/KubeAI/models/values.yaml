@@ -695,6 +695,7 @@ catalog:
     - --reasoning-parser=gemma4
     - --limit-mm-per-prompt={"image":1,"audio":1}
     - --enable-lora
+    - --enforce-eager
     resourceProfile: nvidia-gpu-t4:1
     cacheProfile: vllm
 
