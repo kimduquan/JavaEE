@@ -679,6 +679,23 @@ catalog:
     - --enable-lora
     resourceProfile: nvidia-gpu-t4:1
     cacheProfile: vllm
+  granite-4.2-3b-nvfp4:
+    enabled: true
+    features: ["TextGeneration"]
+    url: "hf://ibm-granite/granite-4.2-3b-nvfp4"
+    engine: VLLM
+    env:
+      VLLM_ALLOW_RUNTIME_LORA_UPDATING: "True"
+      VLLM_WSL2_ENABLE_PIN_MEMORY: "1"
+    args:
+    - --gpu-memory-utilization=0.87
+    - --max_model_len=auto
+    - --enable-auto-tool-choice
+    - --tool-call-parser=qwen3_coder
+    - --reasoning-parser=granite_thinking_parser
+    - --enable-lora
+    resourceProfile: nvidia-gpu-t4:1
+    cacheProfile: vllm
   gemma-4-e2b-it-qat-w4a16-ct:
     enabled: true
     features: ["TextGeneration"]
