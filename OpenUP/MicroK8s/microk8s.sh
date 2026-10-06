@@ -19,7 +19,7 @@ sudo microk8s enable kube-ovn --force
 sudo microk8s enable cis-hardening
 sudo microk8s enable dns
 #sudo microk8s enable metallb 172.23.225.250-172.23.225.254
-sudo microk8s enable host-access
+#sudo microk8s enable host-access
 sudo microk8s enable registry
 sudo microk8s inspect
 sudo microk8s config > ~/.kube/config
