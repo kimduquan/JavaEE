@@ -9,3 +9,15 @@ Set-NetIPInterface `
     -Forwarding Enabled
 
 Set-VMProcessor -VMName "epf-node" -ExposeVirtualizationExtensions $true
+New-NetFirewallRule `
+    -DisplayName "Allow TCP 25000" `
+    -Direction Inbound `
+    -Protocol TCP `
+    -LocalPort 25000 `
+    -Action Allow
+New-NetFirewallRule `
+    -DisplayName "Allow TCP 16443" `
+    -Direction Inbound `
+    -Protocol TCP `
+    -LocalPort 16443 `
+    -Action Allow
