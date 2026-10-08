@@ -15,7 +15,7 @@ sudo microk8s status --wait-ready
 #sudo microk8s enable kube-ovn --force
 sudo microk8s enable cis-hardening
 sudo microk8s enable dns
-sudo microk8s enable metallb 192.168.1.250-192.168.1.254
+#sudo microk8s enable metallb 192.168.1.250-192.168.1.254
 sudo microk8s enable registry
 sudo microk8s inspect
 sudo microk8s config > ~/.kube/config
