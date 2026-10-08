@@ -6,10 +6,10 @@ sudo snap install microk8s --classic
 sudo microk8s status --wait-ready
 #sudo mkdir -p /var/snap/microk8s/current/args/certs.d/172.23.225.247:32000
 #sudo cp hosts.toml /var/snap/microk8s/current/args/certs.d/172.23.225.247:32000
-./stop.sh
+#./stop.sh
 #sudo unlink /var/lib/kubelet
 #sudo umount /var/lib/kubelet
-./start.sh
+#./start.sh
 sudo snap install kubectl --classic
 sudo microk8s status --wait-ready
 sudo microk8s enable kube-ovn --force
