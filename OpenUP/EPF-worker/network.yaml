@@ -8,4 +8,3 @@ spec:
     - interface: enp2s0
       nodes:
         - ubuntu
-  exchangeLinkByNIC: false
