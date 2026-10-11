@@ -23,4 +23,5 @@ sudo microk8s enable registry
 sudo microk8s inspect
 sudo microk8s config > ~/.kube/config
 kubectl label node desktop-q9gd575 node-role.kubernetes.io/control-plane=""
+kubectl annotate node desktop-q9gd575 ovn.kubernetes.io/tunnel_interface=eth0 --overwrite
 kubectl label node desktop-q9gd575 nvidia.com/gpu.present=true
