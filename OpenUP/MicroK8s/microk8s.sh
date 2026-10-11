@@ -3,8 +3,8 @@ grep -qxF "vm.overcommit_memory = 1" /etc/sysctl.conf || echo "vm.overcommit_mem
 grep -qxF "net.ipv4.ip_forward = 1" /etc/sysctl.conf || echo "net.ipv4.ip_forward = 1" | sudo tee -a /etc/sysctl.conf
 sudo sysctl -p
 sudo hostnamectl set-hostname desktop-q9gd575
-sudo rm /etc/resolv.conf
-sudo ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf
+#sudo rm /etc/resolv.conf
+#sudo ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf
 sudo snap install microk8s --classic
 sudo microk8s status --wait-ready
 #sudo mkdir -p /var/snap/microk8s/current/args/certs.d/172.23.225.247:32000
@@ -15,14 +15,14 @@ sudo microk8s status --wait-ready
 #./start.sh
 sudo snap install kubectl --classic
 sudo microk8s status --wait-ready
-#sudo microk8s enable kube-ovn --force
+sudo microk8s kubectl annotate node desktop-q9gd575 ovn.kubernetes.io/tunnel_interface=eth0 --overwrite
+sudo microk8s enable kube-ovn --force
 #sudo ip route change 10.1.0.0/16 via 100.64.0.1 dev ovn0 src 100.64.0.2
 sudo microk8s enable cis-hardening
 sudo microk8s enable dns
 sudo microk8s enable metallb 192.168.1.240-192.168.1.254
 sudo microk8s enable registry
 sudo microk8s inspect
+sudo microk8s kubectl label node desktop-q9gd575 node-role.kubernetes.io/control-plane=""
+sudo microk8s kubectl label node desktop-q9gd575 nvidia.com/gpu.present=true
 sudo microk8s config > ~/.kube/config
-kubectl label node desktop-q9gd575 node-role.kubernetes.io/control-plane=""
-#kubectl annotate node desktop-q9gd575 ovn.kubernetes.io/tunnel_interface=eth0 --overwrite
-kubectl label node desktop-q9gd575 nvidia.com/gpu.present=true
