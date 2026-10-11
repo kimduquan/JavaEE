@@ -1,0 +1,11 @@
+apiVersion: kubeovn.io/v1
+kind: ProviderNetwork
+metadata:
+  name: external
+spec:
+  defaultInterface: eth0
+  customInterfaces:
+    - interface: enp2s0
+      nodes:
+        - ubuntu
+  exchangeLinkByNIC: false
