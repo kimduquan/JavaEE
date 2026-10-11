@@ -13,18 +13,18 @@ cd cert-manager
 ./cert-manager.sh
 
 cd ../
+cd Rook-Ceph
+./rook-ceph.sh
+./rook-ceph-cluster.sh
+./ceph-csi-drivers.sh
+
+cd ../
 cd KubeVirt
 ./kubevirt.sh
 
 cd ../
 cd Containerized-Data-Importer
 ./containerized-data-importer.sh
-
-cd ../
-cd Rook-Ceph
-./rook-ceph.sh
-./rook-ceph-cluster.sh
-./ceph-csi-drivers.sh
 
 cd ../
 cd clusterctl
