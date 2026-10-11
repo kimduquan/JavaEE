@@ -14,7 +14,7 @@ sudo microk8s status --wait-ready
 #./start.sh
 sudo snap install kubectl --classic
 sudo microk8s status --wait-ready
-sudo microk8s enable kube-ovn --force
+#sudo microk8s enable kube-ovn --force
 #sudo ip route change 10.1.0.0/16 via 100.64.0.1 dev ovn0 src 100.64.0.2
 sudo microk8s enable cis-hardening
 sudo microk8s enable dns
@@ -23,5 +23,5 @@ sudo microk8s enable registry
 sudo microk8s inspect
 sudo microk8s config > ~/.kube/config
 kubectl label node desktop-q9gd575 node-role.kubernetes.io/control-plane=""
-kubectl annotate node desktop-q9gd575 ovn.kubernetes.io/tunnel_interface=eth0 --overwrite
+#kubectl annotate node desktop-q9gd575 ovn.kubernetes.io/tunnel_interface=eth0 --overwrite
 kubectl label node desktop-q9gd575 nvidia.com/gpu.present=true
