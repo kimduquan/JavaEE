@@ -15,6 +15,7 @@ sudo microk8s inspect
 #./start.sh
 sudo snap install kubectl --classic
 sudo microk8s kubectl annotate node desktop-q9gd575 ovn.kubernetes.io/tunnel_interface=eth0 --overwrite
+sudo microk8s kubectl label node desktop-q9gd575 role=storage-node --overwrite
 sudo microk8s enable kube-ovn --force
 sudo microk8s status --wait-ready
 sudo microk8s inspect
