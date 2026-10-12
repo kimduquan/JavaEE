@@ -361,6 +361,10 @@ ingress:
       paths:
         - path: /
           pathType: Prefix
+    - host: suitably-useful-arachnid.ngrok-free.app
+      paths:
+        - path: /
+          pathType: Prefix
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
