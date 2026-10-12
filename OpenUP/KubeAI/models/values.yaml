@@ -770,7 +770,7 @@ catalog:
     resourceProfile: nvidia-gpu-t4:1
     cacheProfile: vllm
   granite-4.2-3b-nvfp4:
-    enabled: true
+    enabled: false
     features: ["TextGeneration"]
     url: "hf://ibm-granite/granite-4.2-3b-nvfp4"
     engine: VLLM
