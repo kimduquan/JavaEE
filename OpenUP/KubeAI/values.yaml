@@ -176,8 +176,6 @@ resourceProfiles:
     runtimeClassName: nvidia
     limits:
       nvidia.com/gpu: "1"
-      cpu: 1
-      memory: "6Gi"
     requests:
       nvidia.com/gpu: "1"
       cpu: 100m
