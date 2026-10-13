@@ -793,7 +793,6 @@ catalog:
     engine: VLLM
     env:
       VLLM_ALLOW_RUNTIME_LORA_UPDATING: "True"
-      VLLM_WSL2_ENABLE_PIN_MEMORY: "1"
     args:
     - --gpu-memory-utilization=0.87
     - --max-model-len=2048
