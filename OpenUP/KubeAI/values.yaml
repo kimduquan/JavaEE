@@ -300,13 +300,13 @@ modelAutoscaling:
   interval: 10s
   # Time window the autoscaling algorithm will consider when calculating
   # the desired number of replicas.
-  timeWindow: 10m
+  timeWindow: 20m
   # The name of the ConfigMap that stores the state of the autoscaler.
   # Defaults to "{fullname}-autoscaler-state".
   stateConfigMapName: ""
 
 messaging:
-  errorMaxBackoff: 300s
+  errorMaxBackoff: 1200s
   streams: []
 
 # Configure the openwebui subchart.
@@ -448,14 +448,14 @@ livenessProbe:
   httpGet:
     path: /healthz
     port: 8081
-  initialDelaySeconds: 120
+  initialDelaySeconds: 1200
   periodSeconds: 20
 
 readinessProbe:
   httpGet:
     path: /readyz
     port: 8081
-  initialDelaySeconds: 120
+  initialDelaySeconds: 1200
   periodSeconds: 20
 
 # Additional volumes on the output Deployment definition.
