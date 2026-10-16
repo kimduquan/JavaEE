@@ -444,19 +444,19 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
-livenessProbe:
-  httpGet:
-    path: /healthz
-    port: 8081
-  initialDelaySeconds: 1200
-  periodSeconds: 20
+# livenessProbe:
+#   httpGet:
+#     path: /healthz
+#     port: 8081
+#   initialDelaySeconds: 1200
+#   periodSeconds: 20
 
-readinessProbe:
-  httpGet:
-    path: /readyz
-    port: 8081
-  initialDelaySeconds: 1200
-  periodSeconds: 20
+# readinessProbe:
+#   httpGet:
+#     path: /readyz
+#     port: 8081
+#   initialDelaySeconds: 1200
+#   periodSeconds: 20
 
 # Additional volumes on the output Deployment definition.
 volumes: []
