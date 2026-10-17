@@ -14,6 +14,9 @@ cephClusterSpec:
     enabled: false
   external:
     enable: true
+  network:
+    connections:
+      requireMsgr2: false
   crashCollector:
     disable: true
   placement:
