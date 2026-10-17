@@ -120,6 +120,7 @@ deschedulerPolicy:
   #   serviceNamespace: ""
   #   sampleRate: 1.0
   #   fallbackToNoOpProviderOnError: true
+  gracePeriodSeconds: 600
   profiles:
     - name: default
       pluginConfig:
