@@ -151,12 +151,16 @@ deschedulerPolicy:
               cpu: 50
               memory: 50
               pods: 50
+        - name: HighNodeUtilization
+          args:
+            thresholds:
+              memory: 20
       plugins:
         balance:
           enabled:
             - RemoveDuplicates
             - RemovePodsViolatingTopologySpreadConstraint
-            - LowNodeUtilization
+            - HighNodeUtilization
         deschedule:
           enabled:
             - RemovePodsHavingTooManyRestarts
