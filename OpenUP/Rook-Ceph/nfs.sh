@@ -1,1 +1,1 @@
-kubectl create -f nfs.yaml
+kubectl apply -f nfs.yaml
