@@ -50,11 +50,12 @@ spec:
             spec:
               pvc:
                 accessModes:
-                - ReadWriteOnce
+                - ReadWriteMany
                 resources:
                   requests:
                     storage: 30Gi
                 storageClassName: ceph-block
+                volumeMode: Block
               source:
                 pvc:
                   name: ubuntu-2404-container-disk
@@ -147,11 +148,12 @@ spec:
             spec:
               pvc:
                 accessModes:
-                - ReadWriteOnce
+                - ReadWriteMany
                 resources:
                   requests:
                     storage: 20Gi
                 storageClassName: ceph-block
+                volumeMode: Block
               source:
                 pvc:
                   name: ubuntu-2404-container-disk
