@@ -118,7 +118,7 @@ spec:
   failureDomain: host
   replicated:
     size: 1
-    requireSafeReplicaSize: true
+    requireSafeReplicaSize: false
 
 # ---
 # # Example configmap for providing sssd.conf file to the SSSD sidecar
