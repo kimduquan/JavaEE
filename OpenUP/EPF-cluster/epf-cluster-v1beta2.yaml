@@ -172,7 +172,7 @@ spec:
                   networkInterfaceMultiqueue: true
                 memory:
                   guest: 2Gi
-              evictionStrategy: External
+              evictionStrategy: LiveMigrate
               volumes:
               - dataVolume:
                   name: epf-cluster-boot-volume
