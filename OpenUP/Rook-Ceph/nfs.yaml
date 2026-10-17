@@ -7,7 +7,7 @@
 apiVersion: ceph.rook.io/v1
 kind: CephNFS
 metadata:
-  name: my-nfs
+  name: ceph-nfs
   namespace: rook-ceph # namespace:cluster
 spec:
   # Settings for the NFS server
@@ -101,24 +101,24 @@ spec:
     #       requests:
     #         cpu: "2"
     #         memory: "1Gi"
----
+# ---
 # The built-in Ceph pool ".nfs" is used for storing configuration for all CephNFS clusters.
 # This CephBlockPool CR must be created before creating any CephNFS resources, as the NFS
 # controller requires the pool to exist. Customize pool properties as needed.
 # This pool must be replicated.
-apiVersion: ceph.rook.io/v1
-kind: CephBlockPool
-metadata:
-  name: builtin-nfs
-  namespace: rook-ceph # namespace:cluster
-spec:
+# apiVersion: ceph.rook.io/v1
+# kind: CephBlockPool
+# metadata:
+#   name: builtin-nfs
+#   namespace: rook-ceph # namespace:cluster
+# spec:
   # The required pool name ".nfs" cannot be specified as a K8s resource name, thus we override
   # the pool name created in Ceph with this name property
-  name: .nfs
-  failureDomain: host
-  replicated:
-    size: 3
-    requireSafeReplicaSize: true
+#   name: .nfs
+#   failureDomain: host
+#   replicated:
+#     size: 3
+#     requireSafeReplicaSize: true
 
 # ---
 # # Example configmap for providing sssd.conf file to the SSSD sidecar
