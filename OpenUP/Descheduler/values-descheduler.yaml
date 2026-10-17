@@ -101,6 +101,7 @@ command:
 
 cmdOptions:
   v: 3
+  feature-gates: "EvictionsInBackground=true"
 
 # Recommended to use the latest Policy API version supported by the Descheduler app version
 deschedulerPolicyAPIVersion: "descheduler/v1alpha2"
