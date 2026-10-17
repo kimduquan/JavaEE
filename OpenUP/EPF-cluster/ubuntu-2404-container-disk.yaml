@@ -6,11 +6,12 @@ metadata:
 spec:
   pvc:
     accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
     resources:
       requests:
         storage: 20Gi
     storageClassName: ceph-block
+    volumeMode: Block
   source:
     registry:
       url: docker://quay.io/capk/ubuntu-2404-container-disk:v1.34.1
