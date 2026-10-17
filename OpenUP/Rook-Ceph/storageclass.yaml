@@ -13,7 +13,7 @@ parameters:
   # With Rook, a Kubernetes Service named with the pattern "rook-ceph-<name-of-cephnfs>-a" will
   # always be created and can be used here. This is where name-of-cephnfs refers to the name of the
   # CephNFS resource used for nfsCluster above.
-  server: rook-ceph-ceph-nfs-a
+  server: rook-ceph-nfs-ceph-nfs-a
 
   # clusterID is the Kubernetes namespace where the CephCluster is running
   # If you change this namespace, also change the namespace below where the secret namespaces are defined
