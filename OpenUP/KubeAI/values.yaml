@@ -298,7 +298,7 @@ resourceProfiles:
 cacheProfiles:
   vllm:
     sharedFilesystem:
-      storageClassName: "rook-nfs"
+      storageClassName: "ceph-filesystem"
 
 modelAutoscaling:
   # Interval that the autoscaler will scrape model server metrics.
