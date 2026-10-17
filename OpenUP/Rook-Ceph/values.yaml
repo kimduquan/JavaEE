@@ -627,7 +627,7 @@ drivers:
     # -- CSI driver name for NFS (default: "nfs.csi.ceph.com")
     name: "rook-ceph.nfs.csi.ceph.com"
     # -- Enable the NFS driver (default: true)
-    enabled: true
+    enabled: false
     log:
       # -- Log verbosity level (0-5) (default: 0)
       verbosity: 0
