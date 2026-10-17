@@ -8,9 +8,9 @@ sudo snap install microk8s --classic
 sudo microk8s status --wait-ready
 sudo microk8s inspect
 # https://github.com/kubevirt/containerized-data-importer/blob/main/doc/block_cri_ownership_config.md
-sudo mkdir -p /var/snap/microk8s/current/args/containerd.d
-sudo cp capk-cdi.toml /var/snap/microk8s/current/args/containerd.d
-sudo systemctl restart snap.microk8s.daemon-containerd.service
+sudo sed -i '/\[plugins\."io\.containerd\.grpc\.v1\.cri"\]/a \  device_ownership_from_security_context = true' /var/snap/microk8s/current/args/containerd-template.toml
+#sudo mkdir -p /var/snap/microk8s/current/args/containerd.d
+#sudo cp capk-cdi.toml /var/snap/microk8s/current/args/containerd.d
 #sudo mkdir -p /var/snap/microk8s/current/args/certs.d/172.23.225.247:32000
 #sudo cp hosts.toml /var/snap/microk8s/current/args/certs.d/172.23.225.247:32000
 #./stop.sh
