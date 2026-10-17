@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 # CronJob or Deployment
-kind: CronJob
+kind: Deployment
 
 image:
   repository: registry.k8s.io/descheduler/descheduler
@@ -16,8 +16,8 @@ imagePullSecrets:
 
 resources:
   requests:
-    cpu: 500m
-    memory: 256Mi
+    cpu: 1m
+    memory: 1Mi
   limits:
     cpu: 500m
     memory: 256Mi
@@ -179,7 +179,8 @@ runtimeClassName: ""
 # user-namespace isolation, or `true` to share the host user namespace.
 # hostUsers: false
 
-nodeSelector: {}
+nodeSelector:
+  node-role.kubernetes.io/control-plane: ""
 #  foo: bar
 
 affinity: {}
@@ -208,7 +209,9 @@ topologySpreadConstraints: []
 #   labelSelector:
 #     matchLabels:
 #       app.kubernetes.io/name: descheduler
-tolerations: []
+tolerations:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/control-plane
 # - key: 'management'
 #   operator: 'Equal'
 #   value: 'tool'
