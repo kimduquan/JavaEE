@@ -757,7 +757,7 @@ ingress:
               service:
                 name: keycloak
                 port:
-                  number: 8080
+                  name: http
 ## Network Policy configuration
 ## ref: https://kubernetes.io/docs/concepts/services-networking/network-policies/
 ##
@@ -887,7 +887,7 @@ autoscaling:
   ## @param autoscaling.hpa.targetMemory Target Memory utilization percentage
   ##
   hpa:
-    enabled: true
+    enabled: false
     minReplicas: 1
     maxReplicas: 1
     targetCPU: ""
