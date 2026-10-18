@@ -6,6 +6,10 @@ toolbox:
 # -- Cluster configuration.
 # @default -- See [below](#ceph-cluster-spec)
 cephClusterSpec:
+  security:
+    cephx:
+      csi:
+        keyType: aes
   mon:
     count: 1
   mgr:
