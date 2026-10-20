@@ -4,9 +4,4 @@ services:
     container_name: frps
     restart: unless-stopped
     networks:
-      - wiredoor_frps
-
-networks:
-  wiredoor_frps:
-    name: docker-setup_wiredoor
-    external: true
+      - wiredoor
