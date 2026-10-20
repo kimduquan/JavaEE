@@ -1,0 +1,15 @@
+services:
+  frps:
+    image: localhost:32000/epf/frps:1.0.0
+    container_name: frps
+    restart: unless-stopped
+    ports:
+      - 80:80/tcp
+      - 443:443/tcp
+      - 443:443/udp
+      - 7000:7000/tcp
+    networks:
+      - wiredoor
+
+networks:
+  wiredoor:
