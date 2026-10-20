@@ -333,11 +333,14 @@ controller:
 
   ## Pod Node assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
-  nodeSelector: {}
+  nodeSelector:
+    node-role.kubernetes.io/control-plane: ""
 
   ## Node Taints and Tolerations for pod-node cheduling through attraction/repelling
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
-  tolerations: []
+  tolerations:
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/control-plane
   #  - key: "key"
   #    operator: "Equal|Exists"
   #    value: "value"
