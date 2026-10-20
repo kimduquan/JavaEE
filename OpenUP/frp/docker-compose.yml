@@ -3,6 +3,9 @@ services:
     image: localhost:32000/epf/frps:1.0.0
     container_name: frps
     restart: unless-stopped
+    ports:
+      - "127.0.0.1:7000:7000/tcp"
+      - "127.0.0.1:7000:7000/udp"
     networks:
       - wiredoor_frps
 
