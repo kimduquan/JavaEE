@@ -5,3 +5,6 @@ services:
     restart: unless-stopped
     networks:
       - wiredoor
+
+networks:
+  wiredoor:
