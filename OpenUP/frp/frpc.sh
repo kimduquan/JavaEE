@@ -1,0 +1,2 @@
+. ../env.sh
+docker build --file frp/dockerfiles/Dockerfile-for-frpc --tag epf/frpc:1.0.0 frp
