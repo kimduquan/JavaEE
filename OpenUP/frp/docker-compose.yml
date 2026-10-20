@@ -3,14 +3,10 @@ services:
     image: localhost:32000/epf/frps:1.0.0
     container_name: frps
     restart: unless-stopped
-    ports:
-      - 9080:80/tcp
-      - 9443:443/tcp
-      - 9443:443/udp
-      - 7000:7000/tcp
-      - 7000:7000/udp
     networks:
       - wiredoor
 
 networks:
   wiredoor:
+    name: docker-setup_wiredoor
+    external: true
