@@ -1,0 +1,3 @@
+[submodule "OpenUP/Wiredoor/docker-setup"]
+	path = OpenUP/Wiredoor/docker-setup
+	url = https://github.com/wiredoor/docker-setup.git
