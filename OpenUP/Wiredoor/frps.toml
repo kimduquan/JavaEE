@@ -1,1 +1,4 @@
 bindPort = 7000
+kcpBindPort = 7000
+quicBindPort = 7002
+tcpmuxHTTPConnectPort = 1337
