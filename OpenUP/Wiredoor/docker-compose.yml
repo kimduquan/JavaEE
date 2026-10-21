@@ -3,4 +3,7 @@ services:
     image: localhost:32000/epf/frps:1.0.0
     container_name: frps
     restart: unless-stopped
+    volumes:
+      - ./frps.toml:/etc/frps/frps.toml
     network_mode: "container:wiredoor"
+    command: ["-c", "/etc/frps/frps.toml"]
