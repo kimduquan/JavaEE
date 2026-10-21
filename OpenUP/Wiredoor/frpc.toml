@@ -1,0 +1,17 @@
+serverAddr = "10.0.0.1"
+serverPort = 7002
+transport.protocol = "quic"
+
+[[proxies]]
+name = "http"
+type = "tcp"
+localIP = "127.0.0.1"
+localPort = 80
+remotePort = 8080
+
+[[proxies]]
+name = "https"
+type = "tcp"
+localIP = "127.0.0.1"
+localPort = 443
+remotePort = 8443
