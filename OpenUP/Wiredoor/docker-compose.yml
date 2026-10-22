@@ -1,6 +1,6 @@
 services:
   frps:
-    image: localhost:32000/epf/frps:1.0.0
+    image: epf/frps:1.0.0
     container_name: frps
     restart: unless-stopped
     volumes:
