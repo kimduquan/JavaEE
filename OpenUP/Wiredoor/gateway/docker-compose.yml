@@ -4,18 +4,29 @@ services:
     restart: unless-stopped
     cap_add:
       - NET_ADMIN
-    ports:
-      - "10.0.0.1:7000:7000/tcp"
-      - "10.0.0.1:7000:7000/udp"
-      - "10.0.0.1:7002:7002/udp"
-      - "10.0.0.1:1337:1337/tcp"
     sysctls:
       - net.ipv4.ip_forward=1
     environment:
       WIREDOOR_URL: ${WIREDOOR_URL}
       TOKEN: ${WIREDOOR_GATEWAY_TOKEN}
     networks:
-      - wiredoor
+      - wiredoor-gateway
+
+  frpc:
+    image: epf/frpc:1.0.0
+    container_name: frpc
+    restart: unless-stopped
+    volumes:
+      - ./frpc.toml:/etc/frpc/frpc.toml
+    network_mode: "service:wiredoor-gateway"
+    ports:
+      - "10.0.0.1:7000:7000/tcp"
+      - "10.0.0.1:7000:7000/udp"
+      - "10.0.0.1:7002:7002/udp"
+      - "10.0.0.1:1337:1337/tcp"
+    command: ["-c", "/etc/frpc/frpc.toml"]
+    depends_on:
+      - wiredoor-gateway
 
 networks:
-  wiredoor:
+  wiredoor-gateway:

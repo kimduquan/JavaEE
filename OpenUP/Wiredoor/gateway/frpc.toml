@@ -1,0 +1,3 @@
+serverAddr = "10.0.0.1"
+serverPort = 7002
+transport.protocol = "quic"
