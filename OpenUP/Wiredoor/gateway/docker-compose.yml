@@ -1,0 +1,21 @@
+services:
+  wiredoor-gateway:
+    image: wiredoor/wiredoor-cli:latest
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - "10.0.0.1:7000:7000/tcp"
+      - "10.0.0.1:7000:7000/udp"
+      - "10.0.0.1:7002:7002/udp"
+      - "10.0.0.1:1337:1337/tcp"
+    sysctls:
+      - net.ipv4.ip_forward=1
+    environment:
+      WIREDOOR_URL: ${WIREDOOR_URL}
+      TOKEN: ${WIREDOOR_GATEWAY_TOKEN}
+    networks:
+      - wiredoor
+
+networks:
+  wiredoor:
