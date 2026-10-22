@@ -5,5 +5,5 @@ services:
     restart: unless-stopped
     volumes:
       - ./frps.toml:/etc/frps/frps.toml
-    network_mode: "container:wiredoor"
+    network_mode: "service:wiredoor"
     command: ["-c", "/etc/frps/frps.toml"]
