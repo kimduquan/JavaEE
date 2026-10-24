@@ -8,7 +8,7 @@ $kubectl --kubeconfig=$KUBECONFIG create secret generic keycloak --from-literal=
 $helm --kubeconfig=$KUBECONFIG upgrade --install keycloak oci://registry-1.docker.io/bitnamicharts/keycloak --version 25.2.0 -f values-keycloak.yaml --wait \
 	--set "global.imageRegistry=$EPF_CLUSTER_IMAGE_REGISTRY" \
 	--set "image.registry=$EPF_CLUSTER_IMAGE_REGISTRY" \
-	--set "ingress.hostname=$KEYCLOAK_ADMIN_DOMAIN" \
+	--set "ingress.hostname=$MANAGEMENT_DOMAIN" \
 	--set "ingress.extraRules[0].host=$PRODUCTION_DOMAIN" \
 	--set "ingress.extraRules[1].host=$STAGING_DOMAIN" \
 	--set "ingress.extraRules[2].host=$DEV_DOMAIN" \
