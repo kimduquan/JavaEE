@@ -7,10 +7,10 @@ services:
     sysctls:
       - net.ipv4.ip_forward=1
     ports:
-      - "10.0.0.1:7000:7000/tcp"
-      - "10.0.0.1:7000:7000/udp"
-      - "10.0.0.1:7002:7002/udp"
-      - "10.0.0.1:1337:1337/tcp"
+      - "${GATEWAY_IP}:7000:7000/tcp"
+      - "${GATEWAY_IP}:7000:7000/udp"
+      - "${GATEWAY_IP}:7002:7002/udp"
+      - "${GATEWAY_IP}:1337:1337/tcp"
     environment:
       WIREDOOR_URL: ${WIREDOOR_URL}
       TOKEN: ${WIREDOOR_GATEWAY_TOKEN}
