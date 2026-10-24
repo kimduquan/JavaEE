@@ -12,5 +12,5 @@ export EPF_CLUSTER_CERT=/home/kimduquan/localhost.direct.SS.crt
 export EPF_CLUSTER_CERT_KEY=/home/kimduquan/localhost.direct.SS.key
 export EPF_CLUSTER_IMAGE_REGISTRY=192.168.1.6:32000
 export GATEWAY_IP=192.168.1.6
-export KUBECTL="sudo microk8s kubectl --kubeconfig=$KUBECONFIG"
-export HELM="sudo microk8s helm --kubeconfig=$KUBECONFIG"
+export kubectl="sudo microk8s kubectl --kubeconfig=$KUBECONFIG"
+export helm="sudo microk8s helm --kubeconfig=$KUBECONFIG"
