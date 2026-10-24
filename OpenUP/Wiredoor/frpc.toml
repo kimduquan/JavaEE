@@ -1,17 +1,17 @@
-serverAddr = "10.0.0.1"
-serverPort = 7002
-transport.protocol = "quic"
+serverAddr = "{{ .Envs.FRP_SERVER_ADDR }}"
+serverPort = {{ .Envs.FRP_SERVER_PORT }}
+transport.protocol = "{{ .Envs.FRP_TRANSPORT_PROTOCOL }}"
 
 [[proxies]]
 name = "http"
 type = "tcp"
-localIP = "127.0.0.1"
+localIP = "{{ .Envs.PROXIES_HTTP_LOCAL_IP }}"
 localPort = 80
-remotePort = 8080
+remotePort = {{ .Envs.PROXIES_HTTP_REMOTE_PORT }}
 
 [[proxies]]
 name = "https"
 type = "tcp"
-localIP = "127.0.0.1"
+localIP = "{{ .Envs.PROXIES_HTTPS_LOCAL_IP }}"
 localPort = 443
-remotePort = 8443
+remotePort = {{ .Envs.PROXIES_HTTPS_REMOTE_PORT }}
