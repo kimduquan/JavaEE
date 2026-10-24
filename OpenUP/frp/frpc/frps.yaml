@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frps
+spec:
+  type: ClusterIP
+  ports:
+    - name: bindPort
+      protocol: TCP
+      port: 7000
+      targetPort: 7000
+    - name: kcpBindPort
+      protocol: UDP
+      port: 7000
+      targetPort: 7000
+    - name: quicBindPort
+      protocol: UDP
+      port: 7002
+      targetPort: 7002
+    - name: tcpmuxHTTPConnectPort
+      protocol: TCP
+      port: 1337
+      targetPort: 1337
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: frps-slice-1
+  labels:
+    kubernetes.io/service-name: frps
+addressType: IPv4
+ports:
+  - name: bindPort
+      protocol: TCP
+      port: 7000
+  - name: kcpBindPort
+    protocol: UDP
+    port: 7000
+  - name: quicBindPort
+    protocol: UDP
+    port: 7002
+  - name: tcpmuxHTTPConnectPort
+    protocol: TCP
+    port: 1337
+endpoints:
+  - addresses:
+      - "192.168.1.6"
+    conditions:
+      ready: true
