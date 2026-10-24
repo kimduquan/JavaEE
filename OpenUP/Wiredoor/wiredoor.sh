@@ -1,3 +1,4 @@
+git submodule update --init --recursive
 cp .env docker-setup/.env
 cd docker-setup
 sudo docker compose up -d
