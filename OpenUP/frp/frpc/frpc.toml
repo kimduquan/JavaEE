@@ -1,17 +1,22 @@
 serverAddr = "{{ .Envs.FRP_SERVER_ADDR }}"
 serverPort = {{ .Envs.FRP_SERVER_PORT }}
 transport.protocol = "{{ .Envs.FRP_TRANSPORT_PROTOCOL }}"
+includes = ["/config/*.toml"]
 
 [[proxies]]
 name = "http"
 type = "tcp"
-localIP = "{{ .Envs.PROXIES_HTTP_LOCAL_IP }}"
+localIP = "{{ .Envs.FRP_PROXIES_HTTP_LOCAL_IP }}"
 localPort = 80
-remotePort = {{ .Envs.PROXIES_HTTP_REMOTE_PORT }}
+remotePort = {{ .Envs.FRP_PROXIES_HTTP_REMOTE_PORT }}
+loadBalancer.group = "{{ .Envs.FRP_PROXIES_HTTP_LOAD_BALANCER_GROUP }}"
+loadBalancer.groupKey = "{{ .Envs.FRP_PROXIES_HTTP_LOAD_BALANCER_KEY }}"
 
 [[proxies]]
 name = "https"
 type = "tcp"
-localIP = "{{ .Envs.PROXIES_HTTPS_LOCAL_IP }}"
+localIP = "{{ .Envs.FRP_PROXIES_HTTPS_LOCAL_IP }}"
 localPort = 443
-remotePort = {{ .Envs.PROXIES_HTTPS_REMOTE_PORT }}
+remotePort = {{ .Envs.FRP_PROXIES_HTTPS_REMOTE_PORT }}
+loadBalancer.group = "{{ .Envs.FRP_PROXIES_HTTPS_LOAD_BALANCER_GROUP }}"
+loadBalancer.groupKey = "{{ .Envs.FRP_PROXIES_HTTPS_LOAD_BALANCER_KEY }}"
