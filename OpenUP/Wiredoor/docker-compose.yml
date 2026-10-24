@@ -1,6 +1,6 @@
 services:
   frps:
-    image: epf/frps:1.0.0
+    image: ghcr.io/fatedier/frps:v0.71.1
     container_name: frps
     restart: unless-stopped
     volumes:
