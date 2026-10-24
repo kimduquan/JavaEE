@@ -561,7 +561,7 @@ ingress:
   apiVersion: ""
   ## @param ingress.hostname Default host for the ingress record
   ##
-  hostname: localhost.direct
+  hostname: ""
   ## @param ingress.path Default path for the ingress record
   ## NOTE: You may need to set this to '/*' in order to use this with ALB ingress controllers
   ##
@@ -593,7 +593,9 @@ ingress:
   ##     path: /
   ##
   extraHosts:
-    - name: chipmunk-capable-prawn.ngrok-free.app
+    - name: ""
+      path: /
+    - name: ""
       path: /
   ## @param ingress.extraPaths [array] An array with additional arbitrary paths that may need to be added to the ingress under the main host
   ## e.g:
