@@ -1357,7 +1357,7 @@ externalDatabase:
   database: keycloak
   schema: public
   password:
-  existingSecret: "keycloak"
+  existingSecret: "keycloak-db"
   existingSecretUserKey: "DATABASE_USER"
   existingSecretPasswordKey: "DATABASE_PASSWORD"
   annotations: {}
