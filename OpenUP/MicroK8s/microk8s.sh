@@ -29,4 +29,6 @@ sudo microk8s enable registry
 sudo microk8s inspect
 sudo microk8s kubectl label node desktop-q9gd575 node-role.kubernetes.io/control-plane=""
 sudo microk8s kubectl label node desktop-q9gd575 nvidia.com/gpu.present=true
+sudo microk8s kubectl create namespace $STAGING_NAMESPACE
+sudo microk8s kubectl create namespace $PRODUCTION_NAMESPACE
 sudo microk8s config > ~/.kube/config
