@@ -12,8 +12,8 @@ CLUSTERMESH_APISERVER_IMAGE_TAG=v1.20.2
 ../../registry.sh quay.io "cilium/operator-generic:$OPERATOR_IMAGE_TAG"
 ../../registry.sh quay.io "cilium/startup-script:$NODEINIT_IMAGE_TAG"
 ../../registry.sh quay.io "cilium/clustermesh-apiserver:$CLUSTERMESH_APISERVER_IMAGE_TAG"
-helm repo add cilium https://helm.cilium.io/
-helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" upgrade --install --wait --timeout 40m cilium cilium/cilium --version 1.20.2 --namespace=kube-system -f values-cilium.yaml \
+$helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" repo add cilium https://helm.cilium.io/
+$helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" upgrade --install --wait --timeout 40m cilium cilium/cilium --version 1.20.2 --namespace=kube-system -f values-cilium.yaml \
 	--set "image.repository=$EPF_CLUSTER_IMAGE_REGISTRY/cilium/cilium" \
 	--set "image.tag=$IMAGE_TAG" \
 	--set "certgen.image.repository=$EPF_CLUSTER_IMAGE_REGISTRY/cilium/certgen" \
