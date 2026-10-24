@@ -113,16 +113,16 @@ image:
 auth:
   ## @param auth.adminUser Keycloak administrator user
   ##
-  adminUser: "kimduquan"
+  adminUser: "keycloak"
   ## @param auth.adminPassword Keycloak administrator password for the new user
   ##
-  adminPassword: "090323508"
+  adminPassword:
   ## @param auth.existingSecret Existing secret containing Keycloak admin password
   ##
-  existingSecret: ""
+  existingSecret: "keycloak-admin"
   ## @param auth.passwordSecretKey Key where the Keycloak admin password is being stored inside the existing secret.
   ##
-  passwordSecretKey: ""
+  passwordSecretKey: "PASSWORD"
   ## @param auth.annotations Additional custom annotations for Keycloak auth secret object
   ##
   annotations: {}
@@ -650,11 +650,11 @@ ingress:
   apiVersion: ""
   ## @param ingress.hostname Default host for the ingress record (evaluated as template)
   ##
-  hostname: keycloak.192-168-1-11.nip.io
+  hostname:
   ## @param ingress.ingressClassName IngressClass that will be be used to implement the Ingress (evaluated as template)
   ## Required if you have more than one IngressClass marked as the default for your cluster
   ##
-  ingressClassName: "cilium"
+  ingressClassName:
   ## @param ingress.controller The ingress controller type. Currently supports `default` and `gce`
   ## leave as `default` for most ingress controllers.
   ## set to `gce` if using the GCE ingress controller
@@ -748,7 +748,17 @@ ingress:
   ##             name: http
   ##
   extraRules:
-    - host: chipmunk-capable-prawn.ngrok-free.app
+    - host:
+      http:
+        paths:
+          - path: /auth
+            pathType: Prefix
+            backend:
+              service:
+                name: keycloak
+                port:
+                  name: http
+    - host:
       http:
         paths:
           - path: /auth
@@ -1333,12 +1343,12 @@ postgresql:
 externalDatabase:
   host: "supavisor"
   port: 5432
-  user: keycloak.keycloak
+  user:
   database: keycloak
   schema: public
-  password: "090323508"
-  existingSecret: ""
-  existingSecretUserKey: ""
-  existingSecretPasswordKey: ""
+  password:
+  existingSecret: "keycloak"
+  existingSecretUserKey: "DATABASE_USER"
+  existingSecretPasswordKey: "DATABASE_PASSWORD"
   annotations: {}
   extraParams: ""
