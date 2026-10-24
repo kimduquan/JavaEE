@@ -16,7 +16,16 @@ export PRODUCTION_DOMAIN=kdq.vn
 export PRODUCTION_NAMESPACE=kdq-vn
 export STAGING_DOMAIN=kdq.io.vn
 export STAGING_NAMESPACE=kdq-io-vn
-export DEV_DOMAIN=192-168-1-6.nip.io
+export DEV_DOMAIN=192-168-1-11.nip.io
 export DEV_NAMESPACE=default
+export DOMAIN=$DEV_DOMAIN
+export NAMESPACE=$DEV_NAMESPACE
+if [ "$DEPLOYMENT" = "production" ]; then
+    export DOMAIN=$PRODUCTION_DOMAIN
+    export NAMESPACE=$PRODUCTION_NAMESPACE
+elif [ "$DEPLOYMENT" = "staging" ]; then
+    export DOMAIN=$STAGING_DOMAIN
+    export NAMESPACE=$STAGING_NAMESPACE
+fi
 export kubectl="sudo microk8s kubectl"
 export helm="sudo microk8s helm"
