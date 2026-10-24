@@ -1,12 +1,12 @@
 . ../env.sh
 IMAGE_TAG=37.0.0-debian-12-r0
 ../registry.sh docker.io "bitnamilegacy/wildfly:$IMAGE_TAG"
-$kubectl delete secret oidc
-$kubectl create secret generic oidc --from-literal=OIDC_CLIENT_SECRET='cIkzKJZ4A7jXKpXfaxC4GaLxJAmmEqhP' --from-literal=OIDC_CLIENT_ID='account'
-$kubectl delete cm oidc
+$kubectl --kubeconfig="${KUBECONFIG}" --namespace $NAMESPACE delete secret oidc
+$kubectl --kubeconfig="${KUBECONFIG}" --namespace $NAMESPACE create secret generic oidc --from-literal=OIDC_CLIENT_SECRET='cIkzKJZ4A7jXKpXfaxC4GaLxJAmmEqhP' --from-literal=OIDC_CLIENT_ID='account'
+$kubectl --kubeconfig="${KUBECONFIG}" --namespace $NAMESPACE delete cm oidc
 OIDC_PROVIDER_URI="https://${DOMAIN}/auth/realms/EPF-dev/.well-known/openid-configuration"
-$kubectl create cm oidc --from-literal=OIDC_PROVIDER_URI='${OIDC_PROVIDER_URI}'
-$helm upgrade --install wildfly oci://registry-1.docker.io/bitnamicharts/wildfly -f values-wildfly.yaml --wait \
+$kubectl --kubeconfig="${KUBECONFIG}" --namespace $NAMESPACE create cm oidc --from-literal=OIDC_PROVIDER_URI='${OIDC_PROVIDER_URI}'
+$helm --kubeconfig="${KUBECONFIG}" --namespace $NAMESPACE upgrade --install wildfly oci://registry-1.docker.io/bitnamicharts/wildfly -f values-wildfly.yaml --wait \
 	--set "global.imageRegistry=$EPF_CLUSTER_IMAGE_REGISTRY" \
 	--set "image.registry=$EPF_CLUSTER_IMAGE_REGISTRY" \
 	--set "image.tag=$IMAGE_TAG"
