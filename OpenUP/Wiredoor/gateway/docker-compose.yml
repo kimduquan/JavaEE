@@ -20,6 +20,3 @@ services:
 networks:
   wiredoor-gateway:
     driver: bridge
-    ipam:
-      config:
-        - subnet: 172.18.50.0/24
