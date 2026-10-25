@@ -7,19 +7,19 @@ spec:
   ports:
     - name: bind-port
       protocol: TCP
-      port: 7000
+      port: $FRP_BIND_PORT
       targetPort: $FRP_BIND_PORT
     - name: kcp-bind-port
       protocol: UDP
-      port: 7000
+      port: $FRP_KCP_BIND_PORT
       targetPort: $FRP_KCP_BIND_PORT
     - name: quic-bind-port
       protocol: UDP
-      port: 7002
+      port: $FRP_QUIC_BIND_PORT
       targetPort: $FRP_QUIC_BIND_PORT
     - name: tcpmux-http-connect-port
       protocol: TCP
-      port: 1337
+      port: $FRP_TCP_MUX_HTTP_CONNECT_PORT
       targetPort: $FRP_TCP_MUX_HTTP_CONNECT_PORT
 ---
 apiVersion: discovery.k8s.io/v1
@@ -32,16 +32,16 @@ addressType: IPv4
 ports:
   - name: bind-port
     protocol: TCP
-    port: 7000
+    port: $FRP_BIND_PORT
   - name: kcp-bind-port
     protocol: UDP
-    port: 7000
+    port: $FRP_KCP_BIND_PORT
   - name: quic-bind-port
     protocol: UDP
-    port: 7002
+    port: $FRP_QUIC_BIND_PORT
   - name: tcpmux-http-connect-port
     protocol: TCP
-    port: 1337
+    port: $FRP_TCP_MUX_HTTP_CONNECT_PORT
 endpoints:
   - addresses:
       - "$GATEWAY_IP"
