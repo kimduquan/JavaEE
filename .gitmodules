@@ -1,3 +1,6 @@
 [submodule "OpenUP/Wiredoor/docker-setup"]
 	path = OpenUP/Wiredoor/docker-setup
 	url = https://github.com/wiredoor/docker-setup.git
+[submodule "OpenUP/Keycloak/bitnami/containers"]
+	path = OpenUP/Keycloak/bitnami/containers
+	url = https://github.com/bitnami/containers.git
