@@ -1,4 +1,4 @@
-bindPort = 7000
-kcpBindPort = 7000
-quicBindPort = 7002
-tcpmuxHTTPConnectPort = 1337
+bindPort = {{ .Envs.FRP_BIND_PORT }}
+kcpBindPort = {{ .Envs.FRP_KCP_BIND_PORT }}
+quicBindPort = {{ .Envs.FRP_QUIC_BIND_PORT }}
+tcpmuxHTTPConnectPort = {{ .Envs.FRP_TCP_MUX_HTTP_CONNECT_PORT }}
