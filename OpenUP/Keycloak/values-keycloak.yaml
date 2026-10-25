@@ -276,6 +276,8 @@ extraEnvVars:
     value: ""
   - name: KC_HTTPS_MANAGEMENT_CERTIFICATE_KEY_FILE
     value: ""
+  - name: KC_HTTPS_PROTOCOLS
+    value: "TLSv1.2"
 ## @param extraEnvVarsCM Name of existing ConfigMap containing extra env vars
 ##
 extraEnvVarsCM: ""
