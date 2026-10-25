@@ -1,0 +1,16 @@
+---
+app:
+  envs:
+    FRP_PROXIES_HTTPS_LOCAL_IP: ""
+    FRP_PROXIES_HTTPS_NAME: https
+    FRP_PROXIES_HTTPS_REMOTE_PORT: "8443"
+    FRP_PROXIES_HTTP_LOCAL_IP: ""
+    FRP_PROXIES_HTTP_NAME: http
+    FRP_PROXIES_HTTP_REMOTE_PORT: "8080"
+    FRP_SERVER_ADDR: frps
+    FRP_SERVER_PORT: "17002"
+    FRP_TRANSPORT_PROTOCOL: quic
+  image: ghcr.io/fatedier/frpc:v0.71.1
+  ports:
+    http: 8080
+  replicas: 1
