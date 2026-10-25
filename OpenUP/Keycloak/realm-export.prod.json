@@ -1,8 +1,8 @@
 {
   "id": "25d926f1-b744-4af3-b3b7-0d5bad913fd5",
-  "realm": "EPF",
-  "displayName": "EPF",
-  "displayNameHtml": "EPF",
+  "realm": "KDQ",
+  "displayName": "KDQ",
+  "displayNameHtml": "KDQ",
   "notBefore": 0,
   "defaultSignatureAlgorithm": "RS256",
   "revokeRefreshToken": false,
@@ -60,7 +60,7 @@
       },
       {
         "id": "24dc4851-8c28-413f-a8a5-60e388b68037",
-        "name": "default-roles-epf",
+        "name": "default-roles-kdq",
         "description": "${role_default-roles}",
         "composite": true,
         "composites": {
@@ -419,7 +419,7 @@
   ],
   "defaultRole": {
     "id": "24dc4851-8c28-413f-a8a5-60e388b68037",
-    "name": "default-roles-epf",
+    "name": "default-roles-kdq",
     "description": "${role_default-roles}",
     "composite": true,
     "clientRole": false,
@@ -489,7 +489,7 @@
       "disableableCredentialTypes": [],
       "requiredActions": [],
       "realmRoles": [
-        "default-roles-epf"
+        "default-roles-kdq"
       ],
       "notBefore": 0,
       "groups": [
@@ -516,7 +516,7 @@
       "description": "",
       "rootUrl": "${authBaseUrl}",
       "adminUrl": "",
-      "baseUrl": "/realms/EPF/account/",
+      "baseUrl": "/realms/KDQ/account/",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
@@ -524,7 +524,7 @@
       "secret": "cIkzKJZ4A7jXKpXfaxC4GaLxJAmmEqhP",
       "redirectUris": [
         "/*",
-        "/realms/EPF/account/*",
+        "/realms/KDQ/account/*",
         "http://kdq.vn/*",
         "https://kdq.vn/*"
       ],
@@ -594,13 +594,13 @@
       "description": "",
       "rootUrl": "${authBaseUrl}",
       "adminUrl": "",
-      "baseUrl": "/realms/EPF/account/",
+      "baseUrl": "/realms/KDQ/account/",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "/realms/EPF/account/*"
+        "/realms/KDQ/account/*"
       ],
       "webOrigins": [
         "+"
@@ -835,13 +835,13 @@
       "clientId": "security-admin-console",
       "name": "${client_security-admin-console}",
       "rootUrl": "${authAdminUrl}",
-      "baseUrl": "/admin/EPF/console/",
+      "baseUrl": "/admin/KDQ/console/",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "/admin/EPF/console/*"
+        "/admin/KDQ/console/*"
       ],
       "webOrigins": [
         "+"
