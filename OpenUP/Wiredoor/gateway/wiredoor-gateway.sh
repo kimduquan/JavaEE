@@ -1,5 +1,5 @@
 . ../../env.sh
-. env.sh
+. ../../frp/env.sh
 echo "FRP_BIND_PORT=$FRP_BIND_PORT" >> .env
 echo "FRP_KCP_BIND_PORT=$FRP_KCP_BIND_PORT" >> .env
 echo "FRP_QUIC_BIND_PORT=$FRP_QUIC_BIND_PORT" >> .env
