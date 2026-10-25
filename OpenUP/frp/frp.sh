@@ -7,7 +7,6 @@ kubectl create secret generic frp-ssh-auth --from-file=authorized_keys=~/.ssh/id
 kubectl delete -f tls.yaml
 kubectl apply -f tls.yaml
 kubectl delete -f ingress.yml
-docker build --file $FRP_SOURCE_DIR/dockerfiles/Dockerfile-for-frps --tag epf/frp:1.0.0 $FRP_SOURCE_DIR
 mvn clean package -U
 helm upgrade --install frp target/helm/kubernetes/frp --wait
 #kubectl apply -f ingress.yml
