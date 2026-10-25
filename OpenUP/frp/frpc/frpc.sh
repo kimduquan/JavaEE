@@ -1,4 +1,5 @@
 . ../../env.sh
+. ../env.sh
 $kubectl --kubeconfig="${KUBECONFIG}" --namespace $NAMESPACE delete configmap frpc
 $kubectl --kubeconfig="${KUBECONFIG}" --namespace $NAMESPACE create configmap frpc --from-file=frpc=frpc.toml
 envsubst < frps.yaml | $kubectl --kubeconfig="${KUBECONFIG}" --namespace $NAMESPACE apply -f -
