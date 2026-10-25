@@ -7,7 +7,7 @@ echo "FRP_TCP_MUX_HTTP_CONNECT_PORT=$FRP_TCP_MUX_HTTP_CONNECT_PORT" >> .env
 git submodule update --init --recursive
 cp .env docker-setup/.env
 cd docker-setup
-sudo docker compose up -d
+sudo docker compose up -d --wait
 sudo docker compose ps wiredoor
 cd ../
-sudo docker compose up -d
+sudo docker compose up -d --wait
