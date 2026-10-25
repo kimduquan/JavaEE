@@ -1053,7 +1053,7 @@ metrics:
 keycloakConfigCli:
   ## @param keycloakConfigCli.enabled Whether to enable keycloak-config-cli job
   ##
-  enabled: false
+  enabled: true
   ## Bitnami keycloak-config-cli image
   ## ref: https://hub.docker.com/r/bitnami/keycloak-config-cli/tags/
   ## @param keycloakConfigCli.image.registry [default: REGISTRY_NAME] keycloak-config-cli container image registry
@@ -1168,12 +1168,15 @@ keycloakConfigCli:
   ## @param keycloakConfigCli.nodeSelector Node labels for pod assignment
   ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
   ##
-  nodeSelector: {}
+  nodeSelector:
+    node-role.kubernetes.io/control-plane: ""
   ##
   ## @param keycloakConfigCli.tolerations Tolerations for job pod assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##
-  tolerations: []
+  tolerations:
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/control-plane
   ## keycloak-config-cli availability-check configuration
   ## ref: https://github.com/adorsys/keycloak-config-cli#Configuration
   ## @param keycloakConfigCli.availabilityCheck.enabled Whether to wait until Keycloak is available
@@ -1240,14 +1243,14 @@ keycloakConfigCli:
   ## @param keycloakConfigCli.existingConfigmap ConfigMap with keycloak-config-cli configuration
   ## NOTE: This will override keycloakConfigCli.configuration
   ##
-  existingConfigmap: ""
+  existingConfigmap: "keycloak-realms"
   ## Automatic Cleanup for Finished Jobs
   ## @param keycloakConfigCli.cleanupAfterFinished.enabled Enables Cleanup for Finished Jobs
   ## @param keycloakConfigCli.cleanupAfterFinished.seconds Sets the value of ttlSecondsAfterFinished
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/ttlafterfinished/
   ##
   cleanupAfterFinished:
-    enabled: false
+    enabled: true
     seconds: 600
 
 ## @section Default init container parameters
