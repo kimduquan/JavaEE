@@ -8,19 +8,19 @@ spec:
     - name: bind-port
       protocol: TCP
       port: 7000
-      targetPort: 7000
+      targetPort: $FRP_BIND_PORT
     - name: kcp-bind-port
       protocol: UDP
       port: 7000
-      targetPort: 7000
+      targetPort: $FRP_KCP_BIND_PORT
     - name: quic-bind-port
       protocol: UDP
       port: 7002
-      targetPort: 7002
+      targetPort: $FRP_QUIC_BIND_PORT
     - name: tcpmux-http-connect-port
       protocol: TCP
       port: 1337
-      targetPort: 1337
+      targetPort: $FRP_TCP_MUX_HTTP_CONNECT_PORT
 ---
 apiVersion: discovery.k8s.io/v1
 kind: EndpointSlice
