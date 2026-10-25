@@ -27,3 +27,4 @@ $helm --kubeconfig=$KUBECONFIG upgrade --install keycloak oci://registry-1.docke
 	--set "ingress.extraRules[0].host=$PRODUCTION_DOMAIN" \
 	--set "ingress.extraRules[1].host=$STAGING_DOMAIN" \
 	--set "ingress.extraRules[2].host=$DEV_DOMAIN" \
+	--set "auth.adminUser=$KEYCLOAK_ADMIN_USER"
