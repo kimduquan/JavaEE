@@ -525,8 +525,8 @@
       "redirectUris": [
         "/*",
         "/realms/EPF-dev/account/*",
-        "http://chipmunk-capable-prawn.ngrok-free.app/*",
-        "https://chipmunk-capable-prawn.ngrok-free.app/*"
+        "http://kdq.192-168-1-11.nip.io/*",
+        "https://kdq.192-168-1-11.nip.io/*"
       ],
       "webOrigins": [
         ""
@@ -559,7 +559,7 @@
         "request.object.encryption.alg": "any",
         "client.introspection.response.allow.jwt.claim.enabled": "false",
         "standard.token.exchange.enabled": "false",
-        "frontchannel.logout.url": "https://chipmunk-capable-prawn.ngrok-free.app/Logout",
+        "frontchannel.logout.url": "https://kdq.192-168-1-11.nip.io/Logout",
         "client.use.lightweight.access.token.enabled": "false",
         "request.object.required": "not required",
         "access.token.header.type.rfc9068": "false",
@@ -622,7 +622,7 @@
         "standard.token.exchange.enabled": "false",
         "post.logout.redirect.uris": "+",
         "oauth2.device.authorization.grant.enabled": "false",
-        "logoUri": "https://chipmunk-capable-prawn.ngrok-free.app/dist/img/AdminLTELogo.png",
+        "logoUri": "https://kdq.192-168-1-11.nip.io/dist/img/AdminLTELogo.png",
         "backchannel.logout.revoke.offline.tokens": "false",
         "use.refresh.tokens": "true",
         "realm_client": "false",
@@ -2632,13 +2632,12 @@
     "saml.signature.algorithm": "",
     "parRequestUriLifespan": "60",
     "clientSessionMaxLifespan": "0",
-    "frontendUrl": "https://chipmunk-capable-prawn.ngrok-free.app/auth",
+    "frontendUrl": "https://kdq.192-168-1-11.nip.io/auth",
     "acr.loa.map": "{}"
   },
   "keycloakVersion": "26.3.3",
   "userManagedAccessAllowed": true,
   "organizationsEnabled": true,
-  "verifiableCredentialsEnabled": false,
   "adminPermissionsEnabled": false,
   "clientProfiles": {
     "profiles": []
