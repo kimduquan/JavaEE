@@ -1,5 +1,5 @@
 services:
-  wiredoor-gateway:
+  wiredoor:
     image: wiredoor/wiredoor-cli:latest
     restart: unless-stopped
     cap_add:
@@ -7,16 +7,16 @@ services:
     sysctls:
       - net.ipv4.ip_forward=1
     ports:
-      - "${GATEWAY_IP}:7000:7000/tcp"
-      - "${GATEWAY_IP}:7000:7000/udp"
-      - "${GATEWAY_IP}:7002:7002/udp"
-      - "${GATEWAY_IP}:1337:1337/tcp"
+      - "${GATEWAY_IP}:${FRP_BIND_PORT}:${FRP_BIND_PORT}/tcp"
+      - "${GATEWAY_IP}:${FRP_KCP_BIND_PORT}:${FRP_KCP_BIND_PORT}/udp"
+      - "${GATEWAY_IP}:${FRP_QUIC_BIND_PORT}:${FRP_QUIC_BIND_PORT}/udp"
+      - "${GATEWAY_IP}:${FRP_TCP_MUX_HTTP_CONNECT_PORT}:${FRP_TCP_MUX_HTTP_CONNECT_PORT}/tcp"
     environment:
       WIREDOOR_URL: ${WIREDOOR_URL}
       TOKEN: ${WIREDOOR_GATEWAY_TOKEN}
     networks:
-      - wiredoor-gateway
+      - wiredoor
 
 networks:
-  wiredoor-gateway:
+  "wiredoor:
     driver: bridge
