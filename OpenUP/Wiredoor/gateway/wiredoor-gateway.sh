@@ -4,7 +4,7 @@ echo "FRP_BIND_PORT=$FRP_BIND_PORT" >> .env
 echo "FRP_KCP_BIND_PORT=$FRP_KCP_BIND_PORT" >> .env
 echo "FRP_QUIC_BIND_PORT=$FRP_QUIC_BIND_PORT" >> .env
 echo "FRP_TCP_MUX_HTTP_CONNECT_PORT=$FRP_TCP_MUX_HTTP_CONNECT_PORT" >> .env
-WIREDOOR_GATEWAY_CONTAINER="gateway-wiredoor-1"
+WIREDOOR_GATEWAY_CONTAINER="gateway-wiredoor-cli-1"
 sudo docker compose up -d --wait
 sudo docker exec -it $WIREDOOR_GATEWAY_CONTAINER sudo iptables -t nat -A PREROUTING -p tcp --dport $FRP_BIND_PORT -j DNAT --to-destination "10.0.0.1:$FRP_BIND_PORT"
 sudo docker exec -it $WIREDOOR_GATEWAY_CONTAINER sudo iptables -t nat -A PREROUTING -p udp --dport $FRP_KCP_BIND_PORT -j DNAT --to-destination "10.0.0.1:$FRP_KCP_BIND_PORT"

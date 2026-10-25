@@ -1,5 +1,5 @@
 services:
-  wiredoor:
+  wiredoor-cli:
     image: wiredoor/wiredoor-cli:latest
     restart: unless-stopped
     cap_add:
@@ -15,8 +15,8 @@ services:
       WIREDOOR_URL: ${WIREDOOR_URL}
       TOKEN: ${WIREDOOR_GATEWAY_TOKEN}
     networks:
-      - wiredoor
+      - wiredoor-cli
 
 networks:
-  "wiredoor:
+  wiredoor-cli:
     driver: bridge
