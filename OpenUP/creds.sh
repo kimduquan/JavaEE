@@ -1,0 +1,1 @@
+kubectl create secret generic epf-cluster --from-file=value=${EPF_CLUSTER_KUBE_CONFIG} --dry-run=client -o yaml | kubectl apply -f -
