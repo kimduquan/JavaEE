@@ -3,8 +3,10 @@ SECRET_DIR="~/.secret"
 SECRET_FILE="$SECRET_DIR/$SECRET.yaml"
 export DEFAULT_PASSWORD=
 if [ -z "$SECRET" ]; then
+	:
 else
 	if [ -f "$SECRET_FILE" ]; then
+		:
 	elif [ "$SECRET" = "epf-cluster" ]; then
 		kubectl create secret generic epf-cluster \
 			--from-file=value=${EPF_CLUSTER_KUBE_CONFIG} \
