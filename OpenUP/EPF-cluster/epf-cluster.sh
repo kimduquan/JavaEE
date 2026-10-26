@@ -17,6 +17,8 @@ kubectl wait cluster epf-cluster --for condition=RemoteConnectionProbe --timeout
 
 rm ${EPF_CLUSTER_KUBE_CONFIG}
 clusterctl get kubeconfig epf-cluster > ${EPF_CLUSTER_KUBE_CONFIG}
+../secret.sh epf-cluster
+
 rm ${EPF_CLUSTER_SSH_KEY}
 kubectl get secret epf-cluster-ssh-keys -o jsonpath='{.data.key}' | base64 --decode > ${EPF_CLUSTER_SSH_KEY}
 chmod 600 ${EPF_CLUSTER_SSH_KEY}
