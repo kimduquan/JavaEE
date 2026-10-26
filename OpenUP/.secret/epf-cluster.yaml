@@ -1,6 +1,0 @@
-apiVersion: v1
-data:
-  value: 
-kind: Secret
-metadata:
-  name: epf-cluster
