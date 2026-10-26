@@ -11,10 +11,8 @@ if [ "$DEPLOYMENT" = "dev" ]; then
     MANAGEMENT_DOMAIN=$(echo "$MANAGEMENT_IP" | tr '.' '-')
     MANAGEMENT_DOMAIN="$MANAGEMENT_DOMAIN.nip.io"
 fi
-#$kubectl --kubeconfig=$KUBECONFIG delete secret keycloak-admin --wait
-$kubectl --kubeconfig=$KUBECONFIG create secret generic keycloak-admin --from-literal=CLIENT_SECRET='y1wf2SyO6p8eZq65KbvbNB1gE0cEYyMx' --from-literal=CLIENT_ID='admin-cli' --from-literal=PASSWORD='090323508'
-#$kubectl --kubeconfig=$KUBECONFIG delete secret keycloak-db --wait
-$kubectl --kubeconfig=$KUBECONFIG create secret generic keycloak-db --from-literal=DATABASE_USER='keycloak.keycloak' --from-literal=DATABASE_PASSWORD='090323508'
+../secret.sh keycloak-admin
+../secret.sh keycloak-db
 $kubectl --kubeconfig=$KUBECONFIG delete configmap keycloak-realms --wait
 $kubectl --kubeconfig=$KUBECONFIG create configmap keycloak-realms --from-file=KDQ-dev.json=realm-export.dev.json --from-file=KDQ.json=realm-export.prod.json --from-file=KDQ-stage.json=realm-export.stage.json
 $helm --kubeconfig=$KUBECONFIG upgrade --install keycloak oci://registry-1.docker.io/bitnamicharts/keycloak --version 25.2.0 -f values-keycloak.yaml --wait --timeout 30m \
