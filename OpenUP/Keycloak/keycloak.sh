@@ -13,9 +13,9 @@ if [ -z "$DEPLOYMENT" ] || [ "$DEPLOYMENT" = "dev" ]; then
 fi
 ../secret.sh keycloak-admin
 ../secret.sh keycloak-db
-kubectl --kubeconfig=$KUBECONFIG delete configmap keycloak-realms --wait
-kubectl --kubeconfig=$KUBECONFIG create configmap keycloak-realms --from-file=KDQ-dev.json=realm-export.dev.json --from-file=KDQ.json=realm-export.prod.json --from-file=KDQ-stage.json=realm-export.stage.json
-helm --kubeconfig=$KUBECONFIG upgrade --install keycloak oci://registry-1.docker.io/bitnamicharts/keycloak --version 25.2.0 -f values-keycloak.yaml --wait --timeout 30m \
+kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG delete configmap keycloak-realms --wait
+kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create configmap keycloak-realms --from-file=KDQ-dev.json=realm-export.dev.json --from-file=KDQ.json=realm-export.prod.json --from-file=KDQ-stage.json=realm-export.stage.json
+helm --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG upgrade --install keycloak oci://registry-1.docker.io/bitnamicharts/keycloak --version 25.2.0 -f values-keycloak.yaml --wait --timeout 30m \
 	--set "global.imageRegistry=$EPF_CLUSTER_IMAGE_REGISTRY" \
 	--set "image.registry=$EPF_CLUSTER_IMAGE_REGISTRY" \
 	--set "keycloakConfigCli.image.registry=$EPF_CLUSTER_IMAGE_REGISTRY" \
