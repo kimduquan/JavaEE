@@ -30,7 +30,7 @@ else
 			--from-literal=replication-password='$DEFAULT_PASSWORD' \
 			--dry-run=client -o yaml > "$SECRET_FILE"
 		$kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f "$SECRET_FILE"
-	elif [ "$SECRET" = "initdb.sql" ]; then
+	elif echo "$SECRET" | grep -q "\."; then
 		envsubst < "$SECRET" > "$SECRET.tmp"
 		mv "$SECRET.tmp" "$SECRET"
 	elif [ "$SECRET" = "supavisor" ]; then
