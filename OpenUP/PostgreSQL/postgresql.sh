@@ -1,5 +1,6 @@
 . ../env.sh
 ../registry.sh registry-1.docker.io "bitnami/postgresql:latest"
+../secret.sh postgresql
 kubectl create configmap initdb --from-file=initdb.sql
 kubectl delete pvc/data-postgresql-primary-0 --wait
 kubectl delete pvc/data-postgresql-read-0 --wait
