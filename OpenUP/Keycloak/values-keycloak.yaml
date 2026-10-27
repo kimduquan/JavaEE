@@ -1252,7 +1252,7 @@ keycloakConfigCli:
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/ttlafterfinished/
   ##
   cleanupAfterFinished:
-    enabled: true
+    enabled: false
     seconds: 600
 
 ## @section Default init container parameters
