@@ -1,5 +1,4 @@
 . ../env.sh
-. env.sh
 ../registry.sh docker.io "bitnamilegacy/keycloak:26.3.3-debian-12-r0"
 ../registry.sh docker.io "bitnamilegacy/keycloak-config-cli:6.4.0-debian-12-r11"
 ./keycloak-config-cli.sh
@@ -11,6 +10,7 @@ if [ -z "$DEPLOYMENT" ] || [ "$DEPLOYMENT" = "dev" ]; then
     MANAGEMENT_DOMAIN=$(echo "$MANAGEMENT_IP" | tr '.' '-')
     MANAGEMENT_DOMAIN="$MANAGEMENT_DOMAIN.nip.io"
 fi
+. ../secret.sh
 ../secret.sh keycloak-admin
 ../secret.sh keycloak-db
 kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG delete configmap keycloak-realms --wait
