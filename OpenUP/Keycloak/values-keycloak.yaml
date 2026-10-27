@@ -277,7 +277,7 @@ extraEnvVars:
   - name: KC_HTTPS_MANAGEMENT_CERTIFICATE_KEY_FILE
     value: ""
   - name: KC_HTTPS_PROTOCOLS
-    value: "TLSv1.2"
+    value: "TLSv1.3"
 ## @param extraEnvVarsCM Name of existing ConfigMap containing extra env vars
 ##
 extraEnvVarsCM: ""
@@ -1055,7 +1055,7 @@ metrics:
 keycloakConfigCli:
   ## @param keycloakConfigCli.enabled Whether to enable keycloak-config-cli job
   ##
-  enabled: true
+  enabled: false
   ## Bitnami keycloak-config-cli image
   ## ref: https://hub.docker.com/r/bitnami/keycloak-config-cli/tags/
   ## @param keycloakConfigCli.image.registry [default: REGISTRY_NAME] keycloak-config-cli container image registry
