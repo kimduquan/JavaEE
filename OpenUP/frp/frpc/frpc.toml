@@ -6,6 +6,7 @@ includes = ["/config/*.toml"]
 [[proxies]]
 name = "{{ .Envs.FRP_PROXIES_HTTP_NAME }}"
 type = "tcp"
+healthCheck.type = "tcp"
 localIP = "{{ .Envs.FRP_PROXIES_HTTP_LOCAL_IP }}"
 localPort = 80
 remotePort = {{ .Envs.FRP_PROXIES_HTTP_REMOTE_PORT }}
@@ -15,6 +16,7 @@ loadBalancer.groupKey = "{{ .Envs.FRP_PROXIES_HTTP_NAME }}"
 [[proxies]]
 name = "{{ .Envs.FRP_PROXIES_HTTPS_NAME }}"
 type = "tcp"
+healthCheck.type = "tcp"
 localIP = "{{ .Envs.FRP_PROXIES_HTTPS_LOCAL_IP }}"
 localPort = 443
 remotePort = {{ .Envs.FRP_PROXIES_HTTPS_REMOTE_PORT }}
