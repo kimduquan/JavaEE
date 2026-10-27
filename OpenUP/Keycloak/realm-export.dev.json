@@ -60,7 +60,7 @@
       },
       {
         "id": "24dc4851-8c28-413f-a8a5-60e388b68037",
-        "name": "default-roles-epf-dev",
+        "name": "default-roles-kdq-dev",
         "description": "${role_default-roles}",
         "composite": true,
         "composites": {
@@ -419,7 +419,7 @@
   ],
   "defaultRole": {
     "id": "24dc4851-8c28-413f-a8a5-60e388b68037",
-    "name": "default-roles-epf-dev",
+    "name": "default-roles-kdq-dev",
     "description": "${role_default-roles}",
     "composite": true,
     "clientRole": false,
@@ -489,7 +489,7 @@
       "disableableCredentialTypes": [],
       "requiredActions": [],
       "realmRoles": [
-        "default-roles-epf-dev"
+        "default-roles-kdq-dev"
       ],
       "notBefore": 0,
       "groups": [
