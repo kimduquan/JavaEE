@@ -183,7 +183,7 @@ sampleApplication:
 gateway:
 
   # -- Deploy resources related to Gateway
-  enabled: true
+  enabled: false
 
   # --  String to fully override gateway.fullname
   fullnameOverride: ""
@@ -933,7 +933,7 @@ modelservice:
 # -- Bitnami/Redis chart configuration
 # @default -- Use sane defaults for minimal Redis deployment
 redis:
-  enabled: true
+  enabled: false
   auth:
     enabled: false
     existingSecretPasswordKey: ""
