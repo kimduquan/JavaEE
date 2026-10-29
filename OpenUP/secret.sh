@@ -51,5 +51,10 @@ else
 			--from-literal=OIDC_CLIENT_ID='account'\
 			--dry-run=client -o yaml > "$SECRET_FILE"
 		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f "$SECRET_FILE"
+	elif [ "$SECRET" = "huggingface" ]; then
+		kubectl create secret generic huggingface \
+			--from-literal=token=''
+			--dry-run=client -o yaml > "$SECRET_FILE"
+		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f "$SECRET_FILE"
 	fi
 fi
