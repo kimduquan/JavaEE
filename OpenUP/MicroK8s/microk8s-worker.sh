@@ -11,3 +11,5 @@ sudo microk8s enable kube-ovn --force
 
 sudo microk8s status --wait-ready
 sudo microk8s inspect
+
+#sudo microk8s kubectl label node $(cat /etc/hostname) node-role.kubernetes.io/control-plane=""
