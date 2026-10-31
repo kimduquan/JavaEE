@@ -12,6 +12,7 @@ cd ../
 . env.sh
 kubectl create namespace $STAGING_NAMESPACE
 kubectl create namespace $PRODUCTION_NAMESPACE
+sudo snap install helm
 cd cert-manager
 ./cert-manager.sh
 
