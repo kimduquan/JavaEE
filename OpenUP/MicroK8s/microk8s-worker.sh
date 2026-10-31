@@ -6,6 +6,7 @@ sudo sysctl -p
 sudo snap install microk8s --classic
 sudo microk8s status --wait-ready
 sudo microk8s inspect
+sudo sed -i '/\[plugins\."io\.containerd\.grpc\.v1\.cri"\]/a \  device_ownership_from_security_context = true' /var/snap/microk8s/current/args/containerd-template.toml
 NODENAME=$(cat /etc/hostname)
 NETWORK_INTERFACE=enp2s0
 sudo microk8s kubectl annotate node $NODENAME "ovn.kubernetes.io/tunnel_interface=$NETWORK_INTERFACE"
