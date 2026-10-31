@@ -6,10 +6,12 @@ sudo sysctl -p
 sudo snap install microk8s --classic
 sudo microk8s status --wait-ready
 sudo microk8s inspect
-sudo microk8s kubectl annotate node $(cat /etc/hostname) ovn.kubernetes.io/tunnel_interface=enp2s0
+NODENAME=$(cat /etc/hostname)
+NETWORK_INTERFACE=enp2s0
+sudo microk8s kubectl annotate node $NODENAME "ovn.kubernetes.io/tunnel_interface=$NETWORK_INTERFACE"
 sudo microk8s enable kube-ovn --force
 
 sudo microk8s status --wait-ready
 sudo microk8s inspect
 
-#sudo microk8s kubectl label node $(cat /etc/hostname) node-role.kubernetes.io/control-plane=""
+#kubectl label node ubuntu node-role.kubernetes.io/worker=""

@@ -9,7 +9,7 @@ sudo sed -i '/\[plugins\."io\.containerd\.grpc\.v1\.cri"\]/a \  device_ownership
 sudo snap install kubectl --classic
 NODENAME=$(cat /etc/hostname)
 NETWORK_INTERFACE=enp2s0
-sudo microk8s kubectl annotate node $NODENAME ovn.kubernetes.io/tunnel_interface=$NETWORK_INTERFACE
+sudo microk8s kubectl annotate node $NODENAME "ovn.kubernetes.io/tunnel_interface=$NETWORK_INTERFACE"
 sudo microk8s enable kube-ovn --force
 sudo microk8s status --wait-ready
 sudo microk8s inspect
@@ -19,6 +19,4 @@ sudo microk8s enable metallb 192.168.1.240-192.168.1.254
 sudo microk8s enable registry
 sudo microk8s inspect
 sudo microk8s kubectl label node $NODENAME node-role.kubernetes.io/control-plane=""
-sudo microk8s kubectl create namespace $STAGING_NAMESPACE
-sudo microk8s kubectl create namespace $PRODUCTION_NAMESPACE
 sudo microk8s config > ~/.kube/config
