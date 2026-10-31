@@ -1,6 +1,0 @@
-version = 2
-
-[plugins]
-
-  [plugins."io.containerd.grpc.v1.cri"]
-    device_ownership_from_security_context = true
