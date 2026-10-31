@@ -14,4 +14,4 @@ sudo microk8s enable kube-ovn --force
 sudo microk8s status --wait-ready
 sudo microk8s inspect
 
-#kubectl label node ubuntu node-role.kubernetes.io/worker=""
+#sudo microk8s kubectl label node ubuntu node-role.kubernetes.io/worker=""
