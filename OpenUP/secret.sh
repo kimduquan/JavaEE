@@ -30,6 +30,7 @@ else
 			--from-literal=postgres-password=${DEFAULT_PASSWORD} \
 			--from-literal=password=${DEFAULT_PASSWORD} \
 			--from-literal=replication-password=${DEFAULT_PASSWORD} \
+			--from-literal=initdb-password=${DEFAULT_PASSWORD} \
 			--dry-run=client -o yaml > "$SECRET_FILE"
 		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f "$SECRET_FILE"
 	elif echo "$SECRET" | grep -q "\."; then
