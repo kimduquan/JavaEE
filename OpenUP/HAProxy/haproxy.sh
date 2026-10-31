@@ -1,3 +1,2 @@
-kubectl apply -f tcp.yaml
 kubectl create secret tls localhost-direct --cert=/home/kimduquan/localhost.direct.SS.crt --key=/home/kimduquan/localhost.direct.SS.key
-helm upgrade --install haproxy oci://ghcr.io/haproxytech/helm-charts/kubernetes-ingress -f values-kubernetes-ingress.yaml --wait
+helm upgrade --install haproxy oci://ghcr.io/haproxytech/helm-charts/kubernetes-ingress --version 1.54.4 -f values-kubernetes-ingress.yaml --wait
