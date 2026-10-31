@@ -2,6 +2,7 @@ services:
   wiredoor-cli:
     image: wiredoor/wiredoor-cli:latest
     restart: unless-stopped
+    privileged: true
     cap_add:
       - NET_ADMIN
     sysctls:
