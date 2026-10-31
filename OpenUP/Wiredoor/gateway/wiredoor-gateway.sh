@@ -1,3 +1,4 @@
+../docker.sh
 . ../../env.sh
 . ../../frp/env.sh
 echo "WIREDOOR_URL=https://$PUBLIC_IP" >> .env
