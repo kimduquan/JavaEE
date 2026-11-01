@@ -16,3 +16,17 @@ cd ../
 
 kubectl --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" create ns $STAGING_NAMESPACE
 kubectl --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" create ns $PRODUCTION_NAMESPACE
+
+cd PostgreSQL
+./postgresql.sh
+cd ../
+
+cd Supavisor
+./supavisor.sh
+cd tenants
+./tenants.sh
+cd ../../
+
+cd Redis
+./redis.sh
+cd ../
