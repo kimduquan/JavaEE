@@ -78,7 +78,9 @@ else
 		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f "$SECRET_FILE"
 	elif [ "$SECRET" = "smtp" ]; then
 		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic $SECRET \
-			--from-literal=smtp-password='' \
+			--from-literal=host='' \
+			--from-literal=email='' \
+			--from-literal=password='' \
 			--dry-run=client -o yaml > "$SECRET_FILE"
 		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f "$SECRET_FILE"
 	elif [ "$SECRET" = "redis-auth" ]; then
