@@ -170,11 +170,17 @@ service:
 ## @param ingress.tls Ingress tls settings
 ingress:
   enabled: true
-  className: ""
+  # className: ""
   pathType: Prefix
   annotations: {}
   hosts:
-    - host: git.example.com
+    - host:
+      paths:
+        - path: /
+    - host:
+      paths:
+        - path: /
+    - host:
       paths:
         - path: /
   tls: []
