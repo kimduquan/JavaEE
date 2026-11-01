@@ -1,4 +1,4 @@
-. ../../env.sh
+. ../../env.sh ../../
 . ../env.sh
 kubectl --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" --namespace $NAMESPACE delete configmap frpc
 kubectl --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" --namespace $NAMESPACE create configmap frpc --from-file=frpc=frpc.toml

@@ -1,4 +1,4 @@
-. ../../env.sh
+. ../../env.sh ../../
 KEDA_VERSION=2.21.0
 ../../registry.sh ghcr.io "kedacore/keda:$KEDA_VERSION"
 ../../registry.sh ghcr.io "kedacore/keda-metrics-apiserver:$KEDA_VERSION"

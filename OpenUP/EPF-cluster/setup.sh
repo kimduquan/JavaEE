@@ -1,4 +1,4 @@
-. ../env.sh
+. ../env.sh ../
 export KUBECONFIG=$EPF_CLUSTER_KUBE_CONFIG
 
 cd ../

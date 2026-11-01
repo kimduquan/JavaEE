@@ -10,7 +10,7 @@ export ROOT_VOLUME_SIZE="30Gi"
 #rm epf-cluster.yaml
 #clusterctl generate cluster epf-cluster --kubernetes-version ${CAPK_GUEST_K8S_VERSION} --flavor lb-kccm --control-plane-machine-count 1 --infrastructure kubevirt --target-namespace default > epf-cluster.yaml
 clusterctl upgrade apply --contract v1beta2 --wait-providers
-. ../env.sh
+. ../env.sh ../
 ../registry.sh quay.io "kubevirt/kubevirt-cloud-controller-manager:v0.6.0"
 kubectl apply -f epf-cluster-v1beta2.yaml
 kubectl wait cluster epf-cluster --for condition=RemoteConnectionProbe --timeout=3600s

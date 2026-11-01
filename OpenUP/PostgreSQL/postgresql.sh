@@ -1,4 +1,4 @@
-. ../env.sh
+. ../env.sh ../
 ../registry.sh registry-1.docker.io "bitnami/postgresql:latest"
 ../secret.sh postgresql
 ../secret.sh initdb.sql

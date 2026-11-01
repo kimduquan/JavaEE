@@ -1,4 +1,4 @@
-. ../../env.sh
+. ../../env.sh ../../
 TOOLBOX_IMAGE=ceph/ceph:v20.2.4
 CEPH_IMAGE_TAG=v20.2.4
 ROOK_CEPH_IMAGE_TAG=v1.21.0

@@ -1,4 +1,4 @@
-. ../env.sh
+. ../env.sh ../
 docker build --file $ODOO_SOURCE_DIR/Dockerfile --tag odoo $ODOO_SOURCE_DIR
 IMAGE_REPOSITORY=bitnamilegacy/odoo
 IMAGE_TAG=18.0.20250805-debian-12-r9

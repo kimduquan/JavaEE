@@ -1,5 +1,5 @@
 ../docker.sh
-. ../../env.sh
+. ../../env.sh ../../
 . ../../frp/env.sh
 echo "WIREDOOR_URL=https://$PUBLIC_IP" >> .env
 echo "GATEWAY_IP=$GATEWAY_IP" >> .env

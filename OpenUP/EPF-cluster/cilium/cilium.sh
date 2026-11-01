@@ -1,4 +1,4 @@
-. ../../env.sh
+. ../../env.sh ../../
 IMAGE_TAG=v1.20.2
 CERTGEN_IMAGE_TAG=v0.4.11
 ENVOY_IMAGE_TAG=v1.37.6-1789133542-cbec91f666af0bf742da986d43832932dbb26b82
