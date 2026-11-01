@@ -75,6 +75,11 @@ spec:
                 memory:
                   guest: 3Gi
               evictionStrategy: External
+              nodeSelector:
+                node-role.kubernetes.io/control-plane: ""
+              tolerations:
+                - effect: NoSchedule
+                  key: node-role.kubernetes.io/control-plane
               volumes:
               - dataVolume:
                   name: epf-cluster-boot-volume
