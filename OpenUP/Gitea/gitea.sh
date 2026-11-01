@@ -1,4 +1,5 @@
 . ../env.sh
+../secret.sh smtp
 ../secret.sh gitea-secret
 ../secret.sh gitea-admin-secret
 ../secret.sh gitea-oauth-secret
