@@ -8,6 +8,8 @@
 ## @param global.hostAliases global hostAliases which will be added to the pod's hosts files.
 global:
   imageRegistry: ""
+  security:
+    allowInsecureImages: true
   ## E.g.
   ## imagePullSecrets:
   ##   - myRegistryKeySecretName
@@ -18,6 +20,8 @@ global:
   #   hostnames:
   #   - example.com
 
+valkey-cluster:
+  enabled: false
 
 ## @section deployment
 deployment:
