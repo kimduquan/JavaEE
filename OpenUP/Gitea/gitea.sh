@@ -1,3 +1,4 @@
-kubectl create secret generic gitea-secret --from-literal=secret='cIkzKJZ4A7jXKpXfaxC4GaLxJAmmEqhP' --from-literal=key='account' --from-literal=username='gitea_admin' --from-literal=password='r8sA8CPHD9!bt6d' --from-literal=database_user='gitea.gitea' --from-literal=database_passwd='090323508'
+. ../env.sh
+../secret.sh gitea-secret
 helm repo add gitea-charts https://dl.gitea.com/charts/
-helm upgrade --install gitea gitea-charts/gitea --wait -f values.yaml
+helm --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG upgrade --install gitea gitea-charts/gitea --version v12.7.0 --wait -f values.yaml
