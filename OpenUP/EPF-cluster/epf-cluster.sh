@@ -36,6 +36,10 @@ VM_IP=$(kubectl get vmi --no-headers | awk '{print $4}')
 
 kubectl wait cluster epf-cluster --for condition=ControlPlaneAvailable --timeout=3600s
 
+cd cluster-autoscaler
+./cluster-autoscaler.sh
+cd ../
+
 cd Rook-Ceph
 ./rook-ceph.sh
 cd ../
