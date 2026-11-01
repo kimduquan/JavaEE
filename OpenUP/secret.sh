@@ -8,25 +8,25 @@ else
 	if [ -f "$SECRET_FILE" ]; then
 		:
 	elif [ "$SECRET" = "epf-cluster" ]; then
-		kubectl create secret generic epf-cluster \
+		kubectl create secret generic $SECRET \
 			--from-file=value=${EPF_CLUSTER_KUBE_CONFIG} \
 			--dry-run=client -o yaml > "$SECRET_FILE"
 		kubectl apply -f "$SECRET_FILE"
 	elif [ "$SECRET" = "keycloak-admin" ]; then
-		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic keycloak-admin \
+		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic $SECRET \
 			--from-literal=CLIENT_SECRET='y1wf2SyO6p8eZq65KbvbNB1gE0cEYyMx' \
 			--from-literal=CLIENT_ID='admin-cli' \
 			--from-literal=PASSWORD=${DEFAULT_PASSWORD} \
 			--dry-run=client -o yaml > "$SECRET_FILE"
 		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f "$SECRET_FILE"
 	elif [ "$SECRET" = "keycloak-db" ]; then
-		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic keycloak-db \
+		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic $SECRET \
 			--from-literal=DATABASE_USER='keycloak.keycloak' \
 			--from-literal=DATABASE_PASSWORD=${DEFAULT_PASSWORD} \
 			--dry-run=client -o yaml > "$SECRET_FILE"
 		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f "$SECRET_FILE"
 	elif [ "$SECRET" = "postgresql" ]; then
-		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic postgresql \
+		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic $SECRET \
 			--from-literal=postgres-password=${DEFAULT_PASSWORD} \
 			--from-literal=password=${DEFAULT_PASSWORD} \
 			--from-literal=replication-password=${DEFAULT_PASSWORD} \
@@ -39,7 +39,7 @@ else
 	elif [ "$SECRET" = "supavisor" ]; then
 		
 		#kubectl create secret generic supavisor --from-literal=SECRET_KEY_BASE="$(openssl rand -hex 32)" --from-literal=API_JWT_SECRET="$(openssl rand -hex 32)" --from-literal=METRICS_JWT_SECRET="$(openssl rand -hex 32)" --from-literal=VAULT_ENC_KEY="$(openssl rand -hex 16)"
-		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic supavisor \
+		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic $SECRET \
 			--from-literal=SECRET_KEY_BASE="dc9b087847b1028cd666cc99b7d1755cbda89558d6c8c349202dab51a01d00bb" \
 			--from-literal=API_JWT_SECRET="983cbf9422aba2dd9239e076497f5aaf9ee5acd8a5d939dc3b82ba661ea130d9" \
 			--from-literal=METRICS_JWT_SECRET="1e8ab580d84b238266233ce08d0846aafcfd7ae2fc140472b8014f296b5384e0" \
@@ -47,7 +47,7 @@ else
 			--dry-run=client -o yaml > "$SECRET_FILE"
 		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f "$SECRET_FILE"
 	elif [ "$SECRET" = "oidc" ]; then
-		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic oidc \
+		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic $SECRET \
 			--from-literal=OIDC_CLIENT_SECRET='cIkzKJZ4A7jXKpXfaxC4GaLxJAmmEqhP' \
 			--from-literal=OIDC_CLIENT_ID='account'\
 			--dry-run=client -o yaml > "$SECRET_FILE"
@@ -58,13 +58,22 @@ else
 			--dry-run=client -o yaml > "$SECRET_FILE"
 		kubectl apply -f "$SECRET_FILE"
 	elif [ "$SECRET" = "gitea-secret" ]; then
-		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic gitea-secret \
-			--from-literal=secret='cIkzKJZ4A7jXKpXfaxC4GaLxJAmmEqhP' \
-			--from-literal=key='account' \
-			--from-literal=username='gitea_admin' \
-			--from-literal=password=${DEFAULT_PASSWORD} \
+		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic $SECRET \
 			--from-literal=database_user='gitea.gitea' \
 			--from-literal=database_passwd=${DEFAULT_PASSWORD} \
+			--dry-run=client -o yaml > "$SECRET_FILE"
+		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f "$SECRET_FILE"
+	elif [ "$SECRET" = "gitea-admin-secret" ]; then
+		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic $SECRET \
+			--from-literal=email='' \
+			--from-literal=username='gitea_admin' \
+			--from-literal=password=${DEFAULT_PASSWORD} \
+			--dry-run=client -o yaml > "$SECRET_FILE"
+		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f "$SECRET_FILE"
+	elif [ "$SECRET" = "gitea-oauth-secret" ]; then
+		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic $SECRET \
+			--from-literal=secret='cIkzKJZ4A7jXKpXfaxC4GaLxJAmmEqhP' \
+			--from-literal=key='account' \
 			--dry-run=client -o yaml > "$SECRET_FILE"
 		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f "$SECRET_FILE"
 	fi
