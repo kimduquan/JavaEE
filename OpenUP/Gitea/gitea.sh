@@ -9,6 +9,7 @@ helm --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG upgrade --install gitea gitea-charts/
 	--set "global.imageRegistry=$EPF_CLUSTER_IMAGE_REGISTRY" \
 	--set "image.repository=gitea/gitea" \
 	--set "global.storageClass=cephfs" \
+	--set "gitea.oauth.autoDiscoverUrl=https://$PRODUCTION_DOMAIN" \
 	--set "ingress.hosts[0].host=$PRODUCTION_DOMAIN" \
 	--set "ingress.hosts[1].host=$STAGING_DOMAIN" \
 	--set "ingress.hosts[2].host=$DEV_DOMAIN" \
