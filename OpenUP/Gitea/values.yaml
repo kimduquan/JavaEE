@@ -3,831 +3,119 @@
 # Declare variables to be passed into your templates.
 ## @section Global
 #
-## @param global.imageRegistry global image registry override.
-## @param global.imagePullSecrets global image pull secrets override; can be extended by `imagePullSecrets`.
-## @param global.hostAliases global hostAliases which will be added to the pod's hosts files.
+## @param global.imageRegistry global image registry override
+## @param global.imagePullSecrets global image pull secrets override; can be extended by `imagePullSecrets`
+## @param global.storageClass global storage class override
+## @param global.hostAliases global hostAliases which will be added to the pod's hosts files
 global:
   imageRegistry: ""
-  security:
-    allowInsecureImages: true
   ## E.g.
   ## imagePullSecrets:
   ##   - myRegistryKeySecretName
   ##
   imagePullSecrets: []
+  storageClass: ""
   hostAliases: []
   # - ip: 192.168.137.2
   #   hostnames:
   #   - example.com
 
-valkey-cluster:
-  enabled: false
-  
-postgresql-ha:
-  enabled: false
-
-## @section deployment
-deployment:
-  ## @param deployment.enabled Enable the deployment of Gitea.
-  ## @param deployment.annotations Annotations for the Gitea deployment to be created.
-  ## @param deployment.labels Labels for the deployment.
-  enabled: true
-  annotations: {}
-  labels: {}
-
-  ## @param deployment.affinity Affinity for the deployment.
-  affinity: {}
-    # nodeAffinity:
-    #   requiredDuringSchedulingIgnoredDuringExecution:
-    #     nodeSelectorTerms:
-    #     - matchExpressions:
-    #       - key: kubernetes.io/os
-    #         operator: In
-    #         values:
-    #         - linux
-    #   preferredDuringSchedulingIgnoredDuringExecution:
-    #   - weight: 20
-    #     preference:
-    #       matchExpressions:
-    #       - key: kubernetes.io/arch
-    #         operator: In
-    #         values:
-    #         - amd64
-
-  ## @param deployment.dnsConfig dnsConfig of the Gitea deployment.
-  dnsConfig: {}
-    # nameservers:
-    # - 192.0.2.1 # this is an example
-    # searches:
-    # - ns1.svc.cluster-domain.example
-    # - my.dns.search.suffix
-    # options:
-    # - name: ndots
-    #   value: "2"
-    # - name: edns0
-
-  gitea:
-    ## @param deployment.gitea.env Additional environment variables to pass to the gitea container.
-    env: []
-    # - name: VARIABLE
-    #   value: my-value
-
-    ## @param deployment.gitea.envFrom List of environment variables mounted from configMaps or secrets for the gitea container.
-    envFrom: []
-    # - configMapRef:
-    #     name: special-config
-    # - secretRef:
-    #     name: special-secret
-
-    ## @param deployment.gitea.image.registry image registry, e.g. gcr.io,docker.io.
-    ## @param deployment.gitea.image.repository Image to start for this pod.
-    ## @param deployment.gitea.image.tag Visit: [Image tag](https://hub.docker.com/r/gitea/gitea/tags?page=1&ordering=last_updated). Defaults to `appVersion` within Chart.yaml.
-    ## @param deployment.gitea.image.digest Image digest. Allows to pin the given image tag. Useful for having control over mutable tags like `latest`.
-    ## @param deployment.gitea.image.pullPolicy Image pull policy.
-    ## @param deployment.gitea.image.rootless Wether or not to pull the rootless version of Gitea, only works on Gitea 1.14.x or higher.
-    ## @param deployment.gitea.image.fullOverride Completely overrides the image registry, path/image, tag and digest. **Adjust `deployment.gitea.image.rootless` accordingly and review [Rootless defaults](#rootless-defaults)**.
-    image:
-      registry: "docker.gitea.com"
-      repository: gitea
-      tag: ""
-      digest: ""
-      pullPolicy: IfNotPresent
-      rootless: true
-      fullOverride: ""
-
-    ## @param deployment.gitea.resources Compute Resources required by Gitea container. Cannot be updated.
-    ## @skip deployment.gitea.resources.claims Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container.
-    ## @skip deployment.gitea.resources.limits Limits describes the maximum amount of compute resources allowed for this container.
-    ## @skip deployment.gitea.resources.requests Requests describes the minimum amount of compute resources required for this container.
-    resources:
-    # claims: []
-    #   - name: ""
-    #     request: ""
-    # limits:
-    #   cpu: 100m
-    #   ephemeral: 100Mi
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 100m
-    #   ephemeral: 100m
-    #   memory: 128Mi
-
-    ## @param deployment.gitea.securityContext Security context of the Gitea container. Used as fallback for the chart-managed init containers.
-    securityContext: {}
-    #   allowPrivilegeEscalation: false
-    #   capabilities:
-    #     drop:
-    #       - ALL
-    #   # Add the SYS_CHROOT capability for root and rootless images if you intend to
-    #   # run pods on nodes that use the container runtime cri-o. Otherwise, you will
-    #   # get an error message from the SSH server that it is not possible to read from
-    #   # the repository.
-    #   # https://gitea.com/gitea/helm-gitea/issues/161
-    #     add:
-    #       - SYS_CHROOT
-    #   privileged: false
-    #   readOnlyRootFilesystem: true
-    #   runAsGroup: 1000
-    #   runAsNonRoot: true
-    #   runAsUser: 1000
-
-    ## @param deployment.gitea.volumeMounts Additional volume mounts.
-    volumeMounts: []
-    # - name: my-configmap-volume
-    #   mountPath: /configmap
-    #   readOnly: true
-
-  ## @param deployment.hostUsers Use the host's user namespace. When unset, the field is omitted so the platform default is used.
-  hostUsers: ~
-
-  ## @param deployment.initContainers [array] List of initContainers. The order is important. First init container in the list will be executed first. The link refers to the corresponding init container configuration.
-  initContainers:
-    # - container:
-    #     command: [ "sh", "-c", "echo hello world" ]
-    #     image: "docker.io/library/busybox:latest"
-    #     name: pre-task
-    - link: "initDirectories"
-    - link: "initAppIni"
-    - link: "initConfigureGPG"
-    - link: "initConfigureGitea"
-    # - container:
-    #     command: [ "sh", "-c", "echo hello world" ]
-    #     image: "docker.io/library/busybox:latest"
-    #     name: post-task
-
-  initDirectories:
-    ## @param deployment.initDirectories.env Additional environment variables to pass to the init container.
-    env: []
-    # - name: VARIABLE
-    #   value: my-value
-
-    ## @param deployment.initDirectories.envFrom List of environment variables mounted from configMaps or secrets for the initDirectories container.
-    envFrom: []
-    # - configMapRef:
-    #     name: special-config
-    # - secretRef:
-    #     name: special-secret
-
-    ## @param deployment.initDirectories.image.registry image registry, e.g. gcr.io,docker.io.
-    ## @param deployment.initDirectories.image.repository Image to start for this pod.
-    ## @param deployment.initDirectories.image.tag Visit: [Image tag](https://hub.docker.com/r/gitea/gitea/tags?page=1&ordering=last_updated). Defaults to `appVersion` within Chart.yaml.
-    ## @param deployment.initDirectories.image.digest Image digest. Allows to pin the given image tag. Useful for having control over mutable tags like `latest`.
-    ## @param deployment.initDirectories.image.pullPolicy Image pull policy.
-    ## @param deployment.initDirectories.image.rootless Wether or not to pull the rootless version of Gitea, only works on Gitea 1.14.x or higher.
-    ## @param deployment.initDirectories.image.fullOverride Completely overrides the image registry, path/image, tag and digest. **Adjust `deployment.initDirectories.image.rootless` accordingly and review [Rootless defaults](#rootless-defaults)**.
-    image:
-      registry: "docker.gitea.com"
-      repository: gitea
-      tag: ""
-      digest: ""
-      pullPolicy: IfNotPresent
-      rootless: true
-      fullOverride: ""
-
-    ## @param deployment.initDirectories.resources Compute Resources required by the initDirectories container. Defaults to `initContainers.resources`. Cannot be updated.
-    ## @skip deployment.initDirectories.resources.claims Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container.
-    ## @skip deployment.initDirectories.resources.limits Limits describes the maximum amount of compute resources allowed for this container.
-    ## @skip deployment.initDirectories.resources.requests Requests describes the minimum amount of compute resources required for this container.
-    resources:
-    # claims: []
-    #   - name: ""
-    #     request: ""
-    # limits:
-    #   ephemeral: 100Mi
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   ephemeral: 100Mi
-    #   cpu: 100m
-    #   memory: 128Mi
-
-    ## @param deployment.initDirectories.securityContext Security context of the initDirectories container. Defaults to `deployment.gitea.securityContext`.
-    securityContext: {}
-    #   allowPrivilegeEscalation: false
-    #   capabilities:
-    #     drop:
-    #       - ALL
-    #   # Add the SYS_CHROOT capability for root and rootless images if you intend to
-    #   # run pods on nodes that use the container runtime cri-o. Otherwise, you will
-    #   # get an error message from the SSH server that it is not possible to read from
-    #   # the repository.
-    #   # https://gitea.com/gitea/helm-gitea/issues/161
-    #     add:
-    #       - SYS_CHROOT
-    #   privileged: false
-    #   readOnlyRootFilesystem: true
-    #   runAsGroup: 1000
-    #   runAsNonRoot: true
-    #   runAsUser: 1000
-
-    ## @param deployment.initDirectories.volumeMounts Additional volume mounts.
-    volumeMounts: []
-    # - name: my-configmap-volume
-    #   mountPath: /configmap
-    #   readOnly: true
-
-  initAppIni:
-    ## @param deployment.initAppIni.env Additional environment variables to pass to the init container.
-    env: []
-    # - name: VARIABLE
-    #   value: my-value
-
-    ## @param deployment.initAppIni.envFrom List of environment variables mounted from configMaps or secrets for the initAppIni container.
-    envFrom: []
-    # - configMapRef:
-    #     name: special-config
-    # - secretRef:
-    #     name: special-secret
-
-    ## @param deployment.initAppIni.image.registry image registry, e.g. gcr.io,docker.io.
-    ## @param deployment.initAppIni.image.repository Image to start for this pod.
-    ## @param deployment.initAppIni.image.tag Visit: [Image tag](https://hub.docker.com/r/gitea/gitea/tags?page=1&ordering=last_updated). Defaults to `appVersion` within Chart.yaml.
-    ## @param deployment.initAppIni.image.digest Image digest. Allows to pin the given image tag. Useful for having control over mutable tags like `latest`.
-    ## @param deployment.initAppIni.image.pullPolicy Image pull policy.
-    ## @param deployment.initAppIni.image.rootless Wether or not to pull the rootless version of Gitea, only works on Gitea 1.14.x or higher.
-    ## @param deployment.initAppIni.image.fullOverride Completely overrides the image registry, path/image, tag and digest. **Adjust `deployment.initAppIni.image.rootless` accordingly and review [Rootless defaults](#rootless-defaults)**.
-    image:
-      registry: "docker.gitea.com"
-      repository: gitea
-      tag: ""
-      digest: ""
-      pullPolicy: IfNotPresent
-      rootless: true
-      fullOverride: ""
-
-    ## @param deployment.initAppIni.resources Compute Resources required by the initAppIni container. Defaults to `initContainers.resources`. Cannot be updated.
-    ## @skip deployment.initAppIni.resources.claims Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container.
-    ## @skip deployment.initAppIni.resources.limits Limits describes the maximum amount of compute resources allowed for this container.
-    ## @skip deployment.initAppIni.resources.requests Requests describes the minimum amount of compute resources required for this container.
-    resources:
-    # claims: []
-    #   - name: ""
-    #     request: ""
-    # limits:
-    #   ephemeral: 100Mi
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   ephemeral: 100Mi
-    #   cpu: 100m
-    #   memory: 128Mi
-
-    ## @param deployment.initAppIni.securityContext Security context of the initAppIni container. Defaults to `deployment.gitea.securityContext`.
-    securityContext: {}
-    #   allowPrivilegeEscalation: false
-    #   capabilities:
-    #     drop:
-    #       - ALL
-    #   # Add the SYS_CHROOT capability for root and rootless images if you intend to
-    #   # run pods on nodes that use the container runtime cri-o. Otherwise, you will
-    #   # get an error message from the SSH server that it is not possible to read from
-    #   # the repository.
-    #   # https://gitea.com/gitea/helm-gitea/issues/161
-    #     add:
-    #       - SYS_CHROOT
-    #   privileged: false
-    #   readOnlyRootFilesystem: true
-    #   runAsGroup: 1000
-    #   runAsNonRoot: true
-    #   runAsUser: 1000
-
-    ## @param deployment.initAppIni.volumeMounts Additional volume mounts.
-    volumeMounts: []
-    # - name: my-configmap-volume
-    #   mountPath: /configmap
-    #   readOnly: true
-
-  initConfigureGPG:
-    ## @param deployment.initConfigureGPG.env Additional environment variables to pass to the init container.
-    env: []
-    # - name: VARIABLE
-    #   value: my-value
-
-    ## @param deployment.initConfigureGPG.envFrom List of environment variables mounted from configMaps or secrets for the initConfigureGPG container.
-    envFrom: []
-    # - configMapRef:
-    #     name: special-config
-    # - secretRef:
-    #     name: special-secret
-
-    ## @param deployment.initConfigureGPG.image.registry image registry, e.g. gcr.io,docker.io.
-    ## @param deployment.initConfigureGPG.image.repository Image to start for this pod.
-    ## @param deployment.initConfigureGPG.image.tag Visit: [Image tag](https://hub.docker.com/r/gitea/gitea/tags?page=1&ordering=last_updated). Defaults to `appVersion` within Chart.yaml.
-    ## @param deployment.initConfigureGPG.image.digest Image digest. Allows to pin the given image tag. Useful for having control over mutable tags like `latest`.
-    ## @param deployment.initConfigureGPG.image.pullPolicy Image pull policy.
-    ## @param deployment.initConfigureGPG.image.rootless Wether or not to pull the rootless version of Gitea, only works on Gitea 1.14.x or higher.
-    ## @param deployment.initConfigureGPG.image.fullOverride Completely overrides the image registry, path/image, tag and digest. **Adjust `deployment.initConfigureGPG.image.rootless` accordingly and review [Rootless defaults](#rootless-defaults)**.
-    image:
-      registry: "docker.gitea.com"
-      repository: gitea
-      tag: ""
-      digest: ""
-      pullPolicy: IfNotPresent
-      rootless: true
-      fullOverride: ""
-
-    ## @param deployment.initConfigureGPG.resources Compute Resources required by the initConfigureGPG container. Defaults to `initContainers.resources`. Cannot be updated.
-    ## @skip deployment.initConfigureGPG.resources.claims Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container.
-    ## @skip deployment.initConfigureGPG.resources.limits Limits describes the maximum amount of compute resources allowed for this container.
-    ## @skip deployment.initConfigureGPG.resources.requests Requests describes the minimum amount of compute resources required for this container.
-    resources:
-    # claims: []
-    #   - name: ""
-    #     request: ""
-    # limits:
-    #   ephemeral: 100Mi
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   ephemeral: 100Mi
-    #   cpu: 100m
-    #   memory: 128Mi
-
-    ## @param deployment.initConfigureGPG.securityContext Security context of the initConfigureGPG container. Defaults to `deployment.gitea.securityContext`.
-    securityContext: {}
-    #   allowPrivilegeEscalation: false
-    #   capabilities:
-    #     drop:
-    #       - ALL
-    #   # Add the SYS_CHROOT capability for root and rootless images if you intend to
-    #   # run pods on nodes that use the container runtime cri-o. Otherwise, you will
-    #   # get an error message from the SSH server that it is not possible to read from
-    #   # the repository.
-    #   # https://gitea.com/gitea/helm-gitea/issues/161
-    #     add:
-    #       - SYS_CHROOT
-    #   privileged: false
-    #   readOnlyRootFilesystem: true
-    #   runAsGroup: 1000
-    #   runAsNonRoot: true
-    #   runAsUser: 1000
-
-    ## @param deployment.initConfigureGPG.volumeMounts Additional volume mounts.
-    volumeMounts: []
-    # - name: my-configmap-volume
-    #   mountPath: /configmap
-    #   readOnly: true
-
-  initConfigureGitea:
-    ## @param deployment.initConfigureGitea.env Additional environment variables to pass to the init container.
-    env: []
-    # - name: VARIABLE
-    #   value: my-value
-
-    ## @param deployment.initConfigureGitea.envFrom List of environment variables mounted from configMaps or secrets for the initConfigureGitea container.
-    envFrom: []
-    # - configMapRef:
-    #     name: special-config
-    # - secretRef:
-    #     name: special-secret
-
-    ## @param deployment.initConfigureGitea.image.registry image registry, e.g. gcr.io,docker.io.
-    ## @param deployment.initConfigureGitea.image.repository Image to start for this pod.
-    ## @param deployment.initConfigureGitea.image.tag Visit: [Image tag](https://hub.docker.com/r/gitea/gitea/tags?page=1&ordering=last_updated). Defaults to `appVersion` within Chart.yaml.
-    ## @param deployment.initConfigureGitea.image.digest Image digest. Allows to pin the given image tag. Useful for having control over mutable tags like `latest`.
-    ## @param deployment.initConfigureGitea.image.pullPolicy Image pull policy.
-    ## @param deployment.initConfigureGitea.image.rootless Wether or not to pull the rootless version of Gitea, only works on Gitea 1.14.x or higher.
-    ## @param deployment.initConfigureGitea.image.fullOverride Completely overrides the image registry, path/image, tag and digest. **Adjust `deployment.initConfigureGitea.image.rootless` accordingly and review [Rootless defaults](#rootless-defaults)**.
-    image:
-      registry: "docker.gitea.com"
-      repository: gitea
-      tag: ""
-      digest: ""
-      pullPolicy: IfNotPresent
-      rootless: true
-      fullOverride: ""
-
-    ## @param deployment.initConfigureGitea.resources Compute Resources required by the initConfigureGitea container. Defaults to `initContainers.resources`. Cannot be updated.
-    ## @skip deployment.initConfigureGitea.resources.claims Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container.
-    ## @skip deployment.initConfigureGitea.resources.limits Limits describes the maximum amount of compute resources allowed for this container.
-    ## @skip deployment.initConfigureGitea.resources.requests Requests describes the minimum amount of compute resources required for this container.
-    resources:
-    # claims: []
-    #   - name: ""
-    #     request: ""
-    # limits:
-    #   ephemeral: 100Mi
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   ephemeral: 100Mi
-    #   cpu: 100m
-    #   memory: 128Mi
-
-    ## @param deployment.initConfigureGitea.securityContext Security context of the initConfigureGitea container. Defaults to `deployment.gitea.securityContext`.
-    securityContext: {}
-    #   allowPrivilegeEscalation: false
-    #   capabilities:
-    #     drop:
-    #       - ALL
-    #   # Add the SYS_CHROOT capability for root and rootless images if you intend to
-    #   # run pods on nodes that use the container runtime cri-o. Otherwise, you will
-    #   # get an error message from the SSH server that it is not possible to read from
-    #   # the repository.
-    #   # https://gitea.com/gitea/helm-gitea/issues/161
-    #     add:
-    #       - SYS_CHROOT
-    #   privileged: false
-    #   readOnlyRootFilesystem: true
-    #   runAsGroup: 1000
-    #   runAsNonRoot: true
-    #   runAsUser: 1000
-
-    ## @param deployment.initConfigureGitea.volumeMounts Additional volume mounts.
-    volumeMounts: []
-    # - name: my-configmap-volume
-    #   mountPath: /configmap
-    #   readOnly: true
-
-  ## @param deployment.nodeSelector NodeSelector for the deployment.
-  nodeSelector: {}
-
-  ## @param deployment.priorityClassName priorityClassName for the deployment.
-  priorityClassName: ""
-
-  ## @param deployment.replicas Number of replicas for the Gitea deployment.
-  replicas: 1
-
-  ## @param deployment.resources Resources is the total amount of CPU and Memory resources required by all containers in the pod.
-  ## @skip deployment.resources.limits Limits describes the maximum amount of compute resources allowed.
-  ## @skip deployment.resources.requests Requests describes the minimum amount of compute resources required.
-  resources: {}
-    # limits:
-    #   ephemeral: 100Mi
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   ephemeral: 100Mi
-    #   cpu: 100m
-    #   memory: 128Mi
-
-  ## @param deployment.schedulerName Use an alternate scheduler, e.g. "stork".
-  schedulerName: ""
-
-  ## @param deployment.securityContext Pod security context. On non-OpenShift clusters the chart defaults `fsGroup` to `1000` when this map is empty.
-  securityContext: {}
-
-  ## @param deployment.strategy.type Deployment strategy used to replace old pods, either `RollingUpdate` or `Recreate`.
-  ## @param deployment.strategy.rollingUpdate.maxSurge Number or percentage of pods that may be created above the desired replica count. Only used with `RollingUpdate`.
-  ## @param deployment.strategy.rollingUpdate.maxUnavailable Number or percentage of pods that may be unavailable during the update. Only used with `RollingUpdate`.
-  strategy:
-    type: "RollingUpdate"
-    rollingUpdate:
-      maxSurge: "100%"
-      maxUnavailable: 0
-
-  ## @param deployment.terminationGracePeriodSeconds How long to wait until forcefully kill the pod.
-  terminationGracePeriodSeconds: 60
-
-  ## @param deployment.tolerations Tolerations of the Gitea deployment.
-  tolerations: []
-  # - key: database/type
-  #   operator: Equal
-  #   value: postgres
-  #   effect: NoSchedule
-
-  ## @param deployment.topologySpreadConstraints TopologySpreadConstraints for the deployment.
-  topologySpreadConstraints: []
-  # - topologyKey: kubernetes.io/hostname
-  #   whenUnsatisfiable: DoNotSchedule
-  #   labelSelector:
-  #     matchLabels:
-  #       app.kubernetes.io/instance: gitea
-
-
-  ## @param deployment.volumes Additional volumes to mount into the pods of the Gitea deployment.
-  volumes: []
-  # - name: my-configmap-volume
-  #   config:
-  #     name: my-configmap
-  # - name: my-secret-volume
-  #   secret:
-  #     secretName: my-secret
-
-
-## @section Gateway API
-## See docs/gateway-api.md for full guidance.
-gatewayAPI:
-  ## @param gatewayAPI.enabled Enable deployment of Gateway API resources.
-  enabled: false
-
-  core:
-    ## @param gatewayAPI.core.backendTLSPolicy.enabled Render a BackendTLSPolicy resource for encrypted backend traffic.
-    ## @param gatewayAPI.core.backendTLSPolicy.annotations Annotations applied to the BackendTLSPolicy.
-    ## @param gatewayAPI.core.backendTLSPolicy.labels Additional labels applied to the BackendTLSPolicy.
-    ## @param gatewayAPI.core.backendTLSPolicy.targetRefs Target references for the BackendTLSPolicy. Defaults to the HTTP service.
-    ## @param gatewayAPI.core.backendTLSPolicy.validation Validation configuration (required when enabled). See `docs/gateway-api.md`.
-    ## @extra gatewayAPI.core.backendTLSPolicy.validation.caCertificateRefs CA certificate references for the BackendTLSPolicy validation. See `docs/gateway-api.md`.
-    ## @extra gatewayAPI.core.backendTLSPolicy.validation.hostname Hostname for the BackendTLSPolicy validation. Must be the Common Name (CN) or a Subject Alternative Name (SAN) of the gitea server certificate. See `docs/gateway-api.md`.
-    backendTLSPolicy:
-      enabled: false
-      annotations: {}
-      labels: {}
-      targetRefs: []
-      validation: {}
-      #  caCertificateRefs:
-      #    - name: gitea-ca
-      #      group: ""
-      #      kind: ConfigMap
-      #  hostname: gitea-http
-
-    ## @param gatewayAPI.core.httpRoute.enabled Render an HTTPRoute resource.
-    ## @param gatewayAPI.core.httpRoute.annotations Annotations applied to the HTTPRoute.
-    ## @param gatewayAPI.core.httpRoute.labels Additional labels applied to the HTTPRoute.
-    ## @param gatewayAPI.core.httpRoute.tls When true, treat the upstream Gateway as terminating TLS so `ROOT_URL` uses `https`.
-    ## @param gatewayAPI.core.httpRoute.parentRefs Parent gateway references (required when enabled).
-    ## @param gatewayAPI.core.httpRoute.hostnames List of hostnames for the HTTPRoute.
-    ## @param gatewayAPI.core.httpRoute.rules Custom routing rules. Defaults to a PathPrefix `/` rule targeting the HTTP service.
-    httpRoute:
-      enabled: false
-      annotations: {}
-      labels: {}
-      tls: false
-      parentRefs: []
-      # - group: gateway.networking.k8s.io
-      #   kind: Gateway
-      #   name: shared-gateway
-      #   namespace: gateway-system
-      #   sectionName: http
-      hostnames: []
-      # - git.example.com
-      rules: []
-
-
-    ## @param gatewayAPI.core.tcpRoute.enabled Render a TCPRoute resource (typically for SSH).
-    ## @param gatewayAPI.core.tcpRoute.annotations Annotations applied to the TCPRoute.
-    ## @param gatewayAPI.core.tcpRoute.labels Additional labels applied to the TCPRoute.
-    ## @param gatewayAPI.core.tcpRoute.parentRefs Parent gateway references (required when enabled).
-    ## @param gatewayAPI.core.tcpRoute.rules Custom routing rules. Defaults to a rule targeting the SSH service.
-    tcpRoute:
-      enabled: false
-      annotations: {}
-      labels: {}
-      parentRefs: []
-      # - group: gateway.networking.k8s.io
-      #   kind: Gateway
-      #   name: shared-gateway
-      #   namespace: gateway-system
-      #   sectionName: ssh
-      rules: []
-
-
-  ## NGINX Gateway Fabric specific resources. Only relevant when the upstream
-  ## Gateway is backed by NGINX Gateway Fabric (nginx.org). Other implementations
-  ## (Envoy Gateway, Cilium, ...) do not impose a default request body size limit.
-  nginx:
-    ## @param gatewayAPI.nginx.clientSettingsPolicies.enabled Render a ClientSettingsPolicy (NGINX Gateway Fabric) to raise the client request body limit.
-    ## @param gatewayAPI.nginx.clientSettingsPolicies.annotations Annotations applied to the ClientSettingsPolicy.
-    ## @param gatewayAPI.nginx.clientSettingsPolicies.labels Additional labels applied to the ClientSettingsPolicy.
-    ## @param gatewayAPI.nginx.clientSettingsPolicies.targetRef Target reference for the ClientSettingsPolicy. Defaults to the chart's HTTPRoute.
-    ## @param gatewayAPI.nginx.clientSettingsPolicies.body Client body settings (required when enabled), e.g. `maxSize`. See `docs/gateway-api.md`.
-    clientSettingsPolicies:
-      enabled: false
-      annotations: {}
-      labels: {}
-      targetRef: {}
-      body: {}
-      #   maxSize: 100m
-
-
-## @section Ingress
-## @param ingress.enabled Enable ingress.
-## @param ingress.annotations Additional annotations.
-## @param ingress.labels Additional labels.
-## @param ingress.ingressClassName Name of the IngressClass which backs the Ingress.
-## @param ingress.pathType Ingress Path Type.
-## @param ingress.hosts[0].host Default Ingress host.
-## @param ingress.hosts[0].paths[0].path Default Ingress path.
-## @param ingress.tls Ingress tls settings.
-ingress:
-  enabled: false
-  annotations: {}
-  labels: {}
-  ingressClassName: "nginx"
-  pathType: Prefix
-  hosts:
-    - host: git.example.com
-      paths:
-        - path: /
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - git.example.com
-
-
-## @param namespace An explicit namespace to deploy gitea into. Defaults to the release namespace if not specified.
+## @param namespace An explicit namespace to deploy gitea into. Defaults to the release namespace if not specified
 namespace: ""
 
+## @param replicaCount number of replicas for the deployment
+replicaCount: 1
 
-## @section Network
-## @param clusterDomain Domain of the Cluster. Domain is part of internally issued certificates.
+## @section strategy
+## @param strategy.type strategy type
+## @param strategy.rollingUpdate.maxSurge maxSurge
+## @param strategy.rollingUpdate.maxUnavailable maxUnavailable
+strategy:
+  type: "RollingUpdate"
+  rollingUpdate:
+    maxSurge: "100%"
+    maxUnavailable: 0
+
+## @param clusterDomain cluster domain
 clusterDomain: cluster.local
 
-
 ## @section Image
-## @param imagePullSecrets Secret to use for pulling the image.
-imagePullSecrets: []
+## @param image.registry image registry, e.g. gcr.io,docker.io
+## @param image.repository Image to start for this pod
+## @param image.tag Visit: [Image tag](https://hub.docker.com/r/gitea/gitea/tags?page=1&ordering=last_updated). Defaults to `appVersion` within Chart.yaml.
+## @param image.digest Image digest. Allows to pin the given image tag. Useful for having control over mutable tags like `latest`
+## @param image.pullPolicy Image pull policy
+## @param image.rootless Wether or not to pull the rootless version of Gitea, only works on Gitea 1.14.x or higher
+## @param image.fullOverride Completely overrides the image registry, path/image, tag and digest. **Adjust `image.rootless` accordingly and review [Rootless defaults](#rootless-defaults).**
+image:
+  registry: "docker.gitea.com"
+  repository: gitea
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+  digest: ""
+  pullPolicy: IfNotPresent
+  rootless: true
+  fullOverride: ""
 
+## @param imagePullSecrets Secret to use for pulling the image
+imagePullSecrets: []
 
 ## @section Security
 # Security context is only usable with rootless image due to image design
 ## @param openshift.enabled Enable OpenShift compatibility defaults for chart-managed pods. Defaults to auto-detect based on the SecurityContextConstraints API.
+## @param openshift.hostUsers Override the PodSpec hostUsers field for chart-managed pods. When unset, the field is omitted so the platform default is used.
 openshift:
   enabled: null
+  hostUsers: null
 
+## @param podSecurityContext Pod security context. On non-OpenShift clusters the chart defaults `fsGroup` to `1000` when this map is empty.
+podSecurityContext: {}
 
-## @param podDisruptionBudget Pod disruption budget.
+## @param containerSecurityContext Security context
+containerSecurityContext: {}
+#   allowPrivilegeEscalation: false
+#   capabilities:
+#     drop:
+#       - ALL
+#   # Add the SYS_CHROOT capability for root and rootless images if you intend to
+#   # run pods on nodes that use the container runtime cri-o. Otherwise, you will
+#   # get an error message from the SSH server that it is not possible to read from
+#   # the repository.
+#   # https://gitea.com/gitea/helm-gitea/issues/161
+#     add:
+#       - SYS_CHROOT
+#   privileged: false
+#   readOnlyRootFilesystem: true
+#   runAsGroup: 1000
+#   runAsNonRoot: true
+#   runAsUser: 1000
+
+## @deprecated The securityContext variable has been split two:
+## - containerSecurityContext
+## - podSecurityContext.
+## @param securityContext Run init and Gitea containers as a specific securityContext
+securityContext: {}
+
+## @param podDisruptionBudget Pod disruption budget
 podDisruptionBudget: {}
 #  maxUnavailable: 1
 #  minAvailable: 1
 
-
-## @section Route
-## @param route.enabled Enable OpenShift Route.
-## @param route.annotations Route annotations.
-## @param route.host Route host. When unset, OpenShift may generate one and Gitea URL defaults fall back to ingress/service values.
-## @param route.path Route path.
-## @param route.wildcardPolicy Route wildcard policy.
-## @param route.tls.termination Route TLS termination type.
-## @param route.tls.insecureEdgeTerminationPolicy Route insecure edge termination policy.
-## @param route.tls.key Route TLS key.
-## @param route.tls.certificate Route TLS certificate.
-## @param route.tls.caCertificate Route TLS CA certificate.
-## @param route.tls.destinationCACertificate Route destination CA certificate.
-route:
-  enabled: false
-  annotations: {}
-  host: ""
-  path: ""
-  wildcardPolicy: None
-  tls:
-    termination:
-    insecureEdgeTerminationPolicy:
-    key:
-    certificate:
-    caCertificate:
-    destinationCACertificate:
-
-
-## @section Secrets
-secrets:
-  admin:
-    ## @param secrets.admin.enabled Create and keep the Gitea admin user in sync.
-    enabled: true
-
-    ## @param secrets.admin.addSHASumAnnotation Add a pod annotation with the SHA sum of the admin Secret to trigger a rollout on change. Further information can be found in the [documentation](./README.md#secret-checksum-annotation).
-    addSHASumAnnotation: false
-
-    ## @param secrets.admin.passwordMode Mode for how to set/update the admin user password. Options are: initialOnlyNoReset, initialOnlyRequireReset, and keepUpdated.
-    passwordMode: keepUpdated
-
-    ## @param secrets.admin.existingSecret.enabled Use an already existing Secret instead of creating the admin Secret.
-    ## @param secrets.admin.existingSecret.secretName Name of the already existing admin Secret.
-    ## @param secrets.admin.existingSecret.emailKey Key of the email address in the existing admin Secret.
-    ## @param secrets.admin.existingSecret.passwordKey Key of the password in the existing admin Secret.
-    ## @param secrets.admin.existingSecret.usernameKey Key of the username in the existing admin Secret.
-    existingSecret:
-      enabled: true
-      secretName: "gitea-secret"
-      emailKey: email
-      passwordKey: password
-      usernameKey: username
-
-    ## @param secrets.admin.new.annotations Annotations for the admin Secret.
-    ## @param secrets.admin.new.labels Labels for the admin Secret.
-    ## @param secrets.admin.new.email Email of the Gitea admin user.
-    ## @param secrets.admin.new.password Password of the Gitea admin user.
-    ## @param secrets.admin.new.username Username of the Gitea admin user.
-    new:
-      annotations: {}
-      labels: {}
-      email: gitea@local.domain
-      password: r8sA8CPHD9!bt6d
-      username: gitea_admin
-
-  config:
-    ## @param secrets.config.enabled Enable mounting of the config Secret.
-    enabled: true
-
-    ## @param secrets.config.addSHASumAnnotation Add a pod annotation with the SHA sum of the config Secret to trigger a rollout on change. Further information can be found in the [documentation](./README.md#secret-checksum-annotation).
-    addSHASumAnnotation: false
-
-    ## @param secrets.config.existingSecret.enabled Use an already existing Secret instead of creating the config Secret.
-    ## @param secrets.config.existingSecret.secretName Name of the already existing config Secret.
-    existingSecret:
-      enabled: false
-      secretName: ""
-
-    ## @param secrets.config.new.annotations Annotations for the config Secret.
-    ## @param secrets.config.new.labels Labels for the config Secret.
-    new:
-      annotations: {}
-      labels: {}
-
-  gpg:
-    ## @param secrets.gpg.enabled Enable mounting of a GPG key to sign git commits.
-    enabled: false
-
-    ## @param secrets.gpg.addSHASumAnnotation Add a pod annotation with the SHA sum of the GPG key Secret to trigger a rollout on change. Further information can be found in the [documentation](./README.md#secret-checksum-annotation).
-    addSHASumAnnotation: false
-
-    ## @param secrets.gpg.existingSecret.enabled Use an already existing Secret instead of creating the GPG key Secret.
-    ## @param secrets.gpg.existingSecret.secretName Name of the already existing GPG key Secret.
-    ## @param secrets.gpg.existingSecret.gpgHomeKey Key of the GPG home directory in the existing GPG key Secret.
-    ## @param secrets.gpg.existingSecret.privateKeyKey Key of the private key in the existing GPG key Secret.
-    existingSecret:
-      enabled: false
-      secretName: ""
-      gpgHomeKey: gpgHome
-      privateKeyKey: privateKey
-
-    ## @param secrets.gpg.new.annotations Annotations for the GPG key Secret.
-    ## @param secrets.gpg.new.labels Labels for the GPG key Secret.
-    ## @param secrets.gpg.new.gpgHome Path to the GPG home directory.
-    ## @param secrets.gpg.new.privateKey Content of the private GPG key in armored format.
-    new:
-      annotations: {}
-      labels: {}
-      gpgHome: /data/git/.gnupg
-      privateKey: ""
-      # privateKey: |-
-      #   -----BEGIN PGP PRIVATE KEY BLOCK-----
-      #   ...
-      #   -----END PGP PRIVATE KEY BLOCK-----
-
-  init:
-    ## @param secrets.init.enabled Enable mounting of the init Secret.
-    enabled: true
-
-    ## @param secrets.init.addSHASumAnnotation Add a pod annotation with the SHA sum of the init Secret to trigger a rollout on change. Further information can be found in the [documentation](./README.md#secret-checksum-annotation).
-    addSHASumAnnotation: false
-
-    ## @param secrets.init.existingSecret.enabled Use an already existing Secret instead of creating the init Secret.
-    ## @param secrets.init.existingSecret.secretName Name of the already existing init Secret.
-    existingSecret:
-      enabled: false
-      secretName: ""
-
-    ## @param secrets.init.new.annotations Annotations for the init Secret.
-    ## @param secrets.init.new.labels Labels for the init Secret.
-    new:
-      annotations: {}
-      labels: {}
-
-  inlineConfig:
-    ## @param secrets.inlineConfig.enabled Enable mounting of the inline configuration Secret.
-    enabled: true
-
-    ## @param secrets.inlineConfig.addSHASumAnnotation Add a pod annotation with the SHA sum of the inline configuration Secret to trigger a rollout on change. Further information can be found in the [documentation](./README.md#secret-checksum-annotation).
-    addSHASumAnnotation: false
-
-    ## @param secrets.inlineConfig.existingSecret.enabled Use an already existing Secret instead of creating the inline configuration Secret.
-    ## @param secrets.inlineConfig.existingSecret.secretName Name of the already existing inline configuration Secret.
-    existingSecret:
-      enabled: false
-      secretName: ""
-
-    ## @param secrets.inlineConfig.new.annotations Annotations for the inline configuration Secret.
-    ## @param secrets.inlineConfig.new.labels Labels for the inline configuration Secret.
-    new:
-      annotations: {}
-      labels: {}
-
-  metrics:
-    ## @param secrets.metrics.enabled Enable mounting of the metrics Secret.
-    enabled: true
-
-    ## @param secrets.metrics.addSHASumAnnotation Add a pod annotation with the SHA sum of the metrics Secret to trigger a rollout on change. Further information can be found in the [documentation](./README.md#secret-checksum-annotation).
-    addSHASumAnnotation: false
-
-    ## @param secrets.metrics.existingSecret.enabled Use an already existing Secret instead of creating the metrics Secret.
-    ## @param secrets.metrics.existingSecret.secretName Name of the already existing metrics Secret.
-    existingSecret:
-      enabled: false
-      secretName: ""
-
-    ## @param secrets.metrics.new.annotations Annotations for the metrics Secret.
-    ## @param secrets.metrics.new.labels Labels for the metrics Secret.
-    new:
-      annotations: {}
-      labels: {}
-
-
 ## @section Service
 service:
-  ## @param service.http.type Kubernetes service type for web traffic.
-  ## @param service.http.port Port number for web traffic.
-  ## @param service.http.clusterIP ClusterIP setting for http autosetup for deployment is None.
-  ## @param service.http.loadBalancerIP LoadBalancer IP setting.
-  ## @param service.http.nodePort NodePort for http service.
-  ## @param service.http.externalTrafficPolicy If `service.http.type` is `NodePort` or `LoadBalancer`, set this to `Local` to enable source IP preservation.
-  ## @param service.http.externalIPs External IPs for service.
-  ## @param service.http.ipFamilyPolicy HTTP service dual-stack policy.
+  ## @param service.http.type Kubernetes service type for web traffic
+  ## @param service.http.port Port number for web traffic
+  ## @param service.http.clusterIP ClusterIP setting for http autosetup for deployment is None
+  ## @param service.http.loadBalancerIP LoadBalancer IP setting
+  ## @param service.http.nodePort NodePort for http service
+  ## @param service.http.externalTrafficPolicy If `service.http.type` is `NodePort` or `LoadBalancer`, set this to `Local` to enable source IP preservation
+  ## @param service.http.externalIPs External IPs for service
+  ## @param service.http.ipFamilyPolicy HTTP service dual-stack policy
   ## @param service.http.ipFamilies HTTP service dual-stack familiy selection,for dual-stack parameters see official kubernetes [dual-stack concept documentation](https://kubernetes.io/docs/concepts/services-networking/dual-stack/).
-  ## @param service.http.loadBalancerSourceRanges Source range filter for http loadbalancer.
-  ## @param service.http.annotations HTTP service annotations.
-  ## @param service.http.labels HTTP service additional labels.
-  ## @param service.http.loadBalancerClass Loadbalancer class.
+  ## @param service.http.loadBalancerSourceRanges Source range filter for http loadbalancer
+  ## @param service.http.annotations HTTP service annotations
+  ## @param service.http.labels HTTP service additional labels
+  ## @param service.http.loadBalancerClass Loadbalancer class
   http:
     type: ClusterIP
     port: 3000
@@ -842,21 +130,20 @@ service:
     annotations: {}
     labels: {}
     loadBalancerClass:
-
-  ## @param service.ssh.type Kubernetes service type for ssh traffic.
-  ## @param service.ssh.port Port number for ssh traffic.
-  ## @param service.ssh.clusterIP ClusterIP setting for ssh autosetup for deployment is None.
-  ## @param service.ssh.loadBalancerIP LoadBalancer IP setting.
-  ## @param service.ssh.nodePort NodePort for ssh service.
-  ## @param service.ssh.externalTrafficPolicy If `service.ssh.type` is `NodePort` or `LoadBalancer`, set this to `Local` to enable source IP preservation.
-  ## @param service.ssh.externalIPs External IPs for service.
-  ## @param service.ssh.ipFamilyPolicy SSH service dual-stack policy.
+  ## @param service.ssh.type Kubernetes service type for ssh traffic
+  ## @param service.ssh.port Port number for ssh traffic
+  ## @param service.ssh.clusterIP ClusterIP setting for ssh autosetup for deployment is None
+  ## @param service.ssh.loadBalancerIP LoadBalancer IP setting
+  ## @param service.ssh.nodePort NodePort for ssh service
+  ## @param service.ssh.externalTrafficPolicy If `service.ssh.type` is `NodePort` or `LoadBalancer`, set this to `Local` to enable source IP preservation
+  ## @param service.ssh.externalIPs External IPs for service
+  ## @param service.ssh.ipFamilyPolicy SSH service dual-stack policy
   ## @param service.ssh.ipFamilies SSH service dual-stack familiy selection,for dual-stack parameters see official kubernetes [dual-stack concept documentation](https://kubernetes.io/docs/concepts/services-networking/dual-stack/).
-  ## @param service.ssh.hostPort HostPort for ssh service.
-  ## @param service.ssh.loadBalancerSourceRanges Source range filter for ssh loadbalancer.
-  ## @param service.ssh.annotations SSH service annotations.
-  ## @param service.ssh.labels SSH service additional labels.
-  ## @param service.ssh.loadBalancerClass Loadbalancer class.
+  ## @param service.ssh.hostPort HostPort for ssh service
+  ## @param service.ssh.loadBalancerSourceRanges Source range filter for ssh loadbalancer
+  ## @param service.ssh.annotations SSH service annotations
+  ## @param service.ssh.labels SSH service additional labels
+  ## @param service.ssh.loadBalancerClass Loadbalancer class
   ssh:
     type: ClusterIP
     port: 22
@@ -873,68 +160,196 @@ service:
     labels: {}
     loadBalancerClass:
 
+## @section Ingress
+## @param ingress.enabled Enable ingress
+## @param ingress.className DEPRECATED: Ingress class name.
+## @param ingress.pathType Ingress Path Type
+## @param ingress.annotations Ingress annotations
+## @param ingress.hosts[0].host Default Ingress host
+## @param ingress.hosts[0].paths[0].path Default Ingress path
+## @param ingress.tls Ingress tls settings
+ingress:
+  enabled: true
+  className: "haproxy"
+  pathType: Prefix
+  annotations: {}
+  hosts:
+    - host: touching-pika-enabled.ngrok-free.app
+      paths:
+        - path: /
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - git.example.com
+
+## @section Route
+## @param route.enabled Enable OpenShift Route
+## @param route.annotations Route annotations
+## @param route.host Route host. When unset, OpenShift may generate one and Gitea URL defaults fall back to ingress/service values.
+## @param route.path Route path
+## @param route.wildcardPolicy Route wildcard policy
+## @param route.tls.termination Route TLS termination type
+## @param route.tls.insecureEdgeTerminationPolicy Route insecure edge termination policy
+## @param route.tls.key Route TLS key
+## @param route.tls.certificate Route TLS certificate
+## @param route.tls.caCertificate Route TLS CA certificate
+## @param route.tls.destinationCACertificate Route destination CA certificate
+route:
+  enabled: false
+  annotations: {}
+  host: ""
+  path: ""
+  wildcardPolicy: None
+  tls:
+    termination:
+    insecureEdgeTerminationPolicy:
+    key:
+    certificate:
+    caCertificate:
+    destinationCACertificate:
+
+## @section deployment
+#
+## @param resources Kubernetes resources
+resources:
+  # {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  limits:
+    cpu: 150m
+    memory: 192Mi
+  requests:
+    cpu: 15m
+    memory: 128Mi
+
+## Use an alternate scheduler, e.g. "stork".
+## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+##
+## @param schedulerName Use an alternate scheduler, e.g. "stork"
+schedulerName: ""
+
+## @param nodeSelector NodeSelector for the deployment
+nodeSelector: {}
+
+## @param tolerations Tolerations for the deployment
+tolerations: []
+
+## @param affinity Affinity for the deployment
+affinity: {}
+
+## @param topologySpreadConstraints TopologySpreadConstraints for the deployment
+topologySpreadConstraints: []
+
+## @param dnsConfig dnsConfig for the deployment
+dnsConfig: {}
+
+## @param priorityClassName priorityClassName for the deployment
+priorityClassName: ""
+
+## @param deployment.env  Additional environment variables to pass to containers
+## @param deployment.terminationGracePeriodSeconds How long to wait until forcefully kill the pod
+## @param deployment.labels Labels for the deployment
+## @param deployment.annotations Annotations for the Gitea deployment to be created
+deployment:
+  env:
+    []
+    # - name: VARIABLE
+    #   value: my-value
+  terminationGracePeriodSeconds: 60
+  labels: {}
+  annotations: {}
 
 ## @section ServiceAccount
+
+## @param serviceAccount.create Enable the creation of a ServiceAccount
+## @param serviceAccount.name Name of the created ServiceAccount, defaults to release name. Can also link to an externally provided ServiceAccount that should be used.
+## @param serviceAccount.automountServiceAccountToken Enable/disable auto mounting of the service account token
+## @param serviceAccount.imagePullSecrets Image pull secrets, available to the ServiceAccount
+## @param serviceAccount.annotations Custom annotations for the ServiceAccount
+## @param serviceAccount.labels Custom labels for the ServiceAccount
 serviceAccount:
-  ## @param serviceAccount.enabled Assign the pod to use the ServiceAccount.
-  enabled: true
-
-  ## @param serviceAccount.existingServiceAccount.enabled Enable using an existing ServiceAccount.
-  ## @param serviceAccount.existingServiceAccount.existingServiceAccountName Name of the existing ServiceAccount to use.
-  existingServiceAccount:
-    enabled: false
-    existingServiceAccountName: ""
-
-  ## @param serviceAccount.new.annotations Custom annotations for the ServiceAccount.
-  ## @param serviceAccount.new.labels Custom labels for the ServiceAccount.
-  ## @param serviceAccount.new.automountServiceAccountToken Enable/disable auto mounting of the service account token.
-  ## @param serviceAccount.new.imagePullSecrets Image pull secrets, available to the ServiceAccount.
-  new:
-    annotations: {}
-    labels: {}
-    automountServiceAccountToken: false
-    imagePullSecrets: []
-    # - name: private-registry-access
+  create: true
+  name: ""
+  automountServiceAccountToken: true
+  imagePullSecrets: []
+  # - name: private-registry-access
+  annotations: {}
+  labels: {}
 
 ## @section Persistence
+#
+## @param persistence.enabled Enable persistent storage
+## @param persistence.create Whether to create the persistentVolumeClaim for shared storage
+## @param persistence.mount Whether the persistentVolumeClaim should be mounted (even if not created)
+## @param persistence.claimName Use an existing claim to store repository information
+## @param persistence.size Size for persistence to store repo information
+## @param persistence.accessModes AccessMode for persistence
+## @param persistence.labels Labels for the persistence volume claim to be created
+## @param persistence.annotations.helm.sh/resource-policy Resource policy for the persistence volume claim
+## @param persistence.storageClass Name of the storage class to use
+## @param persistence.subPath Subdirectory of the volume to mount at
+## @param persistence.volumeName Name of persistent volume in PVC
 persistence:
-  ## @param persistence.enabled Enable persistent storage.
   enabled: true
+  create: true
+  mount: true
+  claimName: gitea-shared-storage
+  size: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  labels: {}
+  storageClass:
+  subPath:
+  volumeName: ""
+  annotations:
+    helm.sh/resource-policy: keep
 
-  ## @param persistence.existingPersistentVolumeClaim.enabled Enable using an existing persistent volume claim.
-  ## @param persistence.existingPersistentVolumeClaim.persistentVolumeClaimName Name of the existing persistent volume claim to use.
-  existingPersistentVolumeClaim:
-    enabled: true
-    persistentVolumeClaimName: "gitea-shared-storage"
-
-  ## @param persistence.new.annotations.helm.sh/resource-policy Resource policy for the new persistent volume claim.
-  ## @param persistence.new.labels Labels for the new persistent volume claim.
-  ## @param persistence.new.accessModes AccessMode for the new persistent volume claim.
-  ## @param persistence.new.persistentVolumeName Name of the persistent volume for the new persistent volume claim.
-  ## @param persistence.new.size Size for the new persistent volume claim.
-  ## @param persistence.new.storageClassName Name of the storage class to use for the new persistent volume claim.
-  ## @param persistence.new.subPath Subdirectory of the volume to mount at for the new persistent volume claim.
-  new:
-    annotations:
-      helm.sh/resource-policy: keep
-    labels: {}
-    accessModes:
-      - ReadWriteOnce
-    persistentVolumeName: ""
-    size: 1Gi
-    storageClassName: ""
-    subPath: ""
-
-## @param extraContainers Additional sidecar containers to run in the pod.
+## @param extraContainers Additional sidecar containers to run in the pod
 extraContainers: []
 #  - name: sidecar-bob
 #    image: busybox
 #    command: [/bin/sh, -c, 'echo "Hello world"']
 
+## @param preExtraInitContainers Additional init containers to run in the pod before gitea runs it owns init containers.
+preExtraInitContainers: []
+# - name: pre-init-container
+#   image: docker.io/library/busybox
+#   command: [ /bin/sh, -c, 'echo "Hello world! I am a pre init container."' ]
+
+## @param postExtraInitContainers Additional init containers to run in the pod after gitea runs it owns init containers.
+postExtraInitContainers: []
+# - name: post-init-container
+#   image: docker.io/library/busybox
+#   command: [ /bin/sh, -c, 'echo "Hello world! I am a post init container."' ]
+
+## @param extraVolumes Additional volumes to mount to the Gitea deployment
+extraVolumes: []
+# - name: postgres-ssl-vol
+#   secret:
+#     secretName: gitea-postgres-ssl
+
+## @param extraContainerVolumeMounts Mounts that are only mapped into the Gitea runtime/main container, to e.g. override custom templates.
+extraContainerVolumeMounts: []
+
+## @param extraInitVolumeMounts Mounts that are only mapped into the init-containers. Can be used for additional preconfiguration.
+extraInitVolumeMounts: []
+
+## @deprecated The extraVolumeMounts variable has been split two:
+## - extraContainerVolumeMounts
+## - extraInitVolumeMounts
+## As an example, can be used to mount a client cert when connecting to an external Postgres server.
+## @param extraVolumeMounts **DEPRECATED** Additional volume mounts for init containers and the Gitea main container
+extraVolumeMounts: []
+# - name: postgres-ssl-vol
+#   readOnly: true
+#   mountPath: "/pg-ssl"
+
 ## @section Init
 ## @param initPreScript Bash shell script copied verbatim to the start of the init-container.
 initPreScript: ""
-## @param initContainersScriptsVolumeMountPath Path to mount the scripts consumed from the Secrets.
+## @param initContainersScriptsVolumeMountPath Path to mount the scripts consumed from the Secrets
 initContainersScriptsVolumeMountPath: "/usr/sbinx"
 #
 # initPreScript: |
@@ -943,9 +358,9 @@ initContainersScriptsVolumeMountPath: "/usr/sbinx"
 #   chown -R git:git /data/git/.postgresql/
 #   chmod 400 /data/git/.postgresql/postgresql.key
 
-## @param initContainers.resources.limits initContainers.limits Kubernetes resource limits for init containers.
-## @param initContainers.resources.requests.cpu initContainers.requests.cpu Kubernetes cpu resource limits for init containers.
-## @param initContainers.resources.requests.memory initContainers.requests.memory Kubernetes memory resource limits for init containers.
+## @param initContainers.resources.limits initContainers.limits Kubernetes resource limits for init containers
+## @param initContainers.resources.requests.cpu initContainers.requests.cpu Kubernetes cpu resource limits for init containers
+## @param initContainers.resources.requests.memory initContainers.requests.memory Kubernetes memory resource limits for init containers
 initContainers:
   resources:
     limits: {}
@@ -953,10 +368,39 @@ initContainers:
       cpu: 100m
       memory: 128Mi
 
+# Configure commit/action signing prerequisites
+## @section Signing
+#
+## @param signing.enabled Enable commit/action signing
+## @param signing.gpgHome GPG home directory
+## @param signing.privateKey Inline private gpg key for signed internal Git activity
+## @param signing.existingSecret Use an existing secret to store the value of `signing.privateKey`
+signing:
+  enabled: false
+  gpgHome: /data/git/.gnupg
+  privateKey: ""
+  # privateKey: |-
+  #   -----BEGIN PGP PRIVATE KEY BLOCK-----
+  #   ...
+  #   -----END PGP PRIVATE KEY BLOCK-----
+  existingSecret: ""
+
 ## @section Gitea
 #
 gitea:
-  ## @param gitea.metrics.enabled Enable Gitea metrics.
+  ## @param gitea.admin.username Username for the Gitea admin user
+  ## @param gitea.admin.existingSecret Use an existing secret to store admin user credentials
+  ## @param gitea.admin.password Password for the Gitea admin user
+  ## @param gitea.admin.email Email for the Gitea admin user
+  ## @param gitea.admin.passwordMode Mode for how to set/update the admin user password. Options are: initialOnlyNoReset, initialOnlyRequireReset, and keepUpdated
+  admin:
+    # username: gitea_admin
+    # password: r8sA8CPHD9!bt6d
+    existingSecret: gitea-secret
+    email: "kimduquan@gmail.com"
+    passwordMode: keepUpdated
+
+  ## @param gitea.metrics.enabled Enable Gitea metrics
   ## @param gitea.metrics.token used for `bearer` token authentication on metrics endpoint. If not specified or empty metrics endpoint is public.
   ## @param gitea.metrics.serviceMonitor.enabled Enable Gitea metrics service monitor. Requires, that `gitea.metrics.enabled` is also set to true, to enable metrics generally.
   ## @param gitea.metrics.serviceMonitor.interval Interval at which metrics should be scraped. If not specified Prometheus' global scrape interval is used.
@@ -977,8 +421,9 @@ gitea:
       scrapeTimeout: ""
       tlsConfig: {}
 
-  ## @param gitea.ldap LDAP configuration.
-  ldap: []
+  ## @param gitea.ldap LDAP configuration
+  ldap:
+    []
     # - name: "LDAP 1"
     #  existingSecret:
     #  securityProtocol:
@@ -994,24 +439,25 @@ gitea:
     #  publicSSHKeyAttribute:
 
   # Either specify inline `key` and `secret` or refer to them via `existingSecret`
-  ## @param gitea.oauth OAuth configuration.
+  ## @param gitea.oauth OAuth configuration
   oauth:
-    - name: 'KDQ'
+    # []
+    - name: "EPF"
       provider: "openidConnect"
-    #   key:
-    #   secret:
-      existingSecret:
-      autoDiscoverUrl:
-    #   useCustomUrls:
-    #   customAuthUrl:
-    #   customTokenUrl:
-    #   customProfileUrl:
-    #   customEmailUrl:
+      # key:
+      # secret:
+      existingSecret: gitea-secret
+      autoDiscoverUrl: "https://chipmunk-capable-prawn.ngrok-free.app/auth/realms/EPF-dev/.well-known/openid-configuration"
+      # useCustomUrls:
+      # customAuthUrl:
+      # customTokenUrl:
+      # customProfileUrl:
+      # customEmailUrl:
 
-  ## @param gitea.config.server.SSH_PORT SSH port for rootlful Gitea image.
-  ## @param gitea.config.server.SSH_LISTEN_PORT SSH port for rootless Gitea image.
+  ## @param gitea.config.server.SSH_PORT SSH port for rootlful Gitea image
+  ## @param gitea.config.server.SSH_LISTEN_PORT SSH port for rootless Gitea image
   config:
-    APP_NAME: "KDQ Git"
+    APP_NAME: "EPF Git"
     #  RUN_MODE: dev
     server:
       SSH_PORT: 22 # rootful image
@@ -1053,14 +499,14 @@ gitea:
   #  security:
   #    PASSWORD_COMPLEXITY: spec
 
-  ## @param gitea.additionalConfigSources Additional configuration from secret or configmap.
+  ## @param gitea.additionalConfigSources Additional configuration from secret or configmap
   additionalConfigSources: []
   #   - secret:
   #       secretName: gitea-secret
   #   - configMap:
   #       name: gitea-app-ini-plaintext
 
-  ## @param gitea.additionalConfigFromEnvs Additional configuration sources from environment variables.
+  ## @param gitea.additionalConfigFromEnvs Additional configuration sources from environment variables
   additionalConfigFromEnvs:
     - name: GITEA__DATABASE__USER
       valueFrom:
@@ -1100,7 +546,7 @@ gitea:
   # extraEnvSourceFile: /vault/secrets/gitea
   extraEnvSourceFile:
 
-  ## @param gitea.podAnnotations Annotations for the Gitea pod.
+  ## @param gitea.podAnnotations Annotations for the Gitea pod
   podAnnotations: {}
 
   ## @param gitea.ssh.logLevel Configure OpenSSH's log level. Only available for root-based Gitea image.
@@ -1109,13 +555,13 @@ gitea:
 
   ## @section LivenessProbe
   #
-  ## @param gitea.livenessProbe.enabled Enable liveness probe.
-  ## @param gitea.livenessProbe.tcpSocket.port Port to probe for liveness.
-  ## @param gitea.livenessProbe.initialDelaySeconds Initial delay before liveness probe is initiated.
-  ## @param gitea.livenessProbe.timeoutSeconds Timeout for liveness probe.
-  ## @param gitea.livenessProbe.periodSeconds Period for liveness probe.
-  ## @param gitea.livenessProbe.successThreshold Success threshold for liveness probe.
-  ## @param gitea.livenessProbe.failureThreshold Failure threshold for liveness probe.
+  ## @param gitea.livenessProbe.enabled Enable liveness probe
+  ## @param gitea.livenessProbe.tcpSocket.port Port to probe for liveness
+  ## @param gitea.livenessProbe.initialDelaySeconds Initial delay before liveness probe is initiated
+  ## @param gitea.livenessProbe.timeoutSeconds Timeout for liveness probe
+  ## @param gitea.livenessProbe.periodSeconds Period for liveness probe
+  ## @param gitea.livenessProbe.successThreshold Success threshold for liveness probe
+  ## @param gitea.livenessProbe.failureThreshold Failure threshold for liveness probe
   # Modify the liveness probe for your needs or completely disable it by commenting out.
   livenessProbe:
     enabled: true
@@ -1129,13 +575,13 @@ gitea:
 
   ## @section ReadinessProbe
   #
-  ## @param gitea.readinessProbe.enabled Enable readiness probe.
-  ## @param gitea.readinessProbe.tcpSocket.port Port to probe for readiness.
-  ## @param gitea.readinessProbe.initialDelaySeconds Initial delay before readiness probe is initiated.
-  ## @param gitea.readinessProbe.timeoutSeconds Timeout for readiness probe.
-  ## @param gitea.readinessProbe.periodSeconds Period for readiness probe.
-  ## @param gitea.readinessProbe.successThreshold Success threshold for readiness probe.
-  ## @param gitea.readinessProbe.failureThreshold Failure threshold for readiness probe.
+  ## @param gitea.readinessProbe.enabled Enable readiness probe
+  ## @param gitea.readinessProbe.tcpSocket.port Port to probe for readiness
+  ## @param gitea.readinessProbe.initialDelaySeconds Initial delay before readiness probe is initiated
+  ## @param gitea.readinessProbe.timeoutSeconds Timeout for readiness probe
+  ## @param gitea.readinessProbe.periodSeconds Period for readiness probe
+  ## @param gitea.readinessProbe.successThreshold Success threshold for readiness probe
+  ## @param gitea.readinessProbe.failureThreshold Failure threshold for readiness probe
   # Modify the readiness probe for your needs or completely disable it by commenting out.
   readinessProbe:
     enabled: true
@@ -1150,13 +596,13 @@ gitea:
   # # Uncomment the startup probe to enable and modify it for your needs.
   ## @section StartupProbe
   #
-  ## @param gitea.startupProbe.enabled Enable startup probe.
-  ## @param gitea.startupProbe.tcpSocket.port Port to probe for startup.
-  ## @param gitea.startupProbe.initialDelaySeconds Initial delay before startup probe is initiated.
-  ## @param gitea.startupProbe.timeoutSeconds Timeout for startup probe.
-  ## @param gitea.startupProbe.periodSeconds Period for startup probe.
-  ## @param gitea.startupProbe.successThreshold Success threshold for startup probe.
-  ## @param gitea.startupProbe.failureThreshold Failure threshold for startup probe.
+  ## @param gitea.startupProbe.enabled Enable startup probe
+  ## @param gitea.startupProbe.tcpSocket.port Port to probe for startup
+  ## @param gitea.startupProbe.initialDelaySeconds Initial delay before startup probe is initiated
+  ## @param gitea.startupProbe.timeoutSeconds Timeout for startup probe
+  ## @param gitea.startupProbe.periodSeconds Period for startup probe
+  ## @param gitea.startupProbe.successThreshold Success threshold for startup probe
+  ## @param gitea.startupProbe.failureThreshold Failure threshold for startup probe
   startupProbe:
     enabled: false
     tcpSocket:
@@ -1167,154 +613,248 @@ gitea:
     successThreshold: 1
     failureThreshold: 10
 
-## @section CloudNativePG
-# The CloudNativePG operator itself is not part of this chart. It must be installed cluster-wide beforehand:
-# https://cloudnative-pg.io/documentation/current/installation_upgrade/
-cloudnativePG:
-  ## @param cloudnativePG.enabled Provision a CloudNativePG `Cluster` for Gitea. Requires the CloudNativePG operator to be installed in the cluster.
+## @section valkey-cluster
+## @descriptionStart
+## Valkey cluster and [Valkey](#valkey) cannot be enabled at the same time.
+## @descriptionEnd
+valkey-cluster:
+  ## @param valkey-cluster.enabled Enable valkey cluster
+  # ⚠️ The valkey charts do not work well with special characters in the password (<https://gitea.com/gitea/helm-chart/issues/690>).
+  # Consider omitting such or open an issue in the Bitnami repo and let us know once this got fixed.
+  ## @param valkey-cluster.usePassword Whether to use password authentication.
+  ## @param valkey-cluster.usePasswordFiles Whether to mount passwords as files instead of environment variables.
   enabled: false
+  usePassword: false
+  usePasswordFiles: false
 
-  ## @param cloudnativePG.annotations Annotations for the CloudNativePG `Cluster`.
-  ## @param cloudnativePG.labels Additional labels for the CloudNativePG `Cluster`.
-  annotations: {}
-  labels: {}
-
-  ## @param cloudnativePG.image.registry Image registry.
-  ## @param cloudnativePG.image.repository Image repository.
-  ## @param cloudnativePG.image.tag Image tag.
+  ## @param valkey-cluster.image.repository Image repository, eg. `bitnamilegacy/valkey-cluster`.
   image:
-    registry: ghcr.io
-    repository: cloudnative-pg/postgresql
-    tag: "18.0"
+    repository: bitnamilegacy/valkey-cluster
 
-  ## @param cloudnativePG.instances Number of PostgreSQL instances. Values greater than `1` provision a HA-ready cluster with streaming replication.
-  instances: 1
+  ## @param valkey-cluster.cluster.nodes Number of valkey cluster master nodes
+  ## @param valkey-cluster.cluster.replicas Number of valkey cluster master node replicas
+  cluster:
+    nodes: 3 # default: 6
+    replicas: 0 # default: 1
 
-  credentials:
-    ## @param cloudnativePG.credentials.addSHASumAnnotation Add a pod annotation with the SHA sum of the credentials Secret to trigger a rollout on change. Further information can be found in the [documentation](./README.md#secret-checksum-annotation).
-    addSHASumAnnotation: false
+  ## @param valkey-cluster.metrics.image.repository Image repository, eg. `bitnamilegacy/redis-exporter`.
+  metrics:
+    image:
+      repository: bitnamilegacy/redis-exporter
 
-    ## @param cloudnativePG.credentials.database Name of the database to create. CloudNativePG requires it as a literal in the `Cluster`, hence it cannot be sourced from a Secret.
-    ## @param cloudnativePG.credentials.username Name of the database owner to create. CloudNativePG requires it as a literal in the `Cluster`, hence it cannot be sourced from a Secret.
-    database: gitea
-    username: gitea
-
-    ## @param cloudnativePG.credentials.existingSecret.enabled Use an already existing Secret instead of creating the credentials Secret.
-    ## @param cloudnativePG.credentials.existingSecret.secretName Name of the already existing credentials Secret. Must be of type `kubernetes.io/basic-auth` and its `username` must match `cloudnativePG.credentials.username`.
-    ## @param cloudnativePG.credentials.existingSecret.passwordKey Key of the password in the existing credentials Secret.
-    existingSecret:
-      enabled: false
-      secretName: ""
-      passwordKey: password
-
-    ## @param cloudnativePG.credentials.new.annotations Annotations for the credentials Secret.
-    ## @param cloudnativePG.credentials.new.labels Labels for the credentials Secret.
-    ## @param cloudnativePG.credentials.new.password Password of the database owner.
-    new:
-      annotations: {}
-      labels: {}
-      password: gitea
-
-  ## @param cloudnativePG.postgresql.parameters Custom PostgreSQL configuration parameters.
-  postgresql:
-    parameters: {}
-
-  ## @param cloudnativePG.storage.size Size of the data volume.
-  ## @param cloudnativePG.storage.storageClass Storage class of the data volume. Defaults to the cluster's default storage class.
-  storage:
-    size: 1Gi
+  ## @param valkey-cluster.persistence.enabled Enable persistence on Valkey replicas nodes using Persistent Volume Claims.
+  ## @param valkey-cluster.persistence.storageClass Persistent Volume storage class.
+  ## @param valkey-cluster.persistence.size Persistent Volume size.
+  persistence:
+    enabled: true
     storageClass: ""
+    size: 8Gi
 
-  ## @param cloudnativePG.walStorage.enabled Store the write-ahead log on a dedicated volume.
-  ## @param cloudnativePG.walStorage.size Size of the write-ahead log volume.
-  ## @param cloudnativePG.walStorage.storageClass Storage class of the write-ahead log volume. Defaults to the cluster's default storage class.
-  walStorage:
-    enabled: false
-    size: 1Gi
-    storageClass: ""
+  ## @param valkey-cluster.service.ports.valkey Port of Valkey service
+  service:
+    ports:
+      valkey: 6379
 
-  ## @param cloudnativePG.affinity Affinity for the PostgreSQL pods. CloudNativePG nests `nodeSelector` and `tolerations` below this key as well.
-  affinity: {}
+  ## @param valkey-cluster.sysctlImage.repository Image repository, eg. `bitnamilegacy/os-shell`.
+  sysctlImage:
+    repository: bitnamilegacy/os-shell
 
-  ## @param cloudnativePG.priorityClassName Priority class name for the PostgreSQL pods.
-  priorityClassName: ""
-
-  ## @param cloudnativePG.monitoring.enablePodMonitor Create a `PodMonitor` for the CloudNativePG `Cluster`.
-  monitoring:
-    enablePodMonitor: false
-
-  ## @param cloudnativePG.resources Kubernetes resources for the PostgreSQL containers.
-  resources: {}
-
-  ## @param cloudnativePG.topologySpreadConstraints Topology spread constraints for the PostgreSQL pods.
-  topologySpreadConstraints: []
+  ## @param valkey-cluster.volumePermissions.image.repository Image repository, eg. `bitnamilegacy/os-shell`.
+  volumePermissions:
+    image:
+      repository: bitnamilegacy/os-shell
 
 
 ## @section valkey
+
+## @descriptionStart
+## Valkey and [Valkey cluster](#valkey-cluster) cannot be enabled at the same time.
+## @descriptionEnd
 valkey:
-  ## @param valkey.enabled Enable valkey standalone or replicated.
+  ## @param valkey.enabled Enable valkey standalone or replicated
+  ## @param valkey.architecture Whether to use standalone or replication
+  enabled: false
+  architecture: standalone
+
+  ## @param valkey.kubectl.image.repository Image repository, eg. `bitnamilegacy/kubectl`.
+  kubectl:
+    image:
+      repository: bitnamilegacy/kubectl
+
+  ## @param valkey.image.repository Image repository, eg. `bitnamilegacy/valkey`.
+  image:
+    repository: bitnamilegacy/valkey
+
+  # ⚠️ The valkey charts do not work well with special characters in the password (<https://gitea.com/gitea/helm-chart/issues/690>).
+  # Consider omitting such or open an issue in the Bitnami repo and let us know once this got fixed.
+  ## @param valkey.global.valkey.password Required password
+  global:
+    valkey:
+      password: changeme
+
+  ## @param valkey.master.count Number of Valkey master instances to deploy
+  ## @param valkey.master.service.ports.valkey Port of Valkey service
+  master:
+    count: 1
+    service:
+      ports:
+        valkey: 6379
+
+  ## @param valkey.metrics.image.repository Image repository, eg. `bitnamilegacy/redis-exporter`.
+  metrics:
+    image:
+      repository: bitnamilegacy/redis-exporter
+
+  primary:
+  ## @param valkey.primary.persistence.enabled Enable persistence on Valkey replicas nodes using Persistent Volume Claims.
+  ## @param valkey.primary.persistence.storageClass Persistent Volume storage class.
+  ## @param valkey.primary.persistence.size Persistent Volume size.
+    persistence:
+      enabled: true
+      storageClass: ""
+      size: 8Gi
+
+  replica:
+    ## @param valkey.replica.persistence.enabled Enable persistence on Valkey replicas nodes using Persistent Volume Claims.
+    ## @param valkey.replica.persistence.storageClass Persistent Volume storage class.
+    ## @param valkey.replica.persistence.size Persistent Volume size.
+    persistence:
+      enabled: true
+      storageClass: ""
+      size: 8Gi
+
+  ## @param valkey.sentinel.image.repository Image repository, eg. `bitnamilegacy/sentinel`.
+  sentinel:
+    image:
+      repository: bitnamilegacy/valkey-sentinel
+
+  ## @param valkey.volumePermissions.image.repository Image repository, eg. `bitnamilegacy/os-shell`.
+  volumePermissions:
+    image:
+      repository: bitnamilegacy/os-shell
+
+## @section PostgreSQL HA
+postgresql-ha:
+  ## @param postgresql-ha.enabled Enable PostgreSQL HA
   enabled: false
 
-  ## @param valkey.image.registry Image registry.
-  ## @param valkey.image.repository Image repository.
-  ## @param valkey.image.tag Image tag.
-  image:
-    registry: docker.io
-    repository: valkey/valkey
-    tag: ""
+  ## @param postgresql-ha.global.postgresql.database Name for a custom database to create (overrides `auth.database`)
+  ## @param postgresql-ha.global.postgresql.username Name for a custom user to create (overrides `auth.username`)
+  ## @param postgresql-ha.global.postgresql.password Name for a custom password to create (overrides `auth.password`)
+  global:
+    postgresql:
+      database: gitea
+      password: gitea
+      username: gitea
 
-  ## @param valkey.auth.enabled Enable ACL-based authentication.
-  ## @param valkey.auth.aclUsers.default.permissions ACL permissions for the default user.
-  ## @param valkey.auth.aclUsers.default.password Password for the default user.
-  auth:
-    enabled: true
-    aclUsers:
-      default:
-        permissions: "~* &* +@all"
-        password: changeme
-
-  ## @param valkey.service.port Port of Valkey service.
-  service:
-    port: 6379
-
-  ## @param valkey.dataStorage.enabled Enable persistence using Persistent Volume Claims.
-  ## @param valkey.dataStorage.className Persistent Volume storage class.
-  ## @param valkey.dataStorage.requestedSize Persistent Volume size.
-  dataStorage:
-    enabled: false
-    className: ""
-    requestedSize: 1Gi
-
-  ## @param valkey.replica.enabled Enable replication.
-  ## @param valkey.replica.replicas Number of Valkey replica instances to deploy.
-  ## @param valkey.replica.persistence.size Persistent Volume size for replicas.
-  ## @param valkey.replica.persistence.storageClass Persistent Volume storage class for replicas.
-  replica:
-    enabled: false
-    replicas: 1
-    persistence:
-      size: 1Gi
-      storageClass: ""
-
-  ## @param valkey.metrics.enabled Enable Prometheus exporter sidecar.
-  ## @param valkey.metrics.exporter.image.registry Image registry.
-  ## @param valkey.metrics.exporter.image.repository Image repository.
-  ## @param valkey.metrics.exporter.image.tag Image tag.
+  ## @param postgresql-ha.metrics.image.repository Image repository, eg. `bitnamilegacy/postgres-exporter`.
   metrics:
-    enabled: false
-    exporter:
-      image:
-        registry: ghcr.io
-        repository: oliver006/redis_exporter
-        tag: ""
+    image:
+      repository: bitnamilegacy/postgres-exporter
 
+  ## @param postgresql-ha.postgresql.image.repository Image repository, eg. `bitnamilegacy/postgresql-repmgr`.
+  ## @param postgresql-ha.postgresql.repmgrPassword Repmgr Password
+  ## @param postgresql-ha.postgresql.postgresPassword postgres Password
+  ## @param postgresql-ha.postgresql.password Password for the `gitea` user (overrides `auth.password`)
+  postgresql:
+    image:
+      repository: bitnamilegacy/postgresql-repmgr
+    repmgrPassword: changeme2
+    postgresPassword: changeme1
+    password: changeme4
+
+  ## @param postgresql-ha.pgpool.adminPassword pgpool adminPassword
+  ## @param postgresql-ha.pgpool.image.repository Image repository, eg. `bitnamilegacy/pgpool`.
+  ## @param postgresql-ha.pgpool.srCheckPassword pgpool srCheckPassword
+  pgpool:
+    adminPassword: changeme3
+    image:
+      repository: bitnamilegacy/pgpool
+    srCheckPassword: changeme4
+
+  ## @param postgresql-ha.service.ports.postgresql PostgreSQL service port (overrides `service.ports.postgresql`)
+  service:
+    ports:
+      postgresql: 5432
+
+  ## @param postgresql-ha.persistence.enabled Enable persistence.
+  ## @param postgresql-ha.persistence.storageClass Persistent Volume Storage Class.
+  ## @param postgresql-ha.persistence.size PVC Storage Request for PostgreSQL HA volume
+  persistence:
+    enabled: true
+    storageClass: ""
+    size: 10Gi
+
+  ## @param postgresql-ha.volumePermissions.image.repository Image repository, eg. `bitnamilegacy/os-shell`.
+  volumePermissions:
+    image:
+      repository: bitnamilegacy/os-shell
+
+## @section PostgreSQL
+postgresql:
+  ## @param postgresql.enabled Enable PostgreSQL
+  enabled: false
+
+  ## @param postgresql.global.postgresql.auth.password Password for the `gitea` user (overrides `auth.password`)
+  ## @param postgresql.global.postgresql.auth.database Name for a custom database to create (overrides `auth.database`)
+  ## @param postgresql.global.postgresql.auth.username Name for a custom user to create (overrides `auth.username`)
+  ## @param postgresql.global.postgresql.service.ports.postgresql PostgreSQL service port (overrides `service.ports.postgresql`)
+  global:
+    postgresql:
+      auth:
+        password: gitea
+        database: gitea
+        username: gitea
+      service:
+        ports:
+          postgresql: 5432
+
+  ## @param postgresql.image.repository Image repository, eg. `bitnamilegacy/postgresql`.
+  image:
+    repository: bitnamilegacy/postgresql
+
+  primary:
+    ## @param postgresql.primary.persistence.enabled Enable persistence.
+    ## @param postgresql.primary.persistence.storageClass Persistent Volume storage class.
+    ## @param postgresql.primary.persistence.size PVC Storage Request for PostgreSQL volume.
+    persistence:
+      enabled: true
+      storageClass: ""
+      size: 10Gi
+
+  readReplicas:
+    ## @param postgresql.readReplicas.persistence.enabled Enable PostgreSQL read only data persistence using PVC.
+    ## @param postgresql.readReplicas.persistence.storageClass Persistent Volume storage class.
+    ## @param postgresql.readReplicas.persistence.size PVC Storage Request for PostgreSQL volume.
+    persistence:
+      enabled: true
+      storageClass: ""
+      size: ""
+
+  ## @param postgresql.metrics.image.repository Image repository, eg. `bitnamilegacy/postgres-exporter`.
+  metrics:
+    image:
+      repository: bitnamilegacy/postgres-exporter
+
+  ## @param postgresql.volumePermissions.image.repository Image repository, eg. `bitnamilegacy/os-shell`.
+  volumePermissions:
+    image:
+      repository: bitnamilegacy/os-shell
 
 # By default, removed or moved settings that still remain in a user defined values.yaml will cause Helm to fail running the install/update.
 # Set it to false to skip this basic validation check.
 ## @section Advanced
 ## @param checkDeprecation Set it to false to skip this basic validation check.
+## @param test.enabled Set it to false to disable test-connection Pod.
+## @param test.image.name Image name for the wget container used in the test-connection Pod.
+## @param test.image.tag Image tag for the wget container used in the test-connection Pod.
 checkDeprecation: true
+test:
+  enabled: true
+  image:
+    name: busybox
+    tag: latest
 
-## @param extraDeploy Array of extra objects to deploy with the release.
+## @param extraDeploy Array of extra objects to deploy with the release
 ##
 extraDeploy: []
