@@ -897,8 +897,8 @@ persistence:
   ## @param persistence.existingPersistentVolumeClaim.enabled Enable using an existing persistent volume claim.
   ## @param persistence.existingPersistentVolumeClaim.persistentVolumeClaimName Name of the existing persistent volume claim to use.
   existingPersistentVolumeClaim:
-    enabled: false
-    persistentVolumeClaimName: ""
+    enabled: true
+    persistentVolumeClaimName: "gitea-shared-storage"
 
   ## @param persistence.new.annotations.helm.sh/resource-policy Resource policy for the new persistent volume claim.
   ## @param persistence.new.labels Labels for the new persistent volume claim.
