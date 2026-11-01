@@ -178,6 +178,8 @@ spec:
                 memory:
                   guest: 2Gi
               evictionStrategy: LiveMigrate
+              nodeSelector:
+                node-role.kubernetes.io/worker: ""
               volumes:
               - dataVolume:
                   name: epf-cluster-boot-volume
