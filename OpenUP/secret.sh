@@ -56,6 +56,16 @@ else
 		kubectl create secret generic huggingface \
 			--from-literal=token='' \
 			--dry-run=client -o yaml > "$SECRET_FILE"
+		kubectl apply -f "$SECRET_FILE"
+	elif [ "$SECRET" = "gitea-secret" ]; then
+		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic gitea-secret \
+			--from-literal=secret='cIkzKJZ4A7jXKpXfaxC4GaLxJAmmEqhP' \
+			--from-literal=key='account' \
+			--from-literal=username='gitea_admin' \
+			--from-literal=password=${DEFAULT_PASSWORD} \
+			--from-literal=database_user='gitea.gitea' \
+			--from-literal=database_passwd=${DEFAULT_PASSWORD} \
+			--dry-run=client -o yaml > "$SECRET_FILE"
 		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f "$SECRET_FILE"
 	fi
 fi
