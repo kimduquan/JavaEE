@@ -22,6 +22,9 @@ global:
 
 valkey-cluster:
   enabled: false
+  
+postgresql-ha:
+  enabled: false
 
 ## @section deployment
 deployment:
