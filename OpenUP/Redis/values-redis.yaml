@@ -12,7 +12,7 @@
 ## @param global.defaultStorageClass Global default StorageClass for Persistent Volume(s)
 ## @param global.storageClass DEPRECATED: use global.defaultStorageClass instead
 ## @param global.redis.password Global Redis(R) password (overrides `auth.password`)
-## @param global.defaultFips Default value for the FIPS configuration (allowed values: '', restricted, relaxed, off). Can be overriden by the 'fips' object
+## @param global.defaultFips Default value for the FIPS configuration (allowed values: '', restricted, relaxed, off). Can be overridden by the 'fips' object
 ##
 global:
   imageRegistry: ""
@@ -27,7 +27,7 @@ global:
   ##
   security:
     ## @param global.security.allowInsecureImages Allows skipping image verification
-    allowInsecureImages: false
+    allowInsecureImages: true
   redis:
     password: ""
   ## Compatibility adaptations for Kubernetes platforms
@@ -156,15 +156,15 @@ auth:
   ## @param auth.password Redis(R) password
   ## Defaults to a random 10-character alphanumeric string if not set
   ##
-  password: "090323508"
+  password: ""
   ## @param auth.existingSecret The name of an existing secret with Redis(R) credentials
   ## NOTE: When it's set, the previous `auth.password` parameter is ignored
   ##
-  existingSecret: ""
+  existingSecret: "redis-auth"
   ## @param auth.existingSecretPasswordKey Password key to be retrieved from existing secret
   ## NOTE: ignored unless `auth.existingSecret` parameter is set
   ##
-  existingSecretPasswordKey: ""
+  existingSecretPasswordKey: "password"
   ## @param auth.usePasswordFiles Mount credentials as files instead of using an environment variable
   ##
   usePasswordFiles: true
@@ -1266,6 +1266,9 @@ sentinel:
   ## @param sentinel.parallelSyncs Number of replicas that can be reconfigured in parallel to use the new master after a failover
   ##
   parallelSyncs: 1
+  ## @param sentinel.replicaSyncCheck Wait for data full sync on replicas before marking them as ready (experimental)
+  ##
+  replicaSyncCheck: false
   ## @param sentinel.configuration Configuration for Redis(R) Sentinel nodes
   ## ref: https://redis.io/topics/sentinel
   ##
@@ -1626,9 +1629,6 @@ sentinel:
     ##
     enabled: false
     service:
-      ## @param sentinel.externalAccess.service.loadBalancerIPAnnotaion Name of annotation to specify fixed IP for service in.
-      ##
-      loadBalancerIPAnnotaion: ""
       ## @param sentinel.externalAccess.service.type Type for the services used to expose every Pod
       ## At this moment only LoadBalancer is supported
       ##
@@ -1636,13 +1636,12 @@ sentinel:
       ## @param sentinel.externalAccess.service.redisPort Port for the services used to expose redis-server
       ##
       redisPort: 6379
-
       ## @param sentinel.externalAccess.service.sentinelPort Port for the services used to expose redis-sentinel
       ##
       sentinelPort: 26379
-      ## @param sentinel.externalAccess.service.loadBalancerIP Array of load balancer IPs for each Redis(R) node. Length must be the same as sentinel.replicaCount
+      ## @param sentinel.externalAccess.service.loadBalancerIPs Array of load balancer IPs for each Redis(R) node. Length must be the same as sentinel.replicaCount
       ##
-      loadBalancerIP: []
+      loadBalancerIPs: []
       ## @param sentinel.externalAccess.service.loadBalancerClass Load Balancer class if service type is `LoadBalancer` (optional, cloud specific)
       ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-loadbalancer
       ##
@@ -1657,9 +1656,11 @@ sentinel:
       ## @param sentinel.externalAccess.service.annotations Annotations to add to the services used to expose every Pod of the Redis(R) Cluster
       ##
       annotations: {}
+      ## @param sentinel.externalAccess.service.loadBalancerIPAnnotation Name of annotation to specify fixed IP for the LoadBalancer service
+      ##
+      loadBalancerIPAnnotation: ""
 
 ## @section Other Parameters
-##
 
 ## @param serviceBindings.enabled Create secret for service binding (Experimental)
 ## Ref: https://servicebinding.io/service-provider/
@@ -1716,11 +1717,15 @@ networkPolicy:
   ##                   - frontend
   ##
   extraEgress: []
+  ## @param networkPolicy.addExternalClientAccess Allow access from pods with client label set to "true". Ignored if `networkPolicy.allowExternal` is true.
   ## @param networkPolicy.ingressNSMatchLabels Labels to match to allow traffic from other namespaces
   ## @param networkPolicy.ingressNSPodMatchLabels Pod labels to match to allow traffic from other namespaces
+  ## @param networkPolicy.ingressReleaseMatchLabels [object] Labels to match pods in the same release to allow traffic from. Ignored if `networkPolicy.allowExternal` is true.
   ##
+  addExternalClientAccess: true
   ingressNSMatchLabels: {}
   ingressNSPodMatchLabels: {}
+  ingressReleaseMatchLabels: {}
   metrics:
     ## @param networkPolicy.metrics.allowExternal Don't require client label for connections for metrics endpoint
     ## When set to false, only pods with the correct client label will have network access to the metrics port
