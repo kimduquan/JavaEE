@@ -11,7 +11,7 @@ export EPF_CLUSTER_CERT=/home/kimduquan/localhost.direct.SS.crt
 export EPF_CLUSTER_CERT_KEY=/home/kimduquan/localhost.direct.SS.key
 export EPF_CLUSTER_IMAGE_REGISTRY=192.168.1.2:32000
 ENV_DIR="$1"
-if [ -z "$SECRET" ]; then
+if [ -z "$ENV_DIR" ]; then
 	:
 else
 	"${ENV_DIR}prod-env.sh"
