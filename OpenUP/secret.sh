@@ -1,5 +1,4 @@
 SECRET="$1"
-SECRET_DIR="/home/kimduquan/.secret"
 SECRET_FILE="$SECRET_DIR/$SECRET.yaml"
 if [ -z "$SECRET" ]; then
 	:
