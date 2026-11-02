@@ -909,9 +909,9 @@ autoscaling:
   ## @param autoscaling.hpa.targetMemory Target Memory utilization percentage
   ##
   hpa:
-    enabled: false
+    enabled: true
     minReplicas: 1
-    maxReplicas: 1
+    maxReplicas: 3
     targetCPU: ""
     targetMemory: ""
     ## HPA Scaling Behavior
