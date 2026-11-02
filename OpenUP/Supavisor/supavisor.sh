@@ -1,6 +1,7 @@
 . ../env.sh ../
 SUPAVISOR_IMAGE="supabase/supavisor:2.9.13"
 ../registry.sh ghcr.io "$SUPAVISOR_IMAGE"
+../secret.sh postgresql
 ../secret.sh supavisor
 mvn clean install -U
 kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG delete hpa supavisor
