@@ -6,7 +6,7 @@ KEYCLOAK_CLI_IMAGE_REPOSITORY="bitnamilegacy/keycloak-config-cli"
 KEYCLOAK_CLI_IMAGE_TAG="6.4.0-debian-12-r11"
 ../registry.sh "localhost:32000" "$KEYCLOAK_CLI_IMAGE_REPOSITORY:$KEYCLOAK_CLI_IMAGE_TAG"
 if [ -z "$MANAGEMENT_DOMAIN" ]; then
-    MANAGEMENT_IP=$(kubectl get svc -A --no-headers --field-selector spec.type=LoadBalancer,metadata.name!=epf-cluster-lb | awk '{print $5}')
+    MANAGEMENT_IP=$(kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG get svc -A --no-headers --field-selector spec.type=LoadBalancer | awk '{print $5}')
     MANAGEMENT_DOMAIN=$(echo "$MANAGEMENT_IP" | tr '.' '-')
     MANAGEMENT_DOMAIN="auth-$MANAGEMENT_DOMAIN.nip.io"
 fi
