@@ -16,7 +16,15 @@ spec:
     deploymentReplicas: 0
     nodeSelector:
       kubernetes.io/os: linux
+      node-role.kubernetes.io/control-plane: 
+    tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/control-plane
     uploadProxyReplicas: 0
   workload:
     nodeSelector:
       kubernetes.io/os: linux
+      node-role.kubernetes.io/control-plane: ""
+    tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/control-plane
