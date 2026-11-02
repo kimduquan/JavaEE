@@ -31,3 +31,12 @@ cd ../../
 cd Redis
 ./redis.sh
 cd ../
+
+cd frp/frpc
+export DEPLOYMENT=production
+./frpc.sh
+export DEPLOYMENT=staging
+./frpc.sh
+export DEPLOYMENT=dev
+./frpc.sh
+cd ../../
