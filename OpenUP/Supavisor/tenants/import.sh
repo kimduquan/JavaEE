@@ -2,5 +2,5 @@ Authorization=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1a
 POD=$(kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG get pod -l "app.kubernetes.io/name=supavisor" -o jsonpath='{.items[0].metadata.name}')
 IMPORT_FILE="$1"
 TENANT="$2"
-kubectl cp "$IMPORT_FILE" "$POD:/tmp/"
-kubectl exec -it $POD -- curl -X PUT "http://localhost:4000/api/tenants/$TENANT" -H "Content-Type: application/json" -H "Authorization: Bearer $Authorization" -v --data @"/tmp/$IMPORT_FILE"
+kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG cp "$IMPORT_FILE" "$POD:/tmp/"
+kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG exec -it $POD -- curl -X PUT "http://localhost:4000/api/tenants/$TENANT" -H "Content-Type: application/json" -H "Authorization: Bearer $Authorization" -v --data @"/tmp/$IMPORT_FILE"
