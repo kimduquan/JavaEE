@@ -335,8 +335,8 @@ master:
   ##
   resources:
     requests:
-      cpu: 25m
-      memory: 128Mi
+      cpu: 60m
+      memory: 24Mi
     limits:
       cpu: 150m
       memory: 192Mi
@@ -833,8 +833,8 @@ replica:
   ##
   resources:
     requests:
-      cpu: 25m
-      memory: 128Mi
+      cpu: 100m
+      memory: 16Mi
     limits:
       cpu: 150m
       memory: 192Mi
