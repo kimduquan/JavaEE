@@ -14,9 +14,9 @@ ENV_DIR="$1"
 if [ -z "$SECRET" ]; then
 	:
 else
-	. "${ENV_DIR}prod-env.sh"
-	. "${ENV_DIR}stage-env.sh"
-	. "${ENV_DIR}dev-env.sh"
+	"${ENV_DIR}prod-env.sh"
+	"${ENV_DIR}stage-env.sh"
+	"${ENV_DIR}dev-env.sh"
 fi
 export MANAGEMENT_DOMAIN=
 export REALM_NAME=$PRODUCTION_REALM_NAME
