@@ -113,10 +113,10 @@ image:
 auth:
   ## @param auth.adminUser Keycloak administrator user
   ##
-  adminUser:
+  adminUser: ""
   ## @param auth.adminPassword Keycloak administrator password for the new user
   ##
-  adminPassword:
+  adminPassword: ""
   ## @param auth.existingSecret Existing secret containing Keycloak admin password
   ##
   existingSecret: "keycloak-admin"
@@ -652,11 +652,11 @@ ingress:
   apiVersion: ""
   ## @param ingress.hostname Default host for the ingress record (evaluated as template)
   ##
-  hostname:
+  hostname: ""
   ## @param ingress.ingressClassName IngressClass that will be be used to implement the Ingress (evaluated as template)
   ## Required if you have more than one IngressClass marked as the default for your cluster
   ##
-  ingressClassName:
+  ingressClassName: ""
   ## @param ingress.controller The ingress controller type. Currently supports `default` and `gce`
   ## leave as `default` for most ingress controllers.
   ## set to `gce` if using the GCE ingress controller
@@ -750,7 +750,7 @@ ingress:
   ##             name: http
   ##
   extraRules:
-    - host:
+    - host: ""
       http:
         paths:
           - path: /auth
@@ -760,7 +760,7 @@ ingress:
                 name: keycloak
                 port:
                   name: http
-    - host:
+    - host: ""
       http:
         paths:
           - path: /auth
@@ -770,7 +770,7 @@ ingress:
                 name: keycloak
                 port:
                   name: http
-    - host:
+    - host: ""
       http:
         paths:
           - path: /auth
@@ -1358,10 +1358,10 @@ postgresql:
 externalDatabase:
   host: "supavisor"
   port: 5432
-  user:
+  user: ""
   database: keycloak
   schema: public
-  password:
+  password: ""
   existingSecret: "keycloak-db"
   existingSecretUserKey: "DATABASE_USER"
   existingSecretPasswordKey: "DATABASE_PASSWORD"
