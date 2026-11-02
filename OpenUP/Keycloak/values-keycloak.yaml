@@ -750,7 +750,7 @@ ingress:
   ##             name: http
   ##
   extraRules:
-    - host: "prod"
+    - host: ""
       http:
         paths:
           - path: /auth
@@ -760,7 +760,7 @@ ingress:
                 name: keycloak
                 port:
                   name: http
-    - host: "stage"
+    - host: ""
       http:
         paths:
           - path: /auth
@@ -770,7 +770,7 @@ ingress:
                 name: keycloak
                 port:
                   name: http
-    - host: "dev"
+    - host: ""
       http:
         paths:
           - path: /auth
