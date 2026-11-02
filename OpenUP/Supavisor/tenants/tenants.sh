@@ -1,3 +1,4 @@
+. ../../env.sh ../../
 ../../secret.sh postgres.json
 ../../secret.sh epf.json
 ../../secret.sh keycloak.json
