@@ -17,6 +17,7 @@ cd ../
 kubectl --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" create ns $STAGING_NAMESPACE
 kubectl --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" create ns $PRODUCTION_NAMESPACE
 
+cd ../
 cd PostgreSQL
 ./postgresql.sh
 cd ../
