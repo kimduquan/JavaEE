@@ -101,7 +101,7 @@ command:
 
 cmdOptions:
   v: 3
-#   feature-gates: "EvictionsInBackground=true"
+  feature-gates: "EvictionsInBackground=true"
 
 # Recommended to use the latest Policy API version supported by the Descheduler app version
 deschedulerPolicyAPIVersion: "descheduler/v1alpha2"
@@ -126,6 +126,9 @@ deschedulerPolicy:
       pluginConfig:
         - name: DefaultEvictor
           args:
+            namespaces:
+              includeNamespaces:
+                - "default"
             podProtections:
               defaultDisabled:
               - "PodsWithLocalStorage"
