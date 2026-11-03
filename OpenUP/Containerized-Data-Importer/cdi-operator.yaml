@@ -5802,10 +5802,6 @@ spec:
         terminationMessagePolicy: FallbackToLogsOnError
       nodeSelector:
         kubernetes.io/os: linux
-        node-role.kubernetes.io/control-plane: ""
-      tolerations:
-        - effect: NoSchedule
-          key: node-role.kubernetes.io/control-plane
       securityContext:
         runAsNonRoot: true
       serviceAccountName: cdi-operator
