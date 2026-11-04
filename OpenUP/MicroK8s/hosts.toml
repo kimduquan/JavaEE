@@ -1,4 +1,4 @@
-server = "http://172.23.225.247:32000"
+server = "http://192.168.1.2:32000"
 
-[host."http://172.23.225.247:32000"]
+[host."http://192.168.1.2:32000"]
 capabilities = ["pull", "resolve"]
