@@ -8,8 +8,8 @@ sudo microk8s inspect
 sudo sed -i '/\[plugins\."io\.containerd\.grpc\.v1\.cri"\]/a \  device_ownership_from_security_context = true' /var/snap/microk8s/current/args/containerd-template.toml
 #sudo mkdir -p /var/snap/microk8s/current/args/containerd.d
 #sudo cp capk-cdi.toml /var/snap/microk8s/current/args/containerd.d
-#sudo mkdir -p /var/snap/microk8s/current/args/certs.d/172.23.225.247:32000
-#sudo cp hosts.toml /var/snap/microk8s/current/args/certs.d/172.23.225.247:32000
+sudo mkdir -p /var/snap/microk8s/current/args/certs.d/192.168.1.2:32000
+sudo cp hosts.toml /var/snap/microk8s/current/args/certs.d/192.168.1.2:32000
 #./stop.sh
 #sudo unlink /var/lib/kubelet
 #sudo umount /var/lib/kubelet
