@@ -101,14 +101,14 @@ command:
 
 cmdOptions:
   v: 3
-  feature-gates: "EvictionsInBackground=true"
+  # feature-gates: "EvictionsInBackground=true"
 
 # Recommended to use the latest Policy API version supported by the Descheduler app version
 deschedulerPolicyAPIVersion: "descheduler/v1alpha2"
 
 # deschedulerPolicy contains the policies the descheduler will execute.
 deschedulerPolicy:
-  # nodeSelector: "key1=value1,key2=value2"
+  nodeSelector: "node-role.kubernetes.io/worker="
   # maxNoOfPodsToEvictPerNode: 10
   # maxNoOfPodsToEvictPerNamespace: 10
   # metricsProviders:
@@ -126,9 +126,6 @@ deschedulerPolicy:
       pluginConfig:
         - name: DefaultEvictor
           args:
-            namespaces:
-              includeNamespaces:
-                - "default"
             podProtections:
               defaultDisabled:
               - "PodsWithLocalStorage"
