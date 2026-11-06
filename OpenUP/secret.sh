@@ -1,8 +1,13 @@
 SECRET="$1"
-SECRET_FILE="$SECRET_DIR/$SECRET.yaml"
+SECRET_NAMESPACE="$2"
 if [ -z "$SECRET" ]; then
 	:
 else
+	if [ -z "$SECRET_NAMESPACE" ]; then
+		SECRET_FILE="$SECRET_DIR/$SECRET.yaml"
+	else
+		SECRET_FILE="$SECRET_DIR/$SECRET_NAMESPACE/$SECRET.yaml"
+	fi
 	export DEFAULT_PASSWORD=
 	if [ -f "$SECRET_FILE" ]; then
 		:
