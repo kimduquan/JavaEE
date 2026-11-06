@@ -62,20 +62,20 @@ else
 			--dry-run=client -o yaml > "$SECRET_FILE"
 		kubectl apply -f "$SECRET_FILE"
 	elif [ "$SECRET" = "gitea-secret" ]; then
-		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic $SECRET -n $NAMESPACE \
+		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic $SECRET -n $SECRET_NAMESPACE \
 			--from-literal=database_user='gitea.gitea' \
 			--from-literal=database_passwd=${DEFAULT_PASSWORD} \
 			--dry-run=client -o yaml > "$SECRET_FILE"
 		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f "$SECRET_FILE"
 	elif [ "$SECRET" = "gitea-admin-secret" ]; then
-		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic $SECRET -n $NAMESPACE \
+		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic $SECRET -n $SECRET_NAMESPACE \
 			--from-literal=email='' \
 			--from-literal=username='gitea_admin' \
 			--from-literal=password=${DEFAULT_PASSWORD} \
 			--dry-run=client -o yaml > "$SECRET_FILE"
 		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f "$SECRET_FILE"
 	elif [ "$SECRET" = "gitea-oauth-secret" ]; then
-		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic $SECRET -n $NAMESPACE \
+		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic $SECRET -n $SECRET_NAMESPACE \
 			--from-literal=secret='cIkzKJZ4A7jXKpXfaxC4GaLxJAmmEqhP' \
 			--from-literal=key='account' \
 			--dry-run=client -o yaml > "$SECRET_FILE"
@@ -88,14 +88,14 @@ else
 			--dry-run=client -o yaml > "$SECRET_FILE"
 		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f "$SECRET_FILE"
 	elif [ "$SECRET" = "gitea-smtp" ]; then
-		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic $SECRET -n $NAMESPACE \
+		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic $SECRET -n $SECRET_NAMESPACE \
 			--from-literal=host='' \
 			--from-literal=user='' \
 			--from-literal=password='' \
 			--dry-run=client -o yaml > "$SECRET_FILE"
 		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f "$SECRET_FILE"
 	elif [ "$SECRET" = "redis-auth" ]; then
-		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic $SECRET \
+		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic $SECRET -n $SECRET_NAMESPACE \
 			--from-literal=password=${DEFAULT_PASSWORD} \
 			--dry-run=client -o yaml > "$SECRET_FILE"
 		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f "$SECRET_FILE"
