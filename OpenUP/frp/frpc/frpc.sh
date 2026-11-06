@@ -7,6 +7,8 @@ mvn clean package -U
 HELM_VALUES="target/helm/kubernetes/frpc/values.yaml"
 if [ "$DEPLOYMENT" = "dev" ]; then
     HELM_VALUES="values-dev.yaml"
+elif [ "$DEPLOYMENT" = "stage" ]; then
+    HELM_VALUES="values-stage.yaml"
 fi
 kubectl --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" --namespace $NAMESPACE delete --wait hpa frpc
 helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" --namespace $NAMESPACE upgrade --install frpc target/helm/kubernetes/frpc --wait -f $HELM_VALUES \
