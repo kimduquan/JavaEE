@@ -1,9 +1,9 @@
 . ../env.sh ../
-../secret.sh gitea-smtp
-../secret.sh gitea-secret
-../secret.sh gitea-admin-secret
-../secret.sh gitea-oauth-secret
-../secret.sh redis-auth
+../secret.sh gitea-smtp $NAMESPACE
+../secret.sh gitea-secret $NAMESPACE
+../secret.sh gitea-admin-secret $NAMESPACE
+../secret.sh gitea-oauth-secret $NAMESPACE
+../secret.sh redis-auth $NAMESPACE
 ../registry.sh docker.gitea.com "gitea/gitea:1.27.0-rootless"
 OAUTH_DISCOVERY_URL="https://$DOMAIN/auth/realms/$REALM_NAME/.well-known/openid-configuration"
 ROOT_URL="https://git.$DOMAIN"
