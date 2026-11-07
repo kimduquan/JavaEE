@@ -5,13 +5,16 @@
 ../secret.sh gitea-oauth-secret $NAMESPACE
 ../secret.sh redis-auth $NAMESPACE
 ../registry.sh docker.gitea.com "gitea/gitea:1.27.0-rootless"
-OAUTH_DISCOVERY_URL="https://$DOMAIN/auth/realms/$REALM_NAME/.well-known/openid-configuration"
+OAUTH_DOMAIN=$DOMAIN
 ROOT_URL="https://git.$DOMAIN"
+if [ "$DEPLOYMENT" = "dev" ]; then
+	OAUTH_DOMAIN=$STAGING_DOMAIN
+	ROOT_URL="https://git-$DOMAIN"
+fi
+OAUTH_DISCOVERY_URL="https://$OAUTH_DOMAIN/auth/realms/$REALM_NAME/.well-known/openid-configuration"
 REDIS_PASSWORD=$(kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG get secret redis-auth -o jsonpath='{.data.password}' | base64 --decode)
 REDIS_CONNECTION="redis://:${REDIS_PASSWORD}@redis-master.default.svc.clusterset.local:6379/${REDIS_DATABASE}"
 CACHE_HOST="redis://:${REDIS_PASSWORD}@redis-master.default.svc.clusterset.local:6379/${REDIS_DATABASE}?pool_size=100&idle_timeout=180s"
-kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG delete secret dev-cert -n $NAMESPACE --wait
-kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic dev-cert --from-file=dev.crt=dev.crt -n $NAMESPACE
 helm repo add gitea-charts https://dl.gitea.com/charts/
 helm --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG upgrade --install gitea gitea-charts/gitea --version 12.7.0 --wait -f values.yaml \
 	--set "global.imageRegistry=$EPF_CLUSTER_IMAGE_REGISTRY" \
