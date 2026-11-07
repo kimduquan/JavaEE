@@ -10,5 +10,5 @@ POSTGRES_PASSWORD=$(kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG get secret pos
 helm --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG upgrade --install supavisor target/helm/kubernetes/supavisor --wait --timeout 40m \
 	--set "app.image=$EPF_CLUSTER_IMAGE_REGISTRY/$SUPAVISOR_IMAGE" \
 	--set "app.envs.DATABASE_URL=ecto://postgres:$POSTGRES_PASSWORD@postgresql-primary.default.svc.clusterset.local:5432/postgres"
-kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG autoscale deployment supavisor --max 3
+kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG autoscale deployment supavisor --max 1
 kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG wait pod --for condition=ready --timeout=300s -l app.kubernetes.io/name=supavisor
