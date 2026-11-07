@@ -9,6 +9,8 @@ if [ "$DEPLOYMENT" = "dev" ]; then
     HELM_VALUES="values-dev.yaml"
 elif [ "$DEPLOYMENT" = "staging" ]; then
     HELM_VALUES="values-stage.yaml"
+elif [ "$DEPLOYMENT" = "management" ]; then
+    HELM_VALUES="values-mgmt.yaml"
 fi
 kubectl --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" --namespace $NAMESPACE delete --wait hpa frpc
 helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" --namespace $NAMESPACE upgrade --install frpc target/helm/kubernetes/frpc --wait -f $HELM_VALUES \
