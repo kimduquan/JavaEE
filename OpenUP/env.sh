@@ -20,7 +20,6 @@ else
 	. "${ENV_DIR}dev-env.sh"
 	. "${ENV_DIR}mgmt-env.sh"
 fi
-export MANAGEMENT_DOMAIN=
 export REALM_NAME=$DEV_REALM_NAME
 export DOMAIN=$DEV_DOMAIN
 export NAMESPACE=$DEV_NAMESPACE
@@ -46,6 +45,14 @@ elif [ "$DEPLOYMENT" = "staging" ]; then
     export DEPLOYMENT_POSTFIX=$STAGING_DEPLOYMENT_POSTFIX
     export REALM_NAME=$STAGING_REALM_NAME
     export REDIS_DATABASE=$STAGING_REDIS_DATABASE
+elif [ "$DEPLOYMENT" = "management" ]; then
+    export PUBLIC_IP=$MANAGEMENT_PUBLIC_IP
+    export DOMAIN=$MANAGEMENT_DOMAIN
+    export NAMESPACE=$MANAGEMENT_NAMESPACE
+    export GATEWAY_IP=$MANAGEMENT_GATEWAY_IP
+    export DEPLOYMENT_POSTFIX=$MANAGEMENT_DEPLOYMENT_POSTFIX
+    export REALM_NAME=$MANAGEMENT_REALM_NAME
+    export REDIS_DATABASE=$MANAGEMENT_REDIS_DATABASE
 fi
 export kubectl="sudo microk8s kubectl"
 export helm="sudo microk8s helm"
