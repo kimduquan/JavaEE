@@ -17,6 +17,7 @@ envsubst < frps.yaml | kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESP
 kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE delete configmap frpc --wait
 kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE create configmap frpc --from-file=frpc=frpc.toml
 envsubst < frps.yaml | kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE apply -f -
+kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE wait --for=jsonpath='{.endpoints[*].conditions.ready}'='true' endpointslice -l kubernetes.io/service-name=frps
 kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE delete --wait hpa frpc
 helm --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE upgrade --install frpc target/helm/kubernetes/frpc --wait -f $HELM_VALUES \
 	--set "app.envs.FRP_PROXIES_HTTP_NAME=$DEPLOYMENT_POSTFIX-http" \
