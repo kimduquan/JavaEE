@@ -18,6 +18,7 @@ else
 	. "${ENV_DIR}prod-env.sh"
 	. "${ENV_DIR}stage-env.sh"
 	. "${ENV_DIR}dev-env.sh"
+	. "${ENV_DIR}mgmt-env.sh"
 fi
 export MANAGEMENT_DOMAIN=
 export REALM_NAME=$DEV_REALM_NAME
