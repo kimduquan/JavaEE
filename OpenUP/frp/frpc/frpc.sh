@@ -24,4 +24,4 @@ helm --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE upgrade --install frpc
 	--set "app.envs.FRP_PROXIES_HTTPS_NAME=$DEPLOYMENT_POSTFIX-https" \
 	--set "app.envs.FRP_PROXIES_HTTP_LOCAL_IP=$INGRESS_SERVICE" \
 	--set "app.envs.FRP_PROXIES_HTTPS_LOCAL_IP=$INGRESS_SERVICE"
-kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE autoscale deployment frpc --max 3
+kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE autoscale deployment frpc --max 1
