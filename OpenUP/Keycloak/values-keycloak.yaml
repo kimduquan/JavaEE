@@ -911,7 +911,7 @@ autoscaling:
   hpa:
     enabled: true
     minReplicas: 1
-    maxReplicas: 3
+    maxReplicas: 1
     targetCPU: ""
     targetMemory: ""
     ## HPA Scaling Behavior
