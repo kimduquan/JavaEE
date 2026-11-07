@@ -10,7 +10,6 @@ if [ -z "$MANAGEMENT_DOMAIN" ]; then
     MANAGEMENT_DOMAIN=$(echo "$MANAGEMENT_IP" | tr '.' '-')
     MANAGEMENT_DOMAIN="auth-$MANAGEMENT_DOMAIN.nip.io"
 fi
-. ../secret.sh
 ../secret.sh keycloak-admin
 ../secret.sh keycloak-db
 kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG delete configmap keycloak-realms --wait
