@@ -8,8 +8,8 @@ KEYCLOAK_CLI_IMAGE_TAG="6.4.0-debian-12-r11"
 if [ -z "$MANAGEMENT_DOMAIN" ]; then
     MANAGEMENT_IP=$(kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG get svc -A --no-headers --field-selector spec.type=LoadBalancer | awk '{print $5}')
     MANAGEMENT_DOMAIN=$(echo "$MANAGEMENT_IP" | tr '.' '-')
-    MANAGEMENT_DOMAIN="auth-$MANAGEMENT_DOMAIN.nip.io"
 fi
+AUTH_DOMAIN="auth.$MANAGEMENT_DOMAIN"
 ../secret.sh keycloak-admin
 ../secret.sh keycloak-db
 kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG delete configmap keycloak-realms --wait
@@ -20,7 +20,7 @@ helm --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG upgrade --install keycloak oci://regi
 	--set "keycloakConfigCli.image.registry=$EPF_CLUSTER_IMAGE_REGISTRY" \
 	--set "keycloakConfigCli.image.repository=$KEYCLOAK_CLI_IMAGE_REPOSITORY" \
 	--set "keycloakConfigCli.image.tag=$KEYCLOAK_CLI_IMAGE_TAG" \
-	--set "ingress.hostname=$MANAGEMENT_DOMAIN" \
+	--set "ingress.hostname=$AUTH_DOMAIN" \
 	--set "ingress.extraRules[0].host=$PRODUCTION_DOMAIN" \
 	--set "ingress.extraRules[1].host=$STAGING_DOMAIN" \
 	--set "ingress.extraRules[2].host=$DEV_DOMAIN" \
