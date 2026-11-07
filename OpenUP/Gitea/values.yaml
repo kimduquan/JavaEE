@@ -177,12 +177,6 @@ ingress:
     - host:
       paths:
         - path: /
-    - host:
-      paths:
-        - path: /
-    - host:
-      paths:
-        - path: /
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
