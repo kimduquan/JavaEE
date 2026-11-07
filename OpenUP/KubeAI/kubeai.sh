@@ -1,6 +1,7 @@
 sudo microk8s ctr image pull docker.io/vllm/vllm-openai:v0.31.0
 helm repo add kubeai https://www.kubeai.org
 helm repo update
+. ../env.sh ../
 ../secret.sh huggingface
 kubectl apply -f pvc.yaml
 #kubectl delete -f job.yaml
