@@ -13,7 +13,8 @@ elif [ "$DEPLOYMENT" = "management" ]; then
     INGRESS_SERVICE="haproxy-kubernetes-ingress.default.svc.cluster.local"
 fi
 mvn clean package -U
-kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE delete configmap frpc
+envsubst < frps.yaml | kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE delete --wait -f -
+kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE delete configmap frpc --wait
 kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE create configmap frpc --from-file=frpc=frpc.toml
 envsubst < frps.yaml | kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE apply -f -
 kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE delete --wait hpa frpc
