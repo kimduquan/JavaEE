@@ -1,7 +1,7 @@
 helm repo add autoscaler https://kubernetes.github.io/autoscaler
 helm repo update
 . ../env.sh ../
-IMAGE_TAG=v1.35.0
+IMAGE_TAG=v1.37.0
 ../registry.sh registry.k8s.io "autoscaling/cluster-autoscaler:$IMAGE_TAG"
 kubectl delete secret epf-cluster
 kubectl create secret generic epf-cluster --from-file=value=${EPF_CLUSTER_KUBE_CONFIG}
