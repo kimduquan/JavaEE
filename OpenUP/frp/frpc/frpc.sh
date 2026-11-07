@@ -8,6 +8,7 @@ elif [ "$DEPLOYMENT" = "staging" ]; then
     HELM_VALUES="values-stage.yaml"
 elif [ "$DEPLOYMENT" = "management" ]; then
     HELM_VALUES="values-mgmt.yaml"
+    KUBE_CONFIG=
 fi
 mvn clean package -U
 kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE delete configmap frpc
