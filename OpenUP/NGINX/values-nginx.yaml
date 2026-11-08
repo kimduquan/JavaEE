@@ -878,7 +878,7 @@ httpRoute:
   matches:
     - path:
         type: PathPrefix
-        value: /
+        value: /auth
   ## @param httpRoute.filters List of filter rules applied to the HTTPRoute for the default svc backend reference
   ##
   filters: []
