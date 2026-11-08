@@ -6,3 +6,4 @@ kubectl --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" apply --server-side -f https:/
 kubectl --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" apply --server-side -f https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/v1.6.3/config/crd/standard/gateway.networking.k8s.io_grpcroutes.yaml
 kubectl --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" apply --server-side -f https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/v1.6.3/config/crd/standard/gateway.networking.k8s.io_backendtlspolicies.yaml
 kubectl --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" apply --server-side -f https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/v1.6.3/config/crd/standard/gateway.networking.k8s.io_tlsroutes.yaml
+kubectl --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" apply -f gateway.yaml
