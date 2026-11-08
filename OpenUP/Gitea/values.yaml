@@ -147,7 +147,7 @@ service:
   ssh:
     type: ClusterIP
     port: 2222
-    clusterIP: ""
+    # clusterIP: None
     loadBalancerIP:
     nodePort:
     externalTrafficPolicy:
