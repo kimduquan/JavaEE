@@ -2,15 +2,16 @@
 . ../env.sh
 HELM_VALUES="target/helm/kubernetes/frpc/values.yaml"
 KUBE_CONFIG="${EPF_CLUSTER_KUBE_CONFIG}"
-INGRESS_SERVICE="cilium-ingress.kube-system.svc.cluster.local"
+SERVICE="cilium-ingress.kube-system.svc.cluster.local"
 if [ "$DEPLOYMENT" = "dev" ]; then
     HELM_VALUES="values-dev.yaml"
+    SERVICE="cilium-gateway-epf-gateway.default.svc.cluster.local"
 elif [ "$DEPLOYMENT" = "staging" ]; then
     HELM_VALUES="values-stage.yaml"
 elif [ "$DEPLOYMENT" = "management" ]; then
     HELM_VALUES="values-mgmt.yaml"
     KUBE_CONFIG=
-    INGRESS_SERVICE="haproxy-kubernetes-ingress.default.svc.cluster.local"
+    SERVICE="haproxy-kubernetes-ingress.default.svc.cluster.local"
 fi
 mvn clean package -U
 envsubst < frps.yaml | kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE delete --wait -f -
@@ -22,6 +23,6 @@ kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE delete --wait hpa f
 helm --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE upgrade --install frpc target/helm/kubernetes/frpc --wait -f $HELM_VALUES \
 	--set "app.envs.FRP_PROXIES_HTTP_NAME=$DEPLOYMENT_POSTFIX-http" \
 	--set "app.envs.FRP_PROXIES_HTTPS_NAME=$DEPLOYMENT_POSTFIX-https" \
-	--set "app.envs.FRP_PROXIES_HTTP_LOCAL_IP=$INGRESS_SERVICE" \
-	--set "app.envs.FRP_PROXIES_HTTPS_LOCAL_IP=$INGRESS_SERVICE"
+	--set "app.envs.FRP_PROXIES_HTTP_LOCAL_IP=$SERVICE" \
+	--set "app.envs.FRP_PROXIES_HTTPS_LOCAL_IP=$SERVICE"
 kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE autoscale deployment frpc --max 1
