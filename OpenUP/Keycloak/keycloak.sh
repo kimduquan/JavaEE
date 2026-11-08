@@ -5,12 +5,9 @@
 KEYCLOAK_CLI_IMAGE_REPOSITORY="bitnamilegacy/keycloak-config-cli"
 KEYCLOAK_CLI_IMAGE_TAG="6.4.0-debian-12-r11"
 ../registry.sh "localhost:32000" "$KEYCLOAK_CLI_IMAGE_REPOSITORY:$KEYCLOAK_CLI_IMAGE_TAG"
-AUTH_DOMAIN="$MANAGEMENT_DOMAIN"
-if [ -z "$MANAGEMENT_DOMAIN" ]; then
-    MANAGEMENT_IP=$(kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG get svc -A --no-headers --field-selector spec.type=LoadBalancer | awk '{print $5}')
-    MANAGEMENT_DOMAIN=$(echo "$MANAGEMENT_IP" | tr '.' '-')
-    AUTH_DOMAIN="auth-$MANAGEMENT_DOMAIN"
-fi
+AUTH_IP=$(kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG get svc -A --no-headers --field-selector spec.type=LoadBalancer | awk '{print $5}')
+AUTH_DOMAIN=$(echo "$AUTH_IP" | tr '.' '-')
+AUTH_DOMAIN="auth-$AUTH_DOMAIN"
 ../secret.sh keycloak-admin
 ../secret.sh keycloak-db
 kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG delete configmap keycloak-realms --wait
