@@ -865,7 +865,8 @@ httpRoute:
   ##     sectionName: http
   ##     namespace: default
   ##
-  parentRefs: []
+  parentRefs:
+    - name: epf-gateway
   ## @param httpRoute.hostnames [array] List of hostnames matching HTTP header
   ##
   hostnames:
