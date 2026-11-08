@@ -12,3 +12,5 @@ helm --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG upgrade --install nginx oci://registr
 	--set "httpRoute.hostnames[1]=$STAGING_DOMAIN" \
 	--set "httpRoute.hostnames[2]=$DEV_DOMAIN"
 kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG -n keda apply -f ref-grant.yaml
+envsubst < route.yaml | kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f -
+kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f scale.yaml
