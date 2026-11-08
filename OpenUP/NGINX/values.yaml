@@ -8,6 +8,7 @@
 
 ## @param global.imageRegistry Global Docker image registry
 ## @param global.imagePullSecrets Global Docker registry secret names as an array
+## @param global.defaultFips Default value for the FIPS configuration (allowed values: '', restricted, relaxed, off). Can be overridden by the 'fips' object
 ##
 global:
   imageRegistry: ""
@@ -31,6 +32,13 @@ global:
       ## @param global.compatibility.openshift.adaptSecurityContext Adapt the securityContext sections of the deployment to make them compatible with Openshift restricted-v2 SCC: remove runAsUser, runAsGroup and fsGroup and let the platform use their allowed default IDs. Possible values: auto (apply if the detected running cluster is Openshift), force (perform the adaptation always), disabled (do not perform adaptation)
       ##
       adaptSecurityContext: auto
+  ##  Configure FIPS mode: '', 'restricted', 'relaxed', 'off'
+  ##
+  defaultFips: restricted
+  ## @param global.clusterDomain Kubernetes cluster domain
+  ##
+  clusterDomain: cluster.local
+
 ## @section Common parameters
 
 ## @param nameOverride String to partially override nginx.fullname template (will maintain the release name)
@@ -140,6 +148,9 @@ replicaCount: 1
 ## @param revisionHistoryLimit The number of old history to retain to allow rollback
 ##
 revisionHistoryLimit: 10
+## @param enableServiceLinks Whether information about services should be injected into pod's environment variable
+##
+enableServiceLinks: true
 ## @param updateStrategy.type NGINX deployment strategy type
 ## @param updateStrategy.rollingUpdate NGINX deployment rolling update configuration parameters
 ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
@@ -230,6 +241,10 @@ priorityClassName: ""
 ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
 ##
 schedulerName: ""
+## @param runtimeClassName Name of the runtime class to be used by pod(s)
+## ref: https://kubernetes.io/docs/concepts/containers/runtime-class/
+##
+runtimeClassName: ""
 ## @param terminationGracePeriodSeconds In seconds, time the given to the NGINX pod needs to terminate gracefully
 ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
 ##
@@ -322,7 +337,7 @@ containerSecurityContext:
 containerPorts:
   http: 8080
   https: 8443
-## @param extraContainerPorts Array of additional container ports for the Nginx container
+## @param extraContainerPorts Array of additional container ports for the NGINX container
 ## e.g:
 ## extraContainerPorts:
 ##   - name: grpc
@@ -350,6 +365,10 @@ resourcesPreset: "nano"
 ##     memory: 1024Mi
 ##
 resources: {}
+## @param fips.openssl Configure OpenSSL FIPS mode: '', 'restricted', 'relaxed', 'off'. If empty (""), 'global.defaultFips' would be used
+##
+fips:
+  openssl: ""
 ## NGINX containers' lifecycleHooks
 ## ref: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/attach-handler-lifecycle-event/
@@ -543,6 +562,11 @@ cloneStaticSiteFromGit:
   ## @param cloneStaticSiteFromGit.interval Interval for sidecar container pull from the Git repository
   ##
   interval: 60
+  ## FIPS configuration
+  ## @param cloneStaticSiteFromGit.fips.openssl Configure FIPS mode for OpenSSL
+  ##
+  fips:
+    openssl: ""
   ## Additional configuration for git-clone-repository initContainer
   ##
   gitClone:
@@ -751,7 +775,7 @@ service:
   ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies
   ##
   sessionAffinity: None
-  ## @param service.sessionAffinityConfig Additional settings for the sessionAffinity
+  ## @param service.sessionAffinityConfig Additional settings for the sessionAffinity. Ignored if `service.sessionAffinity` is `None`
   ## sessionAffinityConfig:
   ##   clientIP:
   ##     timeoutSeconds: 300
@@ -821,8 +845,82 @@ networkPolicy:
   ##
   ingressNSMatchLabels: {}
   ingressNSPodMatchLabels: {}
+## Gateway API HTTP routing parameters
+## ref: https://gateway-api.sigs.k8s.io/guides/http-routing/
+##
+httpRoute:
+  ## @param httpRoute.enabled Enable HTTPRoute generation for NGINX
+  ##
+  enabled: false
+  ## @param httpRoute.annotations Additional annotations for the HTTPRoute resource
+  ##
+  annotations: {}
+  ## @param httpRoute.labels Additional labels for the HTTPRoute resource
+  ##
+  labels: {}
+  ## @param httpRoute.parentRefs Gateways the HTTPRoute is attached to. If unspecified, it'll be attached to Gateway named 'gateway' in the same namespace.
+  ## e.g:
+  ## parentRefs:
+  ##   - name: my-gateway
+  ##     sectionName: http
+  ##     namespace: default
+  ##
+  parentRefs: []
+  ## @param httpRoute.hostnames [array] List of hostnames matching HTTP header
+  ##
+  hostnames:
+    - nginx.local
+  ## @param httpRoute.matches [array] List of match rules applied to the HTTPRoute for the default svc backend reference
+  ##
+  matches:
+    - path:
+        type: PathPrefix
+        value: /
+  ## @param httpRoute.filters List of filter rules applied to the HTTPRoute for the default svc backend reference
+  ##
+  filters: []
+  ## @param httpRoute.extraRules List of extra rules applied to the HTTPRoute
+  ## e.g:
+  ## extraRules:
+  ##   - matches:
+  ##       - path:
+  ##           type: PathPrefix
+  ##           value: /login
+  ##     filters:
+  ##       - type: RequestHeaderModifier
+  ##         requestHeaderModifier:
+  ##           set:
+  ##             - name: My-Overwrite-Header
+  ##               value: this-is-the-only-value
+  ##           remove:
+  ##             - User-Agent
+  ##     backendRefs:
+  ##       - name: nginx
+  ##         port: 8080
+  ##
+  extraRules: []
+## Gateway API BackendTLSPolicy parameters
+## ref: https://gateway-api.sigs.k8s.io/guides/tls/#upstream-tls
+##
+backendTLSPolicy:
+  ## @param backendTLSPolicy.enabled Enable BackendTLSPolicy generation for NGINX. Ignored if `tls.enabled` is `false`.
+  ##
+  enabled: false
+  ## @param backendTLSPolicy.annotations Additional annotations for the BackendTLSPolicy resource
+  ##
+  annotations: {}
+  ## @param backendTLSPolicy.labels Additional labels for the BackendTLSPolicy resource
+  ##
+  labels: {}
+  ## @param backendTLSPolicy.hostname SNI to connect to the backend, it must match the certificate served by the backend unless SubjectAltNames are specified.
+  ## By default, the FQDN of the backend service is used.
+  ##
+  hostname: ""
+  ## @param backendTLSPolicy.subjectAltNames List of Subject Alternative Names (SANs) to verify the backend certificate against.
+  ##
+  subjectAltNames: []
 ## Configure the ingress resource that allows you to access the
-## Nginx installation. Set up the URL
+## NGINX installation. Set up the URL
 ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ##
 ingress:
@@ -841,7 +939,7 @@ ingress:
   ## @param ingress.hostname Default host for the ingress resource
   ##
   hostname: "*.lvh.me"
-  ## @param ingress.path The Path to Nginx. You may need to set this to '/*' in order to use this with ALB ingress controllers.
+  ## @param ingress.path The Path to NGINX. You may need to set this to '/*' in order to use this with ALB ingress controllers.
   ##
   path: /
   ## @param ingress.annotations Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
@@ -860,7 +958,7 @@ ingress:
   ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
   ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
   ##
-  ingressClassName: "haproxy"
+  ingressClassName: ""
   ## @param ingress.tls Create TLS Secret
   ## TLS certificates will be retrieved from a TLS secret with name: {{- printf "%s-tls" .Values.ingress.hostname }}
   ## You can use the ingress.secrets parameter to create this TLS secret or relay on cert-manager to create it
@@ -873,8 +971,8 @@ ingress:
   ## @param ingress.extraHosts The list of additional hostnames to be covered with this ingress record.
   ## Most likely the hostname above will be enough, but in the event more hosts are needed, this is an array
   ## extraHosts:
-  ##   - name: "*.lvh.me"
-  ##     path: /
+  ## - name: nginx.local
+  ##   path: /
   ##
   extraHosts: []
   ## @param ingress.extraPaths Any additional arbitrary paths that may need to be added to the ingress under the main host.
@@ -1055,11 +1153,27 @@ metrics:
   ## @param metrics.securityContext.enabled Enabled NGINX Exporter containers' Security Context
   ## @param metrics.securityContext.seLinuxOptions [object,nullable] Set SELinux options in container
   ## @param metrics.securityContext.runAsUser Set NGINX Exporter container's Security Context runAsUser
+  ## @param metrics.securityContext.runAsGroup Set NGINX Exporter container's Security Context runAsGroup
+  ## @param metrics.securityContext.runAsNonRoot Set NGINX Exporter container's Security Context runAsNonRoot
+  ## @param metrics.securityContext.privileged Set NGINX Exporter container's Security Context privileged
+  ## @param metrics.securityContext.readOnlyRootFilesystem Set NGINX Exporter container's Security Context readOnlyRootFilesystem
+  ## @param metrics.securityContext.allowPrivilegeEscalation Set NGINX Exporter container's Security Context allowPrivilegeEscalation
+  ## @param metrics.securityContext.capabilities.drop List of capabilities to be dropped
+  ## @param metrics.securityContext.seccompProfile.type Set NGINX Exporter container's Security Context seccomp profile
   ##
   securityContext:
-    enabled: false
+    enabled: true
     seLinuxOptions: {}
     runAsUser: 1001
+    runAsGroup: 1001
+    runAsNonRoot: true
+    privileged: false
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop: ["ALL"]
+    seccompProfile:
+      type: "RuntimeDefault"
   ## Prometheus exporter service parameters
   ##
   service:
@@ -1092,6 +1206,12 @@ metrics:
   ##     memory: 1024Mi
   ##
   resources: {}
+  ## @param metrics.fips.openssl Configure OpenSSL FIPS mode: '', 'restricted', 'relaxed', 'off'. If empty (""), 'global.defaultFips' would be used
+  ## @param metrics.fips.golang Configure Golang FIPS mode: '', 'restricted', 'relaxed', 'off'. If empty (""), 'global.defaultFips' would be used
+  ##
+  fips:
+    openssl: ""
+    golang: restricted
   ## Prometheus Operator ServiceMonitor configuration
   ##
   serviceMonitor:
@@ -1120,7 +1240,7 @@ metrics:
     ##
     scrapeTimeout: ""
     ## @param metrics.serviceMonitor.selector Prometheus instance selector labels
-    ## ref: https://github.com/bitnami/charts/tree/main/bitnami/prometheus-operator#prometheus-configuration
+    ## ref: https://techdocs.broadcom.com/us/en/vmware-tanzu/bitnami-secure-images/bitnami-secure-images/services/bsi-app-doc/apps-charts-kube-prometheus-index.html#-additional-scrape-configurations
     ##
     ## selector:
     ##   prometheus: my-prometheus
@@ -1191,7 +1311,6 @@ metrics:
   ## @param metrics.readinessProbe.periodSeconds Period seconds for readinessProbe
   ## @param metrics.readinessProbe.failureThreshold Failure threshold for readinessProbe
   ## @param metrics.readinessProbe.successThreshold Success threshold for readinessProbe
-  
   ##
   readinessProbe:
     enabled: true
@@ -1211,7 +1330,6 @@ metrics:
   ## @param metrics.startupProbe.periodSeconds Period seconds for startupProbe
   ## @param metrics.startupProbe.failureThreshold Failure threshold for startupProbe
   ## @param metrics.startupProbe.successThreshold Success threshold for startupProbe
-  
   ##
   startupProbe:
     enabled: false
