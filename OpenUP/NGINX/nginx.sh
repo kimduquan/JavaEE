@@ -5,4 +5,5 @@
 ssh-keygen -q -t ed25519 -N "" -C "gitea_admin" -f id_ed25519
 kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic git-ssh --type=kubernetes.io/ssh-auth --from-file=ssh-privatekey=id_ed25519 --from-file=ssh-publickey=id_ed25519.pub
 helm --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG upgrade --install nginx oci://registry-1.docker.io/bitnamicharts/nginx --version 25.2.14 -f values.yaml --wait \
-	--set "global.imageRegistry=$EPF_CLUSTER_IMAGE_REGISTRY"
+	--set "global.imageRegistry=$EPF_CLUSTER_IMAGE_REGISTRY" \
+	--set "global.security.allowInsecureImages=true"
