@@ -2,10 +2,10 @@
 . ../env.sh
 HELM_VALUES="target/helm/kubernetes/frpc/values.yaml"
 KUBE_CONFIG="${EPF_CLUSTER_KUBE_CONFIG}"
-SERVICE="cilium-ingress.kube-system.svc.cluster.local"
+SERVICE="cilium-gateway-epf-gateway.default.svc.cluster.local"
 if [ "$DEPLOYMENT" = "dev" ]; then
     HELM_VALUES="values-dev.yaml"
-    SERVICE="cilium-gateway-epf-gateway.default.svc.cluster.local"
+    SERVICE="cilium-ingress.kube-system.svc.cluster.local"
 elif [ "$DEPLOYMENT" = "staging" ]; then
     HELM_VALUES="values-stage.yaml"
 elif [ "$DEPLOYMENT" = "management" ]; then
