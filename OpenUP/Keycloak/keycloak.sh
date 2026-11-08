@@ -21,5 +21,5 @@ helm --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG upgrade --install keycloak oci://regi
 	--set "ingress.hostname=$AUTH_DOMAIN" \
 	--set "ingress.extraRules[0].host=$PRODUCTION_DOMAIN" \
 	--set "ingress.extraRules[1].host=$STAGING_DOMAIN" \
-	--set "ingress.extraRules[2].host=git-$DEV_DOMAIN" \
+	--set "ingress.extraRules[2].host=kdq-$DEV_DOMAIN" \
 	--set "auth.adminUser=$ROOT_EMAIL"
