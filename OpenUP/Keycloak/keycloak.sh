@@ -7,7 +7,7 @@ KEYCLOAK_CLI_IMAGE_TAG="6.4.0-debian-12-r11"
 ../registry.sh "localhost:32000" "$KEYCLOAK_CLI_IMAGE_REPOSITORY:$KEYCLOAK_CLI_IMAGE_TAG"
 AUTH_IP=$(kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG get svc -A --no-headers --field-selector spec.type=LoadBalancer | awk '{print $5}')
 AUTH_DOMAIN=$(echo "$AUTH_IP" | tr '.' '-')
-AUTH_DOMAIN="auth-$AUTH_DOMAIN"
+AUTH_DOMAIN="auth-$AUTH_DOMAIN.nip.io"
 ../secret.sh keycloak-admin
 ../secret.sh keycloak-db
 kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG delete configmap keycloak-realms --wait
