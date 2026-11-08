@@ -10,3 +10,4 @@ helm --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} upgrade --install --create-namespac
 	--set "image.keda.registry=$EPF_CLUSTER_IMAGE_REGISTRY" \
 	--set "image.metricsApiServer.registry=$EPF_CLUSTER_IMAGE_REGISTRY" \
 	--set "image.webhooks.registry=$EPF_CLUSTER_IMAGE_REGISTRY"
+helm --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} upgrade --install keda-add-ons-http kedacore/keda-add-ons-http --version 0.16.0 --wait -f values-keda-add-ons-http.yaml
