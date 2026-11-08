@@ -1,10 +1,10 @@
 . ../../env.sh ../../
-IMAGE_TAG=v1.20.2
-CERTGEN_IMAGE_TAG=v0.4.11
-ENVOY_IMAGE_TAG=v1.37.6-1789133542-cbec91f666af0bf742da986d43832932dbb26b82
-OPERATOR_IMAGE_TAG=v1.20.2
+IMAGE_TAG=v1.20.4
+CERTGEN_IMAGE_TAG=v0.4.13
+ENVOY_IMAGE_TAG=v1.39.5-1792733054-8c73b2816bc8239e27f1fd53b271884688137459
+OPERATOR_IMAGE_TAG=v1.20.4
 NODEINIT_IMAGE_TAG=1782916218-36ae25f
-CLUSTERMESH_APISERVER_IMAGE_TAG=v1.20.2
+CLUSTERMESH_APISERVER_IMAGE_TAG=v1.20.4
 ../../registry.sh quay.io "cilium/cilium:$IMAGE_TAG"
 ../../registry.sh quay.io "cilium/certgen:$CERTGEN_IMAGE_TAG"
 ../../registry.sh quay.io "cilium/cilium-envoy:$ENVOY_IMAGE_TAG"
@@ -14,7 +14,7 @@ CLUSTERMESH_APISERVER_IMAGE_TAG=v1.20.2
 ../../registry.sh quay.io "cilium/clustermesh-apiserver:$CLUSTERMESH_APISERVER_IMAGE_TAG"
 helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" repo add cilium https://helm.cilium.io/
 helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" repo update
-helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" upgrade --install --wait --timeout 40m cilium cilium/cilium --version 1.20.2 --namespace=kube-system -f values-cilium.yaml \
+helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" upgrade --install --wait --timeout 40m cilium cilium/cilium --version 1.20.4 --namespace=kube-system -f values-cilium.yaml \
 	--set "image.repository=$EPF_CLUSTER_IMAGE_REGISTRY/cilium/cilium" \
 	--set "image.tag=$IMAGE_TAG" \
 	--set "certgen.image.repository=$EPF_CLUSTER_IMAGE_REGISTRY/cilium/certgen" \
