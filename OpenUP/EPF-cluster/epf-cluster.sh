@@ -30,6 +30,7 @@ kubectl wait cluster epf-cluster --for condition=Available --timeout=1200s
 
 cd cilium
 ./cilium.sh
+./gateway-api.sh
 cd ../
 
 kubectl --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} annotate namespace default clustermesh.cilium.io/global="true"
