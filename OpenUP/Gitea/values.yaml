@@ -518,13 +518,13 @@ gitea:
 
   # Either specify inline `key` and `secret` or refer to them via `existingSecret`
   ## @param gitea.oauth OAuth configuration
-  oauth: []
-    # - name: 'KDQ'
-    #   provider: "openidConnect"
+  oauth:
+    - name: 'KDQ'
+      provider: "openidConnect"
     #   key:
     #   secret:
-    #   existingSecret: gitea-oauth-secret
-    #   autoDiscoverUrl:
+      existingSecret: gitea-oauth-secret
+      autoDiscoverUrl:
     #   useCustomUrls:
     #   customAuthUrl:
     #   customTokenUrl:
