@@ -134,7 +134,7 @@ global:
   imageRegistry:
 
 networkPolicy:
-  enabled: false
+  enabled: true
 
 # Overrides the image tag where default is the chart appVersion.
 tag: ""
