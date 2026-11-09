@@ -413,6 +413,7 @@ startupProbe:
 ##
 livenessProbe:
   enabled: true
+  path: "/healthz"
   initialDelaySeconds: 30
   timeoutSeconds: 5
   periodSeconds: 10
@@ -430,7 +431,7 @@ livenessProbe:
 ##
 readinessProbe:
   enabled: true
-  path: /
+  path: "/healthz"
   initialDelaySeconds: 5
   timeoutSeconds: 3
   periodSeconds: 5
@@ -645,6 +646,11 @@ serverBlock: |-
     root /app/webapp;
     access_log /opt/bitnami/nginx/logs/access.log;
     error_log  /opt/bitnami/nginx/logs/error.log error; 
+    location = /healthz {
+      access_log off;
+      add_header Content-Type text/plain;
+      return 200 'OK';
+    }
     location / {
       index index.html;
       try_files $uri $uri/ =404;
