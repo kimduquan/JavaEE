@@ -33,6 +33,10 @@ cd Redis
 ./redis.sh
 cd ../
 
+cd Prometheus
+./prometheus.sh
+cd ../
+
 cd frp/frpc
 export DEPLOYMENT=production
 ./frpc.sh
@@ -41,3 +45,11 @@ export DEPLOYMENT=staging
 export DEPLOYMENT=dev
 ./frpc.sh
 cd ../../
+
+cd Keycloak
+./keycloak.sh
+cd ../
+
+cd Gitea
+./gitea.sh
+cd ../
