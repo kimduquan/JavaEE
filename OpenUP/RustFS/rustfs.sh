@@ -1,4 +1,4 @@
-../env.sh ../
+. ../env.sh ../
 helm repo add rustfs https://charts.rustfs.com --force-update
 ../secret.sh rustfs
 ../registry.sh docker.io "rustfs/rustfs:1.0.4"
