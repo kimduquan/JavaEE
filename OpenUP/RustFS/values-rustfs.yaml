@@ -332,8 +332,7 @@ ingress:
     nginx.ingress.kubernetes.io/session-cookie-max-age: "3600"
     nginx.ingress.kubernetes.io/session-cookie-name: rustfs
   annotations: {}
-  customAnnotations: # Deprecated: use ingress.annotations instead
-    {}
+  customAnnotations: {} # Deprecated: use ingress.annotations instead
   hosts:
     - host: ""
       paths:
