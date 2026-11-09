@@ -5,11 +5,12 @@ metadata:
 spec:
   scaleTargetRef:
     name: nginx
-  minReplicaCount: 0
+  minReplicaCount: 1
   maxReplicaCount: 3
   cooldownPeriod: 300
   triggers:
-    - type: external-push
+    - type: prometheus
       metadata:
-        scalerAddress: keda-add-ons-http-external-scaler.keda:9090
-        interceptorRoute: nginx
+        serverAddress: "http://prometheus-server.prometheus.svc.cluster.local:9090"
+        query: "sum(rate(envoy_cluster_external_upstream_rq{envoy_cluster_name='default/cilium-gateway-epf-gateway/default_nginx_80'}[1m])) or vector(0)"
+        threshold: '100'
