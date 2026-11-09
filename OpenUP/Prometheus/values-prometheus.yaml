@@ -47,7 +47,7 @@ configmapReload:
   prometheus:
     ## If false, the configmap-reload container will not be deployed
     ##
-    enabled: true
+    enabled: false
 
     ## configmap-reload container name
     ##
@@ -1244,7 +1244,7 @@ alertmanager:
 kube-state-metrics:
   ## If false, kube-state-metrics sub-chart will not be installed
   ##
-  enabled: true
+  enabled: false
 
 ## prometheus-node-exporter sub-chart configurable values
 ## Please see https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus-node-exporter
