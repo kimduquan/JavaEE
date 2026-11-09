@@ -19,7 +19,7 @@ serviceAccounts:
 
     ## Opt out of automounting Kubernetes API credentials.
     ## It will be overridden by server.automountServiceAccountToken value, if set.
-    # automountServiceAccountToken: false
+    automountServiceAccountToken: true
 
 ## Additional labels to attach to all resources
 commonMetaLabels: {}
@@ -130,7 +130,7 @@ server:
 
   ## Opt out of automounting Kubernetes API credentials.
   ## If set it will override serviceAccounts.server.automountServiceAccountToken value for ServiceAccount.
-  # automountServiceAccountToken: false
+  automountServiceAccountToken: true
 
   ## If set it will override prometheus.server.fullname value for ClusterRole and ClusterRoleBinding
   ##
