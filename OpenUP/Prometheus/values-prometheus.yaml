@@ -139,7 +139,7 @@ server:
   ## Name of an existing cluster role to use in a role binding in namespaces set in
   ## namespaces and releaseNamespace for namespaced discovery.
   ##
-  useExistingClusterRoleName: ""
+  useExistingClusterRoleName: "view"
 
   ## releaseNamespace to enable only the release namespace for service discovery.
   ## By default all namespaces are included in service discovery.
