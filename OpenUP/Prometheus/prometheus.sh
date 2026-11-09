@@ -1,1 +1,2 @@
-helm upgrade --install --wait prometheus oci://ghcr.io/prometheus-community/charts/prometheus -f values-prometheus.yaml
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm install prometheus prometheus-community/prometheus --version 29.45.1

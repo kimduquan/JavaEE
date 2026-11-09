@@ -47,7 +47,7 @@ configmapReload:
   prometheus:
     ## If false, the configmap-reload container will not be deployed
     ##
-    enabled: false
+    enabled: true
 
     ## configmap-reload container name
     ##
@@ -57,7 +57,7 @@ configmapReload:
     ##
     image:
       repository: quay.io/prometheus-operator/prometheus-config-reloader
-      tag: v0.92.1
+      tag: v0.95.1
       # When digest is set to a non-empty value, images will be pulled by digest (regardless of tag value).
       digest: ""
       pullPolicy: IfNotPresent
@@ -119,7 +119,7 @@ configmapReload:
       periodSeconds: 10
 
     ## configmap-reload resource requests and limits
-    ## Ref: http://kubernetes.io/docs/user-guide/compute-resources/
+    ## Ref: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
     ##
     resources: {}
 
@@ -147,7 +147,7 @@ server:
   ## Note that kubernetes_sd_configs.namespaces in scrape configs must be specified
   ## if namespaced service discovery is desired. Setting useExistingClusterRoleName is required.
   ##
-  releaseNamespace: true
+  releaseNamespace: false
 
   ## namespaces to include in service discovery instead of clusterwide discovery. Needed if you want to run
   ## Prometheus without cluster-admin privileges (namespaced configuration). See also releaseNamespace.
@@ -198,7 +198,7 @@ server:
     # When digest is set to a non-empty value, images will be pulled by digest (regardless of tag value).
     digest: ""
     # Use the distroless image variant.
-    distroless: true
+    distroless: false
     pullPolicy: IfNotPresent
 
   ## Prometheus server command
@@ -540,7 +540,7 @@ server:
 
     ## Prometheus server data Persistent Volume access modes
     ## Must match those of existing PV or dynamic provisioner
-    ## Ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+    ## Ref: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
     ##
     accessModes:
       - ReadWriteOnce
@@ -564,7 +564,7 @@ server:
 
     ## Prometheus server data Persistent Volume size
     ##
-    size: 1Gi
+    size: 8Gi
 
     ## Prometheus server data Persistent Volume Storage Class
     ## If defined, storageClassName: <storageClass>
@@ -693,15 +693,15 @@ server:
     timeoutSeconds: 10
 
   ## Prometheus server resource requests and limits
-  ## Ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
   ##
-  resources:
-    limits:
-      cpu: 150m
-      memory: 192Mi
-    requests:
-      cpu: 15m
-      memory: 128Mi
+  resources: {}
+    # limits:
+    #   cpu: 500m
+    #   memory: 512Mi
+    # requests:
+    #   cpu: 500m
+    #   memory: 512Mi
 
   # Required for use in managed kubernetes clusters (such as AWS EKS) with custom CNI (such as calico),
   # because control-plane managed by AWS cannot communicate with pods' IP CIDR and admission webhooks are not working
@@ -799,25 +799,28 @@ server:
 
   ## Prometheus data retention period (default if not specified is 15 days)
   ##
-  retention: "1d"
+  retention: "15d"
 
   ## Prometheus' data retention size. Supported units: B, KB, MB, GB, TB, PB, EB.
   ##
-  retentionSize: "1GB"
+  retentionSize: ""
 
 ## scrapeConfigs (map) defines Prometheus' default scrape_configs.
 ## Each can be disabled by setting "enabled" to "false" or leaving it empty. The key sets the default "job_name".
 ## Further scrapeConfigs can be added as new keys, these are then enabled by default.
+## `pre_relabel_configs` and `post_relabel_configs` accept templated YAML block-scalar strings.
+## Their rendered rules are inserted before and after the chart-managed `relabel_configs`, respectively.
 ## ref. https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config
+# @schema additionalProperties: {type: object, properties: {pre_relabel_configs: {type: string}, post_relabel_configs: {type: string}}}
 scrapeConfigs:
   prometheus:
-    enabled: false
+    enabled: true
     job_name: ""
     static_configs:
       - targets:
           - localhost:9090
   kubernetes-api-servers:
-    enabled: false
+    enabled: true
     job_name: ""
     kubernetes_sd_configs:
       - role: endpointslice
@@ -832,8 +835,10 @@ scrapeConfigs:
         - __meta_kubernetes_endpointslice_port_name
         action: keep
         regex: default;kubernetes;https
+    pre_relabel_configs: ""
+    post_relabel_configs: ""
   kubernetes-nodes:
-    enabled: false
+    enabled: true
     job_name: ""
     scheme: https
     tls_config:
@@ -845,8 +850,10 @@ scrapeConfigs:
     relabel_configs:
       - action: labelmap
         regex: __meta_kubernetes_node_label_(.+)
+    pre_relabel_configs: ""
+    post_relabel_configs: ""
   kubernetes-nodes-cadvisor:
-    enabled: false
+    enabled: true
     job_name: ""
     scheme: https
     tls_config:
@@ -861,8 +868,10 @@ scrapeConfigs:
         regex: __meta_kubernetes_node_label_(.+)
       - source_labels: [__metrics_path__]
         target_label: metrics_path
+    pre_relabel_configs: ""
+    post_relabel_configs: ""
   kubernetes-service-endpoints:
-    enabled: false
+    enabled: true
     job_name: ""
     honor_labels: true
     kubernetes_sd_configs:
@@ -903,8 +912,10 @@ scrapeConfigs:
       - source_labels: [__meta_kubernetes_pod_node_name]
         action: replace
         target_label: node
+    pre_relabel_configs: ""
+    post_relabel_configs: ""
   kubernetes-service-endpoints-slow:
-    enabled: false
+    enabled: true
     job_name: ""
     honor_labels: true
     scrape_interval: 5m
@@ -945,7 +956,7 @@ scrapeConfigs:
         action: replace
         target_label: node
   prometheus-pushgateway:
-    enabled: false
+    enabled: true
     job_name: ""
     honor_labels: true
     kubernetes_sd_configs:
@@ -954,8 +965,10 @@ scrapeConfigs:
       - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_probe]
         action: keep
         regex: pushgateway
+    pre_relabel_configs: ""
+    post_relabel_configs: ""
   kubernetes-services:
-    enabled: false
+    enabled: true
     job_name: ""
     honor_labels: true
     metrics_path: /probe
@@ -979,8 +992,10 @@ scrapeConfigs:
         target_label: namespace
       - source_labels: [__meta_kubernetes_service_name]
         target_label: service
+    pre_relabel_configs: ""
+    post_relabel_configs: ""
   kubernetes-pods:
-    enabled: false
+    enabled: true
     job_name: ""
     honor_labels: true
     kubernetes_sd_configs:
@@ -1031,8 +1046,10 @@ scrapeConfigs:
       - source_labels: [__meta_kubernetes_pod_node_name]
         action: replace
         target_label: node
+    pre_relabel_configs: ""
+    post_relabel_configs: ""
   kubernetes-pods-slow:
-    enabled: false
+    enabled: true
     job_name: ""
     honor_labels: true
     scrape_interval: 5m
@@ -1082,6 +1099,8 @@ scrapeConfigs:
       - source_labels: [__meta_kubernetes_pod_node_name]
         action: replace
         target_label: node
+    pre_relabel_configs: ""
+    post_relabel_configs: ""
 
 # extraScrapeConfigs adds additional scrape configs to prometheus.yml
 # must be a string so you have to add a | after extraScrapeConfigs:
@@ -1155,7 +1174,7 @@ alertRelabelConfigs: {}
 networkPolicy:
   ## Enable creation of NetworkPolicy resources.
   ##
-  enabled: true
+  enabled: false
 
 # Force namespace of namespaced resources
 forceNamespace: ""
@@ -1204,20 +1223,11 @@ alertmanager:
     # storageClass: "-"
     accessModes:
       - ReadWriteOnce
-    size: 1Gi
+    size: 2Gi
 
     ## Configure emptyDir volume
     ##
     emptyDir: {}
-
-  config:
-    receivers:
-      - name: default-receiver
-        email_configs:
-          - to: "kimduquan@gmail.com"
-            from: "kimduquan@gmail.com"
-            smarthost: "smtp.gmail.com:465"
-            auth_username: "kimduquan@gmail.com"
 
   podSecurityContext:
     runAsUser: 65534
@@ -1231,7 +1241,7 @@ alertmanager:
 kube-state-metrics:
   ## If false, kube-state-metrics sub-chart will not be installed
   ##
-  enabled: false
+  enabled: true
 
 ## prometheus-node-exporter sub-chart configurable values
 ## Please see https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus-node-exporter
@@ -1239,13 +1249,7 @@ kube-state-metrics:
 prometheus-node-exporter:
   ## If false, node-exporter will not be installed
   ##
-  enabled: false
-
-  rbac:
-    pspEnabled: false
-
-  containerSecurityContext:
-    allowPrivilegeEscalation: false
+  enabled: true
 
 ## prometheus-pushgateway sub-chart configurable values
 ## Please see https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus-pushgateway
@@ -1253,7 +1257,7 @@ prometheus-node-exporter:
 prometheus-pushgateway:
   ## If false, pushgateway will not be installed
   ##
-  enabled: false
+  enabled: true
 
   # Optional service annotations
   serviceAnnotations:
