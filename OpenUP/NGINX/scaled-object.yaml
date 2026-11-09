@@ -5,6 +5,7 @@ metadata:
 spec:
   scaleTargetRef:
     name: nginx
+  minReplicaCount: 1
   maxReplicaCount: 3
   triggers:
     - type: prometheus
