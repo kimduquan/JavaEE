@@ -12,7 +12,7 @@ spec:
   triggers:
     - type: prometheus
       metadata:
-        query: "sum(rate(http_requests_total{service='nginx'}[1m])) or vector(0)"
+        query: "sum(rate(http_requests_total{service=\"nginx\"}[1m])) or vector(0)"
         serverAddress: "http://prometheus-server.prometheus.svc.cluster.local"
         threshold: "0.01"
   #autoscaler:
