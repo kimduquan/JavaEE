@@ -770,7 +770,7 @@ server:
     loadBalancerIP: ""
     loadBalancerSourceRanges: []
     loadBalancerClass: ""
-    servicePort: 80
+    servicePort: 9090
     sessionAffinity: None
     type: ClusterIP
     ## externalTrafficPolicy is applicable to service with externally-facing addresses (NodePorts, ExternalIPs, and LoadBalancer IPs)
