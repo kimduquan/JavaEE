@@ -57,3 +57,7 @@ cd ../
 cd Gitea
 ./gitea.sh
 cd ../
+
+cd WildFly
+./wildfly.sh
+cd ../
