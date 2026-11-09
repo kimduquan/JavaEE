@@ -22,3 +22,23 @@ localPort = 443
 remotePort = {{ .Envs.FRP_PROXIES_HTTPS_REMOTE_PORT }}
 loadBalancer.group = "{{ .Envs.FRP_PROXIES_HTTPS_NAME }}"
 loadBalancer.groupKey = "{{ .Envs.FRP_PROXIES_HTTPS_NAME }}"
+
+[[proxies]]
+name = "{{ .Envs.FRP_PROXIES_HTTP_GATEWAY_NAME }}"
+type = "tcp"
+healthCheck.type = "tcp"
+localIP = "{{ .Envs.FRP_PROXIES_HTTP_GATEWAY_LOCAL_IP }}"
+localPort = 80
+remotePort = {{ .Envs.FRP_PROXIES_HTTP_GATEWAY_REMOTE_PORT }}
+loadBalancer.group = "{{ .Envs.FRP_PROXIES_HTTP_GATEWAY_NAME }}"
+loadBalancer.groupKey = "{{ .Envs.FRP_PROXIES_HTTP_GATEWAY_NAME }}"
+
+[[proxies]]
+name = "{{ .Envs.FRP_PROXIES_HTTPS_GATEWAY_NAME }}"
+type = "tcp"
+healthCheck.type = "tcp"
+localIP = "{{ .Envs.FRP_PROXIES_HTTPS_GATEWAY_LOCAL_IP }}"
+localPort = 443
+remotePort = {{ .Envs.FRP_PROXIES_HTTPS_GATEWAY_REMOTE_PORT }}
+loadBalancer.group = "{{ .Envs.FRP_PROXIES_HTTPS_GATEWAY_NAME }}"
+loadBalancer.groupKey = "{{ .Envs.FRP_PROXIES_HTTPS_GATEWAY_NAME }}"
