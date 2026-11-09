@@ -147,14 +147,14 @@ server:
   ## Note that kubernetes_sd_configs.namespaces in scrape configs must be specified
   ## if namespaced service discovery is desired. Setting useExistingClusterRoleName is required.
   ##
-  releaseNamespace: false
+  releaseNamespace: true
 
   ## namespaces to include in service discovery instead of clusterwide discovery. Needed if you want to run
   ## Prometheus without cluster-admin privileges (namespaced configuration). See also releaseNamespace.
   ## Setting useExistingClusterRoleName is required.
   ##
-  namespaces: []
-    # - yournamespace
+  namespaces:
+    - default
 
   # sidecarContainers - add more containers to prometheus server
   # Key/Value where Key is the sidecar `- name: <Key>`
@@ -480,7 +480,9 @@ server:
   ## Node tolerations for server scheduling to nodes with taints
   ## Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
   ##
-  tolerations: []
+  tolerations:
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/control-plane
     # - key: "key"
     #   operator: "Equal|Exists"
     #   value: "value"
@@ -489,7 +491,8 @@ server:
   ## Node labels for Prometheus server pod assignment
   ## Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
   ##
-  nodeSelector: {}
+  nodeSelector:
+    node-role.kubernetes.io/control-plane: ""
 
   ## Pod affinity
   ##
@@ -564,7 +567,7 @@ server:
 
     ## Prometheus server data Persistent Volume size
     ##
-    size: 8Gi
+    size: 1Gi
 
     ## Prometheus server data Persistent Volume Storage Class
     ## If defined, storageClassName: <storageClass>
@@ -1198,7 +1201,7 @@ extraManifests: []
 alertmanager:
   ## If false, alertmanager will not be installed
   ##
-  enabled: true
+  enabled: false
 
   persistence:
     ## If true, storage will create or use Persistence Volume
@@ -1223,7 +1226,7 @@ alertmanager:
     # storageClass: "-"
     accessModes:
       - ReadWriteOnce
-    size: 2Gi
+    size: 1Gi
 
     ## Configure emptyDir volume
     ##
