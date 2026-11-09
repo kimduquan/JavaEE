@@ -1,0 +1,27 @@
+apiVersion: elasti.truefoundry.com/v1alpha1
+kind: ElastiService
+metadata:
+  name: nginx
+spec:
+  service: nginx
+  minTargetReplicas: 1
+  scaleTargetRef:
+    apiVersion: "apps/v1"
+    kind: Deployment
+    name: nginx
+  triggers:
+    - type: prometheus
+      metadata:
+        query: <query> # 
+        serverAddress: "prometheus-server.prometheus.svc.cluster.local"
+        threshold: 0.01
+  autoscaler:
+    name: nginx
+    type: keda
+  probeResponse:
+    - method: GET
+      path:
+        type: PathPrefix
+        value: /
+      response:
+        status: 200
