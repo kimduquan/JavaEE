@@ -5,9 +5,7 @@ metadata:
 spec:
   scaleTargetRef:
     name: nginx
-  minReplicaCount: 1
   maxReplicaCount: 3
-  cooldownPeriod: 300
   triggers:
     - type: prometheus
       metadata:
