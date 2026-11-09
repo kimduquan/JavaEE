@@ -817,7 +817,7 @@ server:
 # @schema additionalProperties: {type: object, properties: {pre_relabel_configs: {type: string}, post_relabel_configs: {type: string}}}
 scrapeConfigs:
   prometheus:
-    enabled: false
+    enabled: true
     job_name: ""
     static_configs:
       - targets:
