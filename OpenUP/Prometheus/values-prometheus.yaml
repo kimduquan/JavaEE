@@ -47,7 +47,7 @@ configmapReload:
   prometheus:
     ## If false, the configmap-reload container will not be deployed
     ##
-    enabled: false
+    enabled: true
 
     ## configmap-reload container name
     ##
