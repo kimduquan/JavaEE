@@ -100,5 +100,11 @@ else
 			--from-literal=password=${DEFAULT_PASSWORD} \
 			--dry-run=client -o yaml > "$SECRET_FILE"
 		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f "$SECRET_FILE"
+	elif [ "$SECRET" = "rustfs" ]; then
+		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic $SECRET \
+			--from-literal=RUSTFS_ACCESS_KEY='85da6aac2aba19a6dbf66034d199af599616644578306c8f7116e86f4fb0a7a3' \
+			--from-literal=RUSTFS_SECRET_KEY='064f13d6b689a11459949e5d5259158230eed290780de054b50c60e1d3c130fd' \
+			--dry-run=client -o yaml > "$SECRET_FILE"
+		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f "$SECRET_FILE"
 	fi
 fi
