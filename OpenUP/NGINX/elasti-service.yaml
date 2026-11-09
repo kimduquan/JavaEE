@@ -14,7 +14,7 @@ spec:
       metadata:
         query: "sum(rate(cilium_proxy_upstream_reply_seconds_count{namespace='default', service='nginx'}[1m])) or vector(0)"
         serverAddress: "prometheus-server.prometheus.svc.cluster.local"
-        threshold: 0.01
+        threshold: "0.01"
   autoscaler:
     name: nginx
     type: keda
