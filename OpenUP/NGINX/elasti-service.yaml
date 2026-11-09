@@ -12,7 +12,7 @@ spec:
   triggers:
     - type: prometheus
       metadata:
-        query: "sum(rate(http_requests_total{service='nginx'}[1m])) or vector(0)"
+        query: "sum(rate(envoy_cluster_external_upstream_rq{envoy_cluster_name='default/cilium-gateway-epf-gateway/default_nginx_80'}[1m])) or vector(0)"
         serverAddress: "http://prometheus-server.prometheus.svc.cluster.local:9090"
         threshold: "0.01"
         uptimeFilter: "job='prometheus'"
