@@ -206,9 +206,9 @@ config:
     obs_log_directory: "/logs"
     ## Supported values include `production`, `development`, `test`, and `staging`;
     ## refer to the RustFS configuration documentation/source for the authoritative list.
-    obs_environment: "development"
+    obs_environment: "production"
     obs_endpoint:
-      enabled: false # If true, rustfs will export metrics, traces, logs and profiling data to the specified OTLP endpoints. If false, the individual settings for metrics, traces, logs and profiling endpoints will be ignored and all data will not be exported.
+      enabled: true # If true, rustfs will export metrics, traces, logs and profiling data to the specified OTLP endpoints. If false, the individual settings for metrics, traces, logs and profiling endpoints will be ignored and all data will not be exported.
       base_endpoint: "http://jaeger:4318" #Root OTLP/HTTP endpoint, e.g. http://otel-collector:4318
       use_stdout: false # If true, rustfs will also export logs to stdout in addition to the OTLP logs endpoint.
       metrics:
