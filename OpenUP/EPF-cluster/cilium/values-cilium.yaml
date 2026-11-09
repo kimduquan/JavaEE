@@ -1005,7 +1005,7 @@ ingressController:
   # @schema
   # -- Configure whether to use the remote address of the client when determining the source IP.
   # When enabled, the source IP is determined from the remote address instead of the proxy protocol header.
-  useRemoteAddress: true
+  useRemoteAddress: false
   # -- The number of additional Ingress proxy hops from the right side of the HTTP header to trust when determining the origin client's IP address.
   xffNumTrustedHops: 0
   # -- IngressLBAnnotations are the annotation and label prefixes, which are used to filter annotations and/or labels to propagate from Ingress to the Load Balancer service
@@ -1104,7 +1104,7 @@ gatewayAPI:
   # @schema
   # -- Configure whether to use the remote address of the client when determining the source IP.
   # When enabled, the source IP is determined from the remote address instead of the proxy protocol header.
-  useRemoteAddress: true
+  useRemoteAddress: false
   # -- Enable Backend Protocol selection support (GEP-1911) for Gateway API via appProtocol.
   enableAppProtocol: true
   # -- Enable ALPN for all listeners configured with Gateway API. ALPN will attempt HTTP/2, then HTTP 1.1.
