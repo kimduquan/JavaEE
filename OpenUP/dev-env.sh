@@ -1,5 +1,6 @@
 export DEV_PUBLIC_IP=192.168.1.2
 export DEV_DOMAIN=kdq-192-168-1-2.nip.io
+export DEV_AUTH_DOMAIN=auth-192-168-1-2.nip.io
 export DEV_NAMESPACE=default
 export DEV_GATEWAY_IP=192.168.1.8
 export DEV_DEPLOYMENT_POSTFIX=dev
