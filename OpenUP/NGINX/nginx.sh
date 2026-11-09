@@ -8,6 +8,9 @@
 helm --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG upgrade --install nginx oci://registry-1.docker.io/bitnamicharts/nginx --version 25.2.14 -f values-nginx.yaml --wait \
 	--set "global.imageRegistry=$EPF_CLUSTER_IMAGE_REGISTRY" \
 	--set "global.security.allowInsecureImages=true" \
+	--set "ingress.hostname=$PRODUCTION_DOMAIN" \
+	--set "ingress.extraHosts[0].name=$STAGING_DOMAIN" \
+	--set "ingress.extraHosts[1].name=$DEV_DOMAIN" \
 	--set "httpRoute.hostnames[0]=$PRODUCTION_DOMAIN" \
 	--set "httpRoute.hostnames[1]=$STAGING_DOMAIN" \
 	--set "httpRoute.hostnames[2]=$DEV_DOMAIN"
