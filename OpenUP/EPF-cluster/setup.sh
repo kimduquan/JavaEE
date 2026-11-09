@@ -12,6 +12,7 @@ cd EPF-cluster
 
 cd KEDA
 ./keda.sh
+./http-add-on.sh
 cd ../
 
 kubectl --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" create ns $STAGING_NAMESPACE
