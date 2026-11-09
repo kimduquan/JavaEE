@@ -61,3 +61,7 @@ cd ../
 cd WildFly
 ./wildfly.sh
 cd ../
+
+cd Jaeger
+./jaeger.sh
+cd ../
