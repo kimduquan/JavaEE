@@ -5,7 +5,8 @@ global:
   kubernetesClusterDomain: cluster.local
   ## @param global.allowedNamespaces [array] namespaces to confine KubeElasti to; empty installs cluster-scoped RBAC and watches all namespaces
   ##
-  allowedNamespaces: []
+  allowedNamespaces:
+    - default
   ## @param global.nameOverride name of the deployment
   ##
   nameOverride: ""
@@ -172,10 +173,13 @@ elastiController:
   affinity: {}
   ## @param elastiController.nodeSelector [object] node labels for pod assignment
   ##
-  nodeSelector: {}
+  nodeSelector:
+    node-role.kubernetes.io/control-plane: ""
   ## @param elastiController.tolerations [array] tolerations for pod assignment
   ##
-  tolerations: []
+  tolerations:
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/control-plane
   serviceAccount:
     ## @param elastiController.serviceAccount.annotations [object] annotations to use for the deployment
     ##
@@ -292,10 +296,13 @@ elastiResolver:
   affinity: {}
   ## @param elastiResolver.nodeSelector [object] node labels for pod assignment
   ##
-  nodeSelector: {}
+  nodeSelector:
+    node-role.kubernetes.io/control-plane: ""
   ## @param elastiResolver.tolerations [array] tolerations for pod assignment
   ##
-  tolerations: []
+  tolerations:
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/control-plane
   serviceAccount:
     ## @param elastiResolver.serviceAccount.annotations [object] annotations to use for the deployment
     ##
