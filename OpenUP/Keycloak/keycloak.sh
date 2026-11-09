@@ -6,8 +6,8 @@ KEYCLOAK_CLI_IMAGE_REPOSITORY="bitnamilegacy/keycloak-config-cli"
 KEYCLOAK_CLI_IMAGE_TAG="6.4.0-debian-12-r11"
 ../registry.sh "localhost:32000" "$KEYCLOAK_CLI_IMAGE_REPOSITORY:$KEYCLOAK_CLI_IMAGE_TAG"
 AUTH_IP=$(kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG get svc -A --no-headers --field-selector spec.type=LoadBalancer | awk '{print $5}')
-AUTH_DOMAIN=$(echo "$AUTH_IP" | tr '.' '-')
-AUTH_DOMAIN="auth-$AUTH_DOMAIN.nip.io"
+AUTH_HOST=$(echo "$AUTH_IP" | tr '.' '-')
+AUTH_HOST="auth-$AUTH_HOST.nip.io"
 ../secret.sh keycloak-admin
 ../secret.sh keycloak-db
 kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG delete configmap keycloak-realms --wait
@@ -18,7 +18,7 @@ helm --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG upgrade --install keycloak oci://regi
 	--set "keycloakConfigCli.image.registry=$EPF_CLUSTER_IMAGE_REGISTRY" \
 	--set "keycloakConfigCli.image.repository=$KEYCLOAK_CLI_IMAGE_REPOSITORY" \
 	--set "keycloakConfigCli.image.tag=$KEYCLOAK_CLI_IMAGE_TAG" \
-	--set "ingress.hostname=$AUTH_DOMAIN" \
+	--set "ingress.hostname=$AUTH_HOST" \
 	--set "ingress.extraRules[0].host=$PRODUCTION_AUTH_DOMAIN" \
 	--set "ingress.extraRules[1].host=$STAGING_AUTH_DOMAIN" \
 	--set "ingress.extraRules[2].host=$DEV_AUTH_DOMAIN" \
