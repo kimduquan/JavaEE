@@ -881,7 +881,12 @@ httpRoute:
         value: /auth
   ## @param httpRoute.filters List of filter rules applied to the HTTPRoute for the default svc backend reference
   ##
-  filters: []
+  filters:
+    - type: RequestHeaderModifier
+      requestHeaderModifier:
+        set:
+          - name: X-Envoy-Decorator-Operation
+            value:
   ## @param httpRoute.extraRules List of extra rules applied to the HTTPRoute
   ## e.g:
   extraRules:
