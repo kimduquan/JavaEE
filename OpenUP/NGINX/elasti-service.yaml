@@ -22,8 +22,8 @@ spec:
   probeResponse:
     - method: GET
       path:
-        type: PathPrefix
-        value: /
+        type: Exact
+        value: /healthz
       response:
         status: 200
-        body: '{"ok":true}'
+        body: 'OK'
