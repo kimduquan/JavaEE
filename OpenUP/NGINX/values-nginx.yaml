@@ -413,7 +413,6 @@ startupProbe:
 ##
 livenessProbe:
   enabled: true
-  path: "/healthz"
   initialDelaySeconds: 30
   timeoutSeconds: 5
   periodSeconds: 10
