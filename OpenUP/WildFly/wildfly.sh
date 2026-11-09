@@ -8,10 +8,10 @@ kubectl --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" --namespace $NAMESPACE create 
 helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" --namespace $NAMESPACE upgrade --install wildfly oci://registry-1.docker.io/bitnamicharts/wildfly --version 25.0.0 -f values-wildfly.yaml --wait \
 	--set "global.imageRegistry=$EPF_CLUSTER_IMAGE_REGISTRY" \
 	--set "image.registry=$EPF_CLUSTER_IMAGE_REGISTRY" \
-	--set "image.tag=$IMAGE_TAG"
-	--set "ingress.hostname=$PRODUCTION_WEBAPP_DOMAIN"
-	--set "ingress.extraHosts[0].name=$STAGING_WEBAPP_DOMAIN"
-	--set "ingress.extraHosts[1].name=$DEV_WEBAPP_DOMAIN"
+	--set "image.tag=$IMAGE_TAG" \
+	--set "ingress.hostname=$PRODUCTION_WEBAPP_DOMAIN" \
+	--set "ingress.extraHosts[0].name=$STAGING_WEBAPP_DOMAIN" \
+	--set "ingress.extraHosts[1].name=$DEV_WEBAPP_DOMAIN" \
 #/opt/bitnami/wildfly/bin/jboss-cli.sh --connect
 #/opt/bitnami/wildfly/bin/jboss-cli.sh --connect '/subsystem=undertow/application-security-domain=other:write-attribute(name=integrated-jaspi, value=false)'
 #/opt/bitnami/wildfly/bin/jboss-cli.sh --connect '/subsystem=undertow/server=default-server/host=default-host/location="\/":remove()'
