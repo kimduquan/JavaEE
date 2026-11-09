@@ -5,7 +5,7 @@
 KEYCLOAK_CLI_IMAGE_REPOSITORY="bitnamilegacy/keycloak-config-cli"
 KEYCLOAK_CLI_IMAGE_TAG="6.4.0-debian-12-r11"
 ../registry.sh "localhost:32000" "$KEYCLOAK_CLI_IMAGE_REPOSITORY:$KEYCLOAK_CLI_IMAGE_TAG"
-AUTH_IP=$(kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG get svc -A --no-headers --field-selector spec.type=LoadBalancer | awk '{print $5}')
+AUTH_IP=$(kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG get svc -n kube-system --no-headers --field-selector spec.type=LoadBalancer | awk '{print $4}')
 AUTH_HOST=$(echo "$AUTH_IP" | tr '.' '-')
 AUTH_HOST="auth-$AUTH_HOST.nip.io"
 ../secret.sh keycloak-admin
