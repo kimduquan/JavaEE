@@ -14,3 +14,4 @@ helm --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG upgrade --install nginx oci://registr
 kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG -n keda apply -f ref-grant.yaml
 envsubst < route.yaml | kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f -
 kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f scale.yaml
+kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f elasti-service.yaml
