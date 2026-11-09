@@ -139,7 +139,7 @@ server:
   ## Name of an existing cluster role to use in a role binding in namespaces set in
   ## namespaces and releaseNamespace for namespaced discovery.
   ##
-  useExistingClusterRoleName: "view"
+  useExistingClusterRoleName: ""
 
   ## releaseNamespace to enable only the release namespace for service discovery.
   ## By default all namespaces are included in service discovery.
@@ -147,14 +147,13 @@ server:
   ## Note that kubernetes_sd_configs.namespaces in scrape configs must be specified
   ## if namespaced service discovery is desired. Setting useExistingClusterRoleName is required.
   ##
-  releaseNamespace: true
+  releaseNamespace: false
 
   ## namespaces to include in service discovery instead of clusterwide discovery. Needed if you want to run
   ## Prometheus without cluster-admin privileges (namespaced configuration). See also releaseNamespace.
   ## Setting useExistingClusterRoleName is required.
   ##
-  namespaces:
-    - default
+  namespaces: []
 
   # sidecarContainers - add more containers to prometheus server
   # Key/Value where Key is the sidecar `- name: <Key>`
