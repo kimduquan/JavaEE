@@ -817,13 +817,13 @@ server:
 # @schema additionalProperties: {type: object, properties: {pre_relabel_configs: {type: string}, post_relabel_configs: {type: string}}}
 scrapeConfigs:
   prometheus:
-    enabled: true
+    enabled: false
     job_name: ""
     static_configs:
       - targets:
           - localhost:9090
   kubernetes-api-servers:
-    enabled: true
+    enabled: false
     job_name: ""
     kubernetes_sd_configs:
       - role: endpointslice
@@ -841,7 +841,7 @@ scrapeConfigs:
     pre_relabel_configs: ""
     post_relabel_configs: ""
   kubernetes-nodes:
-    enabled: true
+    enabled: false
     job_name: ""
     scheme: https
     tls_config:
@@ -856,7 +856,7 @@ scrapeConfigs:
     pre_relabel_configs: ""
     post_relabel_configs: ""
   kubernetes-nodes-cadvisor:
-    enabled: true
+    enabled: false
     job_name: ""
     scheme: https
     tls_config:
@@ -918,7 +918,7 @@ scrapeConfigs:
     pre_relabel_configs: ""
     post_relabel_configs: ""
   kubernetes-service-endpoints-slow:
-    enabled: true
+    enabled: false
     job_name: ""
     honor_labels: true
     scrape_interval: 5m
@@ -959,7 +959,7 @@ scrapeConfigs:
         action: replace
         target_label: node
   prometheus-pushgateway:
-    enabled: true
+    enabled: false
     job_name: ""
     honor_labels: true
     kubernetes_sd_configs:
@@ -971,7 +971,7 @@ scrapeConfigs:
     pre_relabel_configs: ""
     post_relabel_configs: ""
   kubernetes-services:
-    enabled: true
+    enabled: false
     job_name: ""
     honor_labels: true
     metrics_path: /probe
@@ -1052,7 +1052,7 @@ scrapeConfigs:
     pre_relabel_configs: ""
     post_relabel_configs: ""
   kubernetes-pods-slow:
-    enabled: true
+    enabled: false
     job_name: ""
     honor_labels: true
     scrape_interval: 5m
@@ -1177,7 +1177,7 @@ alertRelabelConfigs: {}
 networkPolicy:
   ## Enable creation of NetworkPolicy resources.
   ##
-  enabled: false
+  enabled: true
 
 # Force namespace of namespaced resources
 forceNamespace: ""
@@ -1252,7 +1252,7 @@ kube-state-metrics:
 prometheus-node-exporter:
   ## If false, node-exporter will not be installed
   ##
-  enabled: true
+  enabled: false
 
 ## prometheus-pushgateway sub-chart configurable values
 ## Please see https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus-pushgateway
