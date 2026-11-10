@@ -1,2 +1,2 @@
 . ../env.sh ../
-mvn clean install -U -Dquarkus.native.container-build=true -Dquarkus.container-image.build=true -P native
+mvn clean install -U -Dquarkus.native.container-build=true -Dquarkus.container-image.build=true -Dquarkus.container-image.push=true -Dquarkus.container-image.insecure=true "-Dquarkus.container-image.registry=$EPF_CLUSTER_IMAGE_REGISTRY" -P native
