@@ -260,11 +260,11 @@
     <pluginManagement>
 	  <plugins>
 		<!-- Source: https://mvnrepository.com/artifact/io.smallrye/jandex-maven-plugin -->
-		<dependency>
+		<plugin>
 			<groupId>io.smallrye</groupId>
 			<artifactId>jandex-maven-plugin</artifactId>
 			<version>3.6.0</version>
-		</dependency>
+		</plugin>
 		<!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-pmd-plugin -->
 		<plugin>
 		    <groupId>org.apache.maven.plugins</groupId>
