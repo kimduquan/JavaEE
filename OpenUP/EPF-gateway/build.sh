@@ -1,4 +1,4 @@
-. ../env.sh
+. ../env.sh ../
 . ../native_env.sh
 mkdir src/main/jib
 cp $SOURCE_DIR/public.pem ./src/main/jib/
