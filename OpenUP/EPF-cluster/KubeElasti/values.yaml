@@ -7,6 +7,8 @@ global:
   ##
   allowedNamespaces:
     - default
+    - prod
+    - stage
   ## @param global.nameOverride name of the deployment
   ##
   nameOverride: ""
