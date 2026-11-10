@@ -8,4 +8,4 @@ export DEV_REALM_NAME="KDQ-$DEV_DEPLOYMENT_POSTFIX"
 export DEV_ROOT_EMAIL=kimduquan@gmail.com
 export DEV_REDIS_DATABASE=0
 export DEV_WEBAPP_DOMAIN=app-192-168-1-2.nip.io
-export DEV_STORAGE_DOMAIN=s3-192-168-1-2.nip.io
+export DEV_STORAGE_DOMAIN=file-192-168-1-2.nip.io
