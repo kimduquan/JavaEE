@@ -4,6 +4,8 @@ HELM_VALUES="target/helm/kubernetes/frpc/values.yaml"
 KUBE_CONFIG="${EPF_CLUSTER_KUBE_CONFIG}"
 SERVICE="cilium-ingress.kube-system.svc.cluster.local"
 GATEWAY_SERVICE="cilium-gateway-epf-gateway.default.svc.cluster.local"
+IMAGE="fatedier/frpc:v0.71.1"
+../../registry.sh ghcr.io "$IMAGE"
 if [ "$DEPLOYMENT" = "dev" ]; then
     HELM_VALUES="values-dev.yaml"
 elif [ "$DEPLOYMENT" = "staging" ]; then
@@ -22,6 +24,7 @@ envsubst < frps.yaml | kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESP
 kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE wait --for=jsonpath='{.endpoints[*].conditions.ready}'='true' endpointslice -l kubernetes.io/service-name=frps
 kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE delete --wait hpa frpc
 helm --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE upgrade --install frpc target/helm/kubernetes/frpc --wait -f $HELM_VALUES \
+	--set "app.image=$EPF_CLUSTER_IMAGE_REGISTRY/$IMAGE" \
 	--set "app.envs.FRP_PROXIES_HTTP_NAME=$DEPLOYMENT_POSTFIX-http" \
 	--set "app.envs.FRP_PROXIES_HTTPS_NAME=$DEPLOYMENT_POSTFIX-https" \
 	--set "app.envs.FRP_PROXIES_HTTP_LOCAL_IP=$SERVICE" \
