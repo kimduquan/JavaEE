@@ -380,7 +380,7 @@ persistence:
   claimName: gitea-shared-storage
   size: 1Gi
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   labels: {}
   storageClass:
   subPath:
