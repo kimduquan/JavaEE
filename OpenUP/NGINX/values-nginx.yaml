@@ -649,7 +649,7 @@ serverBlock: |-
   server {
     listen 0.0.0.0:8080;
     server_name _;
-    root /app/web;
+    root /app/web/public;
     access_log /opt/bitnami/nginx/logs/access.log;
     error_log  /opt/bitnami/nginx/logs/error.log error; 
     location = /healthz {
@@ -665,10 +665,21 @@ serverBlock: |-
   
   server {
     listen 0.0.0.0:8080;
-    server_name ~^(?<web>[^.]+)\.lvh\.me$;
-    root /app/$web;
-    access_log /opt/bitnami/nginx/logs/webapp-access.log;
-    error_log  /opt/bitnami/nginx/logs/webapp-error.log error; 
+    server_name ~^(?<web>[^.]+)\.kdq\.vn$;
+    root /app/$web/public;
+    access_log /opt/bitnami/nginx/logs/prod-access.log;
+    error_log  /opt/bitnami/nginx/logs/prod-error.log error; 
+    location / {
+      index index.html;
+      try_files $uri $uri/ =404;
+    }
+    
+  server {
+    listen 0.0.0.0:8080;
+    server_name ~^(?<web>[^.]+)\.kdq\.io\.vn$;
+    root /app/$web/public;
+    access_log /opt/bitnami/nginx/logs/stage-access.log;
+    error_log  /opt/bitnami/nginx/logs/stage-error.log error; 
     location / {
       index index.html;
       try_files $uri $uri/ =404;
