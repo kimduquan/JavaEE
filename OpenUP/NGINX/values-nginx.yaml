@@ -555,7 +555,7 @@ cloneStaticSiteFromGit:
     pullSecrets: []
   ## @param cloneStaticSiteFromGit.repository Git Repository to clone static content from
   ##
-  repository: "git@gitea-ssh:gitea_admin/webapp.git"
+  repository: "git@gitea-ssh:gitea_admin/web.git"
   ## @param cloneStaticSiteFromGit.branch Git branch to checkout
   ##
   branch: "main"
@@ -577,8 +577,15 @@ cloneStaticSiteFromGit:
       - -ec
       - |
         [[ -f "/opt/bitnami/scripts/git/entrypoint.sh" ]] && source "/opt/bitnami/scripts/git/entrypoint.sh"
-        ssh-keyscan gitea-ssh >> /.ssh/known_hosts && git clone "git@gitea-ssh:gitea_admin/webapp.git" --branch "main" /tmp/app
-        [[ "$?" -eq 0 ]] && shopt -s dotglob && rm -rf /app/* && mv /tmp/app/* /app/
+        ssh-keyscan gitea-ssh >> /.ssh/known_hosts && git clone "git@gitea-ssh:gitea_admin/web.git" --branch "main" /app/web
+    #command:
+    #  - /bin/bash
+    #  - -ec
+    #  - |
+    #    [[ -f "/opt/bitnami/scripts/git/entrypoint.sh" ]] && source "/opt/bitnami/scripts/git/entrypoint.sh"
+    #    ssh-keyscan gitea-ssh >> /.ssh/known_hosts && rm -rf /app/* && git clone "git@gitea-ssh:gitea_admin/web.git" --branch "main" /app/web
+    #    [[ "$?" -eq 0 ]] && cd /app/web && git config user.name "gitea_admin" && git submodule add --force "git@gitea-ssh:gitea_admin/prod.git" prod && git submodule add --force "git@gitea-ssh:gitea_admin/stage.git" stage  && git submodule add --force "git@gitea-ssh:gitea_admin/dev.git" dev
+    #    [[ "$?" -eq 0 ]] && git -c user.name="gitea_admin" -c user.email="gitea@local.domain" commit -m "#" && git push
     ## @param cloneStaticSiteFromGit.gitClone.args Override default container args for git-clone-repository
     ##
     args: []
@@ -593,7 +600,7 @@ cloneStaticSiteFromGit:
       - |
         [[ -f "/opt/bitnami/scripts/git/entrypoint.sh" ]] && source "/opt/bitnami/scripts/git/entrypoint.sh"
         while true; do
-            cd /app && git -c safe.directory=/app pull origin main
+            cd /app/web && git -c safe.directory=/app/web pull origin main
             sleep 60
         done
     ## @param cloneStaticSiteFromGit.gitSync.args Override default container args for git-repo-syncer
@@ -642,7 +649,7 @@ serverBlock: |-
   server {
     listen 0.0.0.0:8080;
     server_name _;
-    root /app/webapp;
+    root /app/web;
     access_log /opt/bitnami/nginx/logs/access.log;
     error_log  /opt/bitnami/nginx/logs/error.log error; 
     location = /healthz {
@@ -658,8 +665,8 @@ serverBlock: |-
   
   server {
     listen 0.0.0.0:8080;
-    server_name ~^(?<webapp>[^.]+)\.lvh\.me$;
-    root /app/$webapp;
+    server_name ~^(?<web>[^.]+)\.lvh\.me$;
+    root /app/$web;
     access_log /opt/bitnami/nginx/logs/webapp-access.log;
     error_log  /opt/bitnami/nginx/logs/webapp-error.log error; 
     location / {
