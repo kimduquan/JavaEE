@@ -577,7 +577,7 @@ cloneStaticSiteFromGit:
       - -ec
       - |
         [[ -f "/opt/bitnami/scripts/git/entrypoint.sh" ]] && source "/opt/bitnami/scripts/git/entrypoint.sh"
-        ssh-keyscan gitea-ssh >> /.ssh/known_hosts && git clone "git@gitea-ssh:gitea_admin/web.git" --branch "main" /app/web
+        ssh-keyscan gitea-ssh >> /.ssh/known_hosts && git clone --recurse-submodules --shallow-submodules --depth 1 -v "git@gitea-ssh:gitea_admin/web.git" --branch "main" /app/web
     #command:
     #  - /bin/bash
     #  - -ec
@@ -649,9 +649,9 @@ serverBlock: |-
   server {
     listen 0.0.0.0:8080;
     server_name _;
-    root /app/web/public;
-    access_log /opt/bitnami/nginx/logs/access.log;
-    error_log  /opt/bitnami/nginx/logs/error.log error; 
+    root /app/web/dev/public;
+    access_log /opt/bitnami/nginx/logs/dev-access.log;
+    error_log  /opt/bitnami/nginx/logs/dev-error.log error; 
     location = /healthz {
       access_log off;
       add_header Content-Type text/plain;
@@ -666,7 +666,7 @@ serverBlock: |-
   server {
     listen 0.0.0.0:8080;
     server_name ~^(?<web>[^.]+)\.kdq\.vn$;
-    root /app/$web/public;
+    root /app/web/prod/public;
     access_log /opt/bitnami/nginx/logs/prod-access.log;
     error_log  /opt/bitnami/nginx/logs/prod-error.log error; 
     location / {
@@ -678,7 +678,7 @@ serverBlock: |-
   server {
     listen 0.0.0.0:8080;
     server_name ~^(?<web>[^.]+)\.kdq\.io\.vn$;
-    root /app/$web/public;
+    root /app/web/stage/public;
     access_log /opt/bitnami/nginx/logs/stage-access.log;
     error_log  /opt/bitnami/nginx/logs/stage-error.log error; 
     location / {
