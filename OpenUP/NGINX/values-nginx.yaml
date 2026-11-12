@@ -600,7 +600,7 @@ cloneStaticSiteFromGit:
       - |
         [[ -f "/opt/bitnami/scripts/git/entrypoint.sh" ]] && source "/opt/bitnami/scripts/git/entrypoint.sh"
         while true; do
-            cd /app/web && git -c safe.directory=/app/web pull -v origin main && git submodule update --init --recursive -v
+            cd /app/web && git -c safe.directory=/app/web pull -v origin main && git submodule update --init --recursive --remote -v
             sleep 60
         done
     ## @param cloneStaticSiteFromGit.gitSync.args Override default container args for git-repo-syncer
