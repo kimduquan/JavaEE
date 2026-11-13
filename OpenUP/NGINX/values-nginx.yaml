@@ -648,7 +648,7 @@ cloneStaticSiteFromGit:
 serverBlock: |-
   server {
     listen 0.0.0.0:8080;
-    server_name _;
+    server_name 192-168-1-2.nip.io;
     root /app/web/dev/public;
     access_log /opt/bitnami/nginx/logs/dev-access.log;
     error_log  /opt/bitnami/nginx/logs/dev-error.log error; 
@@ -665,8 +665,42 @@ serverBlock: |-
   
   server {
     listen 0.0.0.0:8080;
-    server_name ~^(?<web>[^.]+)\.kdq\.vn$;
+    server_name kdq.io.vn;
+    root /app/web/stage/public;
+    access_log /opt/bitnami/nginx/logs/stage-access.log;
+    error_log  /opt/bitnami/nginx/logs/stage-error.log error; 
+    location = /healthz {
+      access_log off;
+      add_header Content-Type text/plain;
+      return 200 'OK';
+    }
+    location / {
+      index index.html;
+      try_files $uri $uri/ =404;
+    }
+  }
+  
+  server {
+    listen 0.0.0.0:8080;
+    server_name kdq.vn;
     root /app/web/prod/public;
+    access_log /opt/bitnami/nginx/logs/prod-access.log;
+    error_log  /opt/bitnami/nginx/logs/prod-error.log error; 
+    location = /healthz {
+      access_log off;
+      add_header Content-Type text/plain;
+      return 200 'OK';
+    }
+    location / {
+      index index.html;
+      try_files $uri $uri/ =404;
+    }
+  }
+  
+  server {
+    listen 0.0.0.0:8080;
+    server_name ~^(?<web>[^.]+)\.kdq\.vn$;
+    root /app/web/prod/$web/public;
     access_log /opt/bitnami/nginx/logs/prod-access.log;
     error_log  /opt/bitnami/nginx/logs/prod-error.log error; 
     location / {
@@ -678,7 +712,7 @@ serverBlock: |-
   server {
     listen 0.0.0.0:8080;
     server_name ~^(?<web>[^.]+)\.kdq\.io\.vn$;
-    root /app/web/stage/public;
+    root /app/web/stage/$web/public;
     access_log /opt/bitnami/nginx/logs/stage-access.log;
     error_log  /opt/bitnami/nginx/logs/stage-error.log error; 
     location / {
