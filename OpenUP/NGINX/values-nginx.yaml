@@ -648,7 +648,7 @@ cloneStaticSiteFromGit:
 serverBlock: |-
   server {
     listen 0.0.0.0:8080;
-    server_name 192-168-1-2.nip.io;
+    server_name kdq-192-168-1-2.nip.io;
     root /app/web/dev/public;
     access_log /opt/bitnami/nginx/logs/dev-access.log;
     error_log  /opt/bitnami/nginx/logs/dev-error.log error; 
