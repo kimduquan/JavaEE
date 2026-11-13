@@ -4,7 +4,7 @@ HELM_VALUES="target/helm/kubernetes/frpc/values.yaml"
 KUBE_CONFIG="${EPF_CLUSTER_KUBE_CONFIG}"
 SERVICE="cilium-ingress.kube-system.svc.cluster.local"
 GATEWAY_SERVICE="cilium-gateway-epf-gateway.default.svc.cluster.local"
-IMAGE="fatedier/frpc:v0.71.1"
+IMAGE="fatedier/frpc:v0.72.0"
 ../../registry.sh ghcr.io "$IMAGE"
 if [ "$DEPLOYMENT" = "dev" ]; then
     HELM_VALUES="values-dev.yaml"

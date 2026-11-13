@@ -16,7 +16,7 @@ app:
     FRP_SERVER_ADDR: frps
     FRP_SERVER_PORT: "7002"
     FRP_TRANSPORT_PROTOCOL: quic
-  image: ghcr.io/fatedier/frpc:v0.71.1
+  image: ghcr.io/fatedier/frpc:v0.72.0
   ports:
     http: 8080
   replicas: 1
