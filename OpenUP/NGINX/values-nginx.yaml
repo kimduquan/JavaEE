@@ -1077,7 +1077,27 @@ ingress:
   ## @param ingress.extraRules The list of additional rules to be added to this ingress record. Evaluated as a template
   ## Useful when looking for additional customization, such as using different backend
   ##
-  extraRules: []
+  extraRules:
+    - host: nginx.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: wildfly
+                port:
+                  name: http
+    - host: nginx.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: wildfly
+                port:
+                  name: http
 ## Health Ingress parameters
 ##
 healthIngress:
