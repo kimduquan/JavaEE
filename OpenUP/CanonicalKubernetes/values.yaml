@@ -1,0 +1,52 @@
+bpf: {}
+cni:
+  binPath: /opt/cni/bin
+  chainingMode: portmap
+  confPath: /etc/cni/net.d
+  exclusive: false
+disableEnvoyVersionCheck: true
+enableRuntimeDeviceDetection: true
+envoy:
+  enabled: false
+gatewayAPI:
+  enabled: true
+  gatewayClass:
+    create: "false"
+image:
+  repository: ghcr.io/canonical/cilium
+  tag: 1.18.4-ck0
+  useDigest: false
+ingressController:
+  defaultSecretName: ""
+  defaultSecretNamespace: ""
+  enableProxyProtocol: false
+  enabled: false
+  loadbalancerMode: ""
+ipam:
+  operator:
+    clusterPoolIPv4PodCIDRList: 10.1.0.0/16
+    clusterPoolIPv6PodCIDRList: ""
+ipv4:
+  enabled: true
+ipv6:
+  enabled: false
+k8sServiceHost: 127.0.0.1
+k8sServicePort: 6443
+loadBalancer:
+  protocolDifferentiation:
+    enabled: true
+nodePort:
+  enableHealthCheck: false
+  enabled: true
+operator:
+  image:
+    repository: ghcr.io/canonical/cilium-operator
+    tag: 1.18.4-ck0
+    useDigest: false
+  replicas: 1
+sctp:
+  enabled: false
+sessionAffinity: true
+socketLB:
+  enabled: true
+tunnelPort: 8472
