@@ -106,5 +106,14 @@ else
 			--from-literal=RUSTFS_SECRET_KEY='064f13d6b689a11459949e5d5259158230eed290780de054b50c60e1d3c130fd' \
 			--dry-run=client -o yaml > "$SECRET_FILE"
 		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f "$SECRET_FILE"
+	elif [ "$SECRET" = "kafka-sasl" ]; then
+		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic $SECRET \
+			--from-literal=client-passwords=${DEFAULT_PASSWORD} \
+			--from-literal=inter-broker-password=${DEFAULT_PASSWORD} \
+			--from-literal=inter-broker-client-secret='' \
+			--from-literal=controller-password=${DEFAULT_PASSWORD} \
+			--from-literal=controller-client-secret='' \
+			--dry-run=client -o yaml > "$SECRET_FILE"
+		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f "$SECRET_FILE"
 	fi
 fi
