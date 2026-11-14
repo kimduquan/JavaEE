@@ -1214,7 +1214,7 @@ encryption:
       tag: "v1.0.0"
       pullPolicy: "IfNotPresent"
       digest: "sha256:884de5adde400e39f58e36c7a729f7690466ca4a8eb4c2a8daa9c1c025115b24"
-      useDigest: true
+      useDigest: false
     # -- CA server address for certificate requests.
     caAddress: "https://localhost:15012"
     # -- TCP port for the health API.
@@ -1780,7 +1780,7 @@ hubble:
       tag: "v1.20.4"
       # hubble-relay-digest
       digest: sha256:cb23408209697ed30d2bc462e1f01eb622ea4423a891458f78bc88d7255bbfc1
-      useDigest: true
+      useDigest: false
       pullPolicy: "IfNotPresent"
     # -- Specifies the resources for the hubble-relay pods
     resources: {}
@@ -2059,7 +2059,7 @@ hubble:
         repository: "quay.io/cilium/hubble-ui-backend"
         tag: "v0.13.6"
         digest: "sha256:83b3fc763f3d49948c306bf49b08277383e195904b9ca5c0c0022b2112628787"
-        useDigest: true
+        useDigest: false
         pullPolicy: "IfNotPresent"
       # -- Hubble-ui backend security context.
       securityContext:
@@ -2092,7 +2092,7 @@ hubble:
         repository: "quay.io/cilium/hubble-ui"
         tag: "v0.13.6"
         digest: "sha256:049a80a03585c043d0c3121bdc518c72b0fd42bae07e4bcce0fdb8f1e88041d0"
-        useDigest: true
+        useDigest: false
         pullPolicy: "IfNotPresent"
       # -- Hubble-ui frontend security context.
       securityContext:
@@ -3604,7 +3604,7 @@ preflight:
     tag: "v1.20.4"
     # cilium-digest
     digest: sha256:20fe92e4c86641233a450098c158d2d29085f3419931ab6bf681d2485dedf16e
-    useDigest: true
+    useDigest: false
     pullPolicy: "IfNotPresent"
   envoy:
     # -- Envoy pre-flight image.
@@ -3617,7 +3617,7 @@ preflight:
       tag: "v1.39.5-1792733054-8c73b2816bc8239e27f1fd53b271884688137459"
       pullPolicy: "IfNotPresent"
       digest: "sha256:547ab45f6092f681d9f54f3be9fa8fb1e705c9c5dc2df388efe3a52aa6965629"
-      useDigest: true
+      useDigest: false
   # -- The priority class to use for the preflight pod.
   priorityClassName: ""
   # -- preflight update strategy
@@ -3988,7 +3988,7 @@ clustermesh:
       # For example after external load balancer controllers are created.
       externallyCreated: false
       # -- The type of service used for apiserver access.
-      type: NodePort
+      type: LoadBalancer
       # -- Optional port to use as the node port for apiserver access.
       nodePort: 32379
       # -- Annotations for the clustermesh-apiserver service.
@@ -4421,7 +4421,7 @@ authentication:
           repository: "docker.io/library/busybox"
           tag: "1.38.0"
           digest: "sha256:fd7dc98638c8e305f4dc34e979f1c0fdfdcaeb0fbf8fcff77ae834b6da3d7e6e"
-          useDigest: true
+          useDigest: false
           pullPolicy: "IfNotPresent"
         # SPIRE agent configuration
         agent:
@@ -4436,7 +4436,7 @@ authentication:
             repository: "ghcr.io/spiffe/spire-agent"
             tag: "1.15.5"
             digest: "sha256:3652c732b0f0d36f4dd78394230a1b1cd0ddcc29548a46c67a996b1a78c14481"
-            useDigest: true
+            useDigest: false
             pullPolicy: "IfNotPresent"
           # -- SPIRE agent service account
           serviceAccount:
@@ -4491,7 +4491,7 @@ authentication:
             repository: "ghcr.io/spiffe/spire-server"
             tag: "1.15.5"
             digest: "sha256:584a9c5cc95b9457f5033e7e4488d603fffe5ec48a80c4dba14b05c5e1c2c384"
-            useDigest: true
+            useDigest: false
             pullPolicy: "IfNotPresent"
           # -- SPIRE server service account
           serviceAccount:
@@ -4619,5 +4619,5 @@ standaloneDnsProxy:
     repository: ""
     tag: ""
     digest: ""
-    useDigest: true
+    useDigest: false
     pullPolicy: "IfNotPresent"
