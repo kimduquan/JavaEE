@@ -21,15 +21,6 @@ certgen:
     repository: quay.io/cilium/certgen
     tag: v0.4.13
     useDigest: false
-ciliumEndpointSlice:
-  enabled: true
-  rateLimits:
-  - burst: 20
-    limit: 10
-    nodes: 0
-  - burst: 100
-    limit: 50
-    nodes: 100
 cluster:
   id: 2
   name: epf-management
@@ -40,13 +31,10 @@ clustermesh:
       repository: quay.io/cilium/clustermesh-apiserver
       tag: v1.20.4
       useDigest: false
-    podDisruptionBudget:
-      enabled: true
     service:
       type: LoadBalancer
   config:
     enabled: true
-  enableEndpointSliceSynchronization: true
   enableMCSAPISupport: true
   policyDefaultLocalCluster: true
   useAPIServer: true
@@ -55,9 +43,6 @@ envoy:
     repository: quay.io/cilium/cilium-envoy
     tag: v1.39.5-1792733054-8c73b2816bc8239e27f1fd53b271884688137459
     useDigest: false
-gatewayAPI:
-  enableAlpn: true
-  enableAppProtocol: true
 hubble:
   relay:
     image:
@@ -96,9 +81,6 @@ preflight:
       tag: v1.39.5-1792733054-8c73b2816bc8239e27f1fd53b271884688137459
       useDigest: false
   image:
-    digest: sha256:49d87af187eeeb9e9e3ec2bc6bd372261a0b5cb2d845659463ba7cc10fe9e45f
-    override: null
-    pullPolicy: IfNotPresent
     repository: quay.io/cilium/cilium
     tag: v1.20.4
     useDigest: false

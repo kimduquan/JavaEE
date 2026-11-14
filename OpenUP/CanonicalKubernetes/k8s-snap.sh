@@ -5,3 +5,4 @@ sudo k8s status --wait-ready --timeout 3m
 sudo k8s enable load-balancer
 sudo k8s set load-balancer.cidrs=192.168.1.220-192.168.1.234
 sudo k8s set load-balancer.l2-interfaces=eth0
+sudo k8s helm upgrade ck-network cilium/cilium --namespace kube-system --reuse-values -f ck-network-values.yaml
