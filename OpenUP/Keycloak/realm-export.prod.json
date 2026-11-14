@@ -2632,7 +2632,7 @@
     "saml.signature.algorithm": "",
     "parRequestUriLifespan": "60",
     "clientSessionMaxLifespan": "0",
-    "frontendUrl": "https://kdq.vn/auth",
+    "frontendUrl": "https://auth.kdq.vn",
     "acr.loa.map": "{}"
   },
   "keycloakVersion": "26.3.3",

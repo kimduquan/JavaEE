@@ -2632,7 +2632,7 @@
     "saml.signature.algorithm": "",
     "parRequestUriLifespan": "60",
     "clientSessionMaxLifespan": "0",
-    "frontendUrl": "https://kdq-192-168-1-2.nip.io/auth",
+    "frontendUrl": "https://auth-192-168-1-2.nip.io",
     "acr.loa.map": "{}"
   },
   "keycloakVersion": "26.3.3",
