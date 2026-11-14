@@ -344,6 +344,16 @@ ingress:
         - path: /
           pathType: Prefix
           servicePort: endpoint
+    - host: ""
+      paths:
+        - path: /
+          pathType: Prefix
+          servicePort: endpoint
+    - host: ""
+      paths:
+        - path: /
+          pathType: Prefix
+          servicePort: endpoint
   tls:
     enabled: false # Enable tls and access rustfs via https.
 
