@@ -199,7 +199,7 @@ hostnameStrict: true
 httpEnabled: true
 ## @param httpRelativePath Set the path relative to '/' for serving resources
 ##
-httpRelativePath: "/auth"
+httpRelativePath: "/"
 ## Keycloak cache configuration
 ## ref: https://www.keycloak.org/server/caching
 ## @param cache.enabled Switch to enable or disable the Keycloak distributed cache for kubernetes.
@@ -410,21 +410,21 @@ startupProbe:
 ##
 customLivenessProbe: 
   httpGet:
-    path: /auth/health/live
+    path: /health/live
     port: 9000
     scheme: HTTP
 ## @param customReadinessProbe Custom Readiness probes Keycloak
 ##
 customReadinessProbe: 
   httpGet:
-    path: /auth/health/ready
+    path: /health/ready
     port: 9000
     scheme: HTTP
 ## @param customStartupProbe Custom Startup probes for Keycloak
 ##
 customStartupProbe: 
   httpGet:
-    path: /auth/health/started
+    path: /health/started
     port: 9000
     scheme: HTTP
   initialDelaySeconds: 300
@@ -753,7 +753,7 @@ ingress:
     - host: ""
       http:
         paths:
-          - path: /auth
+          - path: /
             pathType: Prefix
             backend:
               service:
@@ -763,7 +763,7 @@ ingress:
     - host: ""
       http:
         paths:
-          - path: /auth
+          - path: /
             pathType: Prefix
             backend:
               service:
@@ -773,7 +773,7 @@ ingress:
     - host: ""
       http:
         paths:
-          - path: /auth
+          - path: /
             pathType: Prefix
             backend:
               service:
