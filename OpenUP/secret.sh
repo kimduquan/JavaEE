@@ -115,5 +115,10 @@ else
 			--from-literal=controller-client-secret='' \
 			--dry-run=client -o yaml > "$SECRET_FILE"
 		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f "$SECRET_FILE"
+	elif [ "$SECRET" = "kafka-jaas" ]; then
+		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic $SECRET \
+			--from-literal=jaas="org.apache.kafka.common.security.plain.PlainLoginModule required username=\"user1\" password=\"$DEFAULT_PASSWORD\";" \
+			--dry-run=client -o yaml > "$SECRET_FILE"
+		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f "$SECRET_FILE"
 	fi
 fi
