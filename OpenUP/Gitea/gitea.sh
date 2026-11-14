@@ -12,7 +12,7 @@ if [ "$DEPLOYMENT" = "dev" ]; then
 	GIT_DOMAIN="git-$DOMAIN"
 fi
 ROOT_URL="https://$GIT_DOMAIN"
-OAUTH_DISCOVERY_URL="https://$OAUTH_DOMAIN/auth/realms/$REALM_NAME/.well-known/openid-configuration"
+OAUTH_DISCOVERY_URL="https://$OAUTH_DOMAIN/realms/$REALM_NAME/.well-known/openid-configuration"
 REDIS_PASSWORD=$(kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG get secret redis-auth -n $NAMESPACE -o jsonpath='{.data.password}' | base64 --decode)
 REDIS_CONNECTION="redis://:${REDIS_PASSWORD}@redis-master.default.svc.clusterset.local:6379/${REDIS_DATABASE}"
 CACHE_HOST="redis://:${REDIS_PASSWORD}@redis-master.default.svc.clusterset.local:6379/${REDIS_DATABASE}?pool_size=100&idle_timeout=180s"
