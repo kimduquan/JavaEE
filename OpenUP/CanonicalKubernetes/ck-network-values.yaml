@@ -1,0 +1,104 @@
+authentication:
+  mutual:
+    spire:
+      install:
+        agent:
+          image:
+            repository: ghcr.io/spiffe/spire-agent
+            tag: 1.15.5
+            useDigest: false
+        initImage:
+          repository: docker.io/library/busybox
+          tag: 1.38.0
+          useDigest: false
+        server:
+          image:
+            repository: ghcr.io/spiffe/spire-server
+            tag: 1.15.5
+            useDigest: false
+certgen:
+  image:
+    repository: quay.io/cilium/certgen
+    tag: v0.4.13
+    useDigest: false
+ciliumEndpointSlice:
+  enabled: true
+  rateLimits:
+  - burst: 20
+    limit: 10
+    nodes: 0
+  - burst: 100
+    limit: 50
+    nodes: 100
+cluster:
+  id: 2
+  name: epf-management
+clustermesh:
+  annotations: {}
+  apiserver:
+    image:
+      repository: quay.io/cilium/clustermesh-apiserver
+      tag: v1.20.4
+      useDigest: false
+    podDisruptionBudget:
+      enabled: true
+    service:
+      type: LoadBalancer
+  config:
+    enabled: true
+  enableEndpointSliceSynchronization: true
+  enableMCSAPISupport: true
+  policyDefaultLocalCluster: true
+  useAPIServer: true
+envoy:
+  image:
+    repository: quay.io/cilium/cilium-envoy
+    tag: v1.39.5-1792733054-8c73b2816bc8239e27f1fd53b271884688137459
+    useDigest: false
+gatewayAPI:
+  enableAlpn: true
+  enableAppProtocol: true
+hubble:
+  relay:
+    image:
+      repository: quay.io/cilium/hubble-relay
+      tag: v1.20.4
+      useDigest: false
+  ui:
+    backend:
+      image:
+        repository: quay.io/cilium/hubble-ui-backend
+        tag: v0.13.6
+        useDigest: false
+    frontend:
+      image:
+        repository: quay.io/cilium/hubble-ui
+        tag: v0.13.6
+        useDigest: false
+image:
+  repository: ghcr.io/canonical/cilium
+  tag: 1.20.0-ck0
+  useDigest: false
+nodeinit:
+  image:
+    repository: quay.io/cilium/startup-script
+    tag: 1782916218-36ae25f
+    useDigest: false
+operator:
+  image:
+    repository: ghcr.io/canonical/cilium-operator
+    tag: 1.20.0-ck0
+    useDigest: false
+preflight:
+  envoy:
+    image:
+      repository: quay.io/cilium/cilium-envoy
+      tag: v1.39.5-1792733054-8c73b2816bc8239e27f1fd53b271884688137459
+      useDigest: false
+  image:
+    digest: sha256:49d87af187eeeb9e9e3ec2bc6bd372261a0b5cb2d845659463ba7cc10fe9e45f
+    override: null
+    pullPolicy: IfNotPresent
+    repository: quay.io/cilium/cilium
+    tag: v1.20.4
+    useDigest: false
