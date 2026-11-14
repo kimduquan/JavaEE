@@ -17,7 +17,7 @@ global:
   ##   - myRegistryKeySecretName
   ##
   imagePullSecrets: []
-  defaultStorageClass: ""
+  defaultStorageClass: "ceph-rbd"
   ## Security parameters
   ##
   security:
@@ -291,7 +291,7 @@ sasl:
   ## The client secrets are only required when using OAuthBearer as SASL mechanism.
   ## Client, inter-broker and controller passwords are only required if the SASL mechanism includes something other than OAuthBearer.
   ##
-  existingSecret: ""
+  existingSecret: "kafka-sasl"
 ## @section Kafka TLS parameters
 ## Kafka TLS settings, required if SSL or SASL_SSL listeners are configured
 ##
@@ -1038,7 +1038,7 @@ controller:
     hpa:
       ## @param controller.autoscaling.hpa.enabled Enable HPA for Kafka Controller
       ##
-      enabled: true
+      enabled: false
       ## @param controller.autoscaling.hpa.annotations Annotations for HPA resource
       ##
       annotations: {}
@@ -1514,7 +1514,7 @@ broker:
     hpa:
       ## @param broker.autoscaling.hpa.enabled Enable HPA for Kafka Broker
       ##
-      enabled: true
+      enabled: false
       ## @param broker.autoscaling.hpa.annotations Annotations for HPA resource
       ##
       annotations: {}
@@ -1586,7 +1586,7 @@ broker:
   logPersistence:
     ## @param broker.logPersistence.enabled Enable Kafka logs persistence using PVC
     ##
-    enabled: false
+    enabled: true
     ## @param broker.logPersistence.existingClaim A manually managed Persistent Volume and Claim
     ## If defined, PVC must be created manually before volume will be bound
     ## The value is evaluated as a template
