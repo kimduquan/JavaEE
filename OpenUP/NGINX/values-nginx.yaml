@@ -1081,7 +1081,7 @@ ingress:
             pathType: Prefix
             backend:
               service:
-                name: wildfly
+                name: nginx
                 port:
                   name: http
     - host: nginx.local
@@ -1091,7 +1091,7 @@ ingress:
             pathType: Prefix
             backend:
               service:
-                name: wildfly
+                name: nginx
                 port:
                   name: http
 ## Health Ingress parameters
