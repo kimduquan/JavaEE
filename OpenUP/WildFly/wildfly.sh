@@ -10,8 +10,8 @@ helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" --namespace $NAMESPACE upgrade --
 	--set "image.registry=$EPF_CLUSTER_IMAGE_REGISTRY" \
 	--set "image.tag=$IMAGE_TAG" \
 	--set "ingress.hostname=$PRODUCTION_WEBAPP_DOMAIN" \
-	--set "ingress.extraHosts[0].name=$STAGING_WEBAPP_DOMAIN" \
-	--set "ingress.extraHosts[1].name=$DEV_WEBAPP_DOMAIN"
+	--set "ingress.extraRules[0].host=$STAGING_WEBAPP_DOMAIN" \
+	--set "ingress.extraRules[1].host=$DEV_WEBAPP_DOMAIN"
 #/opt/bitnami/wildfly/bin/jboss-cli.sh --connect
 #/opt/bitnami/wildfly/bin/jboss-cli.sh --connect '/subsystem=undertow/application-security-domain=other:write-attribute(name=integrated-jaspi, value=false)'
 #/opt/bitnami/wildfly/bin/jboss-cli.sh --connect '/subsystem=undertow/server=default-server/host=default-host/location="\/":remove()'

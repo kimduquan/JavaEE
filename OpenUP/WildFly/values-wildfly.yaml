@@ -592,11 +592,7 @@ ingress:
   ##   - name: wildfly.local
   ##     path: /
   ##
-  extraHosts:
-    - name: ""
-      path: /
-    - name: ""
-      path: /
+  extraHosts: []
   ## @param ingress.extraPaths [array] An array with additional arbitrary paths that may need to be added to the ingress under the main host
   ## e.g:
   ## extraPaths:
@@ -653,7 +649,27 @@ ingress:
   ##           port:
   ##             name: http
   ##
-  extraRules: []
+  extraRules:
+    - host: wildfly.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: wildfly
+                port:
+                  name: http
+    - host: wildfly.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: wildfly
+                port:
+                  name: http
 ## Management Console Ingress parameters
 ##
 mgmtIngress:
