@@ -17,7 +17,7 @@ global:
   ##   - myRegistryKeySecretName
   ##
   imagePullSecrets: []
-  defaultStorageClass: "ceph-rbd"
+  defaultStorageClass: "ceph-block"
   ## Security parameters
   ##
   security:
