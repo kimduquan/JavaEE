@@ -15,7 +15,7 @@ global:
   ##
   imagePullSecrets: []
   ## @param global.defaultStorageClass Global default StorageClass for Persistent Volume(s)
-## @param global.storageClass DEPRECATED: use global.defaultStorageClass instead
+  ## @param global.storageClass DEPRECATED: use global.defaultStorageClass instead
   ##
   defaultStorageClass: ""
   storageClass: ""
@@ -34,9 +34,9 @@ global:
     ## @param global.postgresql.auth.secretKeys.adminPasswordKey Name of key in existing secret to use for PostgreSQL credentials (overrides `auth.secretKeys.adminPasswordKey`). Only used when `global.postgresql.auth.existingSecret` is set.
     ## @param global.postgresql.auth.secretKeys.userPasswordKey Name of key in existing secret to use for PostgreSQL credentials (overrides `auth.secretKeys.userPasswordKey`). Only used when `global.postgresql.auth.existingSecret` is set.
     ## @param global.postgresql.auth.secretKeys.replicationPasswordKey Name of key in existing secret to use for PostgreSQL credentials (overrides `auth.secretKeys.replicationPasswordKey`). Only used when `global.postgresql.auth.existingSecret` is set.
+    ## @param global.postgresql.auth.secretKeys.metricsPasswordKey Name of key in existing secret to use for PostgreSQL credentials (overrides `auth.secretKeys.metricsPasswordKey`). Only used when `global.postgresql.auth.existingSecret` is set.
     ##
     fullnameOverride: ""
-    
     auth:
       postgresPassword: ""
       username: ""
@@ -47,6 +47,7 @@ global:
         adminPasswordKey: ""
         userPasswordKey: ""
         replicationPasswordKey: ""
+        metricsPasswordKey: ""
     ## @param global.postgresql.service.ports.postgresql PostgreSQL service port (overrides `service.ports.postgresql`)
     ##
     service:
@@ -61,7 +62,7 @@ global:
       ## @param global.compatibility.openshift.adaptSecurityContext Adapt the securityContext sections of the deployment to make them compatible with Openshift restricted-v2 SCC: remove runAsUser, runAsGroup and fsGroup and let the platform use their allowed default IDs. Possible values: auto (apply if the detected running cluster is Openshift), force (perform the adaptation always), disabled (do not perform adaptation)
       ##
       adaptSecurityContext: auto
-  ## @param global.defaultFips Default value for the FIPS configuration (allowed values: '', restricted, relaxed, off). Can be overriden by the 'fips' object
+  ## @param global.defaultFips Default value for the FIPS configuration (allowed values: '', restricted, relaxed, off). Can be overridden by the 'fips' object
   ##  Configure FIPS mode: '', 'restricted', 'relaxed', 'off'
   ##
   defaultFips: restricted
@@ -170,17 +171,25 @@ auth:
   ## @param auth.replicationPassword Password for the replication user. Ignored if `auth.existingSecret` is provided
   ##
   replicationPassword: ""
+  ## @param auth.metricsUsername Name of the metrics user used by postgresql exporter
+  ##
+  metricsUsername: ""
+  ## @param auth.metricsPassword Password for the metrics user used by postgresql exporter. Ignored if `auth.existingSecret` is provided
+  ##
+  metricsPassword: ""
   ## @param auth.existingSecret Name of existing secret to use for PostgreSQL credentials. `auth.postgresPassword`, `auth.password`, and `auth.replicationPassword` will be ignored and picked up from this secret. The secret might also contains the key `ldap-password` if LDAP is enabled. `ldap.bind_password` will be ignored and picked from this secret in this case.
   ##
   existingSecret: "postgresql"
   ## @param auth.secretKeys.adminPasswordKey Name of key in existing secret to use for PostgreSQL credentials. Only used when `auth.existingSecret` is set.
   ## @param auth.secretKeys.userPasswordKey Name of key in existing secret to use for PostgreSQL credentials. Only used when `auth.existingSecret` is set.
   ## @param auth.secretKeys.replicationPasswordKey Name of key in existing secret to use for PostgreSQL credentials. Only used when `auth.existingSecret` is set.
+  ## @param auth.secretKeys.metricsPasswordKey Name of key in existing secret to use for PostgreSQL credentials. Only used when `auth.existingSecret` is set.
   ##
   secretKeys:
     adminPasswordKey: postgres-password
     userPasswordKey: password
     replicationPasswordKey: replication-password
+    metricsPasswordKey: metrics-password
   ## @param auth.usePasswordFiles Mount credentials as a files instead of using an environment variable
   ##
   usePasswordFiles: true
@@ -300,10 +309,10 @@ tls:
   certificatesSecret: ""
   ## @param tls.certFilename Certificate filename
   ##
-  certFilename: ""
+  certFilename: tls.crt
   ## @param tls.certKeyFilename Certificate key filename
   ##
-  certKeyFilename: ""
+  certKeyFilename: tls.key
   ## @param tls.certCAFilename CA Certificate filename
   ## If provided, PostgreSQL will authenticate TLS/SSL clients by requesting them a certificate
   ## ref: https://www.postgresql.org/docs/9.6/auth-methods.html
@@ -312,12 +321,20 @@ tls:
   ## @param tls.crlFilename File containing a Certificate Revocation List
   ##
   crlFilename: ""
+  ## @param tls.sslMode SSL mode to use when connecting to PostgreSQL. Applied to backup CronJob and password-update Job.
+  ## Accepted values: disable, allow, prefer, require, verify-ca, verify-full
+  ## ref: https://www.postgresql.org/docs/current/libpq-ssl.html
+  ##
+  sslMode: "verify-ca"
 ## @section PostgreSQL Primary parameters
 ##
 primary:
   ## @param primary.name Name of the primary database (eg primary, master, leader, ...)
   ##
   name: primary
+  ## @param primary.replicaCount Number of PostgreSQL Primary replicas to deploy. Only 0 or 1 is supported, since a PostgreSQL Primary cannot be horizontally scaled the way readReplicas can
+  ##
+  replicaCount: 1
   ## @param primary.configuration PostgreSQL Primary main configuration to be injected as ConfigMap
   ## ref: https://www.postgresql.org/docs/current/static/runtime-config.html
   ##
@@ -374,8 +391,15 @@ primary:
     ##
     user: "postgres"
     ## @param primary.initdb.password Specify the PostgreSQL password to execute the initdb scripts
+    ## The password is stored in a Kubernetes Secret and injected via secretKeyRef rather than as a plaintext env value.
     ##
-    password: "090323508"
+    password: ""
+    ## @param primary.initdb.existingSecret Name of an existing Secret containing the initdb password. The key must be specified via existingSecretKey.
+    ##
+    existingSecret: "postgresql"
+    ## @param primary.initdb.existingSecretKey Key in the existing Secret containing the initdb password.
+    ##
+    existingSecretKey: "initdb-password"
   ## Pre-init configuration
   ## ref: https://github.com/bitnami/containers/tree/main/bitnami/postgresql/#on-container-start
   preInitDb:
@@ -513,6 +537,7 @@ primary:
   ## @param primary.podSecurityContext.sysctls Set kernel settings using the sysctl interface
   ## @param primary.podSecurityContext.supplementalGroups Set filesystem extra groups
   ## @param primary.podSecurityContext.fsGroup Group ID for the pod
+  ## @param primary.podSecurityContext.seccompProfile.type Set PostgreSQL primary pod's Security Context seccomp profile
   ##
   podSecurityContext:
     enabled: true
@@ -520,6 +545,8 @@ primary:
     sysctls: []
     supplementalGroups: []
     fsGroup: 1001
+    seccompProfile:
+      type: "RuntimeDefault"
   ## Container Security Context
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
   ## @param primary.containerSecurityContext.enabled Enabled containers' Security Context
@@ -606,14 +633,11 @@ primary:
   ## @param primary.nodeSelector Node labels for PostgreSQL primary pods assignment
   ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
   ##
-  nodeSelector:
-    node-role.kubernetes.io/control-plane: ""
+  nodeSelector: {}
   ## @param primary.tolerations Tolerations for PostgreSQL primary pods assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##
-  tolerations:
-    - effect: NoSchedule
-      key: node-role.kubernetes.io/control-plane
+  tolerations: []
   ## @param primary.topologySpreadConstraints Topology Spread Constraints for pod assignment spread across your cluster among failure-domains. Evaluated as a template
   ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/#spread-constraints-for-pods
   ##
@@ -633,6 +657,9 @@ primary:
   ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
   ##
   terminationGracePeriodSeconds: ""
+  ## @param primary.enableServiceLinks Whether information about services should be injected into pod's environment variable
+  ##
+  enableServiceLinks: true
   ## @param primary.updateStrategy.type PostgreSQL Primary statefulset strategy type
   ## @param primary.updateStrategy.rollingUpdate PostgreSQL Primary statefulset rolling update configuration parameters
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#update-strategies
@@ -729,14 +756,21 @@ primary:
     ##                   - frontend
     ##
     extraEgress: []
+    ## @param primary.networkPolicy.addExternalClientAccess Allow access from pods with client label set to "true". Ignored if `primary.networkPolicy.allowExternal` is true.
     ## @param primary.networkPolicy.ingressNSMatchLabels [object] Labels to match to allow traffic from other namespaces
     ## @param primary.networkPolicy.ingressNSPodMatchLabels [object] Pod labels to match to allow traffic from other namespaces
+    ## @param primary.networkPolicy.ingressReleaseMatchLabels [object] Labels to match pods in the same release to allow traffic from. Ignored if `primary.networkPolicy.allowExternal` is true.
     ##
+    addExternalClientAccess: true
     ingressNSMatchLabels: {}
     ingressNSPodMatchLabels: {}
+    ingressReleaseMatchLabels: {}
   ## PostgreSQL Primary service configuration
   ##
   service:
+    ## @param primary.service.enabled Enable/disable the PostgreSQL primary service
+    ##
+    enabled: true
     ## @param primary.service.type Kubernetes Service type
     ##
     type: ClusterIP
@@ -987,6 +1021,7 @@ readReplicas:
   ## @param readReplicas.podSecurityContext.sysctls Set kernel settings using the sysctl interface
   ## @param readReplicas.podSecurityContext.supplementalGroups Set filesystem extra groups
   ## @param readReplicas.podSecurityContext.fsGroup Group ID for the pod
+  ## @param readReplicas.podSecurityContext.seccompProfile.type Set PostgreSQL read replica pod's Security Context seccomp profile
   ##
   podSecurityContext:
     enabled: true
@@ -994,6 +1029,8 @@ readReplicas:
     sysctls: []
     supplementalGroups: []
     fsGroup: 1001
+    seccompProfile:
+      type: "RuntimeDefault"
   ## Container Security Context
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
   ## @param readReplicas.containerSecurityContext.enabled Enabled containers' Security Context
@@ -1080,14 +1117,11 @@ readReplicas:
   ## @param readReplicas.nodeSelector Node labels for PostgreSQL read only pods assignment
   ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
   ##
-  nodeSelector:
-    node-role.kubernetes.io/control-plane: ""
+  nodeSelector: {}
   ## @param readReplicas.tolerations Tolerations for PostgreSQL read only pods assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##
-  tolerations:
-    - effect: NoSchedule
-      key: node-role.kubernetes.io/control-plane
+  tolerations: []
   ## @param readReplicas.topologySpreadConstraints Topology Spread Constraints for pod assignment spread across your cluster among failure-domains. Evaluated as a template
   ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/#spread-constraints-for-pods
   ##
@@ -1107,6 +1141,9 @@ readReplicas:
   ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
   ##
   terminationGracePeriodSeconds: ""
+  ## @param readReplicas.enableServiceLinks Whether information about services should be injected into pod's environment variable
+  ##
+  enableServiceLinks: true
   ## @param readReplicas.updateStrategy.type PostgreSQL read only statefulset strategy type
   ## @param readReplicas.updateStrategy.rollingUpdate PostgreSQL read only statefulset rolling update configuration parameters
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#update-strategies
@@ -1203,11 +1240,15 @@ readReplicas:
     ##                   - frontend
     ##
     extraEgress: []
+    ## @param readReplicas.networkPolicy.addExternalClientAccess Allow access from pods with client label set to "true". Ignored if `readReplicas.networkPolicy.allowExternal` is true.
     ## @param readReplicas.networkPolicy.ingressNSMatchLabels [object] Labels to match to allow traffic from other namespaces
     ## @param readReplicas.networkPolicy.ingressNSPodMatchLabels [object] Pod labels to match to allow traffic from other namespaces
+    ## @param readReplicas.networkPolicy.ingressReleaseMatchLabels [object] Labels to match pods in the same release to allow traffic from. Ignored if `readReplicas.networkPolicy.allowExternal` is true.
     ##
+    addExternalClientAccess: true
     ingressNSMatchLabels: {}
     ingressNSPodMatchLabels: {}
+    ingressReleaseMatchLabels: {}
   ## PostgreSQL read only service configuration
   ##
   service:
@@ -1361,17 +1402,23 @@ backup:
     ttlSecondsAfterFinished: ""
     ## @param backup.cronjob.restartPolicy Set the cronjob parameter restartPolicy
     restartPolicy: OnFailure
+    ## @param backup.cronjob.podLabels Additional pod labels for backup cronjob pods
+    ##
+    podLabels: {}
     ## @param backup.cronjob.podSecurityContext.enabled Enable PodSecurityContext for CronJob/Backup
     ## @param backup.cronjob.podSecurityContext.fsGroupChangePolicy Set filesystem group change policy
     ## @param backup.cronjob.podSecurityContext.sysctls Set kernel settings using the sysctl interface
     ## @param backup.cronjob.podSecurityContext.supplementalGroups Set filesystem extra groups
     ## @param backup.cronjob.podSecurityContext.fsGroup Group ID for the CronJob
+    ## @param backup.cronjob.podSecurityContext.seccompProfile.type Set backup CronJob pod's Security Context seccomp profile
     podSecurityContext:
       enabled: true
       fsGroupChangePolicy: Always
       sysctls: []
       supplementalGroups: []
       fsGroup: 1001
+      seccompProfile:
+        type: "RuntimeDefault"
     ## backup container's Security Context
     ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
     ## @param backup.cronjob.containerSecurityContext.enabled Enabled containers' Security Context
@@ -1409,14 +1456,11 @@ backup:
     ## @param backup.cronjob.nodeSelector Node labels for PostgreSQL backup CronJob pod assignment
     ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/assign-pods-nodes/
     ##
-    nodeSelector:
-      node-role.kubernetes.io/control-plane: ""
+    nodeSelector: {}
     ## @param backup.cronjob.tolerations Tolerations for PostgreSQL backup CronJob pods assignment
     ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
     ##
-    tolerations:
-      - effect: NoSchedule
-        key: node-role.kubernetes.io/control-plane
+    tolerations: []
     ## backup cronjob container resource requests and limits
     ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     ## @param backup.cronjob.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if backup.cronjob.resources is set (backup.cronjob.resources is recommended for production).
@@ -1557,6 +1601,7 @@ passwordUpdateJob:
   ## @param passwordUpdateJob.podSecurityContext.sysctls Set kernel settings using the sysctl interface
   ## @param passwordUpdateJob.podSecurityContext.supplementalGroups Set filesystem extra groups
   ## @param passwordUpdateJob.podSecurityContext.fsGroup Set credential init job pod's Security Context fsGroup
+  ## @param passwordUpdateJob.podSecurityContext.seccompProfile.type Set credential init job pod's Security Context seccomp profile
   ##
   podSecurityContext:
     enabled: true
@@ -1564,6 +1609,8 @@ passwordUpdateJob:
     sysctls: []
     supplementalGroups: []
     fsGroup: 1001
+    seccompProfile:
+      type: "RuntimeDefault"
   ## @param passwordUpdateJob.extraEnvVars Array containing extra env vars to configure the credential init job
   ## For example:
   ## extraEnvVars:
@@ -1714,7 +1761,7 @@ volumePermissions:
     runAsGroup: 0
     runAsNonRoot: false
     seccompProfile:
-      type: RuntimeDefault
+      type: "RuntimeDefault"
 ## @section Other Parameters
 ##
 
@@ -1972,7 +2019,7 @@ metrics:
     ##
     labels: {}
     ## @param metrics.serviceMonitor.selector Prometheus instance selector labels
-    ## ref: https://github.com/bitnami/charts/tree/main/bitnami/prometheus-operator#prometheus-configuration
+    ## ref: https://techdocs.broadcom.com/us/en/vmware-tanzu/bitnami-secure-images/bitnami-secure-images/services/bsi-app-doc/apps-charts-kube-prometheus-index.html#-additional-scrape-configurations
     ##
     selector: {}
     ## @param metrics.serviceMonitor.relabelings RelabelConfigs to apply to samples before scraping
