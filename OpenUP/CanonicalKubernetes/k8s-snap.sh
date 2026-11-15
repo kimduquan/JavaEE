@@ -11,3 +11,5 @@ sudo k8s helm upgrade --install --wait --timeout 40m cilium cilium/cilium --vers
 	--set "agentNotReadyTaintKey=node.cilium.io/agent-not-ready" \
 	--set "clustermesh.mcsapi.corednsAutoConfigure.coredns.configMapName=ck-dns-coredns"
 sudo k8s status --wait-ready --timeout 5m
+sudo snap install kubectl --classic
+sudo k8s config > ~/.kube/config
