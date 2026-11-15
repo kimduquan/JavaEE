@@ -1,9 +1,9 @@
-helm repo add autoscaler https://kubernetes.github.io/autoscaler
-helm repo update
 . ../env.sh ../
+$helm repo add autoscaler https://kubernetes.github.io/autoscaler
+$helm repo update
 IMAGE_TAG=v1.37.0
 ../registry.sh registry.k8s.io "autoscaling/cluster-autoscaler:$IMAGE_TAG"
-kubectl delete secret epf-cluster
-kubectl create secret generic epf-cluster --from-file=value=${EPF_CLUSTER_KUBE_CONFIG}
-helm upgrade --install --version 9.60.0 --wait --timeout 10m cluster-autoscaler autoscaler/cluster-autoscaler -f values-cluster-autoscaler.yaml \
+$kubectl delete secret epf-cluster
+$kubectl create secret generic epf-cluster --from-file=value=${EPF_CLUSTER_KUBE_CONFIG}
+$helm upgrade --install --version 9.60.0 --wait --timeout 10m cluster-autoscaler autoscaler/cluster-autoscaler -f values-cluster-autoscaler.yaml \
 	--set "image.tag=$IMAGE_TAG"
