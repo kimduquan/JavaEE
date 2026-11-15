@@ -7,7 +7,6 @@ cluster-config:
     cluster-domain: cluster.local
   ingress:
     enabled: true
-    enable-proxy-protocol: false
   load-balancer:
     enabled: true
     cidrs:
