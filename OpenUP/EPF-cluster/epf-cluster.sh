@@ -47,7 +47,7 @@ cd ../
 
 cd EPF-cluster
 cd Rook-Ceph
-#./rook-ceph.sh
+./rook-ceph.sh
 cd ../
 
 #./setup.sh
