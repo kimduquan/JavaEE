@@ -31,13 +31,13 @@ else
 			--dry-run=client -o yaml > "$SECRET_FILE"
 		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f "$SECRET_FILE"
 	elif [ "$SECRET" = "postgresql" ]; then
-		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic $SECRET \
+		kubectl create secret generic $SECRET \
 			--from-literal=postgres-password=${DEFAULT_PASSWORD} \
 			--from-literal=password=${DEFAULT_PASSWORD} \
 			--from-literal=replication-password=${DEFAULT_PASSWORD} \
 			--from-literal=initdb-password=${DEFAULT_PASSWORD} \
 			--dry-run=client -o yaml > "$SECRET_FILE"
-		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f "$SECRET_FILE"
+		kubectl apply -f "$SECRET_FILE"
 	elif echo "$SECRET" | grep -q "\."; then
 		envsubst < "$SECRET" > "$SECRET.tmp"
 		mv "$SECRET.tmp" "$SECRET"
