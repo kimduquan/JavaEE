@@ -8,17 +8,17 @@
 #../registry.sh quay.io "cilium/startup-script:$CILIUM_NODEINIT_IMAGE_TAG"
 #../registry.sh quay.io "cilium/clustermesh-apiserver:$CILIUM_CLUSTERMESH_APISERVER_IMAGE_TAG"
 sudo k8s helm upgrade --install --wait --timeout 40m cilium cilium/cilium --version $CILIUM_CHART_VERSION --namespace=kube-system -f ../Cilium/values-cilium.yaml \
-	--set "image.repository=$EPF_CLUSTER_IMAGE_REGISTRY/cilium/cilium" \
+#	--set "image.repository=$EPF_CLUSTER_IMAGE_REGISTRY/cilium/cilium" \
 	--set "image.tag=$CILIUM_IMAGE_TAG" \
-	--set "certgen.image.repository=$EPF_CLUSTER_IMAGE_REGISTRY/cilium/certgen" \
+#	--set "certgen.image.repository=$EPF_CLUSTER_IMAGE_REGISTRY/cilium/certgen" \
 	--set "certgen.image.tag=$CILIUM_CERTGEN_IMAGE_TAG" \
-	--set "envoy.image.repository=$EPF_CLUSTER_IMAGE_REGISTRY/cilium/cilium-envoy" \
+#	--set "envoy.image.repository=$EPF_CLUSTER_IMAGE_REGISTRY/cilium/cilium-envoy" \
 	--set "envoy.image.tag=$CILIUM_ENVOY_IMAGE_TAG" \
-	--set "operator.image.repository=$EPF_CLUSTER_IMAGE_REGISTRY/cilium/operator" \
+#	--set "operator.image.repository=$EPF_CLUSTER_IMAGE_REGISTRY/cilium/operator" \
 	--set "operator.image.tag=$CILIUM_OPERATOR_IMAGE_TAG" \
-	--set "nodeinit.image.repository=$EPF_CLUSTER_IMAGE_REGISTRY/cilium/startup-script" \
+#	--set "nodeinit.image.repository=$EPF_CLUSTER_IMAGE_REGISTRY/cilium/startup-script" \
 	--set "nodeinit.image.tag=$CILIUM_NODEINIT_IMAGE_TAG" \
-	--set "clustermesh.apiserver.image.repository=$EPF_CLUSTER_IMAGE_REGISTRY/cilium/clustermesh-apiserver" \
+#	--set "clustermesh.apiserver.image.repository=$EPF_CLUSTER_IMAGE_REGISTRY/cilium/clustermesh-apiserver" \
 	--set "clustermesh.apiserver.image.tag=$CILIUM_CLUSTERMESH_APISERVER_IMAGE_TAG" \
 	--set "k8sServiceHost=127.0.0.1" \
 	--set "k8sServicePort=6443" \
