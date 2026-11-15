@@ -7,6 +7,7 @@ sudo k8s helm upgrade --install --wait --timeout 40m cilium cilium/cilium --vers
 	--set "k8sServicePort=6443" \
 	--set "cluster.name=epf-management" \
 	--set "cluster.id=2" \
-	--set "agentNotReadyTaintKey=node.cilium.io/agent-not-ready"
+	--set "agentNotReadyTaintKey=node.cilium.io/agent-not-ready" \
+	--set "clustermesh.mcsapi.corednsAutoConfigure.coredns.configMapName=ck-dns-coredns"
 #sudo k8s status --wait-ready --timeout 5m
 #sudo k8s helm upgrade ck-network cilium/cilium --version 1.18.4 --namespace kube-system --reuse-values --wait -f ck-network-all-values.yaml -f values.yaml -f ck-network-values.yaml
