@@ -96,10 +96,10 @@ else
 			--dry-run=client -o yaml > "$SECRET_FILE"
 		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f "$SECRET_FILE"
 	elif [ "$SECRET" = "redis-auth" ]; then
-		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic $SECRET -n $SECRET_NAMESPACE \
+		kubectl create secret generic $SECRET \
 			--from-literal=password=${DEFAULT_PASSWORD} \
 			--dry-run=client -o yaml > "$SECRET_FILE"
-		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f "$SECRET_FILE"
+		kubectl apply -f "$SECRET_FILE"
 	elif [ "$SECRET" = "rustfs" ]; then
 		kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic $SECRET \
 			--from-literal=RUSTFS_ACCESS_KEY='85da6aac2aba19a6dbf66034d199af599616644578306c8f7116e86f4fb0a7a3' \
