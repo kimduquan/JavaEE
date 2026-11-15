@@ -17,7 +17,7 @@ cluster-config:
     enabled: true
     default: true
   gateway:
-    enabled: true
+    enabled: false
   metrics-server:
     enabled: true
 control-plane-taints: []
