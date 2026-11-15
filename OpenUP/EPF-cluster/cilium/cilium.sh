@@ -7,9 +7,9 @@
 ../../registry.sh quay.io "cilium/operator-generic:$CILIUM_OPERATOR_IMAGE_TAG"
 ../../registry.sh quay.io "cilium/startup-script:$CILIUM_NODEINIT_IMAGE_TAG"
 ../../registry.sh quay.io "cilium/clustermesh-apiserver:$CILIUM_CLUSTERMESH_APISERVER_IMAGE_TAG"
-helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" repo add cilium https://helm.cilium.io/
-helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" repo update
-helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" upgrade --install --wait --timeout 40m cilium cilium/cilium --version $CILIUM_CHART_VERSION --namespace=kube-system -f ../../Cilium/values-cilium.yaml \
+$helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" repo add cilium https://helm.cilium.io/
+$helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" repo update
+$helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" upgrade --install --wait --timeout 40m cilium cilium/cilium --version $CILIUM_CHART_VERSION --namespace=kube-system -f ../../Cilium/values-cilium.yaml \
 	--set "image.repository=$EPF_CLUSTER_IMAGE_REGISTRY/cilium/cilium" \
 	--set "image.tag=$CILIUM_IMAGE_TAG" \
 	--set "certgen.image.repository=$EPF_CLUSTER_IMAGE_REGISTRY/cilium/certgen" \
