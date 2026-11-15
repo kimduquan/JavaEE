@@ -50,4 +50,4 @@ cd Rook-Ceph
 ./rook-ceph.sh
 cd ../
 
-./setup.sh
+#./setup.sh
