@@ -69,5 +69,13 @@ elif [ "$DEPLOYMENT" = "management" ]; then
     export REALM_NAME=$MANAGEMENT_REALM_NAME
     export REDIS_DATABASE=$MANAGEMENT_REDIS_DATABASE
 fi
-export kubectl="sudo microk8s kubectl"
-export helm="sudo k8s helm"
+if [ -z "$K8S_ENV" ]; then
+    export kubectl=kubectl
+    export helm=helm
+elif [ "$K8S_ENV" = "microk8s" ]; then
+    export kubectl="sudo microk8s kubectl"
+    export helm="sudo microk8s helm"
+elif [ "$K8S_ENV" = "k8s" ]; then
+    export kubectl="sudo k8s kubectl"
+    export helm="sudo k8s helm"
+fi
