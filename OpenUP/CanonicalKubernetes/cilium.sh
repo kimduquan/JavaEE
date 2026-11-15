@@ -1,3 +1,4 @@
+. ../env.sh ../
 . ../Cilium/env.sh
 #../registry.sh quay.io "cilium/cilium:$CILIUM_IMAGE_TAG"
 #../registry.sh quay.io "cilium/certgen:$CILIUM_CERTGEN_IMAGE_TAG"
