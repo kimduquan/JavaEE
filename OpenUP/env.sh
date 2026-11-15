@@ -70,4 +70,4 @@ elif [ "$DEPLOYMENT" = "management" ]; then
     export REDIS_DATABASE=$MANAGEMENT_REDIS_DATABASE
 fi
 export kubectl="sudo microk8s kubectl"
-export helm="sudo microk8s helm"
+export helm="sudo k8s helm"
