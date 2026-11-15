@@ -163,7 +163,7 @@ operatorConfig:
     # Controller Plugin Configuration
     controllerPlugin:
       # -- Flag to use host network for the controller plugin (default: false)
-      hostNetwork: false
+      hostNetwork: true
       # -- Number of replicas for the controller plugin (default: 1)
       replicas: 1
       # -- Resource requirements for controller plugin containers (default: {})
@@ -259,7 +259,7 @@ drivers:
     # Controller Plugin Configuration
     controllerPlugin:
       # -- Flag to use host network for the controller plugin (default: false)
-      hostNetwork: false
+      hostNetwork: true
       # -- Number of replicas for the controller plugin (default: 1)
       replicas: 1
       # -- Resource requirements for controller plugin containers (default: {})
@@ -406,7 +406,7 @@ drivers:
     # Controller Plugin Configuration
     controllerPlugin:
       # -- Flag to use host network for the controller plugin (default: false)
-      hostNetwork: false
+      hostNetwork: true
       # -- Number of replicas for the controller plugin (default: 1)
       replicas: 1
       # -- Resource requirements for controller plugin containers (default: {})
@@ -553,7 +553,7 @@ drivers:
     # Controller Plugin Configuration
     controllerPlugin:
       # -- Flag to use host network for the controller plugin (default: false)
-      hostNetwork: false
+      hostNetwork: true
       # -- Number of replicas for the controller plugin (default: 1)
       replicas: 1
       # -- Resource requirements for controller plugin containers (default: {})
@@ -699,7 +699,7 @@ drivers:
     # Controller Plugin Configuration
     controllerPlugin:
       # -- Flag to use host network for the controller plugin (default: false)
-      hostNetwork: false
+      hostNetwork: true
       # -- Number of replicas for the controller plugin (default: 1)
       replicas: 1
       # -- Resource requirements for controller plugin containers (default: {})
