@@ -1,11 +1,11 @@
 cluster-config:
   network:
-    enabled: true
+    enabled: false
   dns:
     enabled: true
     cluster-domain: cluster.local
   ingress:
-    enabled: true
+    enabled: false
   load-balancer:
     enabled: true
     cidrs:
