@@ -78,4 +78,7 @@ elif [ "$K8S_ENV" = "microk8s" ]; then
 elif [ "$K8S_ENV" = "k8s" ]; then
     export kubectl="sudo k8s kubectl"
     export helm="sudo k8s helm"
+elif [ "$K8S_ENV" = "epf-cluster" ]; then
+    export kubectl="kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG"
+    export helm="helm --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG"
 fi
