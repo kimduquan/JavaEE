@@ -47,15 +47,8 @@ $helm upgrade --install ceph-csi-drivers --namespace rook-ceph --wait --timeout 
 $kubectl wait -n rook-ceph -l app=rook-ceph.rbd.csi.ceph.com-ctrlplugin pod --for condition=Ready --timeout=1200s
 $kubectl wait -n rook-ceph -l app=rook-ceph.cephfs.csi.ceph.com-ctrlplugin pod --for condition=Ready --timeout=1200s
 
-#: > export-env.sh
-
-#./export-external-cluster.sh > export-env.sh
-
 . export-env.sh
-
-export KUBECONFIG=$EPF_CLUSTER_KUBE_CONFIG
 
 ./import-external-cluster.sh
 
-export KUBECONFIG=
 $kubectl wait -n rook-ceph cephcluster rook-ceph --for condition=Connected=True --timeout=1200s
