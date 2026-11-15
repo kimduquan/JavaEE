@@ -1,12 +1,12 @@
 . ../env.sh ../
 $kubectl apply -f ubuntu-2404-container-disk.yaml
-#$kubectl wait dv ubuntu-2404-container-disk --for condition=Bound --timeout=4800s
+$kubectl wait dv ubuntu-2404-container-disk --for condition=Bound --timeout=4800s
 export CLUSTER_TOPOLOGY=true
 clusterctl init --infrastructure kubevirt --target-namespace default --wait-providers
 export NODE_VM_IMAGE_TEMPLATE="quay.io/capk/ubuntu-2404-container-disk:v1.34.1"
 export CAPK_GUEST_K8S_VERSION="${NODE_VM_IMAGE_TEMPLATE/*:/}"
 export CRI_PATH="unix:///var/run/containerd/containerd.sock"
-export STORAGE_CLASS_NAME="ceph-block"
+export STORAGE_CLASS_NAME="ceph-rbd"
 export ROOT_VOLUME_SIZE="30Gi"
 #rm epf-cluster.yaml
 #clusterctl generate cluster epf-cluster --kubernetes-version ${CAPK_GUEST_K8S_VERSION} --flavor lb-kccm --control-plane-machine-count 1 --infrastructure kubevirt --target-namespace default > epf-cluster.yaml
