@@ -1,6 +1,13 @@
 cluster-config:
+  network:
+    enabled: true
+    kube-proxy-enabled: false
+  dns:
+    enabled: true
+    cluster-domain: cluster.local
   ingress:
     enabled: true
+    enable-proxy-protocol: false
   load-balancer:
     enabled: true
     cidrs:
@@ -10,9 +17,13 @@ cluster-config:
       - eth0
   local-storage:
     enabled: true
+    default: true
+  gateway:
+    enabled: true
   metrics-server:
     enabled: true
   cloud-provider: external
 control-plane-taints: []
 etcd-port: 2390
 etcd-peer-port: 2391
+datastore-type: etcd
