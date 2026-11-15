@@ -20,7 +20,6 @@ cluster-config:
     enabled: true
   metrics-server:
     enabled: true
-  cloud-provider: external
 control-plane-taints: []
 etcd-port: 2390
 etcd-peer-port: 2391
