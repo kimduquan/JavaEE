@@ -51,7 +51,7 @@ $kubectl --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} wait -n rook-ceph -l app=rook-c
 
 export KUBECONFIG=$EPF_CLUSTER_KUBE_CONFIG
 
-./import-external-cluster.sh
+../../Rook-Ceph/import-external-cluster.sh
 
 export KUBECONFIG=
 $kubectl --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} wait -n rook-ceph cephcluster rook-ceph --for condition=Connected=True --timeout=1200s
