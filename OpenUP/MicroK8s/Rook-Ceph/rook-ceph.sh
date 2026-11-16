@@ -50,6 +50,6 @@ $kubectl wait -n rook-ceph -l app=rook-ceph.cephfs.csi.ceph.com-ctrlplugin pod -
 
 . export-env.sh
 
-./import-external-cluster.sh
+../../Rook-Ceph/import-external-cluster.sh
 
 $kubectl wait -n rook-ceph cephcluster rook-ceph --for condition=Connected=True --timeout=1200s
