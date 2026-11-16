@@ -26,4 +26,9 @@ sudo k8s helm upgrade --install --wait --timeout 40m cilium cilium/cilium --vers
 	--set "cluster.name=epf-management" \
 	--set "cluster.id=2" \
 	--set "agentNotReadyTaintKey=node.cilium.io/agent-not-ready" \
-	--set "clustermesh.mcsapi.corednsAutoConfigure.coredns.configMapName=ck-dns-coredns"
+	--set "clustermesh.mcsapi.corednsAutoConfigure.coredns.configMapName=ck-dns-coredns" \
+	--set "tls.caBundle.enabled=$CILIUM_CLUSTERMESH_CONNECT" \
+	--set "clustermesh.config.clusters.epf-cluster.enabled=$CILIUM_CLUSTERMESH_CONNECT" \
+	--set "clustermesh.config.clusters.epf-management.enabled=$CILIUM_CLUSTERMESH_CONNECT" \
+	--set "clustermesh.config.clusters.epf-cluster.ips[0]=$CLUSTERMESH_CONFIG_CLUSTERS_EPF_CLUSTER_IP" \
+	--set "clustermesh.config.clusters.epf-management.ips[0]=$CLUSTERMESH_CONFIG_CLUSTERS_EPF_MANAGEMENT_IP"
