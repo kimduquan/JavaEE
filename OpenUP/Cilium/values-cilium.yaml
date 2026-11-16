@@ -3175,13 +3175,13 @@ tls:
   # 'ca.crt' field of the respective certificates, allowing for CA rotation with no down-time.
   caBundle:
     # -- Enable the use of the CA trust bundle.
-    enabled: false
+    enabled: true
     # -- Name of the ConfigMap containing the CA trust bundle.
     name: cilium-root-ca.crt
     # -- Entry of the ConfigMap containing the CA trust bundle.
     key: ca.crt
     # -- Use a Secret instead of a ConfigMap.
-    useSecret: false
+    useSecret: true
     # If uncommented, creates the ConfigMap and fills it with the specified content.
     # Otherwise, the ConfigMap is assumed to be already present in .Release.Namespace.
     #
