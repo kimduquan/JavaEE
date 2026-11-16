@@ -3175,7 +3175,7 @@ tls:
   # 'ca.crt' field of the respective certificates, allowing for CA rotation with no down-time.
   caBundle:
     # -- Enable the use of the CA trust bundle.
-    enabled: true
+    enabled: false
     # -- Name of the ConfigMap containing the CA trust bundle.
     name: cilium-root-ca.crt
     # -- Entry of the ConfigMap containing the CA trust bundle.
@@ -3785,22 +3785,34 @@ clustermesh:
     # @schema
     # type: [object, array]
     # @schema
-    clusters: []
+    # clusters: []
     # You can use a dict of clusters (recommended):
-    # clusters:
-    #   # -- Name of the cluster
-    #   cluster1:
-    #     # -- Whether to enable this cluster in the mesh. Optional, defaults to true.
-    #     enabled: true
-    #     # -- Address of the cluster, use this if you created DNS records for
-    #     # the cluster Clustermesh API server.
-    #     address: cluster1.mesh.cilium.io
-    #     # -- Port of the cluster Clustermesh API server.
-    #     port: 2379
-    #     # -- IPs of the cluster Clustermesh API server, use multiple ones when
-    #     # you have multiple IPs to access the Clustermesh API server.
-    #     ips:
-    #     - 172.18.255.201
+    clusters:
+      # -- Name of the cluster
+      epf-cluster:
+        # -- Whether to enable this cluster in the mesh. Optional, defaults to true.
+        enabled: false
+        # -- Address of the cluster, use this if you created DNS records for
+        # the cluster Clustermesh API server.
+        address: epf-cluster.mesh.cilium.io
+        # -- Port of the cluster Clustermesh API server.
+        port: 2379
+        # -- IPs of the cluster Clustermesh API server, use multiple ones when
+        # you have multiple IPs to access the Clustermesh API server.
+        ips:
+          - 192.168.1.247
+      epf-management:
+        # -- Whether to enable this cluster in the mesh. Optional, defaults to true.
+        enabled: false
+        # -- Address of the cluster, use this if you created DNS records for
+        # the cluster Clustermesh API server.
+        address: epf-management.mesh.cilium.io
+        # -- Port of the cluster Clustermesh API server.
+        port: 2379
+        # -- IPs of the cluster Clustermesh API server, use multiple ones when
+        # you have multiple IPs to access the Clustermesh API server.
+        ips:
+          - 192.168.1.221
     #     # -- (deprecated) base64 encoded PEM values for the cluster client certificate, private key and certificate authority.
     #     # These fields can (and should) be omitted in case the CA is shared across clusters. In that case, the
     #     # "remote" private key and certificate available in the local cluster are automatically used instead.
