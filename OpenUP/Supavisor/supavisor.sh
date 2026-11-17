@@ -5,7 +5,7 @@ SUPAVISOR_IMAGE="supabase/supavisor:2.9.13"
 ../secret.sh supavisor
 mvn clean install -U
 #$kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG delete hpa supavisor
-POSTGRES_PASSWORD=$($kubectl get secret postgresql -o jsonpath='{.data.postgres-password}' | base64 --decode)
+POSTGRES_PASSWORD=$($kubectl --kubeconfig=$EPF_MANAGEMENT_KUBE_CONFIG get secret postgresql -o jsonpath='{.data.postgres-password}' | base64 --decode)
 #kubectl apply -f tls.yml
 $kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f ../PostgreSQL/service-import.yaml
 $helm --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG upgrade --install supavisor target/helm/kubernetes/supavisor --wait --timeout 40m \
