@@ -10,6 +10,7 @@ export EPF_CLUSTER_SSH_KEY=/home/kimduquan/epf-cluster-ssh-key
 export EPF_CLUSTER_CERT=/home/kimduquan/localhost.direct.SS.crt
 export EPF_CLUSTER_CERT_KEY=/home/kimduquan/localhost.direct.SS.key
 export EPF_CLUSTER_IMAGE_REGISTRY=192.168.1.2:32000
+export EPF_MANAGEMENT_KUBE_CONFIG=/home/kimduquan/epf-management.kubeconfig
 export SECRET_DIR="/home/kimduquan/.secret"
 if [ -z "$DEPLOYMENT" ]; then
 	export DEPLOYMENT=dev
