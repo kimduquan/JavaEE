@@ -17,13 +17,13 @@ elif [ "$DEPLOYMENT" = "management" ]; then
     GATEWAY_SERVICE="$SERVICE"
 fi
 mvn clean package -U
-envsubst < frps.yaml | kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE delete --wait -f -
-kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE delete configmap frpc --wait
-kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE create configmap frpc --from-file=frpc=frpc.toml
-envsubst < frps.yaml | kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE apply -f -
-kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE wait --for=jsonpath='{.endpoints[*].conditions.ready}'='true' endpointslice -l kubernetes.io/service-name=frps
-kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE delete --wait hpa frpc
-helm --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE upgrade --install frpc target/helm/kubernetes/frpc --wait -f $HELM_VALUES \
+envsubst < frps.yaml | $kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE delete --wait -f -
+$kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE delete configmap frpc --wait
+$kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE create configmap frpc --from-file=frpc=frpc.toml
+envsubst < frps.yaml | $kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE apply -f -
+$kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE wait --for=jsonpath='{.endpoints[*].conditions.ready}'='true' endpointslice -l kubernetes.io/service-name=frps
+$kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE delete --wait hpa frpc
+$helm --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE upgrade --install frpc target/helm/kubernetes/frpc --wait -f $HELM_VALUES \
 	--set "app.image=$EPF_CLUSTER_IMAGE_REGISTRY/$IMAGE" \
 	--set "app.envs.FRP_PROXIES_HTTP_NAME=$DEPLOYMENT_POSTFIX-http" \
 	--set "app.envs.FRP_PROXIES_HTTPS_NAME=$DEPLOYMENT_POSTFIX-https" \
@@ -33,4 +33,4 @@ helm --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE upgrade --install frpc
 	--set "app.envs.FRP_PROXIES_HTTPS_GATEWAY_NAME=$DEPLOYMENT_POSTFIX-https-gateway" \
 	--set "app.envs.FRP_PROXIES_HTTP_GATEWAY_LOCAL_IP=$GATEWAY_SERVICE" \
 	--set "app.envs.FRP_PROXIES_HTTPS_GATEWAY_LOCAL_IP=$GATEWAY_SERVICE"
-kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE autoscale deployment frpc --max 1
+$kubectl --kubeconfig="${KUBE_CONFIG}" --namespace $NAMESPACE autoscale deployment frpc --max 1
