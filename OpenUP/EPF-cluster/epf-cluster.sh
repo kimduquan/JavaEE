@@ -33,8 +33,6 @@ cd cilium
 ./gateway.sh
 cd ../
 
-kubectl --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} annotate namespace default clustermesh.cilium.io/global="true"
-
 VM_IP=$(kubectl get vmi --no-headers | awk '{print $4}')
 #ssh -i ${EPF_CLUSTER_SSH_KEY} -o StrictHostKeyChecking=accept-new capk@${VM_IP} 'bash -s' < disk.sh
 
@@ -49,5 +47,8 @@ cd EPF-cluster
 cd Rook-Ceph
 ./rook-ceph.sh
 cd ../
+
+$kubectl --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} create namespace $STAGING_NAMESPACE
+$kubectl --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} create namespace $PRODUCTION_NAMESPACE
 
 #./setup.sh

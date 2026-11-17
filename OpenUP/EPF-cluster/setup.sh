@@ -12,15 +12,11 @@ cd EPF-cluster
 
 cd KEDA
 ./keda.sh
-#./http-add-on.sh
 cd ../
 
 cd KubeElasti
 ./elasti.sh
 cd ../
-
-kubectl --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" create ns $STAGING_NAMESPACE
-kubectl --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" create ns $PRODUCTION_NAMESPACE
 
 cd ../
 
