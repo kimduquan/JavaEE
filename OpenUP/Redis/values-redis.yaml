@@ -460,14 +460,11 @@ master:
   ## @param master.nodeSelector Node labels for Redis(R) master pods assignment
   ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
   ##
-  nodeSelector:
-    node-role.kubernetes.io/control-plane: ""
+  nodeSelector: {}
   ## @param master.tolerations Tolerations for Redis(R) master pods assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##
-  tolerations:
-    - effect: NoSchedule
-      key: node-role.kubernetes.io/control-plane
+  tolerations: []
   ## @param master.topologySpreadConstraints Spread Constraints for Redis(R) master pod assignment
   ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
   ## E.g.
@@ -961,14 +958,11 @@ replica:
   ## @param replica.nodeSelector Node labels for Redis(R) replicas pods assignment
   ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
   ##
-  nodeSelector:
-    node-role.kubernetes.io/control-plane: ""
+  nodeSelector: {}
   ## @param replica.tolerations Tolerations for Redis(R) replicas pods assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##
-  tolerations:
-    - effect: NoSchedule
-      key: node-role.kubernetes.io/control-plane
+  tolerations: []
   ## @param replica.topologySpreadConstraints Spread Constraints for Redis(R) replicas pod assignment
   ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
   ## E.g.
