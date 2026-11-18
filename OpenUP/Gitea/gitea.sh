@@ -13,12 +13,12 @@ if [ "$DEPLOYMENT" = "dev" ]; then
 fi
 ROOT_URL="https://$GIT_DOMAIN"
 OAUTH_DISCOVERY_URL="https://$OAUTH_DOMAIN/realms/$REALM_NAME/.well-known/openid-configuration"
-REDIS_PASSWORD=$(kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG get secret redis-auth -n $NAMESPACE -o jsonpath='{.data.password}' | base64 --decode)
+REDIS_PASSWORD=$($kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG get secret redis-auth -n $NAMESPACE -o jsonpath='{.data.password}' | base64 --decode)
 REDIS_CONNECTION="redis://:${REDIS_PASSWORD}@redis-master.default.svc.clusterset.local:6379/${REDIS_DATABASE}"
 CACHE_HOST="redis://:${REDIS_PASSWORD}@redis-master.default.svc.clusterset.local:6379/${REDIS_DATABASE}?pool_size=100&idle_timeout=180s"
 # --set "gitea.oauth[0].autoDiscoverUrl=$OAUTH_DISCOVERY_URL" \
-helm repo add gitea-charts https://dl.gitea.com/charts/
-helm --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG -n $NAMESPACE upgrade --install gitea gitea-charts/gitea --version 12.7.0 --wait -f values.yaml \
+$helm --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG repo add gitea-charts https://dl.gitea.com/charts/
+$helm --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG -n $NAMESPACE upgrade --install gitea gitea-charts/gitea --version 12.7.0 --wait -f values.yaml \
 	--set "global.imageRegistry=$EPF_CLUSTER_IMAGE_REGISTRY" \
 	--set "image.repository=gitea/gitea" \
 	--set "global.storageClass=cephfs" \
