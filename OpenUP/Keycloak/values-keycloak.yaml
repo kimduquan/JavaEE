@@ -1175,7 +1175,7 @@ keycloakConfigCli:
   ## @param keycloakConfigCli.tolerations Tolerations for job pod assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##
-  tolerations: {}
+  tolerations: []
   ## keycloak-config-cli availability-check configuration
   ## ref: https://github.com/adorsys/keycloak-config-cli#Configuration
   ## @param keycloakConfigCli.availabilityCheck.enabled Whether to wait until Keycloak is available
