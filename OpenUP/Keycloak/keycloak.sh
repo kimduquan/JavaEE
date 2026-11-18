@@ -1,7 +1,7 @@
 . ../env.sh ../
 ../registry.sh docker.io "bitnamilegacy/keycloak:26.3.3-debian-12-r0"
 ../registry.sh docker.io "bitnamilegacy/keycloak-config-cli:6.4.0-debian-12-r11"
-./keycloak-config-cli.sh
+#./keycloak-config-cli.sh
 KEYCLOAK_CLI_IMAGE_REPOSITORY="bitnamilegacy/keycloak-config-cli"
 KEYCLOAK_CLI_IMAGE_TAG="6.4.0-debian-12-r11"
 ../registry.sh "$EPF_CLUSTER_IMAGE_REGISTRY" "$KEYCLOAK_CLI_IMAGE_REPOSITORY:$KEYCLOAK_CLI_IMAGE_TAG"
