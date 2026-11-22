@@ -12,7 +12,7 @@ CSI_SNAPSHOTTER_IMAGE_TAG=v8.6.0
 ../../registry.sh quay.io "$TOOLBOX_IMAGE"
 ../../registry.sh quay.io "ceph/ceph:$CEPH_IMAGE_TAG"
 ../../registry.sh quay.io "cephcsi/ceph-csi-operator:$CEPH_CSI_OPERATOR_IMAGE_TAG"
-../../registry.sh docker.io "rook/ceph:$ROOK_CEPH_IMAGE_TAG"
+../../registry.sh quay.io "rook/ceph:$ROOK_CEPH_IMAGE_TAG"
 ../../registry.sh quay.io "cephcsi/cephcsi:$CEPH_CSI_IMAGE_TAG"
 ../../registry.sh registry.k8s.io "sig-storage/csi-node-driver-registrar:$CSI_REGISTRAR_IMAGE_TAG"
 ../../registry.sh registry.k8s.io "sig-storage/csi-provisioner:$CSI_PROVISIONER_IMAGE_TAG"
