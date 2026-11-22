@@ -1,4 +1,4 @@
-server = "http://192.168.1.2:32000"
+server = "http://registry.internal.local:32000"
 
-[host."http://192.168.1.2:32000"]
+[host."http://192.168.1.9:32000"]
 capabilities = ["pull", "resolve"]
