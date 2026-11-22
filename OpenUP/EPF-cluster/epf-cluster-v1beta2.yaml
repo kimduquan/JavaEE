@@ -116,11 +116,11 @@ spec:
         tlsBootstrapSeconds: 1500
         discoverySeconds: 1500
     files:
-      - path: /etc/containerd/certs.d/registry.internal.local:32000/hosts.toml
+      - path: /etc/containerd/certs.d/192.168.1.9:32000/hosts.toml
         owner: root:root
         permissions: "0644"
         content: |
-          server = "http://registry.internal.local:32000"
+          server = "http://192.168.1.9:32000"
           
           [host."http://192.168.1.9:32000"]
           capabilities = ["pull", "resolve"]
@@ -216,11 +216,11 @@ spec:
           tlsBootstrapSeconds: 1500
           discoverySeconds: 1500
       files:
-        - path: /etc/containerd/certs.d/registry.internal.local:32000/hosts.toml
+        - path: /etc/containerd/certs.d/192.168.1.9:32000/hosts.toml
           owner: root:root
           permissions: "0644"
           content: |
-            server = "http://registry.internal.local:32000"
+            server = "http://192.168.1.9:32000"
             
             [host."http://192.168.1.9:32000"]
             capabilities = ["pull", "resolve"]
