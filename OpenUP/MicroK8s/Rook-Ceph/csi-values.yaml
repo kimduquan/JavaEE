@@ -31,6 +31,7 @@ drivers:
         - effect: NoSchedule
           key: node-role.kubernetes.io/control-plane
     controllerPlugin:
+      hostNetwork: true
       tolerations:
         - effect: NoSchedule
           key: node-role.kubernetes.io/control-plane
@@ -38,6 +39,7 @@ drivers:
     enabled: true
     name: rook-ceph.cephfs.csi.ceph.com # csi-provisioner-name
     controllerPlugin:
+      hostNetwork: true
       tolerations:
         - effect: NoSchedule
           key: node-role.kubernetes.io/control-plane
