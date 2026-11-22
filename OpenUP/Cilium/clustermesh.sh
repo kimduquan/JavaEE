@@ -9,5 +9,17 @@ kubectl --kubeconfig="$EPF_CLUSTER_KUBE_CONFIG" delete secret cilium-root-ca.crt
 kubectl --kubeconfig="$EPF_CLUSTER_KUBE_CONFIG" create secret generic cilium-root-ca.crt --from-file=ca.crt=ca-bundle.crt -n kube-system
 #kubectl --kubeconfig=epf-management.kubeconfig rollout restart deploy/clustermesh-apiserver ds/cilium -n kube-system
 #kubectl --kubeconfig=epf-management.kubeconfig rollout restart deploy/clustermesh-apiserver ds/cilium -n kube-system
-#sudo microk8s kubectl patch subnet ovn-default --type='merge' -p '{"spec":{"natOutgoing":false}}'
-#sudo ip route add 10.1.0.0/16 via 192.168.1.9 dev eth0
+sudo microk8s kubectl patch subnet ovn-default --type='merge' -p '
+{
+  "spec": {
+    "natOutgoingPolicyRules": [
+      {
+        "match": {
+          "srcIPs": "10.1.0.0/16",
+          "dstIPs": "192.168.1.0/24"
+        },
+        "action": "forward"
+      }
+    ]
+  }
+}'
