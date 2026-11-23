@@ -9,6 +9,11 @@
 ../../registry.sh quay.io "cilium/clustermesh-apiserver:$CILIUM_CLUSTERMESH_APISERVER_IMAGE_TAG"
 $helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" repo add cilium https://helm.cilium.io/
 $helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" repo update
+$helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" history cilium -n kube-system
+helm_status=$($helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" history cilium -n kube-system | awk 'END {print $8}')
+if [ "$helm_status" = "pending-install" ]; then
+    $helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" uninstall cilium -n kube-system
+fi
 $helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" upgrade --install --wait --timeout 40m cilium cilium/cilium --version $CILIUM_CHART_VERSION --namespace=kube-system --atomic -f ../../Cilium/values-cilium.yaml \
 	--set "image.repository=$EPF_CLUSTER_IMAGE_REGISTRY/cilium/cilium" \
 	--set "image.tag=$CILIUM_IMAGE_TAG" \
