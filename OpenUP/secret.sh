@@ -125,5 +125,13 @@ else
 			--from-literal=jaas="org.apache.kafka.common.security.plain.PlainLoginModule required username=\"user1\" password=\"$DEFAULT_PASSWORD\";" \
 			--dry-run=client -o yaml > "$SECRET_FILE"
 		$kubectl apply -f "$SECRET_FILE"
+	elif [ "$SECRET" = "git-ssh" ]; then
+		ssh-keygen -q -t ed25519 -N "" -C "gitea_admin" -f "$SECRET_DIR/id_ed25519"
+		$kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic $SECRET \
+			--type=kubernetes.io/ssh-auth \
+			--from-file=ssh-privatekey=$SECRET_DIR/id_ed25519 \
+			--from-file=ssh-publickey=$SECRET_DIR/id_ed25519.pub \
+			--dry-run=client -o yaml > "$SECRET_FILE"
+		$kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG apply -f "$SECRET_FILE"
 	fi
 fi
