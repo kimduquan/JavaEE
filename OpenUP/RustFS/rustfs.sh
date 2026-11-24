@@ -1,5 +1,5 @@
 . ../env.sh ../
-$helm repo add rustfs https://charts.rustfs.com --force-update
+$helm --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG repo add rustfs https://charts.rustfs.com --force-update
 ../secret.sh rustfs
 ../registry.sh docker.io "rustfs/rustfs:1.0.4"
 ../registry.sh docker.io "library/busybox:stable"
