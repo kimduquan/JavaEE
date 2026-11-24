@@ -3,7 +3,7 @@
 ../secret.sh gitea-secret $NAMESPACE
 ../secret.sh gitea-admin-secret $NAMESPACE
 ../secret.sh gitea-oauth-secret $NAMESPACE
-../secret.sh redis-auth $NAMESPACE
+../secret.sh redis-auth $NAMESPACE "$EPF_CLUSTER_KUBE_CONFIG"
 ../registry.sh docker.gitea.com "gitea/gitea:1.27.0-rootless"
 GIT_MNGT_IP=$($kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG get svc -n kube-system --no-headers cilium-ingress | awk '{print $4}')
 GIT_MNGT_HOST=$(echo "$GIT_MNGT_IP" | tr '.' '-')
