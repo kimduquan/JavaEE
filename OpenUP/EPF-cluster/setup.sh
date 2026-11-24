@@ -19,6 +19,17 @@ cd KubeElasti
 cd ../
 
 cd ../
+cd PostgreSQL
+$kubectl apply -f service-import.yaml
+cd ../
+
+cd Redis
+$kubectl apply -f service-import.yaml
+cd ../
+
+cd Kafka
+$kubectl apply -f service-import.yaml
+cd ../
 
 cd Supavisor
 ./supavisor.sh
