@@ -1,5 +1,6 @@
 SECRET="$1"
 SECRET_NAMESPACE="$2"
+KUBE_CONFIG="$3"
 if [ -z "$SECRET" ]; then
 	:
 else
@@ -99,7 +100,11 @@ else
 		$kubectl create secret generic $SECRET \
 			--from-literal=password=${DEFAULT_PASSWORD} \
 			--dry-run=client -o yaml > "$SECRET_FILE"
-		$kubectl apply -f "$SECRET_FILE"
+		if [ -z "$KUBE_CONFIG" ]; then
+			$kubectl apply -f "$SECRET_FILE"
+		else
+			$kubectl --kubeconfig=$KUBE_CONFIG apply -f "$SECRET_FILE"
+		fi
 	elif [ "$SECRET" = "rustfs" ]; then
 		$kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG create secret generic $SECRET \
 			--from-literal=RUSTFS_ACCESS_KEY='85da6aac2aba19a6dbf66034d199af599616644578306c8f7116e86f4fb0a7a3' \
