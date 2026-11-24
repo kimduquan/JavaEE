@@ -13,7 +13,7 @@ REDIS_PASSWORD=$($kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG get secret redis
 REDIS_CONNECTION="redis://:${REDIS_PASSWORD}@redis-master.default.svc.clusterset.local:6379/${REDIS_DATABASE}"
 CACHE_HOST="redis://:${REDIS_PASSWORD}@redis-master.default.svc.clusterset.local:6379/${REDIS_DATABASE}?pool_size=100&idle_timeout=180s"
 $helm --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG repo add gitea-charts https://dl.gitea.com/charts/
-$helm --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG upgrade --install gitea gitea-charts/gitea --version 12.7.0 --wait -f values.yaml \
+$helm --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG upgrade --install gitea gitea-charts/gitea --version 12.7.0 --wait --atomic -f values.yaml \
 	--set "global.imageRegistry=$EPF_CLUSTER_IMAGE_REGISTRY" \
 	--set "image.repository=gitea/gitea" \
 	--set "global.storageClass=cephfs" \
