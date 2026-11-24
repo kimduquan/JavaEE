@@ -41,6 +41,10 @@ cd Prometheus
 ./prometheus.sh
 cd ../
 
+cd Jaeger
+./jaeger.sh
+cd ../
+
 cd frp/frpc
 export DEPLOYMENT=production
 ./frpc.sh
@@ -58,10 +62,14 @@ cd Gitea
 ./gitea.sh
 cd ../
 
+cd NGINX
+./nginx.sh
+cd ../
+
 cd WildFly
 ./wildfly.sh
 cd ../
 
-cd Jaeger
-./jaeger.sh
+cd RustFS
+./rustfs.sh
 cd ../
