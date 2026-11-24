@@ -8,7 +8,7 @@
 GIT_MNGT_IP=$($kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG get svc -n kube-system --no-headers cilium-ingress | awk '{print $4}')
 GIT_MNGT_HOST=$(echo "$GIT_MNGT_IP" | tr '.' '-')
 GIT_MNGT_HOST="git-$GIT_MNGT_HOST.nip.io"
-ROOT_URL="https://$GIT_MNGT_HOST"
+ROOT_URL="http://$GIT_MNGT_HOST"
 REDIS_PASSWORD=$($kubectl --kubeconfig=$EPF_CLUSTER_KUBE_CONFIG get secret redis-auth -o jsonpath='{.data.password}' | base64 --decode)
 REDIS_CONNECTION="redis://:${REDIS_PASSWORD}@redis-master.default.svc.clusterset.local:6379/${REDIS_DATABASE}"
 CACHE_HOST="redis://:${REDIS_PASSWORD}@redis-master.default.svc.clusterset.local:6379/${REDIS_DATABASE}?pool_size=100&idle_timeout=180s"
