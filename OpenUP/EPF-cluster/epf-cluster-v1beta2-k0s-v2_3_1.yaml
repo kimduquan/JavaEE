@@ -39,7 +39,15 @@ metadata:
   name: epf-cluster-control-plane
   namespace: default
 spec:
-  version: v1.34.1-k0s.0
+  k0sConfig:
+    apiVersion: k0s.k0sproject.io/v1beta1
+    kind: ClusterConfig
+    spec:
+      network:
+        provider: custom
+        kubeProxy:
+          disabled: true
+  version: v1.34.1-k0s.1
   persistence:
     type: emptyDir
   service:
@@ -108,8 +116,24 @@ metadata:
   namespace: default
 spec:
   template:
-    spec: {}
-      # More details of the worker configuration can be set here
+    spec:
+      files:
+        - path: /etc/k0s/containerd.d/hosts.toml
+          owner: root:root
+          permissions: "0644"
+          content: |
+            version = 2
+            
+            [plugins."io.containerd.grpc.v1.cri".registry]
+              config_path = "/etc/k0s/certs.d"
+        - path: /etc/containerd/certs.d/192.168.1.6:32000/hosts.toml
+          owner: root:root
+          permissions: "0644"
+          content: |
+            server = "http://192.168.1.6:32000"
+            
+            [host."http://192.168.1.6:32000"]
+            capabilities = ["pull", "resolve"]
 ---
 apiVersion: cluster.x-k8s.io/v1beta2
 kind: MachineDeployment
@@ -143,7 +167,7 @@ spec:
         apiGroup: infrastructure.cluster.x-k8s.io
         kind: KubevirtMachineTemplate
         name: epf-cluster-md-0
-      version: v1.34.1+k0s.0
+      version: v1.34.1+k0s.1
 ---
 apiVersion: v1
 kind: ServiceAccount
