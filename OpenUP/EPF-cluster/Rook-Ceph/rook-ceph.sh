@@ -34,7 +34,10 @@ $helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" upgrade --install --create-names
 $helm --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} upgrade --install --create-namespace --namespace rook-ceph --wait --timeout 40m rook-ceph-cluster  --version 1.21.0 --set operatorNamespace=rook-ceph rook/rook-ceph-cluster -f values-external.yaml
 $kubectl --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} wait -n rook-ceph cephcluster rook-ceph --for condition=Connecting=True --timeout=1200s
 $helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" repo add ceph-csi-operator https://ceph.github.io/ceph-csi-operator
-$helm --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} upgrade --install ceph-csi-drivers --namespace rook-ceph --wait --timeout 30m ceph-csi-operator/ceph-csi-drivers -f csi-values.yaml
+$helm --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} upgrade --install ceph-csi-drivers --namespace rook-ceph --wait --timeout 30m ceph-csi-operator/ceph-csi-drivers -f csi-values.yaml \
+	--set "operatorConfig.driverSpecDefaults.nodePlugin.kubeletDirPath=$CSI_KUBELET_DIR" \
+	--set "drivers.rbd.nodePlugin.kubeletDirPath=$CSI_KUBELET_DIR" \
+	--set "drivers.cephfs.nodePlugin.kubeletDirPath=$CSI_KUBELET_DIR"
 $kubectl --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} wait -n rook-ceph -l app=rook-ceph.rbd.csi.ceph.com-ctrlplugin pod --for condition=Ready --timeout=1200s
 $kubectl --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} wait -n rook-ceph -l app=rook-ceph.cephfs.csi.ceph.com-ctrlplugin pod --for condition=Ready --timeout=1200s
 
