@@ -36,7 +36,7 @@ kind: K0smotronControlPlane
 metadata:
   name: epf-cluster-control-plane
 spec:
-  version: v1.27.4-k0s.0
+  version: v1.34.1-k0s.0
   persistence:
     type: emptyDir
   service:
@@ -124,7 +124,6 @@ spec:
       labels:
         cluster.x-k8s.io/cluster-name: epf-cluster
     spec:
-      version: v1.27.4+k0s.0
       bootstrap:
         configRef:
           apiGroup: bootstrap.cluster.x-k8s.io
@@ -135,4 +134,4 @@ spec:
         apiGroup: infrastructure.cluster.x-k8s.io
         kind: KubevirtMachineTemplate
         name: epf-cluster-md-0
-      version: v1.27.4
+      version: v1.34.1+k0s.0
