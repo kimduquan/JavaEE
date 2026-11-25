@@ -22,6 +22,5 @@ sudo microk8s enable metallb 192.168.1.240-192.168.1.254
 sudo microk8s enable registry
 sudo microk8s inspect
 sudo microk8s kubectl label node $NODENAME node-role.kubernetes.io/control-plane=""
-sudo microk8s kubectl patch subnet ovn-default --type='merge' -p '{"spec":{"natOutgoing":false}}'
 sudo snap install kubectl --classic
 sudo microk8s config > ~/.kube/config
