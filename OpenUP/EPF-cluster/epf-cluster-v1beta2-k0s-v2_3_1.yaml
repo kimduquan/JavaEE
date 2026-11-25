@@ -126,7 +126,7 @@ spec:
             
             [plugins."io.containerd.grpc.v1.cri".registry]
               config_path = "/etc/k0s/certs.d"
-        - path: /etc/containerd/certs.d/192.168.1.6:32000/hosts.toml
+        - path: /etc/k0s/certs.d/192.168.1.6:32000/hosts.toml
           owner: root:root
           permissions: "0644"
           content: |
