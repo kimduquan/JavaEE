@@ -14,7 +14,7 @@ cluster-config:
     l2-interfaces:
       - eth0
   local-storage:
-    enabled: true
+    enabled: false
     default: true
   gateway:
     enabled: false
