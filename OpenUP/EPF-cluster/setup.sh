@@ -31,12 +31,6 @@ cd Kafka
 $kubectl --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} apply -f service-import.yaml
 cd ../
 
-cd Supavisor
-./supavisor.sh
-cd tenants
-./tenants.sh
-cd ../../
-
 cd Prometheus
 ./prometheus.sh
 cd ../
@@ -44,6 +38,20 @@ cd ../
 cd Jaeger
 ./jaeger.sh
 cd ../
+
+cd WildFly
+./wildfly.sh
+cd ../
+
+cd RustFS
+./rustfs.sh
+cd ../
+
+cd Supavisor
+./supavisor.sh
+cd tenants
+./tenants.sh
+cd ../../
 
 cd frp/frpc
 export DEPLOYMENT=production
@@ -66,10 +74,3 @@ cd NGINX
 ./nginx.sh
 cd ../
 
-cd WildFly
-./wildfly.sh
-cd ../
-
-cd RustFS
-./rustfs.sh
-cd ../
