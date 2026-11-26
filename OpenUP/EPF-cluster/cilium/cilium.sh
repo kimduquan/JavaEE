@@ -29,6 +29,7 @@ $helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" upgrade --install --wait --timeo
 	--set "k8sServicePort=$CILIUM_K8S_SERVICE_PORT" \
 	--set "clustermesh.apiserver.image.repository=$EPF_CLUSTER_IMAGE_REGISTRY/cilium/clustermesh-apiserver" \
 	--set "clustermesh.apiserver.image.tag=$CILIUM_CLUSTERMESH_APISERVER_IMAGE_TAG" \
+	--set "ipam.mode=kubernetes" \
 	--set "tls.caBundle.enabled=$CILIUM_CLUSTERMESH_CONNECT" \
 	--set "clustermesh.config.clusters.epf-cluster.enabled=$CILIUM_CLUSTERMESH_CONNECT" \
 	--set "clustermesh.config.clusters.epf-management.enabled=$CILIUM_CLUSTERMESH_CONNECT" \
