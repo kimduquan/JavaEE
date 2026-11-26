@@ -20,15 +20,15 @@ cd ../
 
 cd ../
 cd PostgreSQL
-$kubectl apply -f service-import.yaml
+$kubectl --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} apply -f service-import.yaml
 cd ../
 
 cd Redis
-$kubectl apply -f service-import.yaml
+$kubectl --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} apply -f service-import.yaml
 cd ../
 
 cd Kafka
-$kubectl apply -f service-import.yaml
+$kubectl --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} apply -f service-import.yaml
 cd ../
 
 cd Supavisor
