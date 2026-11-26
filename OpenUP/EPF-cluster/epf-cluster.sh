@@ -51,5 +51,3 @@ cd ../
 $kubectl annotate namespace default clustermesh.cilium.io/global="true"
 $kubectl --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} create namespace $STAGING_NAMESPACE
 $kubectl --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} create namespace $PRODUCTION_NAMESPACE
-
-#./setup.sh
