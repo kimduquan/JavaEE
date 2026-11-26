@@ -33,6 +33,6 @@ $helm upgrade --install --wait --timeout 40m cilium cilium/cilium --version $CIL
 	--set "clustermesh.config.clusters.epf-cluster.ips[0]=$CLUSTERMESH_CONFIG_CLUSTERS_EPF_CLUSTER_IP" \
 	--set "clustermesh.config.clusters.epf-management.ips[0]=$CLUSTERMESH_CONFIG_CLUSTERS_EPF_MANAGEMENT_IP"
 if [ "$CILIUM_CLUSTERMESH_CONNECT" = "true" ]; then
-    cilium clustermesh  --kubeconfig="$EPF_MANAGEMENT_KUBE_CONFIG" status
-    cilium clustermesh  --kubeconfig="$EPF_CLUSTER_KUBE_CONFIG" status
+    cilium clustermesh --kubeconfig="$EPF_MANAGEMENT_KUBE_CONFIG" status
+    cilium clustermesh --kubeconfig="$EPF_CLUSTER_KUBE_CONFIG" status
 fi
