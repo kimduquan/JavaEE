@@ -238,7 +238,7 @@ metadata:
     capacity.cluster-autoscaler.kubernetes.io/ephemeral-disk: "20Gi"
 spec:
   clusterName: epf-cluster
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels: null
   template:
