@@ -1,11 +1,11 @@
-export DEV_PUBLIC_IP=192.168.1.9
-export DEV_DOMAIN=kdq-192-168-1-9.nip.io
-export DEV_AUTH_DOMAIN=auth-192-168-1-9.nip.io
+export DEV_PUBLIC_IP=192.168.1.6
+export DEV_DOMAIN=kdq-192-168-1-6.nip.io
+export DEV_AUTH_DOMAIN=auth-192-168-1-6.nip.io
 export DEV_NAMESPACE=default
-export DEV_GATEWAY_IP=192.168.1.11
+export DEV_GATEWAY_IP=192.168.1.9
 export DEV_DEPLOYMENT_POSTFIX=dev
 export DEV_REALM_NAME="KDQ-$DEV_DEPLOYMENT_POSTFIX"
 export DEV_ROOT_EMAIL=kimduquan@gmail.com
 export DEV_REDIS_DATABASE=0
-export DEV_WEBAPP_DOMAIN=app-192-168-1-9.nip.io
-export DEV_STORAGE_DOMAIN=file-192-168-1-9.nip.io
+export DEV_WEBAPP_DOMAIN=app-192-168-1-6.nip.io
+export DEV_STORAGE_DOMAIN=file-192-168-1-6.nip.io
