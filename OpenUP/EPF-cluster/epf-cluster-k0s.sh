@@ -15,7 +15,7 @@ rm -r -d $SECRET_DIR
 mkdir $SECRET_DIR
 ../registry.sh quay.io "kubevirt/kubevirt-cloud-controller-manager:v0.6.0"
 
-$kubectl apply -f epf-cluster-v1beta2-k0s-v2_3_1.yaml
+$kubectl apply -f epf-cluster-v1beta2-k0s.yaml
 $kubectl wait cluster epf-cluster --for condition=RemoteConnectionProbe --timeout=3600s
 
 rm ${EPF_CLUSTER_KUBE_CONFIG}
