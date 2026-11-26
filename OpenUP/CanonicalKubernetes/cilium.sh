@@ -8,7 +8,7 @@
 #../registry.sh quay.io "cilium/startup-script:$CILIUM_NODEINIT_IMAGE_TAG"
 #../registry.sh quay.io "cilium/clustermesh-apiserver:$CILIUM_CLUSTERMESH_APISERVER_IMAGE_TAG"
 EPF_CLUSTER_IMAGE_REGISTRY=quay.io
-sudo k8s helm upgrade --install --wait --timeout 40m cilium cilium/cilium --version $CILIUM_CHART_VERSION --namespace=kube-system -f ../Cilium/values-cilium.yaml \
+$helm upgrade --install --wait --timeout 40m cilium cilium/cilium --version $CILIUM_CHART_VERSION --namespace=kube-system -f ../Cilium/values-cilium.yaml \
 	--set "image.repository=$EPF_CLUSTER_IMAGE_REGISTRY/cilium/cilium" \
 	--set "image.tag=$CILIUM_IMAGE_TAG" \
 	--set "certgen.image.repository=$EPF_CLUSTER_IMAGE_REGISTRY/cilium/certgen" \
@@ -32,3 +32,7 @@ sudo k8s helm upgrade --install --wait --timeout 40m cilium cilium/cilium --vers
 	--set "clustermesh.config.clusters.epf-management.enabled=$CILIUM_CLUSTERMESH_CONNECT" \
 	--set "clustermesh.config.clusters.epf-cluster.ips[0]=$CLUSTERMESH_CONFIG_CLUSTERS_EPF_CLUSTER_IP" \
 	--set "clustermesh.config.clusters.epf-management.ips[0]=$CLUSTERMESH_CONFIG_CLUSTERS_EPF_MANAGEMENT_IP"
+if [ "$CILIUM_CLUSTERMESH_CONNECT" = "true" ]; then
+    cilium clustermesh  --kubeconfig="$EPF_MANAGEMENT_KUBE_CONFIG" status
+    cilium clustermesh  --kubeconfig="$EPF_CLUSTER_KUBE_CONFIG" status
+fi
