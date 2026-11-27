@@ -62,6 +62,18 @@ crds:
 # -- Defines Kubernetes namespaces to watch to scale their workloads. Default watches all namespaces
 watchNamespace: "default"
 
+# -- Restricts the operator to reconcile only ScaledObjects and ScaledJobs (and their derived
+# HorizontalPodAutoscalers) matching the given Kubernetes label selector. Default (empty) means
+# no label-based filtering. Mirrors `watchNamespace`, but filters by label instead of by namespace.
+# Examples: "environment=production", "tier in (gold,silver)", "!canary"
+watchLabelSelector: ""
+
+# -- Restricts the operator to reconcile only TriggerAuthentications and ClusterTriggerAuthentications
+# matching the given Kubernetes label selector. Default (empty) means no label-based filtering.
+# Decoupled from `watchLabelSelector` so a single cluster-scoped ClusterTriggerAuthentication can be
+# shared across operators scoped to different label selectors.
+watchLabelSelectorForTriggerauth: ""
+
 # -- Name of secret to use to pull images to use to pull Docker images
 imagePullSecrets: []
 
@@ -84,8 +96,23 @@ networkPolicy:
       extraEgressRules: []
 
 operator:
+  serviceAccountTokens:
+    # -- Token audience policy for Vault and boundServiceAccountToken. When configured as "legacy", it disables enforcement and cannot be combined with configured audiences.
+    mode: enforce-audience  # enforce-audience, legacy
+    # -- Approved audiences for extra token files; creates no mounts or minting defaults. Use audiences not accepted by kube-apiserver. Combined audience config.
+    additionalAllowedAudiences: []
+  # -- Optional endpoint filter, passed as KEDA_OUTBOUND_FILTER. Empty disables filtering. Max 64 KiB.
+  outboundFilter: {}
+  # Example policy (replace {} above):
+  #   hashiCorpVault:
+  #     mode: "off" # off, warn, or enforce
+  #     allowedEndpoints: [] # exact HTTP(S) origins; empty denies all in enforce mode
   # -- Name of the KEDA operator
   name: keda-operator
+  # -- Additional KEDA Operator container environment variables
+  env: []
+  # - name: ENV_NAME
+  #   value: 'ENV-VALUE'
   # -- ReplicaSets for this Deployment you want to retain (Default: 10)
   revisionHistoryLimit: 10
   # -- Capability to configure the number of replicas for KEDA operator.
@@ -96,6 +123,8 @@ operator:
   # --Disable response compression for k8s restAPI in client-go.
   # Disabling compression simply means that turns off the process of making data smaller for K8s restAPI in client-go for faster transmission.
   disableCompression: true
+  # -- Port for the gRPC Metrics Service endpoint that the KEDA operator binds to and the metrics server connects to.
+  metricsServiceTargetPort: 9666
   # -- Leader election ID (Lease resource name) for the controller manager. Defaults to operator.keda.sh.
   # Override to allow multiple independent KEDA operator deployments in the same namespace.
   # leaderElectionID: "operator.keda.sh"
@@ -106,6 +135,8 @@ operator:
   dnsPolicy: ClusterFirst
   # -- Enable operator to use host network
   useHostNetwork: false
+  # -- (bool) Sets `hostUsers` on the KEDA operator pod. Leave unset to preserve the cluster default, `false` to run the pod in its own [user namespace](https://kubernetes.io/docs/concepts/workloads/pods/user-namespaces/), or `true` to explicitly use the host user namespace.
+  hostUsers:
   # -- [Affinity] for pod scheduling for KEDA operator. Takes precedence over the `affinity` field
   affinity: {}
     # podAntiAffinity:
@@ -156,10 +187,18 @@ operator:
   tolerations:
     - effect: NoSchedule
       key: node-role.kubernetes.io/control-plane
+  # -- Additional timeout beyond the ScaledObject or ScaledJob polling interval for Kubernetes API operations in scaling loops. Setting `0s` uses the polling interval as the timeout; the timeout cannot be disabled
+  kubernetesApiTimeout: 5s
 
 metricsServer:
-  # -- Enable KEDA metrics server and external metrics API resources.
+  # -- Enable KEDA metrics server.
   enabled: true
+  # -- Enable registering KEDA metrics server as external metrics API resource.
+  registerAPIService: true
+  # -- Additional Metrics Adapter container environment variables
+  env: []
+  # - name: ENV_NAME
+  #   value: 'ENV-VALUE'
   # -- ReplicaSets for this Deployment you want to retain (Default: 10)
   revisionHistoryLimit: 10
   # -- Capability to configure the number of replicas for KEDA metric server.
@@ -177,6 +216,8 @@ metricsServer:
   dnsConfig: {}
   # -- Enable metric server to use host network
   useHostNetwork: false
+  # -- (bool) Sets `hostUsers` on the KEDA metrics server pod. Leave unset to preserve the cluster default, `false` to run the pod in its own [user namespace](https://kubernetes.io/docs/concepts/workloads/pods/user-namespaces/), or `true` to explicitly use the host user namespace.
+  hostUsers:
   # -- [Affinity] for pod scheduling for Metrics API Server. Takes precedence over the `affinity` field
   affinity: {}
     # podAntiAffinity:
@@ -213,6 +254,10 @@ metricsServer:
 webhooks:
   # It also used to enable or disable webhook patching in the operator
   enabled: true
+  # -- Additional KEDA admission webhook container environment variables
+  env: []
+  # - name: ENV_NAME
+  #   value: 'ENV-VALUE'
   # -- Port number to use for KEDA admission webhooks. Default is 9443.
   port: ""
   # -- Port number to use for KEDA admission webhooks health probe
@@ -237,6 +282,8 @@ webhooks:
   timeoutSeconds: 10
   # -- Enable webhook to use host network, this is required on EKS with custom CNI
   useHostNetwork: false
+  # -- (bool) Sets `hostUsers` on the KEDA admission webhooks pod. Leave unset to preserve the cluster default, `false` to run the pod in its own [user namespace](https://kubernetes.io/docs/concepts/workloads/pods/user-namespaces/), or `true` to explicitly use the host user namespace.
+  hostUsers:
   # -- Name of the KEDA admission webhooks
   name: keda-admission-webhooks
   # -- ReplicaSets for this Deployment you want to retain (Default: 10)
@@ -365,6 +412,7 @@ serviceAccount:
     # -- Specifies whether a service account should be created
     create: true
     # -- The name of the service account to use.
+    # If set to empty string "", it will fall back to serviceAccount.operator.name (default: keda-operator)
     name: keda-metrics-server
     # -- Specifies whether a service account should automount API-Credentials
     automountServiceAccountToken: true
@@ -431,6 +479,13 @@ grpcTLSCertsSecret: ""
 # will be mounted to the /vault path on the Pod
 hashiCorpVaultTLS: ""
 
+hashiCorpVault:
+  kubernetesAuth:
+    # -- Projected operator-token audience, also globally approved. Empty disables projection; does not configure named-SA minting. Use an audience not accepted by kube-apiserver.
+    audience: vault
+    # -- Mount directory for the Vault token (<path>/token). Empty/null disables projection and implicit file selection; explicit TA token paths remain usable.
+    projectedTokenMountPath: /var/run/secrets/keda-vault
+
 logging:
   operator:
     # -- Logging level for KEDA Operator.
@@ -440,7 +495,7 @@ logging:
     # allowed values: `json` or `console`
     format: console
     # -- Logging time encoding for KEDA Operator.
-    # allowed values are `epoch`, `millis`, `nano`, `iso8601`, `rfc3339` or `rfc3339nano`
+    # allowed values are `epoch`, `millis`, `nanos`, `iso8601`, `rfc3339` or `rfc3339nano`
     timeEncoding: rfc3339
     # -- If enabled, the stack traces will be also printed
     stackTracesEnabled: false
@@ -458,7 +513,7 @@ logging:
     # allowed values: `json` or `console`
     zapEncoder: console
     # -- Zap logging time encoding for Metrics Server.
-    # allowed values are `epoch`, `millis`, `nano`, `iso8601`, `rfc3339` or `rfc3339nano`
+    # allowed values are `epoch`, `millis`, `nanos`, `iso8601`, `rfc3339` or `rfc3339nano`
     zapTimeEncoding: rfc3339
   webhooks:
     # -- Logging level for KEDA Operator.
@@ -468,7 +523,7 @@ logging:
     # allowed values: `json` or `console`
     format: console
     # -- Logging time encoding for KEDA Operator.
-    # allowed values are `epoch`, `millis`, `nano`, `iso8601`, `rfc3339` or `rfc3339nano`
+    # allowed values are `epoch`, `millis`, `nanos`, `iso8601`, `rfc3339` or `rfc3339nano`
     timeEncoding: rfc3339
 
 # -- [Security context] for all containers
@@ -653,12 +708,17 @@ profiling:
     # -- Expose profiling on a specific port
     port: 8084
 
-## Extra KEDA Operator and Metrics Adapter container arguments
+## Extra KEDA Operator, Metrics Adapter and Admission Webhooks container arguments
 extraArgs:
   # -- Additional KEDA Operator container arguments
   keda: {}
   # -- Additional Metrics Adapter container arguments
   metricsAdapter: {}
+  # -- Additional KEDA admission webhooks container arguments
+  webhooks: {}
+  # Example:
+  # webhooks:
+  #   cache-miss-to-direct-client: "true"
 
 # -- Additional environment variables that will be passed onto all KEDA components
 env: []
@@ -938,10 +998,13 @@ permissions:
       namesAllowList: []
       # -- Creates roles and rolebindings from namespaced service accounts in the array which allow the KEDA operator
       # to request service account tokens for use with the boundServiceAccountToken trigger source.
+      # Optional audience configures minting for this namespace/name; omit it in legacy mode.
+      # Enforce-audience mode requires a mapping here or in KEDA_SERVICE_ACCOUNT_TOKEN_AUDIENCES.
       # If the namespace does not exist, this will cause the helm chart installation to fail.
       serviceAccountTokenCreationRoles: []
-      # - name: myServiceAccount
-      #   namespace: myServiceAccountNamespace
+      # - name: metrics-reader
+      #   namespace: apps
+      #   audience: metrics-api
       # -- Allow Keda to access all Service Token for KEDA operator
       allowAllServiceAccountTokenCreation: false
 
