@@ -1,3 +1,4 @@
+# https://github.com/rook/rook/blob/v1.21.3/deploy/examples/images.txt
 export ROOK_CEPH_HELM_VERSION=1.21.3
 export ROOK_CEPH_CLUSTER_HELM_VERSION=1.21.3
 export CEPH_IMAGE_TAG=v20.2.4
