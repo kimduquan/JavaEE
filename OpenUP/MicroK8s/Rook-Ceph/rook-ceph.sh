@@ -1,14 +1,5 @@
 . ../../env.sh ../../
-TOOLBOX_IMAGE=ceph/ceph:v20.2.4
-CEPH_IMAGE_TAG=v20.2.4
-ROOK_CEPH_IMAGE_TAG=v1.21.0
-CEPH_CSI_OPERATOR_IMAGE_TAG=v1.0.4
-CEPH_CSI_IMAGE_TAG=v3.18.1
-CSI_REGISTRAR_IMAGE_TAG=v2.18.0
-CSI_PROVISIONER_IMAGE_TAG=v6.3.0
-CSI_RESIZER_IMAGE_TAG=v2.2.1
-CSI_ATTACHER_IMAGE_TAG=v4.13.0
-CSI_SNAPSHOTTER_IMAGE_TAG=v8.6.0
+. ../../Rook-Ceph/env.sh
 ../../registry.sh quay.io "$TOOLBOX_IMAGE"
 ../../registry.sh quay.io "ceph/ceph:$CEPH_IMAGE_TAG"
 ../../registry.sh quay.io "cephcsi/ceph-csi-operator:$CEPH_CSI_OPERATOR_IMAGE_TAG"
@@ -19,9 +10,8 @@ CSI_SNAPSHOTTER_IMAGE_TAG=v8.6.0
 ../../registry.sh registry.k8s.io "sig-storage/csi-resizer:$CSI_RESIZER_IMAGE_TAG"
 ../../registry.sh registry.k8s.io "sig-storage/csi-attacher:$CSI_ATTACHER_IMAGE_TAG"
 ../../registry.sh registry.k8s.io "sig-storage/csi-snapshotter:$CSI_SNAPSHOTTER_IMAGE_TAG"
-. ../../env.sh ../../
 $helm repo add rook https://charts.rook.io/release
-$helm upgrade --install --create-namespace --namespace rook-ceph --wait --timeout 40m rook-ceph rook/rook-ceph  --version 1.21.0 -f values.yaml \
+$helm upgrade --install --create-namespace --namespace rook-ceph --wait --timeout 40m rook-ceph rook/rook-ceph  --version $ROOK_CEPH_HELM_VERSION -f values.yaml \
 	--set "toolbox.image=$EPF_CLUSTER_IMAGE_REGISTRY/$TOOLBOX_IMAGE" \
 	--set "cephImage.repository=$EPF_CLUSTER_IMAGE_REGISTRY/ceph/ceph" \
 	--set "cephImage.tag=$CEPH_IMAGE_TAG" \
@@ -41,7 +31,7 @@ $helm upgrade --install --create-namespace --namespace rook-ceph --wait --timeou
 	--set "csi.attacher.tag=$CSI_ATTACHER_IMAGE_TAG" \
 	--set "csi.snapshotter.repository=$EPF_CLUSTER_IMAGE_REGISTRY/sig-storage/csi-snapshotter" \
 	--set "csi.snapshotter.tag=$CSI_SNAPSHOTTER_IMAGE_TAG"
-$helm upgrade --install --create-namespace --namespace rook-ceph --wait --timeout 40m rook-ceph-cluster  --version 1.21.0 --set operatorNamespace=rook-ceph rook/rook-ceph-cluster -f values-external.yaml
+$helm upgrade --install --create-namespace --namespace rook-ceph --wait --timeout 40m rook-ceph-cluster --version $ROOK_CEPH_CLUSTER_HELM_VERSION --set operatorNamespace=rook-ceph rook/rook-ceph-cluster -f values-external.yaml
 $kubectl wait -n rook-ceph cephcluster rook-ceph --for condition=Connecting=True --timeout=1200s
 $helm repo add ceph-csi-operator https://ceph.github.io/ceph-csi-operator
 $helm upgrade --install ceph-csi-drivers --namespace rook-ceph --wait --timeout 30m ceph-csi-operator/ceph-csi-drivers -f csi-values.yaml
