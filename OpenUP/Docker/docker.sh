@@ -1,0 +1,4 @@
+sudo apt-get install docker.io
+sudo cp ../daemon.json /etc/docker/
+sudo systemctl restart docker
+#sudo cp ../daemon.json /var/snap/docker/current/config/
