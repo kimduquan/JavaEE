@@ -1,14 +1,4 @@
 . ../env.sh ../
-export KUBECONFIG=$EPF_CLUSTER_KUBE_CONFIG
-
-cd ../
-
-cd metrics-server
-./metrics-server.sh
-cd ../
-
-export KUBECONFIG=
-cd EPF-cluster
 
 cd KEDA
 ./keda.sh
@@ -19,16 +9,12 @@ cd KubeElasti
 cd ../
 
 cd ../
-cd PostgreSQL
-$kubectl --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} apply -f service-import.yaml
-cd ../
 
-cd Redis
-$kubectl --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} apply -f service-import.yaml
-cd ../
-
-cd Kafka
-$kubectl --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} apply -f service-import.yaml
+cd metrics-server
+CUR_KUBECONFIG=$KUBECONFIG
+export KUBECONFIG=$EPF_CLUSTER_KUBE_CONFIG
+./metrics-server.sh
+export KUBECONFIG=$CUR_KUBECONFIG
 cd ../
 
 cd Prometheus
@@ -46,3 +32,16 @@ cd ../
 cd RustFS
 ./rustfs.sh
 cd ../
+
+cd PostgreSQL
+$kubectl --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} apply -f service-import.yaml
+cd ../
+
+cd Redis
+$kubectl --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} apply -f service-import.yaml
+cd ../
+
+cd Kafka
+$kubectl --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} apply -f service-import.yaml
+cd ../
+
