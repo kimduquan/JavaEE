@@ -9,9 +9,6 @@ spec:
   configuration:
     developerConfiguration:
       featureGates: []
-      # useEmulation: true
-      # featureGates:
-      #   - "Root"
     imagePullPolicy: IfNotPresent
     supportContainerResources:
       - type: ""
@@ -20,10 +17,6 @@ spec:
             cpu: "1m"
             memory: "1Mi"
   customizeComponents: {}
-    # flags:
-      # handler:
-        # kubelet-root: "/var/snap/microk8s/common/var/lib/kubelet"
-        # kubelet-pods-dir: "/var/snap/microk8s/common/var/lib/kubelet/pods"
   imagePullPolicy: IfNotPresent
   workloadUpdateStrategy: {}
   infra:
