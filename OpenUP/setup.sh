@@ -9,10 +9,10 @@ cd MicroK8s
 ./microk8s.sh
 
 cd ../
-. env.sh
-kubectl create namespace $STAGING_NAMESPACE
-kubectl create namespace $PRODUCTION_NAMESPACE
-sudo snap install helm
+. env.sh ./
+$kubectl create namespace $STAGING_NAMESPACE
+$kubectl create namespace $PRODUCTION_NAMESPACE
+
 cd cert-manager
 ./cert-manager.sh
 
