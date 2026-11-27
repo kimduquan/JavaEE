@@ -1,5 +1,6 @@
 . ../../env.sh ../../
 . ../env.sh
+# https://hub.docker.com/r/fatedier/frpc/tags
 HELM_VALUES="target/helm/kubernetes/frpc/values.yaml"
 KUBE_CONFIG="${EPF_CLUSTER_KUBE_CONFIG}"
 SERVICE="cilium-ingress.kube-system.svc.cluster.local"
