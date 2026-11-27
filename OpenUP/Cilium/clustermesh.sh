@@ -7,6 +7,7 @@ kubectl --kubeconfig="$EPF_MANAGEMENT_KUBE_CONFIG" delete secret cilium-root-ca.
 kubectl --kubeconfig="$EPF_MANAGEMENT_KUBE_CONFIG" create secret generic cilium-root-ca.crt --from-file=ca.crt=ca-bundle.crt -n kube-system
 kubectl --kubeconfig="$EPF_CLUSTER_KUBE_CONFIG" delete secret cilium-root-ca.crt --wait -n kube-system
 kubectl --kubeconfig="$EPF_CLUSTER_KUBE_CONFIG" create secret generic cilium-root-ca.crt --from-file=ca.crt=ca-bundle.crt -n kube-system
+sudo ip route replace 10.1.0.0/16 via $EPF_MANAGEMENT_CONTROL_PLANE_IP dev eth0
 #kubectl --kubeconfig="$EPF_MANAGEMENT_KUBE_CONFIG" rollout restart deploy/clustermesh-apiserver ds/cilium -n kube-system
 #kubectl --kubeconfig="$EPF_CLUSTER_KUBE_CONFIG" rollout restart deploy/clustermesh-apiserver ds/cilium -n kube-system
 #cilium clustermesh --kubeconfig="$EPF_MANAGEMENT_KUBE_CONFIG" status
