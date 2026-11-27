@@ -12,3 +12,6 @@ export CSI_RESIZER_IMAGE_TAG=v2.2.1
 export CSI_ATTACHER_IMAGE_TAG=v4.13.0
 export CSI_SNAPSHOTTER_IMAGE_TAG=v8.6.0
 export CSI_KUBELET_DIR="/var/lib/kubelet"
+if [ "$K8S_ENV" = "microk8s" ]; then
+	export CSI_KUBELET_DIR="/var/snap/microk8s/common/var/lib/kubelet"
+fi
