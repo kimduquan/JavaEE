@@ -279,7 +279,7 @@ jaeger:
   # Configure an OAuth2 Proxy sidecar for Query UI authentication
   oAuthSidecar:
     enabled: false
-    image: quay.io/oauth2-proxy/oauth2-proxy:v7.15.5
+    image: quay.io/oauth2-proxy/oauth2-proxy:v7.15.6
     pullPolicy: IfNotPresent
     containerPort: 4180
     args: []
@@ -309,7 +309,7 @@ jaeger:
 # These settings configure spark and es-maintenance templates.
 # ------------------------------------------------------------------------------
 storage:
-  # allowed values (cassandra, elasticsearch)
+  # allowed values (cassandra, elasticsearch, opensearch)
   type: elasticsearch
 
   # Cassandra connection settings (for external Cassandra or customizing provisioned)
@@ -343,8 +343,8 @@ storage:
       # cassandra.tls.enabled: "false"
 
   # Elasticsearch connection settings
-  # NOTE: In Jaeger v2, Elasticsearch is configured directly in config.extensions.jaeger_storage
-  # (see the 'config' section at the top of this file). The settings below are only used by
+  # NOTE: In Jaeger v2, Elasticsearch is configured directly in userconfig.extensions.jaeger_storage
+  # (see the 'userconfig' section at the top of this file). The settings below are only used by
   # the ES maintenance jobs (esIndexCleaner, esRollover, esLookback) via the elasticsearch.env helper.
   elasticsearch:
     tls:
@@ -355,6 +355,24 @@ storage:
     url: http://elasticsearch-master:9200
     # user: elastic
     # password: changeme
+    ## Name of existing secret to use for Elasticsearch credentials (overrides previous user and password)
+    existingSecret: ""
+    existingSecretUsernameKey: username
+    existingSecretPasswordKey: password
+
+  # OpenSearch connection settings
+  # NOTE: In Jaeger v2, OpenSearch is configured directly in userconfig.extensions.jaeger_storage
+  # (see the 'userconfig' section at the top of this file). The settings below are only used by
+  # the spark job via the opensearch.env helper. Other configuration parameters like JAVA_OPTS, OS_NODES_WAN_ONLY,
+  # OS_INDEX_PREFIX, OS_INDEX_DATE_SEPARATOR, OS_TIME_RANGE etc. should be passed via spark.extraEnv
+  opensearch:
+    url: http://opensearch-master:9200
+    # user: opensearch
+    # password: changeme
+    ## Name of existing secret to use for Opensearch credentials (overrides previous user and password)
+    existingSecret: ""
+    existingSecretUsernameKey: username
+    existingSecretPasswordKey: password
 
 # https://github.com/jaegertracing/spark-dependencies
 spark:
