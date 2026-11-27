@@ -22,17 +22,17 @@ sudo microk8s inspect
 sudo microk8s kubectl label node $NODENAME node-role.kubernetes.io/control-plane=""
 sudo snap install kubectl --classic
 sudo microk8s config > ~/.kube/config
-sudo microk8s kubectl patch subnet ovn-default --type='merge' -p '
-{
-  "spec": {
-    "natOutgoingPolicyRules": [
-      {
-        "match": {
-          "srcIPs": "10.1.0.0/16",
-          "dstIPs": "192.168.1.0/24"
-        },
-        "action": "nat"
-      }
-    ]
-  }
-}'
+#sudo microk8s kubectl patch subnet ovn-default --type='merge' -p '
+#{
+#  "spec": {
+#    "natOutgoingPolicyRules": [
+#      {
+#        "match": {
+#          "srcIPs": "10.1.0.0/16",
+#          "dstIPs": "192.168.1.0/24"
+#        },
+#        "action": "forward"
+#      }
+#    ]
+#  }
+#}'
