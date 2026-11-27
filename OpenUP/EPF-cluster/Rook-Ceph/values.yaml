@@ -93,6 +93,8 @@ monitoring:
   # externalMgrPrometheusPort: <port>
   # Scrape interval for prometheus
   # interval: 10s
+  # Scrape timeout for prometheus, in seconds. Must not be greater than the interval.
+  # scrapeTimeoutSeconds: 5
   # Enable native HTTPS on the Ceph mgr prometheus endpoint (Ceph v20.2+).
   # Rook mounts the TLS Secret and configures the prometheus module; it does not create certificates.
   # metricsTLS:
@@ -843,6 +845,10 @@ cephObjectStores:
 # @default -- `namespace name where rook-ceph operator is deployed`
 csiDriverNamePrefix:
 
+useOperatorHostNetwork: true
+
+enforceHostNetwork: true
+
 nodeSelector:
   node-role.kubernetes.io/control-plane: ""
 
@@ -852,6 +858,8 @@ tolerations:
 
 ceph-csi-operator:
   controllerManager:
+    useOperatorHostNetwork: true
+    enforceHostNetwork: true
     nodeSelector:
       node-role.kubernetes.io/control-plane: ""
     tolerations:
