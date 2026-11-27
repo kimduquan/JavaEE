@@ -31,7 +31,7 @@ sudo microk8s kubectl patch subnet ovn-default --type='merge' -p '
           "srcIPs": "10.1.0.0/16",
           "dstIPs": "192.168.1.0/24"
         },
-        "action": "forward"
+        "action": "nat"
       }
     ]
   }
