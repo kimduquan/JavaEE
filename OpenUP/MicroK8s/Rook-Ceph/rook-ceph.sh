@@ -10,6 +10,7 @@
 ../../registry.sh registry.k8s.io "sig-storage/csi-resizer:$CSI_RESIZER_IMAGE_TAG"
 ../../registry.sh registry.k8s.io "sig-storage/csi-attacher:$CSI_ATTACHER_IMAGE_TAG"
 ../../registry.sh registry.k8s.io "sig-storage/csi-snapshotter:$CSI_SNAPSHOTTER_IMAGE_TAG"
+# https://github.com/rook/rook/blob/v1.21.3/deploy/charts/rook-ceph-cluster/values.yaml
 $helm repo add rook https://charts.rook.io/release
 $helm upgrade --install --create-namespace --namespace rook-ceph --wait --timeout 40m rook-ceph rook/rook-ceph  --version $ROOK_CEPH_HELM_VERSION -f values.yaml \
 	--set "toolbox.image=$EPF_CLUSTER_IMAGE_REGISTRY/$TOOLBOX_IMAGE" \
