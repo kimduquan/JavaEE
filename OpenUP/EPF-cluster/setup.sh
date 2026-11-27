@@ -1,13 +1,13 @@
 . ../env.sh ../
 
+cd ../
+
 cd KEDA
 ./keda.sh
 cd ../
 
 cd KubeElasti
 ./elasti.sh
-cd ../
-
 cd ../
 
 cd metrics-server
