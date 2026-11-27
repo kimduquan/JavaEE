@@ -1,5 +1,5 @@
 . ../env.sh ../
-SUPAVISOR_IMAGE="supabase/supavisor:2.9.13"
+SUPAVISOR_IMAGE="supabase/supavisor:2.10.2"
 ../registry.sh ghcr.io "$SUPAVISOR_IMAGE"
 ../secret.sh postgresql
 ../secret.sh supavisor
