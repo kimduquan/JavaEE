@@ -31,7 +31,7 @@ $helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" upgrade --install --create-names
 	--set "csi.attacher.tag=$CSI_ATTACHER_IMAGE_TAG" \
 	--set "csi.snapshotter.repository=$EPF_CLUSTER_IMAGE_REGISTRY/sig-storage/csi-snapshotter" \
 	--set "csi.snapshotter.tag=$CSI_SNAPSHOTTER_IMAGE_TAG"
-$helm --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} upgrade --install --create-namespace --namespace rook-ceph --wait --timeout 40m rook-ceph-cluster  --version $ROOK_CEPH_CLUSTER_HELM_VERSION --set operatorNamespace=rook-ceph rook/rook-ceph-cluster -f values-external.yaml
+$helm --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} upgrade --install --create-namespace --namespace rook-ceph --wait --timeout 40m rook-ceph-cluster  --version $ROOK_CEPH_CLUSTER_HELM_VERSION --set operatorNamespace=rook-ceph rook/rook-ceph-cluster -f ../../Rook-Ceph/values-external.yaml
 $kubectl --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} wait -n rook-ceph cephcluster rook-ceph --for condition=Connecting=True --timeout=1200s
 $helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" repo add ceph-csi-operator https://ceph.github.io/ceph-csi-operator
 $helm --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} upgrade --install ceph-csi-drivers --namespace rook-ceph --wait --timeout 30m ceph-csi-operator/ceph-csi-drivers -f csi-values.yaml \
