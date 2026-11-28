@@ -1,4 +1,4 @@
-export DEV_PUBLIC_IP=192.168.1.6
+export DEV_PUBLIC_IP=192.168.1.9
 DOMAIN=$(echo "$DEV_PUBLIC_IP" | tr '.' '-')
 DOMAIN="${DOMAIN}.nip.io"
 export DEV_DOMAIN="kdq-$DOMAIN"
