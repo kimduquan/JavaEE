@@ -31,18 +31,18 @@ $helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" upgrade --install --create-names
 	--set "csi.attacher.tag=$CSI_ATTACHER_IMAGE_TAG" \
 	--set "csi.snapshotter.repository=$EPF_CLUSTER_IMAGE_REGISTRY/sig-storage/csi-snapshotter" \
 	--set "csi.snapshotter.tag=$CSI_SNAPSHOTTER_IMAGE_TAG"
-$helm --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} upgrade --install --create-namespace --namespace rook-ceph --wait --timeout 40m rook-ceph-cluster  --version $ROOK_CEPH_CLUSTER_HELM_VERSION --set operatorNamespace=rook-ceph rook/rook-ceph-cluster -f ../../Rook-Ceph/values-external.yaml
+$helm --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} upgrade --install --create-namespace --namespace rook-ceph --wait --timeout 40m rook-ceph-cluster  --version $ROOK_CEPH_CLUSTER_HELM_VERSION --set operatorNamespace=rook-ceph rook/rook-ceph-cluster -f ../../Rook-Ceph/external/values-external.yaml
 $kubectl --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} wait -n rook-ceph cephcluster rook-ceph --for condition=Connecting=True --timeout=1200s
 $helm --kubeconfig="${EPF_CLUSTER_KUBE_CONFIG}" repo add ceph-csi-operator https://ceph.github.io/ceph-csi-operator
-$helm --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} upgrade --install ceph-csi-drivers --namespace rook-ceph --wait --timeout 30m ceph-csi-operator/ceph-csi-drivers -f ../../Rook-Ceph/csi-values.yaml
+$helm --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} upgrade --install ceph-csi-drivers --namespace rook-ceph --wait --timeout 30m ceph-csi-operator/ceph-csi-drivers -f ../../Rook-Ceph/external/csi-values.yaml
 $kubectl --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} wait -n rook-ceph -l app=rook-ceph.rbd.csi.ceph.com-ctrlplugin pod --for condition=Ready --timeout=1200s
 $kubectl --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} wait -n rook-ceph -l app=rook-ceph.cephfs.csi.ceph.com-ctrlplugin pod --for condition=Ready --timeout=1200s
 
-. ../../Rook-Ceph/export-env.sh
+. ../../Rook-Ceph/external/export-env.sh
 
 export KUBECONFIG=$EPF_CLUSTER_KUBE_CONFIG
 
-../../Rook-Ceph/import-external-cluster.sh
+../../Rook-Ceph/external/import-external-cluster.sh
 
 export KUBECONFIG=
 $kubectl --kubeconfig=${EPF_CLUSTER_KUBE_CONFIG} wait -n rook-ceph cephcluster rook-ceph --for condition=Connected=True --timeout=1200s
