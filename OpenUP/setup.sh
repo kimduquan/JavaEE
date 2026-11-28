@@ -32,7 +32,8 @@ cd ../
 
 cd PostgreSQL
 ./postgresql.sh
+cd ../
 
 cd Kafka
 ./kafka.sh
-
+cd ../
