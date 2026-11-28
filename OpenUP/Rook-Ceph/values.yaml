@@ -101,7 +101,7 @@ operatorConfig:
         # -- Maximum number of log files to keep (default: 7)
         maxFiles: 7
         # -- Maximum size of each log file (default: "10G")
-        maxLogSize: "10G"
+        maxLogSize: "1G"
         # -- Periodicity for log rotation (options: hourly, daily, weekly, monthly) (default: "daily")
         periodicity: "daily"
         # -- Default log directory path (default: "")
@@ -119,7 +119,7 @@ operatorConfig:
     # -- gRPC timeout in seconds (default: 30)
     grpcTimeout: 30
     # -- Snapshot policy (options: none, volumeGroupSnapshot, volumeSnapshot) (default: "none")
-    snapshotPolicy: "none"
+    snapshotPolicy: "volumeSnapshot"
     # -- Flag to generate OMap info (default: false)
     generateOMapInfo: false
     # -- File system group policy (e.g., "None", "ReadWriteOnceWithFSType") (default: "File")
@@ -201,7 +201,7 @@ drivers:
         # -- Maximum number of log files to keep (default: 7)
         maxFiles: 7
         # -- Maximum size of each log file (default: "10G")
-        maxLogSize: "10G"
+        maxLogSize: "1G"
         # -- Periodicity for log rotation (options: hourly, daily, weekly, monthly) (default: "daily")
         periodicity: "daily"
         # -- Default log directory path (default: "")
@@ -219,7 +219,7 @@ drivers:
     # -- gRPC timeout in seconds (default: 30)
     grpcTimeout: 30
     # -- Snapshot policy (options: none, volumeGroupSnapshot, volumeSnapshot) (default: "none")
-    snapshotPolicy: "none"
+    snapshotPolicy: "volumeSnapshot"
     # -- Flag to generate OMap info (default: false)
     generateOMapInfo: false
     # -- File system group policy (e.g., "None", "ReadWriteOnceWithFSType") (default: "File")
@@ -348,7 +348,7 @@ drivers:
         # -- Maximum number of log files to keep (default: 7)
         maxFiles: 7
         # -- Maximum size of each log file (default: "10G")
-        maxLogSize: "10G"
+        maxLogSize: "1G"
         # -- Periodicity for log rotation (options: hourly, daily, weekly, monthly) (default: "daily")
         periodicity: "daily"
         # -- Default log directory path (default: "")
@@ -495,7 +495,7 @@ drivers:
         # -- Maximum number of log files to keep (default: 7)
         maxFiles: 7
         # -- Maximum size of each log file (default: "10G")
-        maxLogSize: "10G"
+        maxLogSize: "1G"
         # -- Periodicity for log rotation (options: hourly, daily, weekly, monthly) (default: "daily")
         periodicity: "daily"
         # -- Default log directory path (default: "")
@@ -639,7 +639,7 @@ drivers:
         # -- Maximum number of log files to keep (default: 7)
         maxFiles: 7
         # -- Maximum size of each log file (default: "10G")
-        maxLogSize: "10G"
+        maxLogSize: "1G"
         # -- Periodicity for log rotation (options: hourly, daily, weekly, monthly) (default: "daily")
         periodicity: "daily"
         # -- Default log directory path (default: "")
